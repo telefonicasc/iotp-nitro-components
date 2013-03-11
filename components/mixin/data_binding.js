@@ -8,21 +8,31 @@ define(
     function DataBinding() {
       
       this.defaultAttrs({
-        bindField: ''
+        model: ''
       });
 
       this.after('initialize', function() {
         
-        this.$node.attr('data-bind', this.attr.bindField);
+        this.$node.attr('data-bind', this.attr.model);
 
         this.on('changeData', function(e, attr, value) {
           if (attr === 'value') {
             this.trigger('valueChange', { value: value });
-            this.$node.find('[data-bind]')
-              .not('[data-bind] > [data-bind]').each(function() {
-              var field = $(this).data('bind');
-              $(this).data('value', field ? value[field] : value);  
-            });
+          }
+        });
+
+        this.on('valueChange', function(e, o) {         
+          var value = o.value
+            , nestedDatabinds = this.$node.find('[data-bind] [data-bind]');
+
+          this.$node.find('[data-bind]')
+            .not(nestedDatabinds).each(function() {
+            var field = $(this).data('bind');
+            $(this).trigger('valueChange', { value: value, silent: true });
+          });
+
+          if (o.silent) {
+            e.stopPropagation();
           }
         });
       });

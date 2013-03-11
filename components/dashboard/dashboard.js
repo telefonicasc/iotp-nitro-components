@@ -33,7 +33,8 @@ define(
             items: this.attr.mainContent
           }, {
             component: 'overviewPanel',
-            title: 'Days of user stats'
+            title: this.attr.overviewPanel.title,
+            items: this.attr.overviewPanel.items
           }];
         });
 

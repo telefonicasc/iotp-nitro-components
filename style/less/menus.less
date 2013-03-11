@@ -1,0 +1,105 @@
+
+.context-menu {
+
+  @width: 220px;
+  @padding: 6px;
+
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+
+  position: absolute;
+  background-color: #faf8f5;
+  border-radius: 6px;
+  display: none;
+  margin-left: 20px;
+  margin-top: -18px;
+  box-shadow: 0px 0px 15px #777;
+  width: @width;
+
+  color: #788d9a;
+
+  ul {
+    margin: 0px;
+    list-style: none;
+    padding: @padding;
+    display: inline-block;
+    vertical-align: top;
+    width: @width - 2*@padding;
+  }
+
+  li {
+    cursor: pointer;
+    padding: @padding/2 @padding;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #6EB4DB;
+      color: white;
+    }
+    
+    &.context-menu-title {
+      color: #9CABB4;
+      text-align: center;
+
+      &.back-link {
+        background: url("@{image-path}/context-menu-back.png") no-repeat left center;
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+  
+  .separator {
+    padding: 0px;
+    margin: 6px 6px;
+    height: 1px;
+    background: #788D9A;
+    background: -moz-linear-gradient(left,  #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#faf8f5), color-stop(20%,#788d9a), color-stop(80%,#788d9a), color-stop(100%,#faf8f5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* IE10+ */
+    background: linear-gradient(to right,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf8f5', endColorstr='#faf8f5',GradientType=1 ); /* IE6-9 */
+
+
+
+
+  }
+
+  .submenu {
+    background: url("@{image-path}/submenu-indicator.png") no-repeat right center;
+
+    &:hover {
+      background: #6EB4DB url("@{image-path}/submenu-indicator-hover.png") no-repeat right center;
+    }
+  }
+}
+
+.context-menu-wrapper {
+  overflow: hidden;
+}
+
+.tooltip-arrow {
+  
+  width: 20px;
+  height: 40px;
+  position: absolute;
+  overflow: hidden;
+  left: -21px;
+  margin-left: 1px;
+  
+  &:before {
+    background-color: #FAF8F5;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    content: '';
+    left: 10px;
+    top: 16px;
+    box-shadow: 0px 0px 15px #777;
+    -webkit-transform: scaleY(0.65) rotate(45deg);
+  }
+}

@@ -14,9 +14,26 @@
   right: 0px;
 }
 
-.chart path {
+.chart path.area {
   opacity: 0.5;
   fill: #8FB7DB;
+}
+
+.chart path.line {
+  fill: none;
+  stroke-width: 5px;
+  stroke: #788d9a;
+}
+
+.chart .green path.area {
+  opacity: 0.5;
+  fill: #effac4;
+}
+
+.chart .green path.line {
+  fill: none;
+  stroke-width: 5px;
+  stroke: #effac4;
 }
 
 .online-users {

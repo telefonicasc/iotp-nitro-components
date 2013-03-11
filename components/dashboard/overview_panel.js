@@ -1,15 +1,18 @@
 define(
   [
-    'components/component_manager'
+    'components/component_manager',
+    'components/mixin/container'
   ],
 
-  function(ComponentManager) {
+  function(ComponentManager, ContainerMixin) {
     
-    return ComponentManager.create('overviewPanel', DashboardOverview);
+    return ComponentManager.create('overviewPanel', 
+        DashboardOverview, ContainerMixin);
 
     function DashboardOverview() {
       
       this.defaultAttrs({
+        insertionPoint: '.overview-content',
         title: '',
         count: 10,
         countClass: 'blue'
@@ -30,6 +33,9 @@ define(
 
         this.$headerNode.appendTo(this.$node);
 
+        this.$contentNode = $('<div>')
+            .addClass('overview-content')
+            .appendTo(this.$node);
         
       };
 

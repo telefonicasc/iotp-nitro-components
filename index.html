@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" href="style/less/nitro-components.less" />    
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <div class="card flippable">
+      <div class="front">
+        <div class="header">Header</div> 
+        <div class="body"></div>
+      </div>
+      <div class="back">
+
+      </div>
+    </div>
+
+    <script src="libs/jquery/jquery.js"></script>
+    <script src="libs/less/less.js"></script>
+    <script>
+
+      $(function() {
+        $('.card').click(function() {
+          $(this).toggleClass('flip');
+        });
+      });
+
+    </script>
+  </body>
+</html>

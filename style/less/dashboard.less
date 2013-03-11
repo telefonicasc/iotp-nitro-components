@@ -4,6 +4,11 @@
   font-family: Helvetica, Arial, sans-serif;
   background-color: #E7E7E7;
 
+  // Main content
+  //
+  // Dashboard main content area
+  //
+  // Styleguide 1.1
   .main-content {
     margin: 30px;
     position: absolute;
@@ -16,9 +21,25 @@
       
       position: relative;
 
-      h1 {
-        color: #708796;
-        font-size: 20px;
+      header {
+        h1 {
+          color: #708796;
+          font-size: 20px;
+          display: inline-block;
+        }
+
+        .context-menu-indicator {
+          display: inline-block;
+          width: 15px;
+          height: 15px;
+          margin: 6px 0px 0px 6px;
+          cursor: pointer;
+          background-image: url("@{image-path}/context-menu-indicator.png");
+        }
+
+        .context-menu-indicator:hover {
+          background-image: url("@{image-path}/context-menu-indicator-hover.png");
+        }
       }
 
       .dashboard-main-panel-content {
@@ -41,6 +62,43 @@
     border-left: 1px solid #d2d2d2;
   }
 
+  .overview-content {
+    position: absolute;
+    top: 30px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
+
+  .overview-subpanel {
+    border-bottom: 1px solid #D6DEE0;
+    min-height: 55px;
+
+    .icon {
+      width: 50px;
+      height: 43px;
+      display: inline-block;
+    }
+
+    .overview-subpanel-body {
+      display: inline-block;
+
+      .text {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        color: #61777F;
+      }
+
+      .caption {
+        margin: 0px;
+        color: #999;
+        font-size: 13px;
+        font-weight: normal;
+      }
+    }
+  }
+
   .overview-header {
     height: 30px;
     width: 100%;
@@ -53,8 +111,10 @@
       padding-top: 6px;
       display: inline-block;
       background-color: #4a95de;
-      min-width: 35px;
+      min-width: 27px;
       height: 24px;
+      padding-left: 4px;
+      padding-right: 4px;
     }    
 
     .overview-title { 
@@ -67,9 +127,32 @@
 .range-selection-chart {
 
   border: 1px solid #b3b8be;
+
+  svg {
+    position: absolute;
+  }
   
-  .range-selection-area { 
-    
+  .selected-range { 
+    border-top: 2px solid #788d9a;
+    border-bottom: 2px solid #788d9a;
+  }
+
+  .selected-range {
+    overflow: hidden;
+  }
+
+  path.line {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #b7bbbd;
+  }
+
+  .whole-chart path.area {
+    fill: #CCCFD2;
+  }
+
+  .selected-chart path.area {
+    fill: #EFD775;
   }
 
   .range-selection-handler {
@@ -79,13 +162,26 @@
     width: 10px;
     height: 100%;
     border-radius: 4px;
+    cursor: pointer;
+    margin-left: -14px;
   }
 }
 
-.fit {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;  
+.brush {
+
+  .extent {
+    fill: transparent;
+    stroke: #788d9a;
+    stroke-width: 2px;
+  }
+
+  .resize rect {
+    width: 10px;
+    fill: #d6dce2;
+    stroke-width: 2px;
+    stroke: #788d9a;
+  }
 }
+
+
+

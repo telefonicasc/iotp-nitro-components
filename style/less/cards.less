@@ -1,0 +1,42 @@
+
+.card {
+
+  @width: 145px;
+  @height: 180px;
+  @flip-factor: 1.25;
+
+  .front, .back {
+    background-color: white;
+    width: @width;
+    height: @height;
+    box-shadow: 0px 2px 3px #AAA;
+  }
+
+  .front {
+    .header {
+      background-color: #64737b;
+      margin: 7px 7px 0px 7px;
+      height: 25px;
+      color: white;      
+    }
+    .body {
+      background-color: #dde6e9;
+    }
+  }
+
+  &.flippable {
+    .front, .back {
+      -webkit-transition: -webkit-transform 0.5s, width 0.5s, height 0.5s;
+    }
+  }
+
+  &.flip {
+
+    .front, .back {
+      width: round(@width*@flip-factor);
+      height: round(@height*@flip-factor);
+    }
+
+  }
+
+}

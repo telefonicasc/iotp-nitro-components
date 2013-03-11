@@ -1,59 +1,66 @@
 define(
   [
-    'components/component_manager',
-    'components/mixin/watch_resize'
+    'components/component_manager'
   ],
 
-  function(ComponentManager, WatchResize) {
+  function(ComponentManager) {
     
     return ComponentManager.create('areaChart', 
-      AreaChartComponent, WatchResize);
+      AreaChartComponent);
 
     function AreaChartComponent() {
 
       this.defaultAttrs({
-
+        
       });
 
       this.after('initialize', function() {
 
-        var x = d3.time.scale().range([0, this.width])
-          , y = d3.scale.linear().range([this.height, 0])
-          , xAxis = d3.svg.axis().scale(x).orient('bottom')
-          , yAxis = d3.svg.axis().scale(y).orient('left')
+        var x = this.attr.x
+          , y = this.attr.y
           , data = this.$node.data('value') || this.attr.value || []
-          , svg = d3.select(this.node).select('svg')
-              .attr('width', this.width)
-              .attr('height', this.height)          
+          , svg = d3.select(this.node)
           , area = d3.svg.area()
               .x(function(d) { return x(d.date); })
-              .y0(this.height)
+              .y0(y(0))
               .y1(function(d) { return y(d.value); })
-          , path;
+          , line = d3.svg.line()
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.value); })
+          , pathArea
+          , pathLine;
         
-        path = svg.append('path')
+        svg.attr('class', 'chart ' + this.attr.cssClass);
+
+        pathArea = svg.append('path')
           .datum(data)
           .attr('class', 'area')
           .attr('d', area);        
+
+        pathLine = svg.append('path')
+          .datum(data)
+          .attr('class', 'line')
+          .attr('d', line);
     
         this.updateChart = function() {
-          path.attr('d', area);
+          pathArea.attr('d', area);
+          pathLine.attr('d', line);
         };
 
-        this.on('resize', function() {
-          svg.attr('width', this.width).attr('height', this.height);
-          x.range([0, this.width]);
-          y.range([this.height, 0]);
-          area.y0(this.height);
+        this.on('resize', function(e) {
+          area.y0(this.attr.y(0));
           this.updateChart();
+          e.stopPropagation();
         });
 
         this.on('valueChange', function(e, options) {
-          var value = options.value;
-          x.domain(d3.extent(value, function(d) { return new Date(d.date); }));
-          y.domain([0, d3.max(value, function(d) { return d.value; })*1.2]);
-          path.datum(value);
+          var model = options.value
+            , value = model[this.attr.valueField];
+
+          pathArea.datum(value);
+          pathLine.datum(value);
           this.updateChart();
+          e.stopPropagation();
         });
       });
     }

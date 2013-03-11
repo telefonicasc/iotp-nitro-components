@@ -31,9 +31,15 @@ define(
             }, this));
           } else if (item.component) {
             ComponentManager.get(item.component).attachTo(newNode, item);
+          } else if (item.items) {
+            ComponentManager.get('container').attachTo(newNode, item);            
           }
 
-          newNode.appendTo(this.$node);
+          if (this.attr.insertionPoint) {
+            newNode.appendTo($(this.attr.insertionPoint, this.$node));
+          } else {
+            newNode.appendTo(this.$node);
+          }
 
           // Prevent render event bubbling to avoid infinit loop
           newNode.on('render', function() {            

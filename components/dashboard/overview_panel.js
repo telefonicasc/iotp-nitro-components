@@ -1,11 +1,14 @@
 define(
   [
     'components/component_manager',
-    'components/mixin/container'
+    'components/mixin/container',
+    'components/context_menu_indicator'
   ],
 
-  function(ComponentManager, ContainerMixin) {
+  function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
     
+    window.aa = ComponentManager;
+
     return ComponentManager.create('overviewPanel', 
         DashboardOverview, ContainerMixin);
 
@@ -37,6 +40,10 @@ define(
             .addClass('overview-content')
             .appendTo(this.$node);
         
+        if (this.attr.contextMenu) {
+          this.cmIndicator = $('<div>').appendTo(this.$headerNode);
+          ContextMenuIndicator.attachTo(this.cmIndicator, this.attr);
+        }
       };
 
       this.after('initialize', function() {

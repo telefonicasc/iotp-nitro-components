@@ -1,6 +1,7 @@
 define(
   [
-    'components/component_manager'
+    'components/component_manager',
+    'components/component'
   ],
 
   function(ComponentManager) {
@@ -33,7 +34,9 @@ define(
             ComponentManager.get(item.component).attachTo(newNode, item);
           } else if (item.items) {
             ComponentManager.get('container').attachTo(newNode, item);            
-          }
+          } else {
+            ComponentManager.get('component').attachTo(newNode, item);
+          }          
 
           if (this.attr.insertionPoint) {
             newNode.appendTo($(this.attr.insertionPoint, this.$node));
@@ -58,6 +61,7 @@ define(
       };
 
       this.after('initialize', function() {
+        this.attr.items = this.attr.items || [];
         this.renderItems();  
         
         this.on('render', function() {

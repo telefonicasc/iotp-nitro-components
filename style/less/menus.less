@@ -1,4 +1,23 @@
 
+.tooltip {
+
+  display: none;
+  font-family: Helvetica, Arial;
+  background-color: #34485F;
+  position: absolute;
+  margin-top: -35px;
+  color: white;
+  margin-left: -25px;
+  width: 50px;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+  height: 20px;
+  border-radius: 3px;
+
+}
+
 .context-menu {
 
   @width: 220px;
@@ -17,6 +36,11 @@
   width: @width;
 
   color: #788d9a;
+
+  &.right-anchor {
+    margin-left: -200px;
+    margin-top: 30px;
+  }
 
   ul {
     margin: 0px;
@@ -47,6 +71,44 @@
 
       &:hover {
         background-color: transparent;
+      }
+    }
+    
+    &.dot-toggle {
+      padding-left: 26px;
+      position: relative;
+      color: #ccc;
+
+      &:hover {
+        color: white;
+      }
+
+      &:before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-width: 3px; 
+        border-style: solid;
+        border-radius: 8px;
+        position: absolute;
+        left: 6px;
+        top: 4px;
+        border-color:  #CCC;
+        background-color: rgba(200, 200, 200, 0.5);
+        opacity: 0.3;
+      }
+
+      &.selected {        
+        color: #788d9a;
+        &:hover {
+          color: white;
+        }
+        &:before {
+          opacity: 1;
+        }
+
+        .withColors(border, ~":before");
+        .withColors(background-light, ~":before"); 
       }
     }
   }
@@ -82,6 +144,7 @@
   overflow: hidden;
 }
 
+
 .tooltip-arrow {
   
   width: 20px;
@@ -102,4 +165,31 @@
     box-shadow: 0px 0px 15px #777;
     -webkit-transform: scaleY(0.65) rotate(45deg);
   }
+}
+
+.right-anchor {
+  .tooltip-arrow {
+    
+    left: 173px;
+    top: -26px;
+    width: 40px;
+    height: 26px;
+
+    &:before {
+      -webkit-transform: scaleX(0.65) scaleY(1) rotate(45deg);
+    }
+  }
+}
+
+.context-menu-indicator {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 6px 0px 0px 6px;
+  cursor: pointer;
+  background-image: url("@{image-path}/context-menu-indicator.png");
+}
+
+.context-menu-indicator:hover {
+  background-image: url("@{image-path}/context-menu-indicator-hover.png");
 }

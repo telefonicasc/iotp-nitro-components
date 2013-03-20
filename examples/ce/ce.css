@@ -21,8 +21,20 @@
 
 .chart path.line {
   fill: none;
-  stroke-width: 5px;
+  stroke-width: 4px;
   stroke: #788d9a;
+}
+
+.chart rect.bar {
+  fill-opacity: 0.5;
+  fill: #8FB7DB;
+  stroke: #90a5b2;
+}
+
+.chart.grey.dashed rect {
+  fill: #7F8C8D;
+  stroke: #7F8C8D;
+  stroke-dasharray: 3,3;
 }
 
 .chart .green path.area {

@@ -31,20 +31,20 @@ define(
 
         //setTimeout($.proxy(function() {          
           ChartContainer.attachTo(this.$wholeChart, { 
-            valueField: 'registered',
+            valueField: 'totalRegistered',
             rangeField: 'range',
             charts: [{
               type: 'areaChart',
-              valueField: 'registered',
+              valueField: 'totalRegistered',
               rangeField: 'range'
             }]
           });
           ChartContainer.attachTo(this.$selectedChart, { 
-            valueField: 'registered',
+            valueField: 'totalRegistered',
             rangeField: 'range',
             charts: [{
               type: 'areaChart',
-              valueField: 'registered',
+              valueField: 'totalRegistered',
               rangeField: 'range'
             }]
           });

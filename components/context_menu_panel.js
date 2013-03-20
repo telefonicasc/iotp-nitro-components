@@ -43,6 +43,14 @@ define(
           } else {
             if (item.items) {
               itemEl.addClass('submenu');
+            } 
+
+            if (item.component) {
+              ComponentManager.get(item.component).attachTo(itemEl);
+            }
+
+            if (item.className) {
+              itemEl.addClass(item.className);
             }
 
             itemEl.on('click', $.proxy(function() {

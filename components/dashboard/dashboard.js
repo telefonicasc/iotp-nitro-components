@@ -34,6 +34,7 @@ define(
           }, {
             component: 'overviewPanel',
             title: this.attr.overviewPanel.title,
+            contextMenu: this.attr.overviewPanel.contextMenu,
             items: this.attr.overviewPanel.items
           }];
         });

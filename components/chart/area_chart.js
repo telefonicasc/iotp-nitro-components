@@ -1,66 +1,90 @@
 define(
   [
-    'components/component_manager'
+    'components/component_manager',
+    'components/chart/mixin/chart_element'
   ],
 
-  function(ComponentManager) {
+  function(ComponentManager, ChartElement) {
     
     return ComponentManager.create('areaChart', 
-      AreaChartComponent);
+      ChartElement, AreaChartComponent);
 
     function AreaChartComponent() {
 
-      this.defaultAttrs({
-        
-      });
+      this.showTooltip = function(circle, d) {
+        var pos = $(circle).offset();
+        this.tooltip.html(d[this.attr.y.key]);
+        this.tooltip.css({
+          top: pos.top,
+          left: pos.left + $(circle).width()/2
+        });
+        this.tooltip.show();
+      };
+
+      this.hideTooltip = function() {
+        this.tooltip.hide();
+      };
 
       this.after('initialize', function() {
-
-        var x = this.attr.x
-          , y = this.attr.y
-          , data = this.$node.data('value') || this.attr.value || []
-          , svg = d3.select(this.node)
-          , area = d3.svg.area()
-              .x(function(d) { return x(d.date); })
-              .y0(y(0))
-              .y1(function(d) { return y(d.value); })
+        var area = d3.svg.area()
+              .x(this.x)
+              .y0(this.height)
+              .y1(this.y)
           , line = d3.svg.line()
-              .x(function(d) { return x(d.date); })
-              .y(function(d) { return y(d.value); })
+              .x(this.x)
+              .y(this.y)
           , pathArea
-          , pathLine;
+          , pathLine
+          , tooltip;
         
-        svg.attr('class', 'chart ' + this.attr.cssClass);
+        if (this.attr.tooltip) {
+          this.tooltip = $('<div>').addClass('tooltip').appendTo($('body'));
+        }
 
-        pathArea = svg.append('path')
-          .datum(data)
+        this.context.attr('class', 'chart ' + this.attr.cssClass);
+
+        pathArea = this.context.append('path')
+          .datum(this.value)
           .attr('class', 'area')
           .attr('d', area);        
 
-        pathLine = svg.append('path')
-          .datum(data)
+        pathLine = this.context.append('path')
+          .datum(this.value)
           .attr('class', 'line')
           .attr('d', line);
-    
-        this.updateChart = function() {
+
+        this.after('updateChart', function() {
+          var self = this
+            , hoverCircle;
+            
+          if (this.attr.tooltip) {
+            hoverCircle = this.context.selectAll('.hoverCircle').data(this.value);
+            hoverCircle.enter().append('circle')
+              .attr('r', 6)
+              .attr('opacity', 0)
+              .attr('class', 'hoverCircle')
+              .on('mouseover', function(d) {
+                d3.select(this).attr('opacity', 1);
+                self.showTooltip(this, d);
+              })
+              .on('mouseout', function(d) {
+                d3.select(this).attr('opacity', 0);
+                self.hideTooltip();
+              });
+   
+            hoverCircle
+              .attr('cx', this.x)
+              .attr('cy', this.y);
+
+            hoverCircle.exit().remove();
+          }
+
+          area.y0(this.height);
+
+          pathArea.datum(this.value);
+          pathLine.datum(this.value);
           pathArea.attr('d', area);
           pathLine.attr('d', line);
-        };
-
-        this.on('resize', function(e) {
-          area.y0(this.attr.y(0));
-          this.updateChart();
-          e.stopPropagation();
-        });
-
-        this.on('valueChange', function(e, options) {
-          var model = options.value
-            , value = model[this.attr.valueField];
-
-          pathArea.datum(value);
-          pathLine.datum(value);
-          this.updateChart();
-          e.stopPropagation();
         });
       });
     }

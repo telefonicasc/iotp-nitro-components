@@ -2,11 +2,11 @@ define(
   [
     'components/component_manager',
     'components/mixin/container',
-    'components/context_menu',
+    'components/context_menu_indicator',
     'components/container'    
   ],
 
-  function(ComponentManager, ContainerMixin, ContextMenu) {
+  function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
 
     return ComponentManager.create('dashboardMainPanel', 
       DashboardMainPanel, ContainerMixin);
@@ -28,8 +28,6 @@ define(
             items: [{
               tag: 'h1',
               html: this.attr.title  
-            }, {
-              className: 'context-menu-indicator'
             }]
           }, {
             component: 'container',
@@ -39,34 +37,12 @@ define(
         });
 
         this.on('render', function() {
-          var cmIndicator = this.$node.find('.context-menu-indicator');
+          var cmIndicator;
           if (this.attr.contextMenu) {
-            this.$cm = $('<div>');
-            ContextMenu.attachTo(this.$cm, this.attr.contextMenu);
-            this.$cm.appendTo($('body'));
-            cmIndicator.click($.proxy(function() {
-              var inPos = cmIndicator.offset();
-              this.$cm.css({ 
-                top: inPos.top,
-                left: inPos.left + cmIndicator.width()
-              });
-              this.$cm.trigger('show');
-            }, this));
-            $(document).on('click', $.proxy(function(e) {
-              if (!cmIndicator.is(e.target) && !$.contains(this.$cm[0], e.target)) { 
-                this.$cm.trigger('hide');
-              }
-            }, this));
-            $(document).on('keyup', $.proxy(function(e) {
-              if (e.keyCode === 27) {
-                this.$cm.trigger('hide');
-              }
-            }, this));
-          }else{
-            cmIndicator.hide();
+            cmIndicator = $('<div>').appendTo(this.$node.find('header'));
+            ContextMenuIndicator.attachTo(cmIndicator, this.attr);
           }
         });
-
       });
     }
   }

@@ -9,3 +9,49 @@
 .bold {
   font-weight: bold;
 }
+
+@purple: #8E44AD;
+@blue: #2980b9;
+@green: #27ae60;
+@red: #c0392b;
+@orange: #f39c12;
+@cyan: #afc6d8;
+
+.withColors (@type, @selector: ~'') {
+  .withColors (@type, @selector, ~'purple', @purple);
+  .withColors (@type, @selector, ~'blue', @blue);
+  .withColors (@type, @selector, ~'green', @green);
+  .withColors (@type, @selector, ~'red', @red);
+  .withColors (@type, @selector, ~'orange', @orange);
+  .withColors (@type, @selector, ~'cyan', @cyan);
+}
+
+.withColors (background-light, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    background-color: rgba(red(@color), green(@color), blue(@color), 0.5);
+  }
+}
+
+.withColors (border, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    border-color: @color;
+  }
+}
+
+.withColors (background, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    background-color: @color;
+  }
+}
+
+.withColors (fill, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    fill: @color;
+  }
+}
+
+.withColors (stroke, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    stroke: @color;
+  }
+}

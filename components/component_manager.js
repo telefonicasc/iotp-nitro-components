@@ -10,16 +10,26 @@ define(
     
       create: function() {
         var name = Array.prototype.shift.call(arguments);
-        components[name] = defineComponent.apply(this, arguments);
-        return components[name];
+        components[name] = {
+          mixins: arguments,
+          component: defineComponent.apply(this, arguments)
+        };
+        return components[name].component;
       },
 
-      register: function(name, component) { 
-        components[name] = component;
+      // TODO:
+      extend: function() {
+        var baseName = Array.prototype.shift.call(arguments)
+          , name = Array.prototype.shift.call(arguments);
+
+        components[name] = {
+          mixins: ''
+        };
+        return components[name].component;
       },
 
       get: function(name) {
-        return components[name]; 
+        return components[name].component; 
       }
     };
 

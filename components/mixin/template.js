@@ -22,7 +22,13 @@ define(
           }
 
           this.on('valueChange', function(e, o) {
-            this.$node.html(this.compiledTpl.render(this.attr));
+            var data = $.extend({ value: o.value }, this.attr);
+            $.each(data, function(key, value) {
+              if ($.isFunction(value)) {
+                data[key] = value(o.value);
+              } 
+            });
+            this.$node.html(this.compiledTpl.render(data));
           });
         }
       });

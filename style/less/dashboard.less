@@ -10,7 +10,7 @@
   //
   // Styleguide 1.1
   .main-content {
-    margin: 30px;
+    margin: 25px;
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -20,31 +20,21 @@
     .dashboard-main-panel {
       
       position: relative;
+      margin-bottom: 14px;
 
       header {
         h1 {
           color: #708796;
           font-size: 20px;
           display: inline-block;
-        }
-
-        .context-menu-indicator {
-          display: inline-block;
-          width: 15px;
-          height: 15px;
-          margin: 6px 0px 0px 6px;
-          cursor: pointer;
-          background-image: url("@{image-path}/context-menu-indicator.png");
-        }
-
-        .context-menu-indicator:hover {
-          background-image: url("@{image-path}/context-menu-indicator-hover.png");
+          margin-bottom: 6px;
+          margin-top: 0px;
         }
       }
 
       .dashboard-main-panel-content {
         position: absolute;
-        top: 30px;
+        top: 33px;
         left: 0px;
         right: 0px;
         bottom: 0px;
@@ -68,6 +58,40 @@
     bottom: 0px;
     left: 0px;
     right: 0px;
+
+    .last-section-panel {
+      border-bottom: 1px solid #9ea3a5;
+    }
+
+    .date-range {
+      color: #b2c0cb;
+      font-size: 14px;
+      text-align: center;
+      height: 21px;
+      padding-top: 7px;
+    }
+  }
+
+  .vertical-panel-group {
+
+    height: 111px;
+
+    .vertical-panel {
+      width: 33%;
+      border-right: 1px solid #9ea3a5;
+      display: inline-block;
+      vertical-align: top;
+      height: 110px;
+      text-align: center;
+
+      .overview-subpanel-body .text {
+        font-size: 26px;
+      }
+    }
+
+    .last-vertical-panel {
+      border-right: none;
+    }
   }
 
   .overview-subpanel {
@@ -78,6 +102,28 @@
       width: 50px;
       height: 43px;
       display: inline-block;
+
+      &.dot {
+        width: 18px;
+        height: 18px;
+        border-style: solid;
+        border-width: 4px;
+        border-radius: 13px;
+        margin-left: 12px;
+        margin-right: 12px;
+        margin-top : 15px;
+
+        .withColors(border, ~"");
+        .withColors(background-light, ~""); 
+      }
+
+      &.arrow-down {
+        background: url("@{image-path}/arrow-down.png") no-repeat center center;        
+      }
+
+      &.arrow-up {
+        background: url("@{image-path}/arrow-up.png") no-repeat center center;        
+      }
     }
 
     .overview-subpanel-body {
@@ -124,9 +170,30 @@
 
 }
 
-.range-selection-chart {
+.chart {
+  .withColors(fill, ~' path.area');
+  .withColors(stroke, ~' path.line');
+  .withColors(stroke, ~' circle.hoverCircle');
 
-  border: 1px solid #b3b8be;
+  .hoverCircle {
+    stroke-width: 3px;
+    fill: white;
+    cursor: pointer;
+  }
+
+  .baseline {
+    stroke-width: 2px;
+    stroke: #7f8c8d;
+  }
+
+  .border {
+    fill: none;
+    stroke: #B3B8BE;
+    stroke-width: 1px;
+  }
+}
+
+.range-selection-chart {
 
   svg {
     position: absolute;
@@ -149,10 +216,12 @@
 
   .whole-chart path.area {
     fill: #CCCFD2;
+    opacity: 1;
   }
 
   .selected-chart path.area {
     fill: #EFD775;
+    opacity: 1;
   }
 
   .range-selection-handler {
@@ -183,5 +252,66 @@
   }
 }
 
+.chart {
+  .x.axis {
+    .domain {
+      display: none;
+    }
+    text {
+      fill: #3B3B3D;
+      font-weight: bold;
+      font-size: 13px;
+    }
+  }
 
+  .y.axis {
+    .domain {
+      display: none;
+    }
+    text{
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+  }
+}
+
+.radar-chart {
+  .axis line {
+    stroke: #ced7dc;
+    stroke-width: 3px;
+  }
+
+  .axis circle {
+    fill: #ced7dc;
+  }
+
+  .axis text {
+    text-anchor: middle;
+    font-size: 12px;
+    fill: #7c91a5;
+  }
+  
+  .radar.base path {
+    fill: #ced7dc;
+    fill-opacity: 0.4;
+    stroke-width: 2px;
+    stroke-dasharray: 5,3;
+    stroke: #ced7dc;
+  }
+
+  .radar.base circle {
+    fill: #ced7dc;
+  }
+
+  .radar path {
+    fill: #3498db;
+    stroke-width: 3px;
+    fill-opacity: 0.4;
+    stroke: #64737b;
+  }
+
+  .radar circle {
+    fill: #64737b;
+  }
+}
 

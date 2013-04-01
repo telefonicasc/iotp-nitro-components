@@ -1,13 +1,13 @@
 requirejs.config({
   baseUrl: '/m2m-nitro-components',
   nitroComponents: [
-    'components/application_menu',
-    'components/angular_directives'
   ]
 });
 
 define(
   [
+    'components/application_menu',
+    'components/angular_directives',
     'components/jquery_plugins'
   ],
 

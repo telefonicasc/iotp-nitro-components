@@ -9,7 +9,8 @@ module.exports = function(grunt) {
            options: {
              baseUrl: './node_modules/m2m-nitro-components/',
              out: 'app/lib/nitro_components/nitro_components.js',
-             include: components
+             include: ['libs/almond'].concat(components),
+             wrap: true
            }
         };
     grunt.config.set('requirejs.nitroComponents', requireCfg);

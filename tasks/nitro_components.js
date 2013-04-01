@@ -9,13 +9,17 @@ module.exports = function(grunt) {
            options: {
              baseUrl: './node_modules/m2m-nitro-components/',
              out: 'app/lib/nitro_components/nitro_components.js',
-             nitroComponents: components,
-             include: ['components/jquery_plugins']
+             include: components
            }
         };
     grunt.config.set('requirejs.nitroComponents', requireCfg);
-    console.log('adasda', grunt.config('requirejs.nitroComponents'));
     grunt.task.run('requirejs:nitroComponents');
+
+    var lesscfg = {
+      files: { 'style/css/nitro-components.css':'./node_modules/m2m-nitro-components/style/less/nitro-components.less' }
+    };
+    grunt.config.set('less.nitroComponents', lesscfg);
+    grunt.task.run('less:nitroComponents');
   });
 
 };

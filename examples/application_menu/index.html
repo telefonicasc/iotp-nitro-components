@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet/less" href="../../style/less/nitro-components.less" />
+  <style>
+  </style>
+</head>
+<body class="fit">
+  <div id="application" class="fit">
+    <nav 
+      data-nitro-component="applicationMenu" 
+      data-nitro-options="{ applicationContent: '#content' }">
+      <ul>
+        <li><a href="#"><span>Section 1</span></a></li>
+        <li><span>Section 2</span></li>
+        <li><span>Section 3</span></li>
+        <li><span>Section 4</span></li>
+        <li><span>Section 5</span></li>
+      </ul>
+    </nav>
+    <div id="content" class="application-content fit">
+
+    </div>
+  </div>
+
+  <script src="../../libs/jquery/jquery.js"></script>
+  <script src="../../libs/angular/angular.js"></script>
+  <script src="../../libs/less/less.js"></script>
+  <script data-main="main" src="../../libs/requirejs/require.js"></script>
+</body>
+</html>

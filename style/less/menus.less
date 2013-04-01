@@ -1,4 +1,40 @@
 
+.application-menu {
+  background-color: #2C3337;
+  font-family: Helvetica, Arial, sans-serif;
+
+  ul {
+    width: 300px;
+  }
+  
+  li {
+    height: 46px;
+    margin: 8px 0px;
+    background-color: #30373B;
+    color: #A0A4A5;
+    
+    span {
+      font-size: 14px;
+      display: block;
+      padding: 15px 10px 15px 55px;
+      background-image: url("@{image-path}/menu_icons.png");
+      background-repeat: no-repeat;
+      background-position: 6px -160px;
+    }
+  }
+
+  a:link, a:visited {
+    text-decoration: none;
+    color: #A0A4A5;
+  }
+}
+
+.application-content {
+  background-color: white;
+  left: 55px;
+  .drop-shadow(-6px, 0, 6px, 0.3);
+}
+
 .tooltip {
 
   display: none;

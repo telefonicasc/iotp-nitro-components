@@ -4,23 +4,14 @@ requirejs.config({
 
 define(
   [
-    'components/dashboard/dashboard',
-    'components/dashboard/dashboard_main_panel',
-    'components/container',
-    'components/chart/area_chart',
-    'components/chart/bar_chart',
-    'components/chart/radar_chart',
-    'components/chart/chart_container',
-    'components/chart/range_selection_chart',
-    'components/dashboard/overview_subpanel',
-    'components/toggle'
+    'components/jquery_plugins'
   ],
   
   function(Dashboard) {
 
     //window.randomData = generateRandomData();
 
-    Dashboard.attachTo('.dashboard', {
+    $('.dashboard').m2mdashboard({
       mainContent: [{
         component: 'dashboardMainPanel', 
         title: 'Online users',

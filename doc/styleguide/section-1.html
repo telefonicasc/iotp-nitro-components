@@ -19,6 +19,7 @@
 
 </head>
 <body><div id="kss-wrapper">
+  <header class="application-header"><h1>Nitro components</h1></header>  
   <div id="kss-nav">
     <header id="kss-header">
       <hgroup><h1>kss-node Styleguide</h1></hgroup>
@@ -29,7 +30,11 @@
         
           <li><a href="section-1.html">1.0: Dashboards</a></li>
         
-          <li><a href="section-2.html">2.0: Effects</a></li>
+          <li><a href="section-2.html">2.0: Cards</a></li>
+        
+          <li><a href="section-3.html">3.0: Effects</a></li>
+        
+          <li><a href="section-4.html">4.0: Buttons</a></li>
         
       </ul></nav>
     </aside>
@@ -56,10 +61,29 @@
             <h1 class="kss-title"><span class="kss-ref">1.0</span> - Flippable</h1>
           
             
+                <div class="kss-box"><p>Creates a 3D flip effect</p>
+</div>
+                <table class="kss-mod-list">
+                  <tr class="kss-mod-desc-group">
+                    <td class="kss-mod-desc"><p>Default styling</p></td>
+                    <td class="kss-mod-name"></td>
+                  </tr>
+                  <tr class="kss-mod-example">
+                    <td colspan="2">
+<div class="flippable">
+  <div class="front">Front side</div>
+  <div class="back">Back side</div>
+</div></td>
+                  </tr>
                 
-                  <p>Creates a 3D flip effect</p>
-
-                
+                </table>
+                <div class="kss-markup">
+                  <pre class="prettyprint lang-html">
+&lt;div class=&quot;flippable&quot;&gt;
+  &lt;div class=&quot;front&quot;&gt;Front side&lt;/div&gt;
+  &lt;div class=&quot;back&quot;&gt;Back side&lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
             
           
             </section>
@@ -89,6 +113,7 @@
   <script src="public/kss.js"></script>
   <script src="public/prettify.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="../../dist/nitro-components.js"></script>
   <script>
     $(document).ready(function(){
       var sidebarAdjust = function() {
@@ -109,6 +134,10 @@
       // Ensure code blocks are highlighted properly...
       $('pre>code').addClass('prettyprint');
       prettyPrint();
+
+      $('.flippable').on('click', function() {
+        $(this).toggleClass('flip');
+      });
 
     });
   </script>

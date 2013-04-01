@@ -30,6 +30,12 @@ define(
 
       get: function(name) {
         return components[name].component; 
+      },
+
+      each: function(fn) {
+        $.each(components, function(name, cmp) {
+          fn(name, cmp.component);
+        });
       }
     };
 

@@ -5,7 +5,7 @@ define(
 
   function(ComponentManager) {
 
-    ComponentManager.create('applicationMenu', ApplicationMenu);
+    ComponentManager.create('ApplicationMenu', ApplicationMenu);
 
     function ApplicationMenu() {
 

@@ -7,14 +7,20 @@ requirejs.config({
 
 define(
   [
-    'components/jquery_plugins'
+    'components/graph_editor',
+    'components/card/card',
+    'raphael'
   ],
 
   function() {
 
-    $('#editor').m2mgraphEditor({
+    requirejs(['components/jquery_plugins'], function() {
+
+      $('#editor').m2mgraphEditor({
+
+      });
+      $('.card').m2mcard();
 
     });
-    $('.card').m2mcard();
   }
 );

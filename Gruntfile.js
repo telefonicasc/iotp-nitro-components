@@ -52,7 +52,7 @@ module.exports = function(grunt) {
       components: {
         src: 'components/**/*.js',
         options: {
-          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js'],
+          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js'],
           specs: 'test/*_spec.js',
           template: require('grunt-template-jasmine-requirejs')
         }

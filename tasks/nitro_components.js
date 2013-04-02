@@ -10,6 +10,7 @@ module.exports = function(grunt) {
              baseUrl: './node_modules/m2m-nitro-components/',
              out: 'app/lib/nitro_components/nitro_components.js',
              include: ['libs/almond'].concat(components),
+             insertRequire: components,
              wrap: true
            }
         };

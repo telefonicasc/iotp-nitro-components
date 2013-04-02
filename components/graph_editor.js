@@ -1,8 +1,7 @@
 define(
   [
     'components/component_manager',
-    'components/draggable',
-    'raphael'
+    'components/draggable'
   ],
   
   function(ComponentManager, Draggable) {

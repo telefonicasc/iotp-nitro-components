@@ -9,7 +9,7 @@ define(
   [
     'components/graph_editor',
     'components/card/card',
-    'components/panel/sliding_panel',
+    'components/card/card_toolbox',
     'raphael'
   ],
 
@@ -21,7 +21,8 @@ define(
 
       });
       $('.card').m2mcard();
-      $('#toolbox').m2mSlidingPanel();
+      $('#toolbox').m2mCardToolbox();
+      $('#toolbox .panel-content').html('<h1>ASDASD ASD ASD<br>akajljasld</h1>');
 
     });
   }

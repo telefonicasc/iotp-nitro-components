@@ -6,35 +6,47 @@ define(
 
     var components = {};
 
+    function createComponent(name, mixins) {
+      var component = {
+            mixins: mixins,
+            flightComponent: defineComponent.apply(this, mixins)
+          };
+      component.flightComponent.componentName = name;
+      components[name] = component;
+      return component;
+    }
+
     var ComponentManager = {
     
       create: function() {
-        var name = Array.prototype.shift.call(arguments);
-        components[name] = {
-          mixins: arguments,
-          component: defineComponent.apply(this, arguments)
-        };
-        return components[name].component;
+        var args = Array.prototype.slice.call(arguments)
+          , name = args.shift();
+        return createComponent(name, args).flightComponent;
       },
 
-      // TODO:
       extend: function() {
-        var baseName = Array.prototype.shift.call(arguments)
-          , name = Array.prototype.shift.call(arguments);
+        var args = Array.prototype.slice.call(arguments)
+          , base = args.shift()
+          , name = args.shift()
+          , baseComponent, mixins;
 
-        components[name] = {
-          mixins: ''
-        };
-        return components[name].component;
+        if ($.isFunction(base)) {                    
+          baseComponent = components[base.componentName];
+        }else{
+          baseComponent = components[base];
+        }
+
+        mixins = baseComponent.mixins.concat(args);
+        return createComponent(name, mixins).flightComponent;
       },
 
       get: function(name) {
-        return components[name].component; 
+        return components[name].flightComponent; 
       },
 
       each: function(fn) {
         $.each(components, function(name, cmp) {
-          fn(name, cmp.component);
+          fn(name, cmp.flightComponent);
         });
       }
     };

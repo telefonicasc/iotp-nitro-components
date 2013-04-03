@@ -6,7 +6,7 @@ define(
 
   function(ComponentManager, Template) {
 
-    ComponentManager.create('SlidingPanel', Template, SlidingPanel);
+    return ComponentManager.create('BorderCollapsablePanel', Template, SlidingPanel);
 
     function SlidingPanel() {
 
@@ -20,15 +20,23 @@ define(
       });
 
       this.after('initialize', function() {
-        this.$node.addClass('sliding-panel');
+        this.$node.addClass('border-panel');
   
+        this.$toggle.on('click', $.proxy(function() {
+          if (this.expanded) {
+            this.trigger('collapse');
+          } else {
+            this.trigger('expand');
+          }
+        }, this));        
+
         this.on('expand', function() {
-          this.content.slideDown(400);
+          this.$content.slideDown(400);
           this.expanded = true;
         });
 
         this.on('collapse', function() {
-          this.content.slideUp(400); 
+          this.$content.slideUp(400); 
           this.expanded = false;
         });
 

@@ -8,7 +8,7 @@ define(
     var el = {
       bg : $('<div class="box-message-bg"></div>'),
       box : $('<div class="box-message-msg"></div>'),
-      title: $('<b></b>'),
+      title: $('<p class="box-message-title"></p>'),
       message: $('<p></p>'),
       btn : $('<button class="clean-gray">close</button>')
     };

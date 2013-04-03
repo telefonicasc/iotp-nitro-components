@@ -9,6 +9,7 @@ define(
   [
     'components/graph_editor',
     'components/card/card',
+    'components/panel/sliding_panel',
     'raphael'
   ],
 
@@ -20,6 +21,7 @@ define(
 
       });
       $('.card').m2mcard();
+      $('#toolbox').m2mSlidingPanel();
 
     });
   }

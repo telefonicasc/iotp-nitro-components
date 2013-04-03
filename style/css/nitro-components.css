@@ -1,3 +1,168 @@
+/*
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+*/
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+body {
+  line-height: 1;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+a {
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  background: transparent;
+  text-decoration: none;
+}
+/* change colours to suit your needs */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none;
+}
+/* change colours to suit your needs */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+del {
+  text-decoration: line-through;
+}
+abbr[title],
+dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/* change border colour to suit your needs */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0;
+}
+input,
+select {
+  vertical-align: middle;
+}
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
 .fit {
   position: absolute;
   top: 0px;
@@ -8,29 +173,12 @@
 .bold {
   font-weight: bold;
 }
-/*.withColors (border, @selector) {
-  &.purple@{selector} {
-    border-color: @purple;
-  }
-  &.blue@{selector} {
-    border-color: @blue;
-  }
-}
-
-.withColors (background, @selector) {
-  &.purple@{selector} {
-    background-color: @purple;
-  }
-  &.blue@{selector} {
-    background-color: @blue;
-  }
-}*/
 .dashboard {
   font-family: Helvetica, Arial, sans-serif;
   background-color: #E7E7E7;
 }
 .dashboard .main-content {
-  margin: 30px;
+  margin: 25px;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -39,15 +187,18 @@
 }
 .dashboard .main-content .dashboard-main-panel {
   position: relative;
+  margin-bottom: 14px;
 }
 .dashboard .main-content .dashboard-main-panel header h1 {
   color: #708796;
   font-size: 20px;
   display: inline-block;
+  margin-bottom: 6px;
+  margin-top: 0px;
 }
 .dashboard .main-content .dashboard-main-panel .dashboard-main-panel-content {
   position: absolute;
-  top: 30px;
+  top: 33px;
   left: 0px;
   right: 0px;
   bottom: 0px;
@@ -68,6 +219,33 @@
   left: 0px;
   right: 0px;
 }
+.dashboard .overview-content .last-section-panel {
+  border-bottom: 1px solid #9ea3a5;
+}
+.dashboard .overview-content .date-range {
+  color: #b2c0cb;
+  font-size: 14px;
+  text-align: center;
+  height: 21px;
+  padding-top: 7px;
+}
+.dashboard .vertical-panel-group {
+  height: 111px;
+}
+.dashboard .vertical-panel-group .vertical-panel {
+  width: 33%;
+  border-right: 1px solid #9ea3a5;
+  display: inline-block;
+  vertical-align: top;
+  height: 110px;
+  text-align: center;
+}
+.dashboard .vertical-panel-group .vertical-panel .overview-subpanel-body .text {
+  font-size: 26px;
+}
+.dashboard .vertical-panel-group .last-vertical-panel {
+  border-right: none;
+}
 .dashboard .overview-subpanel {
   border-bottom: 1px solid #D6DEE0;
   min-height: 55px;
@@ -76,6 +254,58 @@
   width: 50px;
   height: 43px;
   display: inline-block;
+}
+.dashboard .overview-subpanel .icon.dot {
+  width: 18px;
+  height: 18px;
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 13px;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 15px;
+}
+.dashboard .overview-subpanel .icon.dot.purple {
+  border-color: #8e44ad;
+}
+.dashboard .overview-subpanel .icon.dot.blue {
+  border-color: #2980b9;
+}
+.dashboard .overview-subpanel .icon.dot.green {
+  border-color: #27ae60;
+}
+.dashboard .overview-subpanel .icon.dot.red {
+  border-color: #c0392b;
+}
+.dashboard .overview-subpanel .icon.dot.orange {
+  border-color: #f39c12;
+}
+.dashboard .overview-subpanel .icon.dot.cyan {
+  border-color: #afc6d8;
+}
+.dashboard .overview-subpanel .icon.dot.purple {
+  background-color: rgba(142, 68, 173, 0.5);
+}
+.dashboard .overview-subpanel .icon.dot.blue {
+  background-color: rgba(41, 128, 185, 0.5);
+}
+.dashboard .overview-subpanel .icon.dot.green {
+  background-color: rgba(39, 174, 96, 0.5);
+}
+.dashboard .overview-subpanel .icon.dot.red {
+  background-color: rgba(192, 57, 43, 0.5);
+}
+.dashboard .overview-subpanel .icon.dot.orange {
+  background-color: rgba(243, 156, 18, 0.5);
+}
+.dashboard .overview-subpanel .icon.dot.cyan {
+  background-color: rgba(175, 198, 216, 0.5);
+}
+.dashboard .overview-subpanel .icon.arrow-down {
+  background: url("../../img/nitro-components/arrow-down.png") no-repeat center center;
+}
+.dashboard .overview-subpanel .icon.arrow-up {
+  background: url("../../img/nitro-components/arrow-up.png") no-repeat center center;
 }
 .dashboard .overview-subpanel .overview-subpanel-body {
   display: inline-block;
@@ -112,14 +342,73 @@
 .dashboard .overview-header .overview-title {
   padding-left: 10px;
 }
-.chart.purple path {
-  fill: #78599d;
+.chart.purple path.area {
+  fill: #8e44ad;
 }
-.chart.blue path {
-  fill: #6099ce;
+.chart.blue path.area {
+  fill: #2980b9;
 }
-.range-selection-chart {
-  border: 1px solid #b3b8be;
+.chart.green path.area {
+  fill: #27ae60;
+}
+.chart.red path.area {
+  fill: #c0392b;
+}
+.chart.orange path.area {
+  fill: #f39c12;
+}
+.chart.cyan path.area {
+  fill: #afc6d8;
+}
+.chart.purple path.line {
+  stroke: #8e44ad;
+}
+.chart.blue path.line {
+  stroke: #2980b9;
+}
+.chart.green path.line {
+  stroke: #27ae60;
+}
+.chart.red path.line {
+  stroke: #c0392b;
+}
+.chart.orange path.line {
+  stroke: #f39c12;
+}
+.chart.cyan path.line {
+  stroke: #afc6d8;
+}
+.chart.purple circle.hoverCircle {
+  stroke: #8e44ad;
+}
+.chart.blue circle.hoverCircle {
+  stroke: #2980b9;
+}
+.chart.green circle.hoverCircle {
+  stroke: #27ae60;
+}
+.chart.red circle.hoverCircle {
+  stroke: #c0392b;
+}
+.chart.orange circle.hoverCircle {
+  stroke: #f39c12;
+}
+.chart.cyan circle.hoverCircle {
+  stroke: #afc6d8;
+}
+.chart .hoverCircle {
+  stroke-width: 3px;
+  fill: white;
+  cursor: pointer;
+}
+.chart .baseline {
+  stroke-width: 2px;
+  stroke: #7f8c8d;
+}
+.chart .border {
+  fill: none;
+  stroke: #B3B8BE;
+  stroke-width: 1px;
 }
 .range-selection-chart svg {
   position: absolute;
@@ -138,9 +427,11 @@
 }
 .range-selection-chart .whole-chart path.area {
   fill: #CCCFD2;
+  opacity: 1;
 }
 .range-selection-chart .selected-chart path.area {
   fill: #EFD775;
+  opacity: 1;
 }
 .range-selection-chart .range-selection-handler {
   border: 2px solid #788d9a;
@@ -162,6 +453,52 @@
   fill: #d6dce2;
   stroke-width: 2px;
   stroke: #788d9a;
+}
+.chart .x.axis .domain {
+  display: none;
+}
+.chart .x.axis text {
+  fill: #3B3B3D;
+  font-weight: bold;
+  font-size: 13px;
+}
+.chart .y.axis .domain {
+  display: none;
+}
+.chart .y.axis text {
+  fill: #7F8C8D;
+  font-size: 12px;
+}
+.radar-chart .axis line {
+  stroke: #ced7dc;
+  stroke-width: 3px;
+}
+.radar-chart .axis circle {
+  fill: #ced7dc;
+}
+.radar-chart .axis text {
+  text-anchor: middle;
+  font-size: 12px;
+  fill: #7c91a5;
+}
+.radar-chart .radar.base path {
+  fill: #ced7dc;
+  fill-opacity: 0.4;
+  stroke-width: 2px;
+  stroke-dasharray: 5,3;
+  stroke: #ced7dc;
+}
+.radar-chart .radar.base circle {
+  fill: #ced7dc;
+}
+.radar-chart .radar path {
+  fill: #3498db;
+  stroke-width: 3px;
+  fill-opacity: 0.4;
+  stroke: #64737b;
+}
+.radar-chart .radar circle {
+  fill: #64737b;
 }
 .card .front,
 .card .back {
@@ -216,6 +553,62 @@
   z-index: 1000;
   -webkit-transform: perspective(300px) rotateY(0deg);
 }
+.button.green {
+  background-color: green;
+}
+.application-menu {
+  background-color: #2C3337;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.application-menu ul {
+  width: 300px;
+}
+.application-menu li {
+  height: 46px;
+  margin: 8px 0px;
+  background-color: #30373B;
+  color: #A0A4A5;
+}
+.application-menu li span {
+  font-size: 14px;
+  display: block;
+  padding: 15px 10px 15px 50px;
+}
+.application-menu a {
+  display: block;
+  margin-left: 8px;
+  background-image: url("../../img/nitro-components/menu_icons.png");
+  background-repeat: no-repeat;
+  background-position: 0px -160px;
+}
+.application-menu a:link,
+.application-menu a:visited {
+  text-decoration: none;
+  color: #A0A4A5;
+}
+.application-content {
+  background-color: white;
+  left: 55px;
+  -webkit-box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
+}
+.tooltip {
+  display: none;
+  font-family: Helvetica, Arial;
+  background-color: #34485F;
+  position: absolute;
+  margin-top: -35px;
+  color: white;
+  margin-left: -25px;
+  width: 50px;
+  padding: 6px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+  height: 20px;
+  border-radius: 3px;
+}
 .context-menu {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
@@ -255,7 +648,7 @@
   text-align: center;
 }
 .context-menu li.context-menu-title.back-link {
-  background: url("../../img/context-menu-back.png") no-repeat left center;
+  background: url("../../img/nitro-components/context-menu-back.png") no-repeat left center;
 }
 .context-menu li.context-menu-title:hover {
   background-color: transparent;
@@ -292,16 +685,40 @@
   opacity: 1;
 }
 .context-menu li.dot-toggle.selected.purple:before {
-  border-color: #78599d;
+  border-color: #8e44ad;
 }
 .context-menu li.dot-toggle.selected.blue:before {
-  border-color: #6099ce;
+  border-color: #2980b9;
+}
+.context-menu li.dot-toggle.selected.green:before {
+  border-color: #27ae60;
+}
+.context-menu li.dot-toggle.selected.red:before {
+  border-color: #c0392b;
+}
+.context-menu li.dot-toggle.selected.orange:before {
+  border-color: #f39c12;
+}
+.context-menu li.dot-toggle.selected.cyan:before {
+  border-color: #afc6d8;
 }
 .context-menu li.dot-toggle.selected.purple:before {
-  background-color: rgba(120, 89, 157, 0.5);
+  background-color: rgba(142, 68, 173, 0.5);
 }
 .context-menu li.dot-toggle.selected.blue:before {
-  background-color: rgba(96, 153, 206, 0.5);
+  background-color: rgba(41, 128, 185, 0.5);
+}
+.context-menu li.dot-toggle.selected.green:before {
+  background-color: rgba(39, 174, 96, 0.5);
+}
+.context-menu li.dot-toggle.selected.red:before {
+  background-color: rgba(192, 57, 43, 0.5);
+}
+.context-menu li.dot-toggle.selected.orange:before {
+  background-color: rgba(243, 156, 18, 0.5);
+}
+.context-menu li.dot-toggle.selected.cyan:before {
+  background-color: rgba(175, 198, 216, 0.5);
 }
 .context-menu .separator {
   padding: 0px;
@@ -331,10 +748,10 @@
 
 }
 .context-menu .submenu {
-  background: url("../../img/submenu-indicator.png") no-repeat right center;
+  background: url("../../img/nitro-components/submenu-indicator.png") no-repeat right center;
 }
 .context-menu .submenu:hover {
-  background: #6eb4db url("../../img/submenu-indicator-hover.png") no-repeat right center;
+  background: #6eb4db url("../../img/nitro-components/submenu-indicator-hover.png") no-repeat right center;
 }
 .context-menu-wrapper {
   overflow: hidden;
@@ -373,8 +790,8 @@
   height: 15px;
   margin: 6px 0px 0px 6px;
   cursor: pointer;
-  background-image: url("../../img/context-menu-indicator.png");
+  background-image: url("../../img/nitro-components/context-menu-indicator.png");
 }
 .context-menu-indicator:hover {
-  background-image: url("../../img/context-menu-indicator-hover.png");
+  background-image: url("../../img/nitro-components/context-menu-indicator-hover.png");
 }

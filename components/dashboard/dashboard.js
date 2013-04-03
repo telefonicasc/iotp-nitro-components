@@ -20,7 +20,7 @@ define(
 
       this.updateData = function() {
         this.attr.data($.proxy(function(data) {
-          this.$node.data('value', data);
+          this.$node.trigger('valueChange', { value: data });
         }, this));
       };
 

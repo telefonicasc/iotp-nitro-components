@@ -10,7 +10,6 @@ define(
     function TemplateMixin() {
 
       this.after('initialize', function() {
-
         if (this.attr.tpl) {
           this.compiledTpl = Hogan.compile(this.attr.tpl);
           this.$node.html(this.compiledTpl.render(this.attr));
@@ -30,6 +29,12 @@ define(
             });
             this.$node.html(this.compiledTpl.render(data));
           });
+        }
+
+        if (this.attr.nodes) {
+          $.each(this.attr.nodes, $.proxy(function(name, selector) {
+            this['$' + name] = $(selector, this.$node);
+          }, this));
         }
       });
     }

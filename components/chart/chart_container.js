@@ -78,12 +78,6 @@ define(
           }, this.attr.rangeSelection));
         }
 
-        this.on('changeData', function(e, attr, value) {
-          if (attr === 'value') {
-            this.trigger('valueChange', { value: value });
-          }
-        });        
-
         this.on('resize', function() {
           var chartSize = {
             width: this.width - this.attr.marginRight,

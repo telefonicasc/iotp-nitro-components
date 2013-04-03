@@ -194,7 +194,7 @@ define(
             }
           }
         }, {
-          component: 'overviewSubpanel',
+          component: 'OverviewSubpanel',
           iconClass: 'dot cyan',
           text: function(data) {
             if (data) {
@@ -205,7 +205,7 @@ define(
           },
           caption: 'Total registered users' 
         }, {
-          component: 'overviewSubpanel',
+          component: 'OverviewSubpanel',
           iconClass: 'dot blue',
           text: function(data) {
             if (data) {
@@ -216,7 +216,7 @@ define(
           },
           caption: 'Online registered users' 
         }, {
-          component: 'overviewSubpanel',
+          component: 'OverviewSubpanel',
           iconClass: 'dot purple',
           className: 'last-section-panel',
           text: function(data) {
@@ -230,7 +230,7 @@ define(
         }, {
           className: 'vertical-panel-group last-section-panel',
           items: [{
-            component: 'overviewSubpanel',
+            component: 'OverviewSubpanel',
             className: 'vertical-panel',
             iconClass: function(data) {              
               if (data) {
@@ -261,7 +261,7 @@ define(
             },
             caption: 'Conversion rate' 
           }, {
-            component: 'overviewSubpanel',
+            component: 'OverviewSubpanel',
             className: 'vertical-panel',
             iconClass: function(data) {              
               if (data) {
@@ -291,7 +291,7 @@ define(
             },
             caption: 'Deactivation churn' 
           }, {
-            component: 'overviewSubpanel',
+            component: 'OverviewSubpanel',
             className: 'vertical-panel last-vertical-panel',
             iconClass: function(data) {              
               if (data) {

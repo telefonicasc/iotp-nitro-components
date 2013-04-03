@@ -7,14 +7,22 @@ requirejs.config({
 
 define(
   [
-    'components/jquery_plugins'
+    'components/graph_editor',
+    'components/card/card',
+    'components/panel/sliding_panel',
+    'raphael'
   ],
 
   function() {
 
-    $('#editor').m2mgraphEditor({
+    requirejs(['components/jquery_plugins'], function() {
+
+      $('#editor').m2mgraphEditor({
+
+      });
+      $('.card').m2mcard();
+      $('#toolbox').m2mSlidingPanel();
 
     });
-    $('.card').m2mcard();
   }
 );

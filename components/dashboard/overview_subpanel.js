@@ -7,16 +7,16 @@ define(
 
   function(ComponentManager, DataBinding, Template) {
 
-    return ComponentManager.create('overviewSubpanel', 
+    return ComponentManager.create('OverviewSubpanel', 
         OverviewSubpanel, DataBinding, Template);
 
     function OverviewSubpanel() {
       
       this.defaultAttrs({
-        tpl: '<div class="icon {{iconClass}}"></div>' +
+        tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
              '<div class="overview-subpanel-body">' +
-               '<div class="text">{{text}}</div>' +
-               '<div class="caption">{{caption}}</div>' +
+               '<div class="text">{{text}}{{value.text}}</div>' +
+               '<div class="caption">{{caption}}{{value.caption}}</div>' +
              '</div>',
         iconClass: '',
         text: '',

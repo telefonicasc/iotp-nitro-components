@@ -31,13 +31,13 @@ define(
         }, this));
 
         this.on('expand', function(e, options) {
-          this.appContent.animate({
+          this.appContent.transition({
             left: this.attr.expandedWidth
           }, this.attr.expandDuration);
         }); 
 
         this.on('collapse', function(e, options) {
-          this.appContent.animate({
+          this.appContent.transition({
             left: this.attr.collapsedWidth
           }, this.attr.collapseDuration);
         });

@@ -22,7 +22,6 @@ define(
       });
       $('.card').m2mcard();
       $('#toolbox').m2mCardToolbox();
-      $('#toolbox .panel-content').html('<h1>ASDASD ASD ASD<br>akajljasld</h1>');
 
     });
   }

@@ -1,11 +1,11 @@
 define(
   [
-    'libs/flight/lib/component'
+    'components/component_manager'
   ],
 
-  function(defineComponent) {
+  function(ComponentManager) {
 
-    return defineComponent(Map);
+    return ComponentManager.create('map', Map);
 
     function Map() {
       
@@ -14,10 +14,11 @@ define(
         zoomMin: 1,
         zoomMax: 14
       });
-
+      
       this.after('initialize', function() {
         
-        this.map = mapbox.map(this.node)
+        this.$node.addClass('map');
+        this.$node.html(this.attr.contenido);
         
       });
     }

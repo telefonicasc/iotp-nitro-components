@@ -18,5 +18,17 @@ define(
         title: $('input[name=message]').val()
       });
     });
+
+    angular.module('testApp', ['nitroComponents'])
+      .run(function() {
+        console.log('init_app');
+      })
+      .controller('main', ['$scope', 'BoxMessage', function($scope, BM){
+        $scope.test = function(){
+          BM.open({message:'test'});
+        };
+      }]);
+
+    angular.bootstrap(document, ['testApp']);
   }
 );

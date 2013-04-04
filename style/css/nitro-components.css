@@ -795,3 +795,81 @@ select {
 .context-menu-indicator:hover {
   background-image: url("../../img/nitro-components/context-menu-indicator-hover.png");
 }
+.box-message-bg {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  zoom: 1;
+  background: #000;
+  -moz-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+  filter: alpha(opacity=50);
+}
+.box-message-msg {
+  z-index: 20001;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff;
+  width: 300px;
+  margin-left: -150px;
+  margin-top: -100px;
+  padding-top: 5px;
+  overflow: hidden;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.box-message-msg p {
+  padding: 5px 15px;
+}
+.box-message-msg div {
+  padding: 5px;
+  background-color: #eeeeee;
+  border-top: 1px solid #ccc;
+  text-align: center;
+}
+.box-message-msg button {
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #bbb;
+  border-radius: 3px;
+  color: #333;
+  font: bold 11px/1 "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  padding: 8px 0;
+  text-align: center;
+  text-shadow: 0 1px 0 #eee;
+  width: 150px;
+  cursor: pointer;
+  background: #eeeeee;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #cccccc));
+  background: -ms-linear-gradient(bottom, #eeeeee, #cccccc);
+  background: -moz-linear-gradient(center bottom, #eeeeee 0%, #cccccc 100%);
+  background: -o-linear-gradient(#cccccc, #eeeeee);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#eeeeee', GradientType=0);
+}
+.box-message-msg button:hover {
+  border: 1px solid #bbb;
+  border-bottom: 1px solid #999;
+  text-shadow: 0 1px 0 #ddd;
+  background: #dddddd;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #dddddd), color-stop(1, #bbbbbb));
+  background: -ms-linear-gradient(bottom, #dddddd, #bbbbbb);
+  background: -moz-linear-gradient(center bottom, #dddddd 0%, #bbbbbb 100%);
+  background: -o-linear-gradient(#bbbbbb, #dddddd);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbbbbb', endColorstr='#dddddd', GradientType=0);
+}
+.box-message-msg button:active {
+  border: 1px solid #aaa;
+  border-bottom: 1px solid #888;
+  -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+  box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+}
+.box-message-title {
+  font-weight: 800;
+}

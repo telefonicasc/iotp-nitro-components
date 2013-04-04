@@ -7,9 +7,7 @@ requirejs.config({
 
 define(
   [
-    'components/graph_editor',
-    'components/card/card',
-    'components/card/card_toolbox',
+    'components/card/rule_editor',
     'raphael'
   ],
 
@@ -17,11 +15,7 @@ define(
 
     requirejs(['components/jquery_plugins'], function() {
 
-      $('#editor').m2mgraphEditor({
-
-      });
-      $('.card').m2mcard();
-      $('#toolbox').m2mCardToolbox();
+      $('#editor').m2mRuleEditor({ });
 
     });
   }

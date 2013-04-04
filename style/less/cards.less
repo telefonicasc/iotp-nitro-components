@@ -1,9 +1,12 @@
 
 .card {
 
+  font-family: Helvetica, Arial, sans-serif;
+
   @width: 145px;
   @height: 180px;
   @flip-factor: 1.25;
+  @preview-factor: 0.75;
 
   .front, .back {
     background-color: white;
@@ -13,6 +16,9 @@
   }
 
   .front {
+
+    position: relative; 
+
     .header {
       background-color: #64737b;
       margin: 7px 7px 0px 7px;
@@ -21,6 +27,12 @@
     }
     .body {
       background-color: #dde6e9;
+      margin: 7px;
+      position: absolute;
+      top: 25px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
     }
   }
 
@@ -38,5 +50,34 @@
     }
 
   }
+}
 
+.start-card {
+  height: 85px;
+  width: 85px;
+  background-color: #77868E;
+  border: 8px solid white;
+  border-radius: 85px;
+  box-shadow: 0 0 8px #979797;
+}
+
+.card-placeholder {
+  border: 3px dashed #AAA;
+  width: 160px;
+  height: 120px;
+}
+
+.action-card {
+
+}
+
+.card-toolbox {
+  
+  .card {
+    float: left;
+  }
+}
+
+.graph-editor {
+  background-image: url("@{image-path}/ruleback.png");
 }

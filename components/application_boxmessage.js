@@ -3,15 +3,16 @@ define(
     'components/component_manager'
   ],
 
-  function(ComponentManager) {
+  function() {
 
     var el = {
       bg : $('<div class="box-message-bg"></div>'),
       box : $('<div class="box-message-msg"></div>'),
       title: $('<p class="box-message-title"></p>'),
       message: $('<p></p>'),
-      btn : $('<button class="clean-gray">close</button>')
-    };
+      btn : $('<button class="clean-gray"></button>')
+      },
+      BUTTON_TEXT = 'Close';
 
     var BoxMessage = {
       close:function(){
@@ -20,6 +21,7 @@ define(
         el.title.hide();
       },
       open:function(opt){
+        opt.buttonText = opt.buttonText || BUTTON_TEXT;
         if(opt.title){
           el.title.html(opt.title);
           el.title.show();
@@ -29,6 +31,7 @@ define(
           el.box.show();
           el.bg.show();
         }
+        el.btn.text(opt.buttonText);
       }
     };
 

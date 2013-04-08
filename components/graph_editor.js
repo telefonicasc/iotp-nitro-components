@@ -49,13 +49,20 @@ define(
         this.$nodes.on('drag', '*', $.proxy(function(e, ui) {
           if (e.target.parentNode === e.delegateTarget) {
             var dragNode = $(e.target);
-            dragNode.trigger('move', 
+            dragNode.trigger('moved', 
               { left: ui.position.left, top: ui.position.top }
             );
           }
         }, this));
 
-        this.$nodes.on('move', '*', $.proxy(function(e) {
+        this.$nodes.on('move', '*', $.proxy(function(e, o) {
+          if (e.target.parentNode === e.delegateTarget) {
+            $(e.target).css(o);
+            $(e.target).trigger('moved', o);
+          }
+        }, this));
+
+        this.$nodes.on('moved', '*', $.proxy(function(e) {
           if (e.target.parentNode === e.delegateTarget) {
             this.updateConnections(); 
           }

@@ -3,12 +3,13 @@ define(
     'components/component_manager',
     'components/graph_editor',
     'components/card/card_toolbox',
-    'components/card/card' 
+    'components/card/card',
+    'components/card/mixin/and_interaction'
   ],
 
-  function(ComponentManager, GraphEditor, CardToolbox, Card) {
+  function(ComponentManager, GraphEditor, CardToolbox, Card, AndInteraction) {
     
-    return ComponentManager.create('RuleEditor', RuleEditor);
+    return ComponentManager.create('RuleEditor', RuleEditor, AndInteraction);
     
     function RuleEditor() {
 
@@ -41,7 +42,8 @@ define(
         }, this));
 
         this.$graphEditor.on('connectionAdded', $.proxy(function(e, o) {
-          this.relayoutCards(o.connections);
+          this.connections = o.connections;
+          this.relayoutCards();
         }, this));
 
         this.$cardToolbox = $('<div>').appendTo(this.$node);
@@ -60,20 +62,75 @@ define(
       
         this.$startCard = $('<div>').addClass('start-card');
         this.$graphEditor.trigger('addNode', { node: this.$startCard });        
-
       });
 
-      this.relayoutCards = function(connections) {
-        var topCards = this.getTopCards(connections);
-        console.log('topCards', topCards);
+      this.relayoutCards = function() {
+        var cards = this.getAllCards()
+          , colWidth = 300
+          , height = this.$graphEditor.height();
+
+        this.calculatePositions();
+
+        cards.each(function(i) {
+          var el = $(this);
+          el.trigger('move', {
+            left: (el.data('col') + (el.data('colwidth') / 2)) * colWidth,
+            top: (el.data('row')+0.5) * height
+          });
+        });
       };
 
-      this.getTopCards = function(connections) {
-        var topCards = $('.node-container', this.$graphEditor).children();
-        $.each(connections, function(i, connection) {
+      this.calculatePositions = function(parentCard) {
+        var cards;
+
+        if (parentCard) {
+          cards = this.getConnectedTo(parentCard);
+        } else {
+          cards = this.getTopCards();
+        }
+  
+        cards.each($.proxy(function(i, el) {
+          var col;
+
+          if (parentCard) {
+            col = parentCard.data('col') + 1;
+          } else {
+            col = 0;
+          }
+
+          $(el).data('row', i);
+          $(el).data('rowheight', 1/cards.length);
+          $(el).data('col', col);
+          $(el).data('colwidth', 1);
+
+          this.calculatePositions(this.connections, $(el)); 
+        }, this));
+      };
+
+      this.getAllCards = function() {
+        return $('.node-container', this.$graphEditor).children();
+      };
+
+      this.getTopCards = function() {
+        var topCards = this.getAllCards();
+        $.each(this.connections, function(i, connection) {
           topCards = topCards.not(connection.end);
         });
         return topCards;
+      };
+
+      this.getConnectedTo = function(card) {
+        var connectedTo = $([]);
+        $.each(this.connections, function(i, connection) {
+          if (connection.start.is(card)) {
+            connectedTo = connectedTo.add(connection.end);
+          }
+        });
+        return connectedTo;
+      };
+
+      this.getConnectedFrom = function(card) {
+
       };
     }
   }

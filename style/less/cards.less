@@ -53,18 +53,23 @@
 }
 
 .start-card {
-  height: 85px;
-  width: 85px;
+  height: 84px;
+  width: 84px;
   background-color: #77868E;
   border: 8px solid white;
   border-radius: 85px;
   box-shadow: 0 0 8px #979797;
+  margin-left: -42px;
+  margin-top: -42px;
 }
 
 .card-placeholder {
   border: 3px dashed #AAA;
   width: 160px;
   height: 120px;
+  margin-left: -80px;
+  margin-top: -60px;
+  border-radius: 13px;
 }
 
 .action-card {
@@ -80,4 +85,10 @@
 
 .graph-editor {
   background-image: url("@{image-path}/ruleback.png");
+}
+
+.node-container {
+  .start-card, .card-placeholder, .card {
+    position: absolute;
+  }
 }

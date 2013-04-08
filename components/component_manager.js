@@ -24,6 +24,10 @@ define(
         return createComponent(name, args).flightComponent;
       },
 
+      createAnonymous: function() {
+        return defineComponent.apply(this, arguments);
+      },
+
       extend: function() {
         var args = Array.prototype.slice.call(arguments)
           , base = args.shift()

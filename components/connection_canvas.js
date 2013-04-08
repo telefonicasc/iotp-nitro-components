@@ -9,15 +9,15 @@ define(
       ConnectionCanvas);
 
     function ConnectionCanvas() {
-      
+
       this.defaultAttrs({
 
       });
 
       this.after('initialize', function() {
-        
-           
-         
+
+
+
       });
     }
   }

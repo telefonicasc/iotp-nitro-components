@@ -5,7 +5,7 @@ define(
   ],
 
   function(ComponentManager, ChartElement) {
-    
+
     return ComponentManager.create('axis',
       ChartElement, Axis);
 
@@ -19,7 +19,7 @@ define(
 
       this.after('initialize', function() {
 
-        if (this.attr.orientation === 'left' || 
+        if (this.attr.orientation === 'left' ||
             this.attr.orientation === 'right') {
           this.scale = this.scaley;
         } else {
@@ -31,7 +31,7 @@ define(
         this.axis
           .scale(this.scale)
           .orient(this.attr.orientation)
-          .ticks(this.attr.ticks);          
+          .ticks(this.attr.ticks);
 
         this.context.call(this.axis);
 
@@ -39,7 +39,7 @@ define(
           this.context.call(this.axis);
         });
       });
-      
+
     }
   }
 

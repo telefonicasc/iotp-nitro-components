@@ -3,12 +3,12 @@ define(
     'components/component_manager',
     'components/mixin/container',
     'components/context_menu_indicator',
-    'components/container'    
+    'components/container'
   ],
 
   function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
 
-    return ComponentManager.create('dashboardMainPanel', 
+    return ComponentManager.create('dashboardMainPanel',
       DashboardMainPanel, ContainerMixin);
 
     function DashboardMainPanel() {
@@ -24,10 +24,10 @@ define(
 
         this.before('renderItems', function() {
           this.attr.items = [{
-            tag: 'header', 
+            tag: 'header',
             items: [{
               tag: 'h1',
-              html: this.attr.title  
+              html: this.attr.title
             }]
           }, {
             component: 'container',

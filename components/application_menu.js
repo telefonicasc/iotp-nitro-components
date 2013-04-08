@@ -17,7 +17,7 @@ define(
       });
 
       this.after('initialize', function() {
-        
+
         this.$node.addClass('application-menu fit');
 
         this.appContent = $(this.attr.applicationContent);
@@ -34,7 +34,7 @@ define(
           this.appContent.animate({
             left: this.attr.expandedWidth
           }, this.attr.expandDuration);
-        }); 
+        });
 
         this.on('collapse', function(e, options) {
           this.appContent.animate({

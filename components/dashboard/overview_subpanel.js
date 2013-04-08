@@ -7,11 +7,11 @@ define(
 
   function(ComponentManager, DataBinding, Template) {
 
-    return ComponentManager.create('OverviewSubpanel', 
+    return ComponentManager.create('OverviewSubpanel',
         OverviewSubpanel, DataBinding, Template);
 
     function OverviewSubpanel() {
-      
+
       this.defaultAttrs({
         tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
              '<div class="overview-subpanel-body">' +
@@ -20,7 +20,7 @@ define(
              '</div>',
         iconClass: '',
         text: '',
-        caption: ''         
+        caption: ''
       });
 
       this.after('initialize', function() {

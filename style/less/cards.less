@@ -1,35 +1,41 @@
 
+@card-width: 160px;
+@card-height: 195px;
+@card-flip-factor: 1.25;
+@card-preview-factor: 0.75;
+@card-header-height: 40px;
+
 .card {
 
   font-family: Helvetica, Arial, sans-serif;
 
-  @width: 145px;
-  @height: 180px;
-  @flip-factor: 1.25;
-  @preview-factor: 0.75;
-
   .front, .back {
     background-color: white;
-    width: @width;
-    height: @height;
+    width: @card-width;
+    height: @card-height;
     box-shadow: 0px 2px 3px #AAA;
   }
 
   .front {
 
-    position: relative; 
+    position: absolute; 
 
     .header {
       background-color: #64737b;
       margin: 7px 7px 0px 7px;
-      height: 25px;
+      height: @card-header-height;
       color: white;      
+
+      h1 {
+        text-align: center;
+        padding-top: 13px;
+      }
     }
     .body {
       background-color: #dde6e9;
       margin: 7px;
       position: absolute;
-      top: 25px;
+      top: @card-header-height;
       left: 0px;
       right: 0px;
       bottom: 0px;
@@ -45,10 +51,13 @@
   &.flip {
 
     .front, .back {
-      width: round(@width*@flip-factor);
-      height: round(@height*@flip-factor);
+      width: round(@card-width*@card-flip-factor);
+      height: round(@card-height*@card-flip-factor);
     }
+  }
 
+  &.preview {
+    -webkit-transform: scale(@card-preview-factor);
   }
 }
 
@@ -80,6 +89,8 @@
   
   .card {
     float: left;
+    width: @card-width;
+    height: @card-height;
   }
 }
 
@@ -90,5 +101,10 @@
 .node-container {
   .start-card, .card-placeholder, .card {
     position: absolute;
+  }
+
+  .card {
+    margin-left: 0-round(@card-width/2);
+    margin-top: 0-round(@card-height/2);
   }
 }

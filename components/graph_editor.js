@@ -92,6 +92,16 @@ define(
         this.on('nodeRemoved', function() {
 
         });
+
+        this.on('saveConnections', function() {
+          this.savedConnections = $.extend(true, [], this.connections);
+          this.updateConnections();
+        });
+        
+        this.on('restoreConnections', function() {
+          this.connections = $.extend(true, [], this.savedConnections);
+          this.updateConnections();
+        });
       });  
 
       this.updateConnections = function() {

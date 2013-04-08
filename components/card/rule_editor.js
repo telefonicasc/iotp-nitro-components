@@ -20,6 +20,10 @@ define(
             cards: [{
             }, {
             }]
+          },
+          actions: {
+            label: 'Actions',
+            cards: []
           }
         },
       });

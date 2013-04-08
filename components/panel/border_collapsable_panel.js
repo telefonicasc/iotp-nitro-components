@@ -22,6 +22,8 @@ define(
       this.after('initialize', function() {
         this.$node.addClass('border-panel');
   
+        this.expanded = true;
+
         this.$toggle.on('click', $.proxy(function() {
           if (this.expanded) {
             this.trigger('collapse');

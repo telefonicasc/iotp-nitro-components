@@ -103,7 +103,7 @@ define(
           $(el).data('col', col);
           $(el).data('colwidth', 1);
 
-          this.calculatePositions(this.connections, $(el)); 
+          this.calculatePositions($(el)); 
         }, this));
       };
 

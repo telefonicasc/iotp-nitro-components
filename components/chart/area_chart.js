@@ -26,16 +26,9 @@ define(
             };
 
             this.after('initialize', function() {
-                var area = d3.svg.area()
-                            .x(this.x)
-                            .y0(this.height)
-                            .y1(this.y),
-                    line = d3.svg.line()
-                            .x(this.x)
-                            .y(this.y,
-                    pathArea,
-                    pathLine,
-                    tooltip;
+                var area = d3.svg.area().x(this.x).y0(this.height).y1(this.y),
+                    line = d3.svg.line().x(this.x).y(this.y),
+                    pathArea, pathLine, tooltip;
 
                 if (this.attr.tooltip) {
                     this.tooltip = $('<div>').addClass('tooltip')

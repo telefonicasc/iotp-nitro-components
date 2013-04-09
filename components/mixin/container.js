@@ -13,12 +13,12 @@ define(
       this.renderItems = function() {
         $.each(this.attr.items, $.proxy(function(i, item) {
           var newNode = $('<' + (item.tag || 'div') + '>');
-          
+
           if (item.className) {
             newNode.addClass(item.className);
           }
 
-          if (item.html) {            
+          if (item.html) {
             newNode.html(item.html);
           }
 
@@ -33,10 +33,10 @@ define(
           } else if (item.component) {
             ComponentManager.get(item.component).attachTo(newNode, item);
           } else if (item.items) {
-            ComponentManager.get('container').attachTo(newNode, item);            
+            ComponentManager.get('container').attachTo(newNode, item);
           } else {
             ComponentManager.get('component').attachTo(newNode, item);
-          }          
+          }
 
           if (this.attr.insertionPoint) {
             newNode.appendTo($(this.attr.insertionPoint, this.$node));
@@ -45,7 +45,7 @@ define(
           }
 
           // Prevent render event bubbling to avoid infinit loop
-          newNode.on('render', function() {            
+          newNode.on('render', function() {
             return false;
           });
 
@@ -62,15 +62,15 @@ define(
 
       this.after('initialize', function() {
         this.attr.items = this.attr.items || [];
-        this.renderItems();  
-        
+        this.renderItems();
+
         this.on('render', function() {
           this.rendered = true;
         });
-  
+
         if (jQuery.contains(document.documentElement, this.node)) {
           this.trigger('render');
-        }        
+        }
       });
     }
   }

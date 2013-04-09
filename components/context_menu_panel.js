@@ -3,8 +3,8 @@ define(
     'components/component_manager'
   ],
 
-  function (ComponentManager) {
-    
+  function(ComponentManager) {
+
     return ComponentManager.create('contextMenuPanel',
       ContextMenuPanel);
 
@@ -24,7 +24,7 @@ define(
             .on('click', $.proxy(function() {
               this.trigger('back');
             }, this))
-            .appendTo(this.$node);             
+            .appendTo(this.$node);
 
           if (this.attr.hasBack) {
             header.addClass('back-link');
@@ -35,7 +35,7 @@ define(
         $.each(this.attr.items, $.proxy(function(i, item) {
           var itemEl = $('<li>')
             .html(item.text)
-            .appendTo(this.$node)
+            .appendTo(this.$node);
 
           if (item.text === '--') {
             itemEl.html('');
@@ -43,7 +43,7 @@ define(
           } else {
             if (item.items) {
               itemEl.addClass('submenu');
-            } 
+            }
 
             if (item.component) {
               ComponentManager.get(item.component).attachTo(itemEl);
@@ -54,7 +54,7 @@ define(
             }
 
             itemEl.on('click', $.proxy(function() {
-              this.trigger('selected', item); 
+              this.trigger('selected', item);
             }, this));
           }
 

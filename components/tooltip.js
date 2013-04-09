@@ -2,8 +2,8 @@ define(
   [
     'components/component_manager'
   ],
-  
-  function (ComponentManager) {
+
+  function(ComponentManager) {
 
     return ComponentManager.create('tooltip',
       Tooltip);

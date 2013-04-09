@@ -4,14 +4,16 @@ define(
         'components/graph_editor',
         'components/card/card_toolbox',
         'components/card/card',
+        'components/card/mixin/interactions',
         'components/card/mixin/and_interaction'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-        Card, AndInteraction) {
-    
-        return ComponentManager.create('RuleEditor', RuleEditor, AndInteraction);
-    
+        Card, Interactions, AndInteraction) {
+
+        return ComponentManager.create('RuleEditor', RuleEditor,
+            Interactions, AndInteraction);
+
     function RuleEditor() {
 
       this.defaultAttrs({
@@ -70,9 +72,9 @@ define(
       });
 
       this.relayoutCards = function() {
-        var cards = this.getAllCards()
-          , colWidth = 300
-          , height = this.$graphEditor.height();
+        var cards = this.getAllCards(),
+            colWidth = 300,
+            height = this.$graphEditor.height();
 
         this.calculatePositions();
 
@@ -80,7 +82,7 @@ define(
           var el = $(this);
           el.trigger('move', {
             left: (el.data('col') + (el.data('colwidth') / 2)) * colWidth,
-            top: (el.data('row')+0.5) * height
+            top: (el.data('row') + 0.5) * height
           });
         });
       };
@@ -93,7 +95,7 @@ define(
         } else {
           cards = this.getTopCards();
         }
-  
+
         cards.each($.proxy(function(i, el) {
           var col;
 
@@ -104,11 +106,11 @@ define(
           }
 
           $(el).data('row', i);
-          $(el).data('rowheight', 1/cards.length);
+          $(el).data('rowheight', 1 / cards.length);
           $(el).data('col', col);
           $(el).data('colwidth', 1);
 
-          this.calculatePositions($(el)); 
+          this.calculatePositions($(el));
         }, this));
       };
 

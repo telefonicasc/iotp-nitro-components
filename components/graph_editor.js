@@ -50,13 +50,13 @@ define(
                 this.$nodes.on('drag', '*', $.proxy(function(e, ui) {
                     if (e.target.parentNode === e.delegateTarget) {
                         var dragNode = $(e.target);
-                        dragNode.trigger('move',
+                        dragNode.trigger('moved',
                             { left: ui.position.left, top: ui.position.top }
                         );
                     }
                 }, this));
 
-                this.$nodes.on('move', '*', $.proxy(function(e) {
+                this.$nodes.on('move', '*', $.proxy(function(e, o) {
                     if (e.target.parentNode === e.delegateTarget) {
                         $(e.target).css(o);
                         $(e.target).trigger('moved', o);
@@ -113,14 +113,17 @@ define(
 
             this.getPathArray = function(start, end) {
                 var pathArray = [],
-                    startPosition = start.position(),
-                    endPosition = end.position(),
+                    startPosition = start.offset(),
+                    endPosition = end.offset(),
                     diffX = endPosition.left - startPosition.left,
                     diffY = endPosition.top - startPosition.top;
 
-                    pathArray.push('M', startPosition.left, startPosition.top,
-                        'c', 100, 0);
-                    pathArray.push(diffX - 100, diffY, diffX, diffY);
+                console.log(endPosition.left, endPosition.top);
+
+                pathArray.push('M', startPosition.left, startPosition.top,
+                    'c', 100, 0);
+
+                pathArray.push(diffX - 100, diffY, diffX, diffY);
 
                 return pathArray;
             };

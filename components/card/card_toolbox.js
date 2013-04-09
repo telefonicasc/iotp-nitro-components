@@ -9,11 +9,11 @@ define(
 
   function(ComponentManager, BorderCollapsablePanel, Card, Draggable, RadioButton) {
 
-    return ComponentManager.extend(BorderCollapsablePanel, 
+    return ComponentManager.extend(BorderCollapsablePanel,
         'CardToolbox', CardToolbox);
 
     function CardToolbox() {
-      
+
       this.defaultAttrs({
         cardDefaults: {
           flippable: false

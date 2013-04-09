@@ -25,7 +25,7 @@ define(
             $.each(data, function(key, value) {
               if ($.isFunction(value)) {
                 data[key] = value(o.value);
-              } 
+              }
             });
             this.$node.html(this.compiledTpl.render(data));
           });
@@ -40,4 +40,4 @@ define(
     }
   }
 );
-  
+

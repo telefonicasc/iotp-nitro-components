@@ -6,7 +6,7 @@ define(
     'components/card/card_side'
   ],
   function(ComponentManager, Template, Flippable, CardSide) {
-    
+
     return ComponentManager.create('card', Template, Card);
 
     function Card() {
@@ -17,7 +17,7 @@ define(
              '<div class="back"></div>',
         nodes: {
           front: '.front',
-          back: '.back'          
+          back: '.back'
         },
         front: {
         },
@@ -34,7 +34,7 @@ define(
 
         if (this.attr.flippable) {
           Flippable.attachTo(this.node);
-        }else{
+        }else {
           this.$back.hide();
         }
       });

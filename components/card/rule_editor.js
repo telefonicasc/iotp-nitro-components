@@ -1,15 +1,16 @@
 define(
-  [
-    'components/component_manager',
-    'components/graph_editor',
-    'components/card/card_toolbox',
-    'components/card/card',
-    'components/card/mixin/and_interaction'
-  ],
+    [
+        'components/component_manager',
+        'components/graph_editor',
+        'components/card/card_toolbox',
+        'components/card/card',
+        'components/card/mixin/and_interaction'
+    ],
 
-  function(ComponentManager, GraphEditor, CardToolbox, Card, AndInteraction) {
+    function(ComponentManager, GraphEditor, CardToolbox,
+        Card, AndInteraction) {
     
-    return ComponentManager.create('RuleEditor', RuleEditor, AndInteraction);
+        return ComponentManager.create('RuleEditor', RuleEditor, AndInteraction);
     
     function RuleEditor() {
 
@@ -25,19 +26,19 @@ define(
             label: 'Actions',
             cards: []
           }
-        },
+        }
       });
 
       this.after('initialize', function() {
-      
+
         this.$graphEditor = $('<div>').addClass('fit').appendTo(this.$node);
         GraphEditor.attachTo(this.$graphEditor, {});
 
         this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
-          var node = o.node
-            , placeholder = $('<div>').addClass('card-placeholder action-card');
+          var node = o.node,
+              placeholder = $('<div>').addClass('card-placeholder action-card');
 
-          if (!node.hasClass('card-placeholder')) {            
+          if (!node.hasClass('card-placeholder')) {
             this.$graphEditor.trigger('addNode', { node: placeholder });
             this.$graphEditor.trigger('addConnection', {
               start: node, end: placeholder
@@ -51,7 +52,7 @@ define(
         }, this));
 
         this.$cardToolbox = $('<div>').appendTo(this.$node);
-        CardToolbox.attachTo(this.$cardToolbox, { 
+        CardToolbox.attachTo(this.$cardToolbox, {
           cardSections: this.attr.cardSections
         });
 
@@ -63,9 +64,9 @@ define(
             this.$graphEditor.trigger('addNode', { node: newCard });
           }, this)
         });
-      
+
         this.$startCard = $('<div>').addClass('start-card');
-        this.$graphEditor.trigger('addNode', { node: this.$startCard });        
+        this.$graphEditor.trigger('addNode', { node: this.$startCard });
       });
 
       this.relayoutCards = function() {

@@ -2,7 +2,7 @@ define(
   [],
 
   function() {
-    
+
     return WatchResize;
 
     function WatchResize() {
@@ -26,7 +26,7 @@ define(
         }, this);
 
         this.on('resize', function(e) {
-          e.stopPropagation(); 
+          e.stopPropagation();
         });
 
         this.on('render', function() {
@@ -38,4 +38,4 @@ define(
     }
 
   }
-)
+);

@@ -1,10 +1,10 @@
 define(
   [
-    'components/component_manager'    
+    'components/component_manager'
   ],
 
   function(ComponentManager) {
-    
+
     return ComponentManager.create('CardSide', CardSide);
 
     function CardSide() {
@@ -13,10 +13,10 @@ define(
         header: 'Card'
       });
 
-      this.after('initialize', function() { 
+      this.after('initialize', function() {
         if (this.attr.header) {
           this.$header = $('<div>').addClass('header').appendTo(this.$node);
-          if (typeof this.attr.header === "string") {
+          if (typeof this.attr.header === 'string') {
             $('<h1>').html(this.attr.header).appendTo(this.$header);
           }
         }

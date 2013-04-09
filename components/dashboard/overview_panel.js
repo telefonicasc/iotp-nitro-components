@@ -6,14 +6,14 @@ define(
   ],
 
   function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
-    
+
     window.aa = ComponentManager;
 
-    return ComponentManager.create('overviewPanel', 
+    return ComponentManager.create('overviewPanel',
         DashboardOverview, ContainerMixin);
 
     function DashboardOverview() {
-      
+
       this.defaultAttrs({
         insertionPoint: '.overview-content',
         title: '',
@@ -29,7 +29,7 @@ define(
             .appendTo(this.$headerNode)
             .html(this.attr.count);
 
-        this.$titleNode  = $('<span>')
+        this.$titleNode = $('<span>')
             .addClass('overview-title')
             .appendTo(this.$headerNode)
             .html(this.attr.title);
@@ -39,7 +39,7 @@ define(
         this.$contentNode = $('<div>')
             .addClass('overview-content')
             .appendTo(this.$node);
-        
+
         if (this.attr.contextMenu) {
           this.cmIndicator = $('<div>').appendTo(this.$headerNode);
           ContextMenuIndicator.attachTo(this.cmIndicator, this.attr);

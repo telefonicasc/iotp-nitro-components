@@ -10,7 +10,7 @@ define(
       Toggle, DataBinding);
 
     function Toggle() {
-    
+
       this.defaultAttrs({
 
       });
@@ -26,7 +26,7 @@ define(
         this.on('valueChange', function(e, options) {
           this.value = options.value;
           this.$node.toggleClass('selected', this.value);
-        });        
+        });
       });
     }
   }

@@ -78,6 +78,16 @@ module.exports = function(grunt) {
           }
         }
       }
+    },
+
+    closureLint: {
+      app: { 
+        closureLinterPath: '/usr/bin/',
+        src: ['components/**'],
+        options: {
+          stdout: true
+        }
+      }
     }
   });
 
@@ -86,6 +96,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-styleguide');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-closure-linter');
 
   grunt.registerTask('build', ['requirejs']);
   grunt.registerTask('test', ['jasmine']);

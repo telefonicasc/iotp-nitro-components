@@ -24,9 +24,9 @@ define(
 				    zoomMax: 22,
                     hostDiv: 'dashmap',
 				    markers: [
-				        { lat:40.5155,lon:-3.6650 }, 
+				        { lat:40.5155,lon:-3.6650, symbol: 'police' }, 
 					    { lat:40.5125, lon:-3.6660, color:'#DC1010' },
-					    { lat:40.51, lon:-3.665, color:'#0040FF' }
+					    { lat:40.51, lon:-3.665, color:'#0040FF', symbol: 'triangle' }
 				    ]
                 }],
                 overviewPanel: {},

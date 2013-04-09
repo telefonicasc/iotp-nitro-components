@@ -54,6 +54,7 @@ function(ComponentManager) {
 			data.color = data.color == null ? '#000' : data.color;
             data.title = data.title == null ? '' : data.title;
             data.description = data.description == null ? '' : data.description;
+            data.symbol = data.symbol == null ? 'star' : data.symbol;
 
 			console.log(
                 'Event: lat:' + data.lat + 
@@ -67,7 +68,7 @@ function(ComponentManager) {
 				geometry: { coordinates: [data.lon, data.lat] },
 				properties: {
 					'marker-color': data.color,
-					'marker-symbol': 'star-stroked',
+					'marker-symbol': data.symbol,
 					title: 'Example marker',
 					description: 'Example description'
 					}

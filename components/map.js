@@ -23,7 +23,10 @@ function(ComponentManager) {
       
         this.after('initialize', function() {
             // Creating map	
-			this.mapC = mapbox.map(this.attr.hostDiv);
+            //
+            this.$node.addClass('fit');
+            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);
+			this.mapC = mapbox.map(this.$nodeMap[0]);
 			this.mapC.addLayer(mapbox.layer().id(this.attr.mapId));
 			this.mapC.setZoomRange(this.attr.zoomMin, this.attr.zoomMax);
 			this.centerZoom(this.attr.center, this.attr.zoomInitial);

@@ -162,7 +162,13 @@ define(
       overviewPanel: {
         title: 'Days of user stats',
         contextMenu: {
+          onSelect: function(item) {
+            if (item.actionid === 'export') {
+              window.location = 'http://mongodb1-1/CE/excel/ce.xls'; 
+            }
+          },
           items: [{
+            actionid: 'export',
             text: 'Export data'
           }, {
             text: '--'

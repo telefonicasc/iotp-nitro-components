@@ -13,22 +13,39 @@ define(
     function() {
 
         requirejs(['components/jquery_plugins'], function() {
-            
+        
         $('.dashboard').m2mdashboard({
             mainContent: [{
-                    component: 'map',
-                    contenido: 'Contenido de ejemplo',
-				    center: { lat: 40.515512, lon: -3.65 }, 
-	  			    zoomInitial: 14,
-				    zoomMin: 1,
-				    zoomMax: 22,
-                    hostDiv: 'dashmap',
-				    markers: [
-				        { lat:40.5155,lon:-3.6650, symbol: 'police' }, 
-					    { lat:40.5125, lon:-3.6660, color:'#DC1010' },
-					    { lat:40.51, lon:-3.665, color:'#0040FF', symbol: 'triangle' }
-				    ]
-                }],
+                component: 'map',
+                useToolTipFormatter: true,
+                showZoomButtons: true,
+				center: { lat: 40.515, lon: -3.667 },
+	  			zoomInitial: 14,
+				zoomMin: 1,
+				zoomMax: 22,
+				markers: [
+				    { 
+                        lat:40.515,
+                        lon:-3.665,
+                        symbol: 'police',
+                        title: 'Marker 1'
+                    }, 
+					{ 
+                        lat:40.515, 
+                        lon:-3.670, 
+                        color:'#DC1010',
+                        title: 'Marker 2'
+                    },
+					{ 
+                        lat:40.515, 
+                        lon:-3.675, 
+                        color:'#0040FF', 
+                        symbol: 'triangle',
+                        title: 'Marker 3',
+                        description: 'This is marker 3'
+                    }
+				]
+            }],
                 overviewPanel: {},
                 data: function() {}
             });
@@ -38,23 +55,22 @@ define(
             'click', 
             function () {
                 console.log("Test button clicked");
-                $(this).trigger('triggerTest');
-                //$('#-zoom-14').trigger('triggerTest');
-                //console.log($('#-zoom-14').html());
+                $(this).trigger('triggerTest',{text:'token'});
+                $(this).trigger('echo');
+            }
+        );
+               
+        $('#testButton').on(
+            'triggerTest', 
+            function (param) {
+                console.log('Main.js received event :"triggerTest" at ' + Date() + ' ' + param.text);
             }
         );
 
-        $('#testButton').on(
-            'addMarker', 
+        $(this).on(
+            'echo-test',
             function () {
-                console.log('this works');
-            }
-        );
-       
-        $('#testButton').on(
-            'triggerTest', 
-            function () {
-                console.log('Main.js received event :"triggerTest" at ' + Date());
+                console.log('Main.js :: trigger["echo-test"]');
             }
         );
     }

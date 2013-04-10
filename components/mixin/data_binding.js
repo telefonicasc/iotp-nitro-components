@@ -1,7 +1,9 @@
 define(
-    [],
+    [
+        'libs/jsonpath'
+    ],
 
-    function() {
+    function(jsonPath) {
 
         return DataBinding;
 
@@ -26,10 +28,21 @@ define(
                         value = o.value;
 
                     if (model) {
+                        // If model is a function get the value calling
+                        // that function. Value of parent component is passed
                         if ($.isFunction(model)) {
                             value = model(value);
+
+                        // If model is an object we take it as the value
                         } else if ($.isPlainObject(model)) {
                             value = model;
+
+                        // If model is a JSON path string
+                        } else if (model.indexOf('$') === 0) {
+                            value = jsonPath(value, model);
+
+                        // If model is just a string take the property of the
+                        // object with that name
                         } else {
                             value = value[model];
                         }

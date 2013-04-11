@@ -7,8 +7,9 @@ define(
 
         function Interactions() {
 
-            var interactions = [];
-            var interactionAreas = [];
+            var interactions = [],
+                interactionAreas = [],
+                activeArea = null;
 
             this.registerInteraction = function(options) {
                 interactions.push(options);
@@ -21,13 +22,7 @@ define(
                 }, this));
 
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {
-                    var position = {},
-                        componentOffset = this.$node.offset(),
-                        helperOffset = $(ui.helper).offset();
-
-                    position.left = helperOffset.left - componentOffset.left;
-                    position.top = helperOffset.top - componentOffset.top;
-                    this.onDrag(position, $(ui.helper));
+                    this.onDrag($(ui.helper));
                 }, this));
             });
 
@@ -45,8 +40,10 @@ define(
                 }, this));
             };
 
-            this.onDrag = function(position, card) {
-                var left = position.left,
+            this.onDrag = function(card) {
+                var newActive,
+                    position = card.data(),
+                    left = position.left,
                     top = position.top;
                 $.each(interactionAreas, $.proxy(function(i, area) {
                     if (left > area.left + 100 &&
@@ -54,9 +51,14 @@ define(
                         top > area.top &&
                         top < area.top + 200) {
 
-                        area.interaction.activate.call(this, area, card);
+                        newActive = area;
                     }
                 }, this));
+
+                if (newActive && newActive !== activeArea) {
+                    newActive.interaction.activate.call(this, newActive, card);
+                }
+                activeArea = newActive;
             };
 
             this.onDragStop = function() {

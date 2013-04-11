@@ -50,14 +50,16 @@ define(
                 this.$nodes.on('drag', '*', $.proxy(function(e, ui) {
                     if (e.target.parentNode === e.delegateTarget) {
                         var dragNode = $(e.target);
-                        dragNode.trigger('moved',
-                            { left: ui.position.left, top: ui.position.top }
-                        );
+                        dragNode.data({
+                            left: ui.position.left, top: ui.position.top
+                        }); 
+                        dragNode.trigger('moved');
                     }
                 }, this));
 
                 this.$nodes.on('move', '*', $.proxy(function(e, o) {
                     if (e.target.parentNode === e.delegateTarget) {
+                        $(e.target).data({ left: o.left, top: o.top });
                         $(e.target).css(o);
                         $(e.target).trigger('moved', o);
                       }
@@ -69,8 +71,18 @@ define(
                      }
                 }, this));
 
-                this.on('removeConnection', function() {
-
+                this.on('removeConnection', function(e, o) {
+                    var connection = this.getConnection(o.start, o.end),
+                        index;
+                    if (connection) {
+                        connection.path.remove();
+                        index = this.connections.indexOf(connection);
+                        this.connections.splice(index, 1);
+                    }
+                });
+                
+                this.on('insertAfter', function(e, o) {
+                    
                 });
 
                 this.on('addNode', function(e, o) {
@@ -83,7 +95,7 @@ define(
                 });
 
                 this.on('removeNode', function(e, o) {
-
+                    
                 });
 
                 this.on('nodeAdded', function() {
@@ -102,6 +114,10 @@ define(
                     this.connections = $.extend(true, [], this.savedConnections);
                     this.updateConnections();
                 });
+
+                this.on('updateConnections', function() {
+                    this.updateConnections();
+                });
             });
 
             this.updateConnections = function() {
@@ -110,15 +126,25 @@ define(
                         this.getPathArray(connection.start, connection.end));
                 }, this));
             };
+            
+            this.getConnection = function(start, end) {
+                var conn = null;
+
+                $.each(this.connections, $.proxy(function(i, connection) {
+                    if (connection.start.is(start) && connection.end.is(end)) {
+                        conn = connection;
+                    }
+                }, this));
+
+                return conn;
+            };
 
             this.getPathArray = function(start, end) {
                 var pathArray = [],
-                    startPosition = start.offset(),
-                    endPosition = end.offset(),
+                    startPosition = start.data(),
+                    endPosition = end.data(),
                     diffX = endPosition.left - startPosition.left,
                     diffY = endPosition.top - startPosition.top;
-
-                console.log(endPosition.left, endPosition.top);
 
                 pathArray.push('M', startPosition.left, startPosition.top,
                     'c', 100, 0);

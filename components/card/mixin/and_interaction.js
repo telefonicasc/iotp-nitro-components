@@ -25,7 +25,13 @@ define(
         }
 
         function activate(area, card) {
-            console.log('activate');
+            var nextcard = this.getConnectedTo(area.card);
+
+            this.addConnection(area.card, card);
+            if (nextcard) {
+                this.removeConnection(area.card, nextcard);
+                this.addConnection(card, nextcard);
+            }
         }
     }
 );

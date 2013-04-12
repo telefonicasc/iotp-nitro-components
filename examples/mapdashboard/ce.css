@@ -6,6 +6,35 @@
   right: 0px; 
 }
 
+
+.zoomer {
+    background-color:#FFF;
+    border-color:#202020;
+    -webkit-border-radius:25%;
+    border-radius:20%;
+    position:absolute;
+    font-size:30px;
+    width:30px;
+    height:30px;
+    color:black;
+    text-align:center;
+    border:1px solid #C0C0C0; 
+    vertical-align:middle;
+}
+
+.zoomer:hover {
+    background-color:#C0C0C0;
+}
+
+.zoomin {
+    left:31px;
+}
+
+.zoomout {
+    left:0px;
+}
+
+
 .chart {
   position: absolute;
   top: 0px;

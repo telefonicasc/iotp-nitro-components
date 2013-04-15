@@ -19,7 +19,7 @@ define(
               width: 45,
               barPadding: 4
             },
-            data: [{ key: 'gains', value: '87' }, { key: 'losses', value: '46' }, ... ]    //values from 0 - 100 
+            data: [ { gains: 87 }, { losses: 46 }, ... ]    //values from 0 - 100 
           }
         }
    */
@@ -49,26 +49,30 @@ define(
   	       
   	       svg.selectAll("rect")
   			   .data(_data).enter().append("rect")
-  			   .attr("x", function(d, i) {
+  			   .attr("x", function(obj, i) {
   	    			return i * (_chartConf.width + _chartConf.barPadding);
   				 })
-  			   .attr("y", function(d) {
-  	    			return _chartConf.maxHeight - d.value*_chartConf.maxHeight/100; 
+  			   .attr("y", function(obj) {
+              var value = obj[Object.keys(obj)[0]];
+  	    			return _chartConf.maxHeight - value*_chartConf.maxHeight/100; 
   				 })
   			   .attr("width", _chartConf.width)
-  			   .attr("height", function(d) {
-  	          return parseInt(d.value)*_chartConf.maxHeight/100;
+  			   .attr("height", function(obj) {
+              var key = Object.keys(obj)[0];
+              var value = obj[key];
+  	          return parseInt(value)*_chartConf.maxHeight/100;
   	       });
 
            svg.selectAll("text")
            .data(_data).enter().append("text")
-  	       .text(function(d) {
-                return d.key;
+  	       .text(function(obj) {
+                var key = Object.keys(obj)[0];
+                return key;
   	   		 })
-           .attr("x", function(d, i) {
+           .attr("x", function(obj, i) {
                 return i * (_chartConf.width+_chartConf.barPadding)+ _chartConf.width/2;
            })
-           .attr("y", function(d) {
+           .attr("y", function(obj) {
                 return (_chartConf.maxHeight-_chartConf.barPadding-2);
            })
            

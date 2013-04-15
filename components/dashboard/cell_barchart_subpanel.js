@@ -39,42 +39,42 @@ define(
 
         this.createChart = function(){
 
-           var _chartConf = this.attr.chart.conf;
-           var _data = this.attr.chart.data;
+            var _chartConf = this.attr.chart.conf;
+            var _data = this.attr.chart.data;
 
-  			   var svg = d3.select(this.node)
-  	          .append("svg")
-  	          .attr("width", _chartConf.width*_data.length + _chartConf.barPadding*(_data.length - 1))
-  	          .attr("height", _chartConf.maxHeight);       
-  	       
-  	       svg.selectAll("rect")
-  			   .data(_data).enter().append("rect")
-  			   .attr("x", function(obj, i) {
-  	    			return i * (_chartConf.width + _chartConf.barPadding);
-  				 })
-  			   .attr("y", function(obj) {
+            var svg = d3.select(this.node)
+            .append("svg")
+            .attr("width", _chartConf.width*_data.length + _chartConf.barPadding*(_data.length - 1))
+            .attr("height", _chartConf.maxHeight);       
+
+            svg.selectAll("rect")
+            .data(_data).enter().append("rect")
+            .attr("x", function(obj, i) {
+              return i * (_chartConf.width + _chartConf.barPadding);
+            })
+            .attr("y", function(obj) {
               var value = obj[Object.keys(obj)[0]];
-  	    			return _chartConf.maxHeight - value*_chartConf.maxHeight/100; 
-  				 })
-  			   .attr("width", _chartConf.width)
-  			   .attr("height", function(obj) {
+              return _chartConf.maxHeight - value*_chartConf.maxHeight/100; 
+            })
+            .attr("width", _chartConf.width)
+            .attr("height", function(obj) {
               var key = Object.keys(obj)[0];
               var value = obj[key];
-  	          return parseInt(value)*_chartConf.maxHeight/100;
-  	       });
+              return parseInt(value)*_chartConf.maxHeight/100;
+            });
 
-           svg.selectAll("text")
-           .data(_data).enter().append("text")
-  	       .text(function(obj) {
+            svg.selectAll("text")
+            .data(_data).enter().append("text")
+            .text(function(obj) {
                 var key = Object.keys(obj)[0];
                 return key;
-  	   		 })
-           .attr("x", function(obj, i) {
+             })
+            .attr("x", function(obj, i) {
                 return i * (_chartConf.width+_chartConf.barPadding)+ _chartConf.width/2;
-           })
-           .attr("y", function(obj) {
+            })
+            .attr("y", function(obj) {
                 return (_chartConf.maxHeight-_chartConf.barPadding-2);
-           })
+            })
            
         }
         
@@ -84,14 +84,14 @@ define(
             tag: 'div',
             html: '<div class="title"><div>'+_text.title.value+'</div>' +
                   '<div class="caption">'+_text.title.caption+'</div></div>' +
-             	    '<div class="content"><div class="value text">'+_text.content.value+'</div>' +
-               	  '<div class="caption">'+_text.content.caption+'</div></div>',
+                  '<div class="content"><div class="value text">'+_text.content.value+'</div>' +
+                  '<div class="caption">'+_text.content.caption+'</div></div>',
           }];
         });
 
         this.after('renderItems', function() {
-        	this.createChart();
-        });   		  
+          this.createChart();
+        });     
 
       });
     }

@@ -28,10 +28,13 @@ define([], function() {
                                 angularUpdate: false
                             });
                         });
+                        element.trigger('valueChange', {
+                            value: getValue(scope)
+                        });
                         element.on('valueChange', function(e, o) {
                             if (o.angularUpdate !== false) {
                                 scope.$apply(function() {
-                                        setValue(scope, o.value);
+                                    setValue(scope, o.value);
                                 });
                             }
                         });

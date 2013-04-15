@@ -1,13 +1,31 @@
 // Buttons
 //
-// Markup: <button class="button {$modifiers}">This is a button</button>
+// Markup: <button class="m2m-btn {$modifiers}">This is a button</button>
 //
-// .green - A green button
 //
 // Styleguide 4.0.
-.button {
 
+.m2m-btn {
+    .gradient(@m2m-btn_bg-color, @m2m-btn_bg-color-start, @m2m-btn_bg-color-end);
+    border: 1px solid @m2m-btn_bg-color;
+    border-bottom: 1px solid #bbb;
+    border-radius: 3px;
+    color: @m2m-btn_color;
+    font-weight: 800;
+    padding: 8px 5px;
+    text-align: center;
+    text-shadow: 0 1px 0 @m2m-btn_bg-color-end;
 }
-.button.green {
-  background-color: green;
+.m2m-btn:hover {
+    .gradient(@m2m-btn_hover_bg-color, @m2m-btn_hover_bg-color-start, @m2m-btn_hover_bg-color-end);
+    border: 1px solid @m2m-btn_hover_bg-color;
+    border-bottom: 1px solid #999;
+    cursor: pointer;
+    text-shadow: 0 1px 0 @m2m-btn_hover_bg-color-end;
+}
+.m2m-btn:active {
+    border: 1px solid #aaa;
+    border-bottom: 1px solid #888;
+    -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+    box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
 }

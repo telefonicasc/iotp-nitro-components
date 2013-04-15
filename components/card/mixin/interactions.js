@@ -55,8 +55,12 @@ define(
                     }
                 }, this));
 
-                if (newActive && newActive !== activeArea) {
-                    newActive.interaction.activate.call(this, newActive, card);
+                if (newActive) {
+                    if (newActive !== activeArea) {
+                        newActive.interaction.activate.call(this, newActive, card);
+                    }
+                } else {
+                     
                 }
                 activeArea = newActive;
             };

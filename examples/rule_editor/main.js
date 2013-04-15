@@ -7,6 +7,7 @@ requirejs.config({
 define(
   [
     'components/card/rule_editor',
+    'components/sensor_widget/battery',
     'components/angular_directives'
   ],
 
@@ -23,16 +24,21 @@ define(
                     conditions: {
                         label: 'Conditions',
                         cards: [{
-
+                            header: 'Battery',
+                            front: {
+                                items: [{
+                                    component: 'Battery'
+                                }]
+                            }
                         }, {
-
-                        }, {
-
+                            header: 'Pitch'
                         }]
                     },
                     actions: {
                         label: 'Actions',
-                        cards: []
+                        cards: [{
+                            cssClass: 'action'    
+                        }]
                     }
                 };
 

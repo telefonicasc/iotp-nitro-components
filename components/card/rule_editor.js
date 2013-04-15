@@ -18,18 +18,7 @@ define(
         function RuleEditor() {
 
             this.defaultAttrs({
-                cards: {
-                    conditions: {
-                        label: 'Conditions',
-                        cards: [{
-                        }, {
-                        }]
-                    },
-                    actions: {
-                        label: 'Actions',
-                        cards: []
-                    }
-                }
+                cards: {}
             });
 
             this.after('initialize', function() {

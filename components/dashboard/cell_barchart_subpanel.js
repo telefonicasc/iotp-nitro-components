@@ -5,7 +5,7 @@ define(
     'components/mixin/container'
   ],
 
-  /* COMPONENT DATA
+  /* DATA BINDING SAMPLE
   	    {
           component: 'cellBarchartSubpanel',
           className: 'cell-barchart-subpanel',
@@ -13,7 +13,14 @@ define(
             title: { value: '21%', caption: 'of users online' },
             content: { value: '345', caption: 'unique users online' }
           },
-          chartData: [{ key: 'gains', value: '16' }, { key: 'losses', value: '48' }, ...] 
+          chart: {
+            conf: {
+              maxHeight: 70,
+              width: 45,
+              barPadding: 4
+            },
+            data: [{ key: 'gains', value: '87' }, { key: 'losses', value: '46' }, ... ]    //values from 0 - 100 
+          }
         }
    */
    
@@ -25,11 +32,6 @@ define(
     function CellBarchartSubpanel() {
 
       this.defaultAttrs({
-        chartConf: {
-        	maxHeight: 60,
-        	width: 45,
-          barPadding: 4
-        },
         items: []    
       });
 
@@ -37,42 +39,39 @@ define(
 
         this.createChart = function(){
 
-           var _chart = this.attr.chartConf;
-           var _data = this.attr.chartData;
+           var _chartConf = this.attr.chart.conf;
+           var _data = this.attr.chart.data;
 
   			   var svg = d3.select(this.node)
   	          .append("svg")
-  	          .attr("width", (_chart.width+_chart.barPadding)*_data.length)
-  	          .attr("height", this.height);       
+  	          .attr("width", _chartConf.width*_data.length + _chartConf.barPadding*(_data.length - 1))
+  	          .attr("height", _chartConf.maxHeight);       
   	       
   	       svg.selectAll("rect")
-  			   .data(_data)
-  			   .enter()
-  			   .append("rect")
+  			   .data(_data).enter().append("rect")
   			   .attr("x", function(d, i) {
-  	    			return i * (_chart.width + _chart.barPadding);  //Bar width  plus padding
+  	    			return i * (_chartConf.width + _chartConf.barPadding);
   				 })
   			   .attr("y", function(d) {
-  	    			return _chart.maxHeight - d.value;  //Height minus data value
+  	    			return _chartConf.maxHeight - d.value*_chartConf.maxHeight/100; 
   				 })
-  			   .attr("width", _chart.width)
+  			   .attr("width", _chartConf.width)
   			   .attr("height", function(d) {
-  	           return d.value;
+  	          return parseInt(d.value)*_chartConf.maxHeight/100;
   	       });
 
            svg.selectAll("text")
-           .data(_data)
-           .enter()
-           .append("text")
+           .data(_data).enter().append("text")
   	       .text(function(d) {
                 return d.key;
   	   		 })
            .attr("x", function(d, i) {
-                return i * (_chart.width+_chart.barPadding);
+                return i * (_chartConf.width+_chartConf.barPadding)+ _chartConf.width/2;
            })
            .attr("y", function(d) {
-                return (_chart.maxHeight-5);
-           });
+                return (_chartConf.maxHeight-_chartConf.barPadding-2);
+           })
+           
         }
         
         this.before('renderItems', function() {

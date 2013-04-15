@@ -83,7 +83,7 @@ define(
               return 75;
          })
          .attr("font-size", "11px")
-         .attr("fill", "#617789");
+         .attr("fill", "#617789")
          .attr("text-anchor", "middle");
 
       }

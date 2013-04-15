@@ -40,7 +40,7 @@ define(
 
         this.createChart = function(){
         	//Create SVG element
-			var svg = d3.select(this.node)
+			    var svg = d3.select(this.node)
 	            .append("svg")
 	            .attr("width", this.width)
 	            .attr("height", this.height);
@@ -55,18 +55,38 @@ define(
 			   .append("rect")
 			   .attr("x", function(d, i) {
 	    			return i * (chartConfig.width + 2);  //Bar width of 20 plus 1 for padding
-				})
+				 })
 			   .attr("y", function(d) {
 	    			return chartConfig.maxHeight - d;  //Height minus data value
-				})
+				 })
 			   .attr("width", chartConfig.width)
 			   .attr("height", function(d) {
 	                return d;
-	           })
-	           .text(function(d) {
-	        		return d;
-	   		   });
-        }
+	       })
+         .attr("fill", "#9AC7E3");
+
+         svg.selectAll("text")
+         .data(this.attr.chartDataset)
+         .enter()
+         .append("text")
+	       .text(function(d,i) {
+              if (i == 0){
+                return "gains";
+              }else{
+                return "losses";
+              }
+	   		 })
+         .attr("x", function(d, i) {
+              return i * (40)+20;
+         })
+         .attr("y", function(d) {
+              return 75;
+         })
+         .attr("font-size", "11px")
+         .attr("fill", "#617789");
+         .attr("text-anchor", "middle");
+
+      }
 
         this.before('renderItems', function() {
           this.attr.items = [{

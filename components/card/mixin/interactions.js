@@ -57,10 +57,11 @@ define(
 
                 if (newActive) {
                     if (newActive !== activeArea) {
+                        this.$graphEditor.trigger('restoreConnections');
                         newActive.interaction.activate.call(this, newActive, card);
                     }
                 } else {
-                     
+                    this.$graphEditor.trigger('saveConnections'); 
                 }
                 activeArea = newActive;
             };

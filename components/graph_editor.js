@@ -106,11 +106,13 @@ define(
 
                 });
                 this.on('saveConnections', function() {
+                    console.log('saveConnections');
                     this.savedConnections = $.extend(true, [], this.connections);
                     this.updateConnections();
                 });
                 
                 this.on('restoreConnections', function() {
+                    console.log('restoreConnections');
                     this.connections = $.extend(true, [], this.savedConnections);
                     this.updateConnections();
                 });

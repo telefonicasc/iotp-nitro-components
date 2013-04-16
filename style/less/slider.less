@@ -1,0 +1,87 @@
+.m2m-slider {
+
+  width: 100%;
+  overflow: hidden;
+
+  .slider-arrow {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 10px solid #9DB7BD;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: -20px;
+    left: 18px;
+    border-top: 10px solid transparent;
+  }
+
+  .slider-label {
+    padding: 8px;
+    color: #B3B8BE;
+    font-weight: bold;
+    margin-bottom: 9px;
+  }
+  .slider-bar {
+    border: 3px solid #D6DCE2;
+    height: 28px;
+    left: 12%;
+    right: 12%;
+    position: absolute;
+    margin-top: 4px;
+
+    .slider-square {
+      background-color: #E5EFF2;
+      display: inline-block;
+      width: 12%;
+      height: 22px;
+      margin: 3px 0px 3px 2%;
+    }
+
+    .slider-level {
+      position: absolute;
+      left: 2%;
+      right: 50%;
+      top: 3px;
+      bottom: 3px;
+      background-color: #BADB8F;
+      margin-right: 2%;
+    }
+
+  }
+
+  .slider-handler {
+    width: 47px;
+    height: 23px;
+    font-weight: bold;
+    color: white;
+    font-size: 22px;
+    background-color: #9DB7BD;
+    border-radius: 6px;
+    padding: 0px 0px 5px 0px;
+    margin-top: -14px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 48;
+  }
+  .slider-scale {
+    margin-top: 41px;
+    width: 100%;
+
+    label {
+      font-size: 12px;
+      color: #B3B8BE;
+      font-weight: bold;
+    }
+
+    .slider-min {
+      margin-left: 4px;
+    }
+
+    .slider-max {
+      float: right;
+      margin-right: 4px;
+    }
+  }
+
+
+}

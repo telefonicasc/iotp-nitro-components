@@ -18,10 +18,14 @@ define(
         function RuleEditor() {
 
             this.defaultAttrs({
-                cards: {}
+                cards: {},
+                value: { cards: [] }
             });
 
             this.after('initialize', function() {
+
+                this.connections = [];
+                this.value = this.attr.value;
 
                 this.$graphEditor = $('<div>').addClass('fit')
                         .appendTo(this.$node);
@@ -30,11 +34,12 @@ define(
 
                 this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
                     var node = o.node,
+                        placeholder; 
+
+                    if (!node.hasClass('card-placeholder') &&
+                        !this.getConnectedTo(node).length) {
                         placeholder = $('<div>');
-
-                    placeholder.addClass('card-placeholder action-card');
-
-                    if (!node.hasClass('card-placeholder')) {
+                        placeholder.addClass('card-placeholder action-card');
                         this.$graphEditor.trigger('addNode', {
                             node: placeholder
                         });
@@ -67,9 +72,9 @@ define(
                 this.$graphEditor.droppable({
                     accept: '.card.preview',
                     drop: $.proxy(function(e, ui) {
-                        var newCard = $('<div>');
-                        Card.attachTo(newCard, {});
-                        this.$graphEditor.trigger('addNode', { node: newCard });
+                        ui.draggable.data('draggable').cancelHelperRemoval = true;
+                        this.$graphEditor.trigger('addNode', { node: ui.helper });
+                        this.relayoutCards();
                     }, this)
                 });
 
@@ -77,7 +82,7 @@ define(
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });
 
                 this.on('valueChange', function(e, o) {
-                    console.log('adasdas', o.value);
+                    //console.log('adasdas', o.value);
                 });
             });
 

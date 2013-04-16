@@ -2,7 +2,8 @@ define(
     [
         'components/component_manager',
         'components/mixin/data_binding',
-        'components/mixin/watch_resize'
+        'components/mixin/watch_resize',
+        'components/mixin/template'
     ],
 
     function(ComponentManager, DataBinding, WatchResize) {

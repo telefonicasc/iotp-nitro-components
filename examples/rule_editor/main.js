@@ -8,6 +8,7 @@ define(
   [
     'components/card/rule_editor',
     'components/sensor_widget/battery',
+    'components/slider',
     'components/angular_directives'
   ],
 
@@ -28,6 +29,11 @@ define(
                             front: {
                                 items: [{
                                     component: 'Battery'
+                                }]
+                            }, 
+                            back: {
+                                items: [{
+                                    component: 'Slider'
                                 }]
                             }
                         }, {

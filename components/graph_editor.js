@@ -52,7 +52,7 @@ define(
                         var dragNode = $(e.target);
                         dragNode.data({
                             left: ui.position.left, top: ui.position.top
-                        }); 
+                        });
                         dragNode.trigger('moved');
                     }
                 }, this));
@@ -67,7 +67,7 @@ define(
 
                 this.$nodes.on('moved', '*', $.proxy(function(e) {
                     if (e.target.parentNode === e.delegateTarget) {
-                        this.updateConnections(); 
+                        this.updateConnections();
                      }
                 }, this));
 
@@ -80,9 +80,9 @@ define(
                         this.connections.splice(index, 1);
                     }
                 });
-                
+
                 this.on('insertAfter', function(e, o) {
-                    
+
                 });
 
                 this.on('addNode', function(e, o) {
@@ -95,7 +95,7 @@ define(
                 });
 
                 this.on('removeNode', function(e, o) {
-                    
+
                 });
 
                 this.on('nodeAdded', function() {
@@ -110,7 +110,7 @@ define(
                     this.savedConnections = $.extend(true, [], this.connections);
                     this.updateConnections();
                 });
-                
+ 
                 this.on('restoreConnections', function() {
                     console.log('restoreConnections');
                     this.connections = $.extend(true, [], this.savedConnections);

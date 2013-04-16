@@ -13,7 +13,7 @@ define(
             title: { value: '21%', caption: 'of users online' },
             content: { value: '345', caption: 'unique users online' }
           },
-          chart: {
+          chart: {        //(optional)
             conf: {
               maxHeight: 70,
               width: 45,

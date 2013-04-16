@@ -82,7 +82,7 @@ define(
           var _text = this.attr.text;
           this.attr.items = [{
             tag: 'div',
-            html: '<div class="title"><div>'+_text.title.value+'</div>' +
+            html: '<div class="title"><div class="value">'+_text.title.value+'</div>' +
                   '<div class="caption">'+_text.title.caption+'</div></div>' +
                   '<div class="content"><div class="value text">'+_text.content.value+'</div>' +
                   '<div class="caption">'+_text.content.caption+'</div></div>',
@@ -90,7 +90,10 @@ define(
         });
 
         this.after('renderItems', function() {
-          this.createChart();
+          //If there is chart then render it
+          if (this.attr.chart){
+            this.createChart();
+          }    
         });     
 
       });

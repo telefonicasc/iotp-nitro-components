@@ -7,6 +7,7 @@ requirejs.config({
 define(
   [
     'components/card/rule_editor',
+    'components/card/action/send_email',
     'components/sensor_widget/battery',
     'components/slider',
     'components/angular_directives'
@@ -30,7 +31,7 @@ define(
                                 items: [{
                                     component: 'Battery'
                                 }]
-                            }, 
+                            },
                             back: {
                                 items: [{
                                     component: 'Slider'
@@ -43,7 +44,16 @@ define(
                     actions: {
                         label: 'Actions',
                         cards: [{
-                            cssClass: 'action'    
+                            cssClass: 'action',
+                            header: 'Send Email',
+                            front: {
+                                items: []
+                            },
+                            back: {
+                                items: [{
+                                    component: 'SendEmail'
+                                }]
+                            }
                         }]
                     }
                 };
@@ -53,14 +63,14 @@ define(
                     'cards': [{
                         'id': 'card0',
                         'sensorData': {
-                             
+
                         },
                         'configData': {
 
                         },
                         'connectedTo': ['card1']
                     }, {
-                        'id': 'card1' 
+                        'id': 'card1'
                     }]
                 };
             }

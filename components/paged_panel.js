@@ -35,13 +35,20 @@ define(
                             return index == i;
                         }
                     );
-                    debugger;
-                    console.log (el.height());
+
+                    if (ph - el.height() >= 0) {
+                        ph = ph - el.height();
+                        el.css('display','');
+                    }
+                    else {
+                        el.css('display','none');
+                    }
                 }
                 
-                self.width = self.$node.width();
-                self.height= self.$node.height();
-                console.log ('W:' + self.width + ' ,H: ' + self.height);
+                //self.width = self.$node.width();
+                //self.height= self.$node.height();
+                //console.log ('P:' + ph + ' W:' + self.width + ' ,H: ' + self.height);
+
             }
 
             this.after('initialize', function() {

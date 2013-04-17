@@ -20,96 +20,111 @@ define(
         			{group:'PA' ,values: [737462,1345341,679201,1203944,3157759,3414001,1910571]}
 
         		],
-        		names: ['Under 5 Years','5 to 13 Years','14 to 17 Years','18 to 24 Years','25 to 44 Years','45 to 64 Years','65 Years and Over']
-
+        		names: ['Under 5 Years','5 to 13 Years','14 to 17 Years','18 to 24 Years','25 to 44 Years','45 to 64 Years','65 Years and Over'],
+        		colors: ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]
             });
 
             this.after('initialize', function() {
-
-				var margin = {top: 0, right: 0, bottom: 25, left: 0},
-				width = 800,
-				height = 240;
-
-				var x0 = d3.scale.ordinal().rangeRoundBands([0, width], .1);
-				var x1 = d3.scale.ordinal();
-				var y = d3.scale.linear().range([height, 0]);
-
-				var color = d3.scale.ordinal().range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+				
+				var margin = {top: 0, right: 20, bottom: 20, left: 0};
+				var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width], .1),
+					x1 = d3.scale.ordinal(),
+					y = d3.scale.linear().range([this.height, 0]);
 
 				var xAxis = d3.svg.axis().scale(x0).orient("bottom");
 				var yAxis = d3.svg.axis()
 				.scale(y)
 				.orient("left")
-				.tickFormat(d3.format("0.01s"));
+				.tickFormat(d3.format("0.01s"));		
 
 				var svg = d3.select(this.node).append("svg")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
 				.append("g")
 				.attr("transform", "translate(" + 0 + "," + margin.top + ")");
 
-				var _data= this.attr.data;
-				var _names= this.attr.names;
-				    
-				_data.forEach(function(d) {
-					d.ages = [];
-					d.values.forEach(function(val, i){
-						d.ages.push({name: _names[i], value: val});
-					});
-				});
+				var axisX = svg.append("g")
+				.attr("class", "x axis");
 
-				x0.domain(_data.map(function(d) { 
-					return d.group; 
-					}));
-				x1.domain(_names).rangeRoundBands([0, x0.rangeBand()]);
-				y.domain([0, d3.max(_data, function(d) { 
-					return d3.max(d.ages, function(d) { 
-						return d.value; 
-					}); 
-				})]);
+				var axisY = svg.append("g")
+				.attr("class", "y axis");
 
-				svg.append("g")
-				.attr("class", "x axis")
-				.attr("transform", "translate(0," + height + ")")
-				.call(xAxis);
-
-				svg.append("g")
-				.attr("class", "y axis")
-				.attr("transform", "translate("+width+"," + 0 + ")")
-				.call(yAxis);
+				var barGroups = svg.selectAll(".barGroup").data(this.attr.data);
 				
 
-				var state = svg.selectAll(".state")
-				.data(_data)
-				.enter().append("g")
-				.attr("class", "g")
-				.attr("transform", function(d) { 
-					return "translate(" + x0(d.group) + ",0)"; 
-				});
-
-				state.selectAll("rect")
-				.data(function(d) { 
-					return d.ages; 
-				})
-				.enter().append("rect")
-				.attr("width", x1.rangeBand())
-				.attr("x", function(d,i) { 
-					console.log(d);
-					return x1(d.name); 
-				})
-				.attr("y", function(d) { 
-					return y(d.value); 
-				})
-				.attr("height", function(d) { return height - y(d.value); })
-				.style("fill", function(d) { return color(d.name); });
-
 				this.updateChart = function() {
+					
+					barGroups.remove();
 
+					svg.attr("width", this.width + margin.left + margin.right)
+					.attr("height", this.height + margin.top + margin.bottom)
+					
+					var _data= this.attr.data;
+					var _names= this.attr.names;
+					var _colors= this.attr.colors;
+					    
+					_data.forEach(function(d) {
+						d.ages = [];
+						d.values.forEach(function(val, i){
+							d.ages.push({name: _names[i], value: val});
+						});
+					});
+
+					x0.domain(_data.map(function(d) { 
+						return d.group; 
+					}));
+					x1.domain(_names).rangeRoundBands([0, x0.rangeBand()]);
+					y.domain([0, d3.max(_data, function(d) { 
+						return d3.max(d.ages, function(d) { 
+							return d.value; 
+						}); 
+					})]);
+			
+					axisX.attr("transform", "translate(0," + this.height + ")")
+					.call(xAxis);
+					
+					axisY.attr("transform", "translate("+(this.width+20)+"," + 0 + ")")
+					.call(yAxis);
+
+					barGroups = svg.selectAll(".state").data(this.attr.data);
+					barGroups.enter().append("g");
+					
+					barGroups.attr("class", "g")
+					.attr("transform", function(d) { 
+						return "translate(" + x0(d.group) + ",0)"; 
+					});
+					
+					var _height = this.height;
+
+					var bars = barGroups.selectAll(".bar2")
+					.data(function(d) { 
+						return d.ages; 
+					});
+
+					bars.enter().append("rect")
+					.attr('class', 'bar2')
+					.attr("width", x1.rangeBand()-2)
+					.attr("x", function(d,i) { 
+						return x1(d.name); 
+					})
+					.attr("y", function(d) { 
+						return y(d.value); 
+					})
+					.attr("height", function(d) { 
+						return _height - y(d.value); 
+					})
+					.style("fill", function(d,i) { 
+						return _colors[i] 
+					});
+					
             	}	
 
             	this.on('resize', function(e, chartSize) {
                    this.width = chartSize.width;
-                   this.height = chartSize.height;	
+                   this.height = chartSize.height;
+                 
+                   x0.rangeRoundBands([0, this.width], .1);
+				   y.range([this.height, 0]);
+				   
+                   this.updateChart();	
                    e.stopPropagation();
                 });
 

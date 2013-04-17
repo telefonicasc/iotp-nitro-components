@@ -1,69 +1,85 @@
 define(
     [
         'components/component_manager',
-        'components/mixin/container',
-        'components/mixin/watch_resize'
+        'components/mixin/container'
     ],
 
-    function(ComponentManager, ContainerMixin, WatchResize) {
+    function(ComponentManager, ContainerMixin) {
 
-        return ComponentManager.create('pagedPanel', PagedPanel, ContainerMixin, WatchResize);
+        return ComponentManager.create('pagedPanel', PagedPanel, ContainerMixin);
 
         var self;
-
+        
         function PagedPanel() {
 
+            this.currenPage = 0;
+            this.config = {
+                insertionPoint: '.paged-content',
+                navigationDiv: '.paged-navigation'
+            };
+
             this.defaultAttrs({
+                ordered: true,
+                insertionPoint: '.paged-content',
+                buttonsDiv: '.paged-navigation',
+                pageDisplay: '.paged-navigation-display',
                 items: []
             });
-
-            /*
-            this.updateData = function() {
-                this.attr.data($.proxy(function(data) {
-                    this.$node.trigger('valueChange', { value: data });
-                }, this));
-            };
-            */
 
             this.updateSize = function () {
                 // Parent height
                 var ph = self.$node.parent().height();
-                debugger;
-                for (var i = 0; i < self.$node.children().length; i++) {
-                    el = self.$node.children().filter(
+                // Has some component been hided already?
+                var hidedOne = false;
+                // Parent node is the component items insertion point
+                var parentNode = self.$node.find(self.attr.insertionPoint);
+                
+                for (var i = 0; i < parentNode.children().length; i++) {
+                    el = parentNode.children().filter(
                         function (index) {
                             return index == i;
                         }
                     );
 
-                    if (ph - el.height() >= 0) {
+                    if (ph - el.height() >= 0 && !hidedOne) {
                         ph = ph - el.height();
-                        el.css('display','');
+                        el.css('display',''); /* Make sure element is displayed */
                     }
                     else {
-                        el.css('display','none');
+                        el.css('display','none'); /* Don't display this component */
+                        // If items are required to be displayed in order, this will be true.
+                        hidedOne = self.attr.ordered;
                     }
                 }
-                
-                //self.width = self.$node.width();
-                //self.height= self.$node.height();
-                //console.log ('P:' + ph + ' W:' + self.width + ' ,H: ' + self.height);
+            }
 
+            this.pageLeft = function () {
+                console.log('paging left');
+            }
+
+            this.pageRight = function () {
+                console.log('paging right');
             }
 
             this.after('initialize', function() {
-
+                var src = '<div classs="paged-navigation"><button type="button"/></div>';
                 self = this;
-                this.width = 0;
-                this.height = 0;
-                this.cursor = 0;
-                this.elem = null;
+                this.$node.addClass('paged-panel');
+                this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
+                this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);
 
-                this.$node.addClass('paged-content');
-                //this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);
+                // Create navigation buttons and current page display
+                var nav = this.$node.find('.paged-navigation');
+                nav.append('<button type="button" class="paged-button-left"><</button>');
+                nav.append('<div class="paged-navigation-display" style="display:inline">2/3</div>');
+                nav.append('<button type="button" class="paged-button-right">></button>');
 
+                // Adds button click events
+                this.$node.find('.paged-button-left').click(this.pageLeft);
+                this.$node.find('.paged-button-right').click(this.pageRight);
+
+                // Bind update on window resize
                 $(window).bind('resize', self.updateSize);
-                
             });
         }
     }

@@ -44,16 +44,9 @@ define(
                     actions: {
                         label: 'Actions',
                         cards: [{
-                            cssClass: 'action',
+                            cssClass: 'm2m-card-action m2m-card-send-email',
                             header: 'Send Email',
-                            front: {
-                                items: []
-                            },
-                            back: {
-                                items: [{
-                                    component: 'SendEmail'
-                                }]
-                            }
+                            component: 'SendEmail'
                         }]
                     }
                 };

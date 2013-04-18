@@ -8,7 +8,7 @@ define(
   ],
   function(ComponentManager, Template, Flippable, CardSide, DataBinding) {
 
-    return ComponentManager.create('card', Template, Card, DataBinding);
+    return ComponentManager.create('Card', Template, Card, DataBinding);
 
     function Card() {
 
@@ -23,12 +23,14 @@ define(
         front: {
         },
         back: {
-        }
+        },
+        cssClass:'m2m-card-condition'
       });
 
       this.after('initialize', function() {
 
         this.$node.addClass('card');
+        this.$node.addClass(this.attr.cssClass);
 
         if (this.attr.header) {
             this.attr.front.header = this.attr.header;

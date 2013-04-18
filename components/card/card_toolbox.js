@@ -9,26 +9,6 @@ define(
 
   function(ComponentManager, BorderCollapsablePanel, Card, Draggable, RadioButton) {
 
-    var cardType = {
-      CONDITION:'conditions',
-      ACTION:'actions'
-    };
-
-    var classForCardByType = {
-      CONDITION:'m2m-card-condition',
-      ACTION:'m2m-card-action'
-    };
-
-    var getClassByType = function(type){
-      var className = '';
-      if(type === cardType.ACTION){
-        className = classForCardByType.ACTION;
-      }else if(type === cardType.CONDITION){
-        className = classForCardByType.CONDITION;
-      }
-      return className;
-    };
-
     return ComponentManager.extend(BorderCollapsablePanel,
         'CardToolbox', CardToolbox);
 
@@ -36,7 +16,8 @@ define(
 
       this.defaultAttrs({
         cardDefaults: {
-          flippable: false
+          flippable: false,
+          component:'Card'
         }
       });
 
@@ -47,8 +28,6 @@ define(
         this.$cardSectionSwitch = $('<div>');
 
         $.each(this.attr.cardSections, $.proxy(function(key, section) {
-          var classForCardByType = getClassByType(key);
-
           section.el = $('<div>')
             .addClass('card-toolbox-section')
             .appendTo(this.$content);
@@ -60,13 +39,14 @@ define(
           $.each(section.cards, $.proxy(function(i, card) {
             var cardEl = $('<div>')
               .addClass('preview')
-              .addClass( classForCardByType )
               .appendTo(section.el);
-            Card.attachTo(cardEl, $.extend({}, this.attr.cardDefaults, card));
+            var attrCard = $.extend({}, this.attr.cardDefaults, card);
+            var cmp  = ComponentManager.get(attrCard.component);
+            cmp.attachTo(cardEl, attrCard);
             Draggable.attachTo(cardEl, {
               helper: function() {
                 var newCardEl = $('<div>');
-                Card.attachTo(newCardEl, card);
+                cmp.attachTo(newCardEl, card);
                 return newCardEl;
               }
             });

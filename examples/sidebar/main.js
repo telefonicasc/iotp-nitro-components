@@ -17,12 +17,18 @@ define(
             $('.dashboard').m2mdashboard({
                 mainContent: [],
                 overviewPanel: {
-                    title: 'Sidebar details task',
+                    title: 'Sidebar details: IDAS-8815',
                     items: [
                         {
                             component: 'pagedPanel',
                             //insertionPoint: '.paged-content',
                             items: [
+                                {
+                                    component: 'OverviewSubpanel',
+                                    iconClass: 'dot red',
+                                    text: 'First component',
+                                    caption: 'Always visible on first page'    
+                                },
                                 {
                                     component: 'minimap',
                                     zoomValue: 16,
@@ -38,7 +44,7 @@ define(
                                 },
                                 {
                                     component: 'OverviewSubpanel',
-                                    iconClass: 'dot blue',
+                                    iconClass: 'dot green',
                                     text: 'Token A',
                                     caption: 'First Paged Token'    
                                 },

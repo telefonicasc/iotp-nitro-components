@@ -10,8 +10,8 @@ define(
     'components/chart/radar_chart',
     'components/chart/range_selection_chart',
     'components/dashboard/dashboard_main_panel',
-    'components/dashboard/overview_subpanel',
-    'components/dashboard/cell_barchart_subpanel'
+    'components/dashboard/overview_subpanel'
+    //'components/dashboard/cell_barchart_subpanel'
   ],
   
   function() {
@@ -159,7 +159,8 @@ define(
           }],    
           //component: 'rangeSelectionChart'
         }]
-      },{
+      }/*
+      ,{
           component: 'cellBarchartSubpanel',
           className: 'cell-barchart-subpanel',
           text: {
@@ -174,7 +175,7 @@ define(
             },
             data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
           }
-        }],
+        }*/],
       overviewPanel: {
         title: 'Days of user stats',
         contextMenu: {

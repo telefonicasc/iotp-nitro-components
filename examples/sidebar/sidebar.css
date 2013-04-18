@@ -14,8 +14,17 @@
 }
 
 .detail-panel-header {
-    border-bottom: 3px solid #D6DEE0;
+    border-bottom: 3px solid black;
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.detail-panel {
+    left: 5px;
+    right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: #FFFFFF;
+
 }

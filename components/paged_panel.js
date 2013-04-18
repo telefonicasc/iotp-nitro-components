@@ -139,7 +139,7 @@ define(
 
             });
 
-            this.after('render', function () {
+            this.after('renderItems', function () {
                 console.log('rendered');    
             });
         }

@@ -7,7 +7,8 @@ define(
         'components/dashboard/dashboard',
         'components/minimap',
         'components/dashboard/overview_subpanel',
-        'components/paged_panel'
+        'components/paged_panel',
+        'components/detail_panel'
     ],
   
     function() {
@@ -24,11 +25,30 @@ define(
                             //insertionPoint: '.paged-content',
                             items: [
                                 {
+                                    component: 'detailPanel',
+                                    header: 'Detail Panel',
+                                    id: 'DT-Panel',
+                                    items: [
+                                        {
+                                            component: 'OverviewSubpanel',
+                                            iconClass: 'dot black',
+                                            text: 'First',
+                                            caption: 'Subpanel comp 1'
+                                        },
+                                        {
+                                            component: 'OverviewSubpanel',
+                                            iconClass: 'dot red',
+                                            text: 'Second',
+                                            caption: 'Subpanel comp2'
+                                        }
+                                    ]
+                                },
+                                /*{
                                     component: 'OverviewSubpanel',
                                     iconClass: 'dot red',
                                     text: 'First component',
                                     caption: 'Always visible on first page'    
-                                },
+                                },*/
                                 {
                                     component: 'minimap',
                                     zoomValue: 16,

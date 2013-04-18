@@ -13,3 +13,9 @@
     left: 5%;
 }
 
+.detail-panel-header {
+    border-bottom: 3px solid #D6DEE0;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

@@ -24,7 +24,8 @@ define(
 
         this.before('renderItems', function() {
           this.attr.items = [{
-            tag: 'header',
+            tag: 'div',
+            className: 'title',
             items: [{
               tag: 'h1',
               html: this.attr.title
@@ -39,7 +40,7 @@ define(
         this.on('render', function() {
           var cmIndicator;
           if (this.attr.contextMenu) {
-            cmIndicator = $('<div>').appendTo(this.$node.find('header'));
+            cmIndicator = $('<div>').appendTo(this.$node.find('div.title'));
             ContextMenuIndicator.attachTo(cmIndicator, this.attr);
           }
         });

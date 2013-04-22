@@ -9,10 +9,8 @@ define(
     'components/chart/area_chart',
     'components/chart/radar_chart',
     'components/chart/range_selection_chart',
-    'components/chart/group_bar_chart',
     'components/dashboard/dashboard_main_panel',
-    'components/dashboard/overview_subpanel',
-    'components/dashboard/cell_barchart_subpanel'
+    'components/dashboard/overview_subpanel'  
   ],
   
   function() {
@@ -161,54 +159,7 @@ define(
           }],    
           //component: 'rangeSelectionChart'
         }]
-      },{
-          component: 'cellBarchartSubpanel',
-          className: 'cell-barchart-subpanel',
-          text: {
-            title: { value: '21%', caption: 'of users online' },
-            content: { value: '345', caption: 'unique users online' }
-          },
-          chart: {
-            conf: {
-              maxHeight: 70,
-              width: 45,
-              barPadding: 4
-            },
-            data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
-          }
-        },
-        {
-        component: 'dashboardMainPanel',
-        title: 'Product Mix',
-        className: 'product-mix',
-        items: [{
-          component: 'chartContainer',
-          rangeField: 'selectedRange',
-          valueField: 'registrations',
-          className: 'chart',
-          grid: false,
-          marginBottom: 20,
-          marginRight: 45,
-          axisx: false,
-          axisy: false,
-          charts: [{
-            type: 'groupBarChart',
-            data: {
-              values: [
-                { '1 hour': [2704,4499,2159,3853,10604,8819,4114] },
-                { '4 hours': [2027,3277,1420,2454,7017,5656,2472] },
-                { '8 hours': [1208,2141,1058,1999,5355,5120,2607] },
-                { '1 day': [1140,1938,925,1607,4782,4746,3187] },
-                { '1 month': [894,1558,725,1311,3596,3239,1575] },
-                { '50 megs': [737,1345,679,1203,3157,3414,1910] },
-                { '250 megs': [837,2345,779,3203,4157,4414,2910] }
-              ],
-              names: ['Bar1','Bar2','Bar3','Bar4','Bar5','Bar6','Bar7'],  
-              colors: ["#d3d2bc", "#dfcab5", "#c5cfc5"]
-            }
-          }]
-        }]
-      },],
+      }],
       overviewPanel: {
         title: 'Days of user stats',
         contextMenu: {

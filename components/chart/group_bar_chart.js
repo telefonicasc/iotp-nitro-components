@@ -11,18 +11,21 @@ define(
         function GroupBarChart(){
 
         	this.defaultAttrs({
-        		grid: true 		
+        		grid: true,
+        		data: {}    
             });
 
             this.after('initialize', function() {
 				
 				var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
 					x1 = d3.scale.ordinal(),
-					y = d3.scale.linear().range([this.height, 0]);			
+					y = d3.scale.linear().range([this.height, 0]),
+					colors = this.attr.colors;			
 
 				var context = d3.select(this.node).append("svg")
 				.attr('class', 'group-barchart')
 				.attr("width", this.width).attr("height", this.height);
+
 				
 				var axisX, axisY, xAxis, yAxis = null;		
 				if (this.attr.grid){
@@ -31,31 +34,40 @@ define(
 					xAxis = d3.svg.axis().scale(x0).orient("bottom");
 					yAxis = d3.svg.axis().scale(y).orient("right").tickFormat(d3.format("1"));		
 				}
-
-				var barGroups = context.selectAll(".barGroup").data(this.attr.data.values);
+				var _data = this.attr.data;
+				var _keys = Object.keys(_data);
+				var barGroups = context.selectAll(".barGroup").data(_keys);
 				var backgroundGroups = context.append("g");
 			
 				this.updateChart = function() {
-					var _data = this.attr.data;
 					var _height = this.height;
 					var _width = this.width;
+					delete _data.datos;
+					console.log('_data', _data);
+					_keys = Object.keys(_data);					
 
+					
+					var _names = [];	
 					barGroups.remove();	
 					backgroundGroups.remove();
-
-					_data.values.forEach(function(obj) {
-						obj.ages = [];
-						var values = obj[Object.keys(obj)[0]];
-						values.forEach(function(val, i){
-							obj.ages.push({name: _data.names[i], value: val});
+					_data.datos = [];
+					_keys.forEach(function(k) {	
+						var agesValues = {ages:[]};	
+						_names = [];	
+						_data[k].forEach(function(val, i){
+							_names.push("bar"+i);
+							agesValues.ages.push({name: "bar"+i, value: val});
 						});
+						_data.datos.push(agesValues);
 					});
 
-					x0.domain(_data.values.map(function(d) {
-						return Object.keys(d)[0]; 
+					x0.domain(_keys.map(function(key) {
+						return key; 
 					}));
-					x1.domain(_data.names).rangeRoundBands([0, x0.rangeBand()]);
-					y.domain([0, d3.max(_data.values, function(d) { 
+
+					x1.domain(_names).rangeRoundBands([0, x0.rangeBand()]);
+					
+					y.domain([0, d3.max(_data.datos, function(d) { 
 						return d3.max(d.ages, function(d) { 
 							return d.value; 
 						}); 
@@ -69,48 +81,46 @@ define(
 					//Background group 		
 					backgroundGroups = context.append("g");
 					backgroundGroups.selectAll(".bg_group")
-					.data(_data.values)
+					.data(_keys)
 					.enter().append("rect")
-					.attr('class', function(d, i){
+					.attr('class', function(key, i){
 						return (i%2 == 0)? 'bg_group odd' : 'bg_group';
 					})
-					.attr("x", function(d) { 
-						var key = Object.keys(d)[0]; 
+					.attr("x", function(key) { 
 						return  x0(key)-x0(0)/2;
 					})
-					.attr("width", _width/_data.values.length)
+					.attr("width", _width/_keys.length )
 					.attr("height", _height);
 
 					//Bar groups
-					barGroups = context.selectAll(".group").data(_data.values);
+					barGroups = context.selectAll(".group").data(_data.datos);
 					barGroups.enter().append("g")
-					.attr("fill", function(d, i) { 
-						return _data.colors[(i%_data.colors.length)]; 
+					.attr("fill", function(key, i) { 
+						return colors[(i%colors.length)]; 
 					})
 					.attr("class", "group")
-					.attr("transform", function(d) { 
-						var key = Object.keys(d)[0]; 
-						return "translate(" + x0(key) + ",0)"; 
+					.attr("transform", function(d, i) { 
+						return "translate(" + x0(_keys[i]) + ",0)"; 
 					});	
 					
 					//Bars
 					var bars = barGroups.selectAll(".chartbar")
 					.data(function(d) { 
 						return d.ages; 
-					});			
+					});	
+
 					bars.enter().append("rect")
 					.attr('class', 'chartbar')
 					.attr("width", x1.rangeBand()-2)
 					.attr("x", function(d,i) { 
 						return x1(d.name); 
 					})
-					.attr("y", function(d) { 
+					.attr("y", function(d) {
 						return y(d.value); 
 					})
 					.attr("height", function(d) { 
 						return _height - y(d.value); 
 					});
-					bars.exit().remove();
             	}	
 
             	this.on('resize', function(e, chartSize) {
@@ -124,29 +134,37 @@ define(
 
 
                 this.on('valueChange', function(e, options) {
-                   
+                	var valueField = this.attr.model;
+                   	var rawData = $.map(options.value[valueField], function(val, i) {
+                            if (val.date >= options.range[0] && val.date <= options.range[1]) {
+                                return val;
+                            }
+                        });
+                    _data = processData(rawData, options.range[0], options.range[1]); 	
+                   	this.updateChart();
                     e.stopPropagation();
                 });
 
             });	
         }
+
+        function processData(dataIn, startDate, endDate){
+        	var dataOut = {};
+        	var keys = null;
+   			
+        	dataIn.forEach(function(val, i){
+        		if (!keys){
+        			keys = Object.keys(val.value);		
+        			keys.forEach(function(key, i){
+        				dataOut[key] = [];
+        			});
+        		} 
+        		keys.forEach(function(key, j){
+        			dataOut[key].push(val.value[key]);
+        		});	
+  
+			});
+			return dataOut;
+        }
     }      
 );
-
-
-//SAMPLE DATA BINDER
-/*
-   {
-      values: [
-        { '1 hour': [2704,4499,2159,3853,10604,8819,4114] },
-        { '4 hours': [2027,3277,1420,2454,7017,5656,2472] },
-        { '8 hours': [1208,2141,1058,1999,5355,5120,2607] },
-        { '1 day': [1140,1938,925,1607,4782,4746,3187] },
-        { '1 month': [894,1558,725,1311,3596,3239,1575] },
-        { '50 megs': [737,1345,679,1203,3157,3414,1910] },
-        { '250 megs': [837,2345,779,3203,4157,4414,2910] }
-      ],
-      names: ['Bar1','Bar2','Bar3','Bar4','Bar5','Bar6','Bar7'],  
-      colors: ["#d3d2bc", "#dfcab5", "#c5cfc5"]
-    }
-*/

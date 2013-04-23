@@ -26,7 +26,7 @@ define(
 					context = d3.select(this.node).append("svg")
 							.attr("class", "group-barchart")
 							.attr("width", this.width)
-							.attr("height", this.height);
+							.attr("height", (this.height));
 				
 				var axisX, axisY, xAxis, yAxis = null;		
 				if (this.attr.grid){
@@ -39,7 +39,8 @@ define(
 				var _data = this.attr.data,
 					_keys = Object.keys(_data),
 					barGroups = context.selectAll(".barGroup").data(_keys),
-					backgroundGroups = context.append("g");
+					backgroundGroups = context.append("g"),
+					subPanelgroup = context.append("g");
 
 				
                 this.tooltip = $('<div>').addClass('tooltip')
@@ -47,9 +48,14 @@ define(
                 
 			
 				this.updateChart = function() {					
-				
+					
+					console.log('height', this.height);
+					context.attr("height", (this.height+190));
+
 					barGroups.remove();	
 					backgroundGroups.remove();
+					subPanelgroup.remove();
+
 					_keys = Object.keys(_data); 
 					
 					//Grouping data by 'key'
@@ -92,6 +98,36 @@ define(
 					.attr("width", this.width/_keys.length )
 					.attr("height", this.height);
 
+					var _height = this.height;
+
+					subPanelgroup = context.append("g");
+					subPanelgroup.attr("transform", "translate(0, "+(this.height+30)+")");
+					subPanelgroup.selectAll(".foreignObject")
+					.data(_keys)
+					.enter().append("foreignObject")
+					.attr("class", function(key, i){
+						CellBarchartSubpanel.attachTo(this,{
+							text: {
+			                title: { value: Math.floor(Math.random()*(100-10+1)+10) +'%', caption: 'of users online' },
+			                content: { value: Math.floor(Math.random()*(500-100+1)+100), caption: 'unique users online' }
+			              },
+			              chart: {
+			                conf: {
+			                  maxHeight: 70,
+			                  width: 45,
+			                  barPadding: 4
+			                },
+			                data: [ { gains: Math.floor(Math.random()*(100-40+1)+40) }, { losses: Math.floor(Math.random()*(100-40+1)+40) } ]    //values from 0 - 100 
+			              }
+						});
+						return "cell-barchart-subpanel";
+					})
+					.attr("x", function(key) { 
+						return  x0(key)-x0(0)/2;
+					})
+					.attr("width", this.width/_keys.length )
+					.attr("height", 165);
+
 					//Bar groups
 					barGroups = context.selectAll(".group").data(values);
 					barGroups.enter().append("g")
@@ -105,7 +141,6 @@ define(
 
 					//Bars
 					var self = this;
-					var _height = this.height;
 					var bars = barGroups.selectAll(".chartbar")
 					.data(function(d) { 
 						return d; 
@@ -194,7 +229,6 @@ define(
 		    		});
 
 				});
-				console.log(dataOut);
 				return dataOut;
 		    }
 

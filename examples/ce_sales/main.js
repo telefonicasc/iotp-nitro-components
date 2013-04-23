@@ -30,7 +30,7 @@ define(
             valueField: 'registrations',
             className: 'chart',
             grid: false,
-            marginBottom: 20,
+            marginBottom: 190,
             marginRight: 45,
             axisx: false,
             axisy: false,
@@ -97,21 +97,6 @@ define(
                     num_days: (value.selectedRange[1]-value.selectedRange[0])/(1000*60*60*24)+1
                   }
                 }
-              }
-            }, {
-              component: 'cellBarchartSubpanel',
-              className: 'cell-barchart-subpanel',
-              text: {
-                title: { value: '21%', caption: 'of users online' },
-                content: { value: '345', caption: 'unique users online' }
-              },
-              chart: {
-                conf: {
-                  maxHeight: 70,
-                  width: 45,
-                  barPadding: 4
-                },
-                data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
               }
             }
           ]

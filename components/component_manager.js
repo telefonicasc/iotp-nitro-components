@@ -42,7 +42,14 @@ define(
             },
 
             get: function(name) {
-                return components[name].flightComponent;
+                var cmp = components[name];
+                var flightComponent = null;
+                if(cmp){
+                    flightComponent = components[name].flightComponent;
+                }else{
+                    console.error('Component "'+name+'" is undefined; components :', components);
+                }
+                return flightComponent;
             },
 
             each: function(fn) {

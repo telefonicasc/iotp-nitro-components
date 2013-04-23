@@ -28,6 +28,7 @@
     "grunt-template-jasmine-istanbul": "~0.2.0",
     "grunt-styleguide": "~0.2.4",
     "grunt-contrib-watch": "~0.3.1",
-    "grunt-closure-linter": "~0.1.0"
+    "grunt-closure-linter": "~0.1.0",
+    "grunt-plato": "~0.2.0"
   }
 }

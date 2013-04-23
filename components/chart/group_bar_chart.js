@@ -1,31 +1,32 @@
 define(
     [
-        'components/component_manager'
+        'components/component_manager',
+        'components/dashboard/cell_barchart_subpanel'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, CellBarchartSubpanel) {
 
-        return ComponentManager.create('groupBarChart',
+        return ComponentManager.create("groupBarChart",
             GroupBarChart);
 
         function GroupBarChart(){
 
         	this.defaultAttrs({
         		grid: true,
-        		data: {}    
+        		data: {},
+        		max_num_bars: 7   
             });
 
-            this.after('initialize', function() {
+            this.after("initialize", function() {
 				
 				var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
 					x1 = d3.scale.ordinal(),
 					y = d3.scale.linear().range([this.height, 0]),
-					colors = this.attr.colors;			
-
-				var context = d3.select(this.node).append("svg")
-				.attr('class', 'group-barchart')
-				.attr("width", this.width).attr("height", this.height);
-
+					colors = this.attr.colors,			
+					context = d3.select(this.node).append("svg")
+							.attr("class", "group-barchart")
+							.attr("width", this.width)
+							.attr("height", this.height);
 				
 				var axisX, axisY, xAxis, yAxis = null;		
 				if (this.attr.grid){
@@ -34,66 +35,65 @@ define(
 					xAxis = d3.svg.axis().scale(x0).orient("bottom");
 					yAxis = d3.svg.axis().scale(y).orient("right").tickFormat(d3.format("1"));		
 				}
-				var _data = this.attr.data;
-				var _keys = Object.keys(_data);
-				var barGroups = context.selectAll(".barGroup").data(_keys);
-				var backgroundGroups = context.append("g");
-			
-				this.updateChart = function() {
-					var _height = this.height;
-					var _width = this.width;
-					delete _data.datos;
-					console.log('_data', _data);
-					_keys = Object.keys(_data);					
 
-					
-					var _names = [];	
+				var _data = this.attr.data,
+					_keys = Object.keys(_data),
+					barGroups = context.selectAll(".barGroup").data(_keys),
+					backgroundGroups = context.append("g");
+
+				
+                this.tooltip = $('<div>').addClass('tooltip')
+                    .appendTo($('body'));
+                
+			
+				this.updateChart = function() {					
+				
 					barGroups.remove();	
 					backgroundGroups.remove();
-					_data.datos = [];
+					_keys = Object.keys(_data); 
+					
+					//Grouping data by 'key'
+					var values = [], barIndexList = [];	
 					_keys.forEach(function(k) {	
-						var agesValues = {ages:[]};	
-						_names = [];	
+						var barsGroup = [] ;	
+						barIndexList = [];	
 						_data[k].forEach(function(val, i){
-							_names.push("bar"+i);
-							agesValues.ages.push({name: "bar"+i, value: val});
+							barIndexList.push(i);
+							barsGroup.push( {index: i, value: val} );
 						});
-						_data.datos.push(agesValues);
+						values.push(barsGroup);
 					});
 
 					x0.domain(_keys.map(function(key) {
 						return key; 
 					}));
-
-					x1.domain(_names).rangeRoundBands([0, x0.rangeBand()]);
-					
-					y.domain([0, d3.max(_data.datos, function(d) { 
-						return d3.max(d.ages, function(d) { 
+					x1.domain(barIndexList).rangeRoundBands([0, x0.rangeBand()]);			
+					y.domain([0, d3.max(values, function(d) { 
+						return d3.max(d, function(d) { 
 							return d.value; 
 						}); 
-					})]);
-					
+					})]);	
 					if (axisX && axisY) {	
 						axisX.attr("transform", "translate(0, "+this.height+")").call(xAxis);
 						axisY.attr("transform", "translate("+this.width+", 0)").call(yAxis);
 					}
 
-					//Background group 		
+					//Background rectangles 		
 					backgroundGroups = context.append("g");
 					backgroundGroups.selectAll(".bg_group")
 					.data(_keys)
 					.enter().append("rect")
-					.attr('class', function(key, i){
-						return (i%2 == 0)? 'bg_group odd' : 'bg_group';
+					.attr("class", function(key, i){
+						return (i%2 == 0)? "bg_group odd" : "bg_group";
 					})
 					.attr("x", function(key) { 
 						return  x0(key)-x0(0)/2;
 					})
-					.attr("width", _width/_keys.length )
-					.attr("height", _height);
+					.attr("width", this.width/_keys.length )
+					.attr("height", this.height);
 
 					//Bar groups
-					barGroups = context.selectAll(".group").data(_data.datos);
+					barGroups = context.selectAll(".group").data(values);
 					barGroups.enter().append("g")
 					.attr("fill", function(key, i) { 
 						return colors[(i%colors.length)]; 
@@ -102,28 +102,52 @@ define(
 					.attr("transform", function(d, i) { 
 						return "translate(" + x0(_keys[i]) + ",0)"; 
 					});	
-					
+
 					//Bars
+					var self = this;
+					var _height = this.height;
 					var bars = barGroups.selectAll(".chartbar")
 					.data(function(d) { 
-						return d.ages; 
+						return d; 
 					});	
-
 					bars.enter().append("rect")
-					.attr('class', 'chartbar')
+					.attr("class", "chartbar")
 					.attr("width", x1.rangeBand()-2)
 					.attr("x", function(d,i) { 
-						return x1(d.name); 
+						return x1(d.index); 
 					})
 					.attr("y", function(d) {
 						return y(d.value); 
 					})
 					.attr("height", function(d) { 
 						return _height - y(d.value); 
-					});
+					})
+					.on('mouseover', function(d) {
+                        //d3.select(this).attr('opacity', 1);
+                        self.showTooltip(this, d);
+                    })
+                    .on('mouseout', function(d) {
+                        //d3.select(this).attr('opacity', 0);
+                        self.hideTooltip();
+                    });
             	}	
 
-            	this.on('resize', function(e, chartSize) {
+				this.showTooltip = function(rect, d) {
+					var pos = $(rect).offset();
+					this.tooltip.html(d.value);
+					this.tooltip.css({
+						top: pos.top,
+						left: pos.left + x1.rangeBand()/3 
+					});
+					this.tooltip.show();
+				};
+
+				this.hideTooltip = function() {
+					this.tooltip.hide();
+				};
+
+
+            	this.on("resize", function(e, chartSize) {
                    this.width = chartSize.width;
                    this.height = chartSize.height;
                    x0.rangeRoundBands([0, this.width], .1);
@@ -132,39 +156,73 @@ define(
                    e.stopPropagation();
                 });
 
-
-                this.on('valueChange', function(e, options) {
+                this.on("valueChange", function(e, options) {
                 	var valueField = this.attr.model;
                    	var rawData = $.map(options.value[valueField], function(val, i) {
                             if (val.date >= options.range[0] && val.date <= options.range[1]) {
                                 return val;
                             }
                         });
-                    _data = processData(rawData, options.range[0], options.range[1]); 	
+
+		    		var period_days = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
+		    		var num_bars = numBars(period_days, 7);
+                    _data = prepareData(rawData, period_days, num_bars).data;	
+
                    	this.updateChart();
                     e.stopPropagation();
                 });
 
             });	
-        }
 
-        function processData(dataIn, startDate, endDate){
-        	var dataOut = {};
-        	var keys = null;
-   			
-        	dataIn.forEach(function(val, i){
-        		if (!keys){
-        			keys = Object.keys(val.value);		
-        			keys.forEach(function(key, i){
-        				dataOut[key] = [];
-        			});
-        		} 
-        		keys.forEach(function(key, j){
-        			dataOut[key].push(val.value[key]);
-        		});	
-  
-			});
-			return dataOut;
+			function prepareData(dataIn, period_days, num_bars){
+		    	
+		    	var dataOut = {data:{}, datesRange: zeros(num_bars)}, 
+		    		keys = null; 	
+		    		
+		    	dataIn.forEach(function(val, i){    	
+
+		    		if (!keys){
+		    			keys = Object.keys(val.value);		
+		    			keys.forEach(function(key){
+		    				dataOut.data[key] = zeros(num_bars);
+		    			});
+		    		} 
+		
+		    		var x = i%num_bars;		
+		    		keys.forEach(function(key){
+		    			dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
+		    		});
+
+				});
+				console.log(dataOut);
+				return dataOut;
+		    }
+
+		    function numBars(days, maxbars){
+		    	if (days <= maxbars) return days;
+		    	for (var i = 2 ; i <= maxbars; i++) {
+		    		if ((days%i) == 0 && (days/i) <= maxbars ) {
+		    			return days/i;
+		    		}
+		    	};
+		    	return days;
+		    }
+
+		    function zeros(length){
+		    	var vector = [];
+		    	for (var i = 0; i < length; i++) vector[i] = 0;
+				return vector;	
+		    }
+
+		    function esPrimo(num) {
+			    var i=2;
+			    while (i*i<=num) {
+			        if (num%i == 0) return(false);
+			        i++;
+			    }
+			    return(true);
+			}
         }
+   
     }      
 );

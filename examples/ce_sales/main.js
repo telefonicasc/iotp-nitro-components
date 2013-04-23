@@ -16,7 +16,7 @@ define(
   
     requirejs(['components/jquery_plugins'], function() {
       
-      var data = JSON.stringify(generateRandomData());
+      //var data = JSON.stringify(generateRandomData());
 
       $('.dashboard').m2mdashboard({
         mainContent: [
@@ -84,22 +84,37 @@ define(
         overviewPanel: {
           title: 'Samples Overview Panel',
           contextMenu: null,
-          items: [{
-            component: 'cellBarchartSubpanel',
-            className: 'cell-barchart-subpanel',
-            text: {
-              title: { value: '21%', caption: 'of users online' },
-              content: { value: '345', caption: 'unique users online' }
-            },
-            chart: {
-              conf: {
-                maxHeight: 70,
-                width: 45,
-                barPadding: 4
+          items: [
+            {
+              className: 'date-range last-section-panel',
+              tpl: '{{#value}} {{start}} to {{end}} ({{num_days}} days) {{/value}}',
+              model: function(value) {
+                var format = d3.time.format('%e-%b-%y');
+                if (value && value.selectedRange) {              
+                  return {
+                    start: format(value.selectedRange[0]),
+                    end: format(value.selectedRange[1]),
+                    num_days: (value.selectedRange[1]-value.selectedRange[0])/(1000*60*60*24)+1
+                  }
+                }
+              }
+            }, {
+              component: 'cellBarchartSubpanel',
+              className: 'cell-barchart-subpanel',
+              text: {
+                title: { value: '21%', caption: 'of users online' },
+                content: { value: '345', caption: 'unique users online' }
               },
-              data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
+              chart: {
+                conf: {
+                  maxHeight: 70,
+                  width: 45,
+                  barPadding: 4
+                },
+                data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
+              }
             }
-          }]
+          ]
         },
         data: function(cb) {
           $.getJSON('data/fake_data.json', function(data) {
@@ -125,7 +140,7 @@ define(
         , conversionRate = 0.11
         , registeredRate = 0.7
         , deactivationRate = 0.01
-        , endDate = new Date(2013, 1, 1).getTime()
+        , endDate = new Date(2013, 3, 1).getTime()
         , dayInc = 1000*60*60*24;      
 
       while (date < endDate) {
@@ -136,13 +151,13 @@ define(
           , todayVisitors = Math.round(totalRegistered*(Math.random()*0.2)+60)
           , todayRegistrations = Math.round(todayVisitors*todayCr)
           , todayDeactivations = Math.round(totalRegistered*todayDr)
-          , bundle1hour = randomFromInterval(1, 10)
-          , bundle4hours = randomFromInterval(1, 10)
-          , bundle8hours = randomFromInterval(1, 10)
-          , bundle1day = randomFromInterval(1, 10)
-          , bundle1month = randomFromInterval(1, 10)
-          , bundle50megs = randomFromInterval(1, 10)
-          , bundle250megs = randomFromInterval(1, 10);
+          , bundle1hour = randomFromInterval(1, 20)
+          , bundle4hours = randomFromInterval(1, 20)
+          , bundle8hours = randomFromInterval(1, 20)
+          , bundle1day = randomFromInterval(1, 20)
+          , bundle1month = randomFromInterval(1, 20)
+          , bundle50megs = randomFromInterval(1, 20)
+          , bundle250megs = randomFromInterval(1, 20);
 
 
         totalRegistered += todayRegistrations;

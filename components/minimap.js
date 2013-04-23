@@ -15,13 +15,16 @@ define(
                 mapId: 'keithtid.map-w594ylml',
                 zoomValue: 16,
                 movable: false,
-                markerModel: null
+                markerModel: null,
+                listenTo: 'updateMinimap',
+                containerClass: 'mapbox-mini'
             });
 
             this.after('initialize', function() {
+                var self = this;
                 var mapM;
                 this.$node.addClass('fit-minimap');
-                this.$nodeMap = $('<div>').addClass('mapbox-mini').appendTo(this.$node);
+                this.$nodeMap = $('<div>').addClass(self.attr.containerClass).appendTo(this.$node);
             
                 // Create layer showing map
                 var layer = mapbox.layer().id(this.attr.mapId);
@@ -39,7 +42,6 @@ define(
                     lat: this.attr.markerModel.geometry.coordinates[1],
                     lon: this.attr.markerModel.geometry.coordinates[0]
                 }
-                //debugger;
                 this.mapM.centerzoom(center, this.attr.zoomValue);
                 // Create marker layer
                 this.markerLayer = mapbox.markers.layer();
@@ -50,6 +52,19 @@ define(
                 // => Disable tooltips
                 var interaction = mapbox.markers.interaction(this.markerLayer);
                 interaction.showOnHover(false);
+
+                // Event listener
+                this.on(this.attr.listenTo,function (event, markerModel) {
+                    this.mapM.removeLayer('markers');
+                    this.markerLayer = mapbox.markers.layer().features([markerModel]);
+                    this.mapM.addLayer(this.markerLayer);
+                    var center = {
+                        lat: markerModel.geometry.coordinates[1],
+                        lon: markerModel.geometry.coordinates[0]
+                    }
+                    this.mapM.centerzoom(center, this.attr.zoomValue);
+                });
+
             });
         }
     }

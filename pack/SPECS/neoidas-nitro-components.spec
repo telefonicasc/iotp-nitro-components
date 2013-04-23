@@ -25,7 +25,7 @@ then
    mkdir -p $RPM_BUILD_ROOT%{_dcadir}
 fi
 
-cp -rf ${WORKSPACE}/examples $RPM_BUILD_ROOT%{_dcadir}/
+cp -rf ${WORKSPACE}/* $RPM_BUILD_ROOT%{_dcadir}/
 
 # -------------------------------------------------------------------------------------------- #
 # post-install section:

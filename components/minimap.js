@@ -29,7 +29,6 @@ define(
                 // Create layer showing map
                 var layer = mapbox.layer().id(this.attr.mapId);
                 // Create mapbox, without handlers, to prevent zooming and panning
-                console.log(this.$nodeMap[0]);
                 if (this.attr.movable == false) {
                     this.mapM = mapbox.map(this.$nodeMap[0], layer, null, []);
                 }

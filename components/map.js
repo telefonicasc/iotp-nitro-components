@@ -137,65 +137,82 @@ function(ComponentManager) {
             if (this.attr.hoveringTooltip == false) {
                 interaction.showOnHover(false);
             } 
-            // ==> Create markers
-            // All markers unselected
-            for (var i = 0; i < self.attr.features.length; i++) {
-                // AUTO ID
-                self.attr.features[i].properties['_marker_id'] = '_marker_' + i;
-                if (self.attr.features[i].properties['marker-color'] == null) {
-                    self.attr.features[i].properties['marker-color'] = self.attr.unselectedColor;
-                }
-                if (self.attr.features[i].properties['marker-symbol'] == null ) {
-                    self.attr.features[i].properties['marker-symbol'] = self.attr.unselectedSymbol;
-                }
-            }
-            
-            // Check this: http://mapbox.com/mapbox.js/example/marker-movement/
-            this.markerLayer.features(this.attr.features);
-            //    .key(function (f) {return f.properties.id} );
-            // ==> On click event trigger for the markers 
-            this.markerLayer.factory(
-                function(model) {
-                    var elem = mapbox.markers.simplestyle_factory(model);
-                    // Adds the id to the class, to be able to recover it later
-                    $(elem).addClass(model.properties['_marker_id']);
-                    MM.addEvent(elem, 'click',
-                        function (mouseEvent) {
-                            // Update markers
-                            self.trigger('update-marker-views', { id:$(elem).attr('class') } );
-                            // Trigger the event specified
-                            // Get marker model
-                            var modelIndex = self.findMarker($(elem).attr('class'));
-                            var model = self.attr.features[modelIndex];
-                            if (self.attr.markerClickEventTarget != '') {
-                                $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
-                            }
-                            else {
-                                self.trigger(self.attr.markerClickEvent, model);
-                            }
-                        } 
-                    );
-                    // Elem se ha actualizado, por lo que este nodo ya no existe!!
-                    return elem;
-                }
-            );
-
             if (self.attr.debug) {
                 // ==> Event suscriptions and handlers
                 console.log('Created click event debug handler');
                 // TEST
                 this.on(this.attr.markerClickEvent, function (event,payload) {
                     console.log('Map.js  :: trigger["' + 
-                        this.attr.markerClickEvent + '"] Target class name: ' +event.currentTarget.className);
+                        this.attr.markerClickEvent + '"] Target class name: ' + event.currentTarget.className);
                 });
             }
 
-            this.on('update-marker-model', function (event, payload) {
-                var index = self.findMarker(payload.id);
-                console.log('index: ' + index);
+            // ============================= \\
+            // >> Set map marker features << \\
+            // ============================= \\
+            this.setFeatures = function (features, center, zoom) {
+                console.log('Setting map features');
+                if (zoom != null) self.attr.zoomInitial = zoom;
+                if (center != null) self.attr.center = center;
+                if (features != null) self.attr.features = features;
+
+                console.log('Updating map marker features');
+                // Set feature id/props
+                for (var i = 0; i < self.attr.features.length; i++) {
+                    // AUTO ID
+                    self.attr.features[i].properties['_marker_id'] = '_marker_' + i;
+                    if (self.attr.features[i].properties['marker-color'] == null) {
+                        self.attr.features[i].properties['marker-color'] = self.attr.unselectedColor;
+                    }
+                    if (self.attr.features[i].properties['marker-symbol'] == null ) {
+                        self.attr.features[i].properties['marker-symbol'] = self.attr.unselectedSymbol;
+                    }
+                }
+                self.mapC.removeLayer('markers');
+                self.markerLayer = mapbox.markers.layer().features(self.attr.features);
+                self.mapC.addLayer(self.markerLayer);
+                self.mapC.centerzoom(center, zoom);
+                this.markerLayer.factory(
+                    function(model) {
+                        var elem = mapbox.markers.simplestyle_factory(model);
+                        // Adds the id to the class, to be able to recover it later
+                        $(elem).addClass(model.properties['_marker_id']);
+                        MM.addEvent(elem, 'click',
+                            function (mouseEvent) {
+                                // Update markers
+                                self.trigger('update-marker-views', { id:$(elem).attr('class') } );
+                                // Trigger the event specified
+                                // Get marker model
+                                var modelIndex = self.findMarker($(elem).attr('class'));
+                                var model = self.attr.features[modelIndex];
+                                if (self.attr.markerClickEventTarget != '') {
+                                    $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
+                                }
+                                else {
+                                    self.trigger(self.attr.markerClickEvent, model);
+                                }
+                            } 
+                        );
+                        // Elem se ha actualizado, por lo que este nodo ya no existe!!
+                        return elem;
+                    }
+                );
+            }
+
+            // ==> Create features
+            //self.setFeatures(self.attr.features, self.attr.center, self.attr.zoomInitial);
+            self.setFeatures();
+            
+            // =========================== \\
+            // >> Handles model updates << \\
+            // =========================== \\
+            this.on('update-marker-features', function (event, features, center, zoom) {
+                self.setFeatures(features,center,zoom);
             });
 
-            // => Marker update on click
+            // ============================ \\
+            // >> Marker update on click << \\
+            // ============================ \\
             this.on('update-marker-views', function (event, payload) {
                 if (self.attr.debug) console.log('Map.js [trigger] updating markers');
                 var sel = self.attr.selected;
@@ -227,6 +244,9 @@ function(ComponentManager) {
                 self.attr.selected = i;
             });
 
+            // ======================================== \\
+            // >> Finds a marker given it's id/class << \\
+            // ======================================== \\
             this.findMarker = function (markerid) {
                 var i = 0;
                 var found = false;

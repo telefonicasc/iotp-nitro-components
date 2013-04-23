@@ -34,7 +34,6 @@ define(
                             {
                                 geometry: { coordinates: [ -3.662782, 40.515528 ] },
                                 properties: {
-                                    'id': 1,
                                     'marker-color':'#DF0101',
                                     'marker-symbol':'rail-underground',
                                     'title': 'Ronda de la Comunicacion',
@@ -43,7 +42,6 @@ define(
                             {
                                 geometry: { coordinates: [ -3.6665, 40.51535 ] },
                                 properties: {
-                                    'id':2,
                                     'marker-color':'#0101DF',
                                     'marker-symbol':'industrial',
                                     'title': 'Telefonica I+D'
@@ -53,7 +51,7 @@ define(
                     }
                 ],
                 overviewPanel: {
-                    title: 'Sidebar details: IDAS-8815',
+                    title: 'Traffic Lights',
                     items: [
                         {
                             component: 'pagedPanel',

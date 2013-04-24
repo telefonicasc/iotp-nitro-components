@@ -120,7 +120,8 @@ define(
             //rangeField: 'selectedRange'
           }]
         }]
-      }, {
+      },
+      {
         component: 'dashboardMainPanel',
         title: 'Timeline',
         className: 'timeline',
@@ -159,23 +160,7 @@ define(
           }],    
           //component: 'rangeSelectionChart'
         }]
-      }/*
-      ,{
-          component: 'cellBarchartSubpanel',
-          className: 'cell-barchart-subpanel',
-          text: {
-            title: { value: '21%', caption: 'of users online' },
-            content: { value: '345', caption: 'unique users online' }
-          },
-          chart: {
-            conf: {
-              maxHeight: 70,
-              width: 45,
-              barPadding: 4
-            },
-            data: [ { gains: 87 }, { losses: 46 } ]    //values from 0 - 100 
-          }
-        }*/],
+      }],
       overviewPanel: {
         title: 'Days of user stats',
         contextMenu: {

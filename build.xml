@@ -22,7 +22,7 @@
     </target>
     
     <target name="run-tests" depends="prepare">
-	<exec executable="grunt" dir="${basedir}/">
+	<exec executable="/home/develop/RH5_5_deps/node-v0.8/bin/grunt" dir="${basedir}/">
 		<arg line="test" />
 		<env key="PATH" value="/home/develop/RH5_5_deps/node-v0.8/bin:/home/develop/RH5_5_deps/node-v0.8.14:/home/develop/RH5_5_deps/node-v0.8.14/deps/npm/bin:/home/develop/RH5_5_deps/Python-2.7.3/:$PATH" />            
 	</exec>

@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/m2m-nitro-components'
+  baseUrl: '../../'
 });
 
 define(
@@ -16,8 +16,6 @@ define(
   
     requirejs(['components/jquery_plugins'], function() {
       
-      //var data = JSON.stringify(generateRandomData());
-
       $('.dashboard').m2mdashboard({
         mainContent: [
           {
@@ -30,14 +28,14 @@ define(
             valueField: 'registrations',
             className: 'chart',
             grid: false,
-            marginBottom: 190,
-            marginRight: 45,
+            marginBottom: 150,
+            marginRight: 30,
             axisx: false,
             axisy: false,
             charts: [{
               type: 'groupBarChart',
-              model: 'productMix',
-              colors: ["#d3d2bc", "#dfcab5", "#c5cfc5", "#d7b7ab", "#b3c1bf", "#d6d5a4", "#c1aeb0"]
+              model: 'bundleSales',
+              colors: ["#d3d2bc", "#dfcab5", "#c5cfc5", "#d7b7ab", "#d6d5a4", "#c1aeb0"]
             }]
           }]
         },
@@ -61,6 +59,7 @@ define(
             component: 'chartContainer', 
             rangeField: 'range',
             valueField: 'totalRegistered',
+            axisx: false,
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',
@@ -87,7 +86,7 @@ define(
           items: [
             {
               className: 'date-range last-section-panel',
-              tpl: '{{#value}} {{start}} to {{end}} ({{num_days}} days) {{/value}}',
+              tpl: '<div>{{#value}} {{start}} to {{end}} ({{num_days}} days) {{/value}}</div><div>{{}}</div>',
               model: function(value) {
                 var format = d3.time.format('%e-%b-%y');
                 if (value && value.selectedRange) {              
@@ -102,69 +101,57 @@ define(
           ]
         },
         data: function(cb) {
-          $.getJSON('data/fake_data.json', function(data) {
-            $.each(data.deactivations, function(i, item) {
-              item.value = 0 - item.value;
-            })
-            cb(data);
+          var from  = 1356998400000, to = 1364688000000,
+              url = 'http://mongodb1-1:27080/dashce/';
+
+          var uriBundles = encodeURI(url+'bundles/_find?batch_size=1000&criteria={"ts": {"$gte": {"$date" : '+from+'}, "$lte": {"$date" : '+to+'}}}');
+          var uriAccounts = encodeURI(url+'accounts/_find?batch_size=1000&criteria={"ts": {"$gte": {"$date" : '+from+'}, "$lte": {"$date" : '+to+'}}}');
+          var queryBundles = $.getJSON(uriBundles);
+          var queryAccounts = $.getJSON(uriAccounts);
+          
+          $.when( queryBundles, queryAccounts ).done(function(res1, res2) {
+              var data = createDataObject(res1, res2)
+              cb(data);
+          }).fail(function(e) {
+            alert('Error fetching data from server');
           });
         }
       });
-
-      function generateRandomData() {
-      var data = {
-          totalRegistered: [],
-          onlineRegistered: [],
-          visitors: [],
-          registrations: [],
-          deactivations: [],
-          productMix: []
-        }
-        , date = new Date(2013, 0, 2).getTime()
-        , totalRegistered = 20
-        , conversionRate = 0.11
-        , registeredRate = 0.7
-        , deactivationRate = 0.01
-        , endDate = new Date(2013, 1, 1).getTime()
-        , dayInc = 1000*60*60*24;      
-
-      while (date < endDate) {
-        var todayCr = conversionRate*(Math.random()*0.4+0.8)
-          , todayOnlineRegistered = Math.round(totalRegistered*(Math.random()*0.4+0.1))
-          , todayRr = registeredRate*(Math.random()*0.4+0.8)
-          , todayDr = deactivationRate*(Math.random()*0.4+0.8)
-          , todayVisitors = Math.round(totalRegistered*(Math.random()*0.2)+60)
-          , todayRegistrations = Math.round(todayVisitors*todayCr)
-          , todayDeactivations = Math.round(totalRegistered*todayDr)
-          , bundle1hour = randomFromInterval(1, 20)
-          , bundle4hours = randomFromInterval(1, 20)
-          , bundle8hours = randomFromInterval(1, 20)
-          , bundle1day = randomFromInterval(1, 20)
-          , bundle1month = randomFromInterval(1, 20)
-          , bundle50megs = randomFromInterval(1, 20)
-          , bundle250megs = randomFromInterval(1, 20);
-
-
-        totalRegistered += todayRegistrations;
-        totalRegistered -= todayDeactivations;      
-
-        data.totalRegistered.push({ date: date, value: totalRegistered });
-        data.onlineRegistered.push({ date: date, value: todayOnlineRegistered });
-        data.visitors.push({ date: date, value: todayVisitors });
-        data.registrations.push({ date: date, value: todayRegistrations });
-        data.deactivations.push({ date: date, value: todayDeactivations });
-        data.productMix.push({ date: date, value: {'1 hour': bundle4hours, '4 hours': bundle4hours, '8 hours': bundle8hours, '1 day': bundle1day, '1 month': bundle1month, '50 megs': bundle50megs, '250 megs': bundle250megs} });
-
-        date += dayInc;
-      }
       
-      return data;
-    }
+      function createDataObject(bundlesData, accountsData){
+        var data = {
+                totalRegistered: [],
+                onlineRegistered: [],
+                visitors: [],
+                registrations: [],
+                deactivations: [],
+                bundleSales: []
+              }
 
-    function randomFromInterval(from,to)
-    {
-        return Math.floor(Math.random()*(to-from+1)+from);
-    }
+        var results = bundlesData[0].results;
+        $.each(results, function(i, item) {
+          var obj = { date: item.ts.$date, value:{} };
+          $.each(item.type, function(j, bundle){
+              obj.value[bundle.name] = bundle.purchased;
+          });
+          data['bundleSales'].push(obj);
+        });
+
+        results = accountsData[0].results;
+        var sumRegistered = 0;
+        var sumOnlineRegistered = 0;
+        $.each(results, function(i, item) {
+          sumRegistered += item.new_registers.count;
+          sumOnlineRegistered += item.online.count;
+          data['registrations'].push({ date: item.ts.$date, value:item.new_registers.count });
+          data['totalRegistered'].push({ date: item.ts.$date, value:sumRegistered });
+          data['onlineRegistered'].push({ date: item.ts.$date, value:sumOnlineRegistered });
+          data['deactivations'].push({ date: item.ts.$date, value:item.deactivations });
+          data['visitors'].push({ data: item.ts.$date, value: item.visitors.newly_registered})
+        });
+
+        return data;
+      }
 
     });
   }

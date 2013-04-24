@@ -49,7 +49,7 @@ define(
 			
 				this.updateChart = function() {					
 					
-					context.attr("height", (this.height+190));
+					context.attr("height", (this.height+130));
 
 					barGroups.remove();	
 					backgroundGroups.remove();
@@ -106,25 +106,17 @@ define(
 					.attr("class", function(key, i){
 						CellBarchartSubpanel.attachTo(this,{
 							text: {
-			                title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of users online' },
-			                content: { value: Math.floor(Math.random()*(401)+100), caption: 'unique users online' }
-			              },
-			              chart: {
-			                conf: {
-			                  maxHeight: 70,
-			                  width: 45,
-			                  barPadding: 4
-			                },
-			                data: [ { gains: Math.floor(Math.random()*(61)+40) }, { losses: Math.floor(Math.random()*(100-40+1)+40) } ]    //values from 0 - 100 
-			              }
+								title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of sessions' },
+								content: { value: Math.floor(Math.random()*(1230)+100), caption: 'Packages consumed' }
+							}
 						});
 						return "cell-barchart-subpanel";
 					})
 					.attr("x", function(key) { 
-						return  x0(key)-x0(0)/2;
+						return  x0(key)-x0(0)/2+3;
 					})
-					.attr("width", this.width/_keys.length )
-					.attr("height", 165);
+					.attr("width", this.width/_keys.length-6 )
+					.attr("height", 100);
 					/*------------------------------------*/
 
 					//Bar groups
@@ -157,18 +149,16 @@ define(
 						return self.height - y(d.value); 
 					})
 					.on('mouseover', function(d) {
-                        //d3.select(this).attr('opacity', 1);
-                        self.showTooltip(this, d);
-                    })
-                    .on('mouseout', function(d) {
-                        //d3.select(this).attr('opacity', 0);
-                        self.hideTooltip();
-                    });
-            	}	
+						self.showTooltip(this, d);
+					})
+					.on('mouseout', function(d) {
+						self.hideTooltip();
+					});
+				}	
 
 				this.showTooltip = function(rect, d) {
 					var pos = $(rect).offset();
-					this.tooltip.html(d.value);
+					this.tooltip.html('<div>'+d.value+'</div><div>('+this.attr.daysBar+' d/b)</div>');
 					this.tooltip.css({
 						top: pos.top,
 						left: pos.left + x1.rangeBand()/3 
@@ -181,69 +171,82 @@ define(
 				};
 
 
-            	this.on("resize", function(e, chartSize) {
-                   this.width = chartSize.width;
-                   this.height = chartSize.height;
-                   x0.rangeRoundBands([0, this.width], .1);
-				   y.range([this.height, 0]);				   
-                   this.updateChart();	
-                   e.stopPropagation();
-                });
+				this.on("resize", function(e, chartSize) {
+					this.width = chartSize.width;
+					this.height = chartSize.height;
+					x0.rangeRoundBands([0, this.width], .1);
+					y.range([this.height, 0]);				   
+					this.updateChart();	
+					e.stopPropagation();
+				});
 
-                this.on("valueChange", function(e, options) {
-                	var valueField = this.attr.model;
-                   	var rawData = $.map(options.value[valueField], function(val, i) {
-                            if (val.date >= options.range[0] && val.date <= options.range[1]) {
-                                return val;
-                            }
-                        });
+				this.on("valueChange", function(e, options) {
+					var valueField = this.attr.model;
+					var rawData = $.map(options.value[valueField], function(val, i) {
+						if (val.date >= options.range[0] && val.date <= options.range[1]) {
+							return val;
+						}
+					});
+					var days = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
+					var d = prepareData(rawData, days);
+					_data = d.data;
+					this.attr.daysBar = d.daysBar;	
+					this.updateChart();
+					e.stopPropagation();
+					});
+				});	
 
-		    		var period_days = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
-		    		var num_bars = numBars(period_days, 7);
-                    _data = prepareData(rawData, period_days, num_bars).data;	
+			function prepareData(dataIn, period_days){
+				
+				if (period_days > 7 && checkPrimo(period_days)){
+					period_days++;
+				}
+				var num_bars = numBars(period_days, 7);
 
-                   	this.updateChart();
-                    e.stopPropagation();
-                });
-
-            });	
-
-			function prepareData(dataIn, period_days, num_bars){
-		    	
-		    	var dataOut = {data:{}, datesRange: zeros(num_bars)}, 
-		    		keys = null; 	
-		    		
-		    	dataIn.forEach(function(val, i){    	
-		    		if (!keys){
-		    			keys = Object.keys(val.value);		
-		    			keys.forEach(function(key){
-		    				dataOut.data[key] = zeros(num_bars);
-		    			});
-		    		} 
-		    		var x = i%num_bars;		
-		    		keys.forEach(function(key){
-		    			dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
-		    		});
+				var dataOut = {data:{}, daysBar: period_days/num_bars }, 
+					keys = null; 		
+				dataIn.forEach(function(val, i){    	
+					if (!keys){
+						keys = Object.keys(val.value);		
+						keys.forEach(function(key){
+							dataOut.data[key] = zeros(num_bars);
+						});
+					} 
+					var x = i%num_bars;		
+					keys.forEach(function(key){
+						dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
+					});
 
 				});
 				return dataOut;
-		    }
+			}
 
-		    function numBars(days, maxbars){
-		    	if (days <= maxbars) return days;
-		    	for (var i = 2 ; i <= maxbars; i++) {
-		    		if ((days%i) == 0 && (days/i) <= maxbars ) {
-		    			return days/i;
-		    		}
-		    	};
-		    	return days;
-		    }
+			function checkPrimo(number){
+				var primo=0;
+				for(var i=0; i<=number; i++){
+					if(number%i==0 ){
+						primo++;
+					}
+					if(primo>2) break;
+				} 
+				return (primo==2)? true: false; 
+			}
 
-		    function zeros(length){
-		    	var vector = [];
-		    	for (var i = 0; i < length; i++) vector[i] = 0;
+			function numBars(days, maxbars){
+				if (days <= maxbars) return days;
+				for (var i = 2 ; i <= days; i++) {
+					if ((days%i) == 0 && (days/i) <= maxbars ) {
+						return days/i;
+					}
+				};
+				return days;
+			}
+
+			function zeros(length){
+				var vector = [];
+				for (var i = 0; i < length; i++) vector[i] = 0;
 				return vector;	
-		    }
-        }
-    }      
+			}
+		}
+	}  
 );

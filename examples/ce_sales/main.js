@@ -157,8 +157,6 @@ define(
 
         date += dayInc;
       }
-
-      console.log(JSON.stringify(data));
       
       return data;
     }

@@ -49,7 +49,6 @@ define(
 			
 				this.updateChart = function() {					
 					
-					console.log('height', this.height);
 					context.attr("height", (this.height+190));
 
 					barGroups.remove();	
@@ -97,8 +96,6 @@ define(
 					})
 					.attr("width", this.width/_keys.length )
 					.attr("height", this.height);
-
-					var _height = this.height;
 
 					/* TODO: this is just for Demo, it won't be here finally */
 					subPanelgroup = context.append("g");
@@ -157,7 +154,7 @@ define(
 						return y(d.value); 
 					})
 					.attr("height", function(d) { 
-						return _height - y(d.value); 
+						return self.height - y(d.value); 
 					})
 					.on('mouseover', function(d) {
                         //d3.select(this).attr('opacity', 1);

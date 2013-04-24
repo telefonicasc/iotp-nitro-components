@@ -98,6 +98,7 @@ function(ComponentManager) {
             showZoomButtons: false,
             features: [],
 			markers: [],
+            markerAnnounceTrigger: 'announce-trigger',
             markerClickEventTarget: '',
             markerClickEvent: 'marker-clicked',
             hoveringTooltip: true,
@@ -185,6 +186,8 @@ function(ComponentManager) {
                                 // Get marker model
                                 var modelIndex = self.findMarker($(elem).attr('class'));
                                 var model = self.attr.features[modelIndex];
+                                // Model includes img src
+                                model.properties['img'] = elem.src;
                                 if (self.attr.markerClickEventTarget != '') {
                                     $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
                                 }
@@ -198,6 +201,18 @@ function(ComponentManager) {
                     }
                 );
             }
+
+            /*
+            this.announce = function (locator, trigger_name) {
+                var list = [];
+                // I want to include the devic name
+                for (var i = 0; i < self.attr.features.length; i++) {
+                    self.attr.features[i].properties['img']
+
+                }
+
+            };
+            */
 
             // ==> Create features
             //self.setFeatures(self.attr.features, self.attr.center, self.attr.zoomInitial);
@@ -242,6 +257,20 @@ function(ComponentManager) {
                 }
                 // => Update attribute selected
                 self.attr.selected = i;
+            });
+
+            // ======================================================== \\
+            // >> Trigger to request to announce the current markers << \\
+            // ======================================================== \\
+            this.on('announce-markers', function (event, locator, trigger_name) {
+                //self.announce(locator, trigger_name);
+                var tn = trigger_name == null ? markerAnnounceTrigger : trigger_name;
+                if (locator == null) {
+                    self.trigger(tn, self.attr.features);
+                }
+                else {
+                    $(locator).trigger(tn, [self.attr.features]);
+                }
             });
 
             // ======================================== \\

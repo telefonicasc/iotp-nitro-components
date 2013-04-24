@@ -9,8 +9,10 @@
 .mapbox-mini {
     height: 250px;
     width: 90%;
-    //bottom: 0px;
+    bottom: 22x;
     left: 5%;
+    top:5px;
+    border: 2px solid black;
 }
 
 .detail-panel-header {
@@ -56,3 +58,10 @@
     left:0px;
 }
 
+.paged-panel {
+}
+
+.paged-navigation {
+    padding-top: 5px;
+    text-align: center;
+}

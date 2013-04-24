@@ -16,12 +16,15 @@ define(
             this.pageCount = 1;
             this.pagerVisible = false;
             this.defaultAttrs({
+                header: '',
                 insertionPoint: '.paged-content',
                 pagerLocator: '.paged-navigation',
                 pageDisplay: '.paged-navigation-display',
                 buttonLeftClass: '.paged-button-left',
                 buttonRightClass: '.paged-button-right',
-                items: []
+                ID: '',
+                items: [],
+                triggers: []
             });
 
             this.updateView = function () {
@@ -118,9 +121,19 @@ define(
                 }
             }
 
+            this.loadItems = function (items) {
+                $.each(items, $.proxy(function (i, item) {
+                    self.attr.items.push(item);
+                })); 
+                self.renderItems();
+            }
+
             this.after('initialize', function() {
                 self = this;
                 this.$node.addClass('paged-panel');
+                this.$node.attr('id',self.attr.ID);
+                this.$nodeMap = $('<div>').addClass('paged-header')
+                    .html(self.attr.header).appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);
 
@@ -133,14 +146,32 @@ define(
                 // Adds button click events
                 this.$node.find('.paged-button-left').click(this.pageLeft);
                 this.$node.find('.paged-button-right').click(this.pageRight);
-
+                
                 // Bind update on window resize
                 $(window).bind('resize', self.updateView);
+                
+                // Update event handler
+                this.on('update-view', function () {
+                    console.log(self.attr.ID + ': update view request');
+                    self.updateView();
+                });
 
-            });
+                this.on('load-items', function (event, items) {
+                    console.log('Loading items at: ' + self.attr.ID);
+                    if (items != null) self.loadItems(items);
+                    else console.error('Required parameter: items []');
+                });
 
-            this.after('renderItems', function () {
-                console.log('rendered');    
+                this.on('remove-component', function (event, comp) {
+                    debugger;
+                    console.error("TODO!: paged_panel:remove-component");
+                });
+
+                // Load dynamic triggers
+                for (var i = 0; i < self.attr.triggers.length; i++) {
+                    console.log('loading dynamic trigger');
+                    self.on(self.attr.triggers[i].name, self.attr.triggers[i].task);
+                }
             });
         }
     }

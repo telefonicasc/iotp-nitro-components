@@ -100,6 +100,7 @@ define(
 
 					var _height = this.height;
 
+					/* TODO: this is just for Demo, it won't be here finally */
 					subPanelgroup = context.append("g");
 					subPanelgroup.attr("transform", "translate(0, "+(this.height+30)+")");
 					subPanelgroup.selectAll(".foreignObject")
@@ -108,8 +109,8 @@ define(
 					.attr("class", function(key, i){
 						CellBarchartSubpanel.attachTo(this,{
 							text: {
-			                title: { value: Math.floor(Math.random()*(100-10+1)+10) +'%', caption: 'of users online' },
-			                content: { value: Math.floor(Math.random()*(500-100+1)+100), caption: 'unique users online' }
+			                title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of users online' },
+			                content: { value: Math.floor(Math.random()*(401)+100), caption: 'unique users online' }
 			              },
 			              chart: {
 			                conf: {
@@ -117,7 +118,7 @@ define(
 			                  width: 45,
 			                  barPadding: 4
 			                },
-			                data: [ { gains: Math.floor(Math.random()*(100-40+1)+40) }, { losses: Math.floor(Math.random()*(100-40+1)+40) } ]    //values from 0 - 100 
+			                data: [ { gains: Math.floor(Math.random()*(61)+40) }, { losses: Math.floor(Math.random()*(100-40+1)+40) } ]    //values from 0 - 100 
 			              }
 						});
 						return "cell-barchart-subpanel";
@@ -127,6 +128,7 @@ define(
 					})
 					.attr("width", this.width/_keys.length )
 					.attr("height", 165);
+					/*------------------------------------*/
 
 					//Bar groups
 					barGroups = context.selectAll(".group").data(values);
@@ -215,14 +217,12 @@ define(
 		    		keys = null; 	
 		    		
 		    	dataIn.forEach(function(val, i){    	
-
 		    		if (!keys){
 		    			keys = Object.keys(val.value);		
 		    			keys.forEach(function(key){
 		    				dataOut.data[key] = zeros(num_bars);
 		    			});
 		    		} 
-		
 		    		var x = i%num_bars;		
 		    		keys.forEach(function(key){
 		    			dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
@@ -247,16 +247,6 @@ define(
 		    	for (var i = 0; i < length; i++) vector[i] = 0;
 				return vector;	
 		    }
-
-		    function esPrimo(num) {
-			    var i=2;
-			    while (i*i<=num) {
-			        if (num%i == 0) return(false);
-			        i++;
-			    }
-			    return(true);
-			}
         }
-   
     }      
 );

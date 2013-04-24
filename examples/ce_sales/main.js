@@ -120,12 +120,12 @@ define(
           deactivations: [],
           productMix: []
         }
-        , date = new Date(2013, 0, 1).getTime()
+        , date = new Date(2013, 0, 2).getTime()
         , totalRegistered = 20
         , conversionRate = 0.11
         , registeredRate = 0.7
         , deactivationRate = 0.01
-        , endDate = new Date(2013, 3, 1).getTime()
+        , endDate = new Date(2013, 1, 1).getTime()
         , dayInc = 1000*60*60*24;      
 
       while (date < endDate) {

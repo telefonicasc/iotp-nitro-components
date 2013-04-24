@@ -31,6 +31,6 @@
     <target name="bundle" depends="run-tests">
     </target>
 
-    <target name="build" depends="prepare" />
+    <target name="build" depends="bundle" />
 
 </project>

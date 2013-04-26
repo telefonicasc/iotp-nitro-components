@@ -6,6 +6,7 @@ define(
   [
     'components/dashboard/dashboard',
     'components/chart/group_bar_chart',
+    'components/chart/bar_chart',
     'components/chart/range_selection_chart',
     'components/dashboard/dashboard_main_panel',
     'components/dashboard/overview_subpanel',
@@ -66,16 +67,10 @@ define(
               selectedRangeField: 'selectedRange'
             },
             charts: [{
-              type: 'areaChart',
-              model: 'totalRegistered',
+              type: 'barChart',
+              model: 'bundleSalesSum',
               //rangeField: 'range',
               cssClass: 'whole-chart'   
-            }, {
-              type: 'areaChart',
-              model: 'totalRegistered',
-              clipRange: 'selectedRange',
-              //rangeField: 'selectedRange',
-              cssClass: 'selected-chart'
             }] 
           }]
         }
@@ -126,16 +121,20 @@ define(
                 visitors: [],
                 registrations: [],
                 deactivations: [],
-                bundleSales: []
+                bundleSales: [],
+                bundleSalesSum: []
               }
 
         var results = bundlesData[0].results;
         $.each(results, function(i, item) {
           var obj = { date: item.ts.$date, value:{} };
+          var objSum = { date: item.ts.$date, value: 0 };
           $.each(item.type, function(j, bundle){
               obj.value[bundle.name] = bundle.purchased;
+              objSum.value = objSum.value + bundle.purchased;
           });
           data['bundleSales'].push(obj);
+          data['bundleSalesSum'].push(objSum);
         });
 
         results = accountsData[0].results;

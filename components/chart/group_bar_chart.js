@@ -14,7 +14,8 @@ define(
         	this.defaultAttrs({
         		grid: true,
         		data: {},
-        		max_num_bars: 7   
+        		max_num_bars: 7,
+        		incremental: true   
             });
 
             this.after("initialize", function() {
@@ -170,6 +171,35 @@ define(
 					this.tooltip.hide();
 				};
 
+				this.prepareChartData = function(dataIn, period_days){
+					if (period_days > this.attr.max_num_bars && checkPrimo(period_days)){
+						period_days++;
+					}
+					var num_bars = numBars(period_days, this.attr.max_num_bars),
+					    _inc = this.attr.incremental,
+					    dataOut = {data:{}, daysBar: period_days/num_bars }, 
+						keys = null; 		
+
+					dataIn.forEach(function(val, i){    	
+						if (!keys){
+							keys = Object.keys(val.value);		
+							keys.forEach(function(key){
+								dataOut.data[key] = zeros(num_bars);
+							});
+						} 
+						var x = i%num_bars;		
+						keys.forEach(function(key){
+							if (x > 0){
+								dataOut.data[key][x] = dataOut.data[key][x] + ((_inc)? dataOut.data[key][x-1] : 0) +val.value[key];
+							}else{
+								dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
+							}
+						});
+
+					});
+					return dataOut;
+				}
+
 
 				this.on("resize", function(e, chartSize) {
 					this.width = chartSize.width;
@@ -187,39 +217,14 @@ define(
 							return val;
 						}
 					});
-					var days = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
-					var d = prepareData(rawData, days);
+					var daysRange = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
+					var d = this.prepareChartData(rawData, daysRange);
 					_data = d.data;
 					this.attr.daysBar = d.daysBar;	
 					this.updateChart();
 					e.stopPropagation();
 					});
-				});	
-
-			function prepareData(dataIn, period_days){
-				
-				if (period_days > 7 && checkPrimo(period_days)){
-					period_days++;
-				}
-				var num_bars = numBars(period_days, 7);
-
-				var dataOut = {data:{}, daysBar: period_days/num_bars }, 
-					keys = null; 		
-				dataIn.forEach(function(val, i){    	
-					if (!keys){
-						keys = Object.keys(val.value);		
-						keys.forEach(function(key){
-							dataOut.data[key] = zeros(num_bars);
-						});
-					} 
-					var x = i%num_bars;		
-					keys.forEach(function(key){
-						dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
-					});
-
-				});
-				return dataOut;
-			}
+				});			
 
 			function checkPrimo(number){
 				var primo=0;
@@ -234,7 +239,7 @@ define(
 
 			function numBars(days, maxbars){
 				if (days <= maxbars) return days;
-				for (var i = 2 ; i <= days; i++) {
+				for (var i = maxbars ; i >= 2; i--) {
 					if ((days%i) == 0 && (days/i) <= maxbars ) {
 						return days/i;
 					}

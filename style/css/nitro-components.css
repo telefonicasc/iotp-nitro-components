@@ -500,21 +500,74 @@ select {
 .radar-chart .radar circle {
   fill: #64737b;
 }
+.cell-barchart-subpanel {
+  width: 150px;
+  background-color: #bfcecf;
+  color: #617789;
+  text-align: center;
+}
+.cell-barchart-subpanel svg text {
+  font-size: 11px;
+  fill: #617789;
+  text-anchor: middle;
+}
+.cell-barchart-subpanel svg rect {
+  fill: #d6dddc;
+  stroke: #acbec5;
+  stroke-width: 0.5px;
+}
+.cell-barchart-subpanel .title {
+  padding: 5px;
+  background-color: #64737b;
+  color: #efeeeb;
+  border-bottom: 1px solid white;
+}
+.cell-barchart-subpanel .title .caption {
+  font-size: 10px;
+  color: #adbabc;
+}
+.cell-barchart-subpanel .content {
+  padding: 10px;
+  text-align: center;
+}
+.cell-barchart-subpanel .content .value {
+  font-size: 26px;
+  color: #525f65;
+}
+.cell-barchart-subpanel .content .caption {
+  font-size: 10px;
+}
+.card {
+  font-family: Helvetica, Arial, sans-serif;
+}
 .card .front,
 .card .back {
   background-color: white;
-  width: 145px;
-  height: 180px;
+  width: 160px;
+  height: 195px;
   box-shadow: 0px 2px 3px #AAA;
+}
+.card .front {
+  position: absolute;
 }
 .card .front .header {
   background-color: #64737b;
   margin: 7px 7px 0px 7px;
-  height: 25px;
+  height: 40px;
   color: white;
+}
+.card .front .header h1 {
+  text-align: center;
+  padding-top: 13px;
 }
 .card .front .body {
   background-color: #dde6e9;
+  margin: 7px;
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }
 .card.flippable .front,
 .card.flippable .back {
@@ -522,8 +575,46 @@ select {
 }
 .card.flip .front,
 .card.flip .back {
-  width: 181px;
-  height: 225px;
+  width: 200px;
+  height: 244px;
+}
+.card.preview {
+  -webkit-transform: scale(0.75);
+}
+.start-card {
+  height: 84px;
+  width: 84px;
+  background-color: #77868E;
+  border: 8px solid white;
+  border-radius: 85px;
+  box-shadow: 0 0 8px #979797;
+  margin-left: -42px;
+  margin-top: -42px;
+}
+.card-placeholder {
+  border: 3px dashed #AAA;
+  width: 160px;
+  height: 120px;
+  margin-left: -80px;
+  margin-top: -60px;
+  border-radius: 13px;
+}
+.card-toolbox .card {
+  float: left;
+  width: 160px;
+  height: 195px;
+}
+.graph-editor {
+  background-image: url("../../img/nitro-components/ruleback.png");
+}
+.node-container .start-card,
+.node-container .card-placeholder,
+.node-container .card {
+  position: absolute;
+}
+.node-container .card {
+  margin-left: -80px;
+  margin-top: -98px;
 }
 .flippable {
   position: relative;
@@ -553,8 +644,39 @@ select {
   z-index: 1000;
   -webkit-transform: perspective(300px) rotateY(0deg);
 }
-.button.green {
-  background-color: green;
+.m2m-btn {
+  background: #cccccc;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #cccccc), color-stop(1, #eeeeee));
+  background: -ms-linear-gradient(bottom, #cccccc, #eeeeee);
+  background: -moz-linear-gradient(center bottom, #cccccc 0%, #eeeeee 100%);
+  background: -o-linear-gradient(#eeeeee, #cccccc);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=0);
+  border: 1px solid #cccccc;
+  border-bottom: 1px solid #bbb;
+  border-radius: 3px;
+  color: #333333;
+  font-weight: 800;
+  padding: 8px 5px;
+  text-align: center;
+  text-shadow: 0 1px 0 #eeeeee;
+}
+.m2m-btn:hover {
+  background: #bbbbbb;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #bbbbbb), color-stop(1, #dddddd));
+  background: -ms-linear-gradient(bottom, #bbbbbb, #dddddd);
+  background: -moz-linear-gradient(center bottom, #bbbbbb 0%, #dddddd 100%);
+  background: -o-linear-gradient(#dddddd, #bbbbbb);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
+  border: 1px solid #bbbbbb;
+  border-bottom: 1px solid #999;
+  cursor: pointer;
+  text-shadow: 0 1px 0 #dddddd;
+}
+.m2m-btn:active {
+  border: 1px solid #aaa;
+  border-bottom: 1px solid #888;
+  -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+  box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
 }
 .application-menu {
   background-color: #2C3337;
@@ -795,6 +917,30 @@ select {
 .context-menu-indicator:hover {
   background-image: url("../../img/nitro-components/context-menu-indicator-hover.png");
 }
+.border-panel {
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  min-height: 10px;
+  background-color: #E8E7E4;
+  position: absolute;
+  z-index: 10000;
+  border-top: 1px solid #BBB;
+}
+.border-panel .toggle-button {
+  cursor: pointer;
+  height: 14px;
+  margin-top: -15px;
+  left: 50%;
+  width: 58px;
+  position: absolute;
+  border-radius: 6px 6px 0px 0px;
+  margin-left: -29px;
+  border-top: 1px solid #BBB;
+  border-left: 1px solid #BBB;
+  border-right: 1px solid #BBB;
+  background-color: #E8E7E4;
+}
 .box-message-bg {
   z-index: 100;
   position: fixed;
@@ -872,4 +1018,88 @@ select {
 }
 .box-message-title {
   font-weight: 800;
+}
+.m2m-sectionbar {
+  background: #d8d8d8;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #d8d8d8), color-stop(1, #f2f2f2));
+  background: -ms-linear-gradient(bottom, #d8d8d8, #f2f2f2);
+  background: -moz-linear-gradient(center bottom, #d8d8d8 0%, #f2f2f2 100%);
+  background: -o-linear-gradient(#f2f2f2, #d8d8d8);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f2f2', endColorstr='#d8d8d8', GradientType=0);
+  border-bottom: 1px solid #a5a5a5;
+  padding: 0;
+  height: 40px;
+  display: block;
+}
+.m2m-sectionbar h1 {
+  height: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  padding-left: 5px;
+}
+.m2m-sectionbar ul.m2m-btns {
+  height: 40px;
+  line-height: 40px;
+}
+.m2m-sectionbar ul.m2m-btns.lft {
+  float: left;
+  margin-right: 5px;
+}
+.m2m-sectionbar ul.m2m-btns.rgt {
+  float: right;
+  margin-left: 5px;
+}
+.m2m-sectionbar ul.m2m-btns li {
+  display: inline;
+}
+.dashboard {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.chart {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.chart path.area {
+  opacity: 0.5;
+  fill: #8FB7DB;
+}
+.chart path.line {
+  fill: none;
+  stroke-width: 4px;
+  stroke: #788d9a;
+}
+.chart rect.bar {
+  fill-opacity: 0.5;
+  fill: #8FB7DB;
+  stroke: #90a5b2;
+}
+.chart.grey.dashed rect {
+  fill: #7F8C8D;
+  stroke: #7F8C8D;
+  stroke-dasharray: 3,3;
+}
+.chart .green path.area {
+  opacity: 0.5;
+  fill: #effac4;
+}
+.chart .green path.line {
+  fill: none;
+  stroke-width: 5px;
+  stroke: #effac4;
+}
+.online-users {
+  height: 55%;
+}
+.registrations {
+  height: 25%;
+}
+.timeline {
+  height: 15%;
 }

@@ -74,7 +74,7 @@ module.exports = function(grunt) {
               }
             },
             coverage: 'reports/coverage/coverage.json',
-            report: 'reports/coverate'
+            report: 'reports/coverage'
           }
         }
       }
@@ -88,6 +88,16 @@ module.exports = function(grunt) {
           stdout: true
         }
       }
+    },
+    plato: {
+      check: {
+	options: {
+          jshint : grunt.file.readJSON('.jshintrc')
+      	},
+        files: {
+	  'reports/complexity': ['components/**/*.js']
+        },
+      }
     }
   });
 
@@ -97,9 +107,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-styleguide');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-closure-linter');
+  grunt.loadNpmTasks('grunt-plato');
 
   grunt.registerTask('build', ['requirejs']);
-  grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('test', ['jasmine', 'plato']);
   grunt.registerTask('specpage', ['jasmine:components:build']);
   grunt.registerTask('specpage2', ['jasmine:coverage:build']);
 };

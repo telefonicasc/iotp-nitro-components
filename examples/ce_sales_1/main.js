@@ -47,14 +47,25 @@ define(
           contextMenu: {
             text: 'Set view size',
             items: [{
-              text: 'Week'
+              text: 'Week',
+              action: 'action-week',
+              range: 7
             }, {
-              text: 'Month'
+              text: 'Month',
+              action: 'action-month',
+              range: 35 // 5 weeks of 7 days
             }, {
-              text: 'Quarter'
+              text: 'Quarter',
+              action: 'action-quarter',
+              range: 140 // 20 weeks of 7 days
             }, {
-              text: 'Unconstrained'
-            }]
+              text: 'Unconstrained',
+              action: 'action-unconstrained',
+              range: -1
+            }],
+            onSelect: function(item){
+              $('.range-selection-chart').trigger('rangeSelected', item);
+            }
           },  
           items: [{
             component: 'chartContainer', 
@@ -64,7 +75,8 @@ define(
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',
-              selectedRangeField: 'selectedRange'
+              selectedRangeField: 'selectedRange',
+              fixRange: 7
             },
             charts: [{
               type: 'barChart',

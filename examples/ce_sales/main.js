@@ -48,19 +48,23 @@ define(
             text: 'Set view size',
             items: [{
               text: 'Week',
-              action: 'action-week' 
+              action: 'action-week',
+              range: 7
             }, {
               text: 'Month',
-              action: 'action-month' 
+              action: 'action-month',
+              range: 35 // 5 weeks of 7 days
             }, {
               text: 'Quarter',
-              action: 'action-quarter' 
+              action: 'action-quarter',
+              range: 140 // 20 weeks of 7 days
             }, {
               text: 'Unconstrained',
-              action: 'action-unconstrained' 
+              action: 'action-unconstrained',
+              range: 7
             }],
             onSelect: function(item){
-              console.log(item);
+              $('.range-selection-chart').trigger('rangeSelected', item);
             }
           },  
           items: [{
@@ -71,7 +75,8 @@ define(
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',
-              selectedRangeField: 'selectedRange'
+              selectedRangeField: 'selectedRange',
+              fixRange: 7
             },
             charts: [{
               type: 'barChart',

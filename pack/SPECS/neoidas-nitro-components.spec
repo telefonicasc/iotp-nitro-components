@@ -26,6 +26,8 @@ then
 fi
 
 cp -rf ${WORKSPACE}/* $RPM_BUILD_ROOT%{_dcadir}/
+rm -rf $RPM_BUILD_ROOT%{_dcadir}/node_modules
+
 
 # -------------------------------------------------------------------------------------------- #
 # post-install section:

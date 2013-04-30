@@ -20,7 +20,7 @@ define(
 
         this.$node.addClass('application-menu fit');
 
-        this.appContent = $(this.attr.applicationContent);
+        var container = this.appContent = $(this.attr.applicationContent);
 
         this.$node.on('click', $.proxy(function() {
           this.trigger('expand');
@@ -37,9 +37,9 @@ define(
         });
 
         this.on('collapse', function(e, options) {
-          this.appContent.animate({
-            left: this.attr.collapsedWidth
-          }, this.attr.collapseDuration);
+          this.appContent.animate({ left: this.attr.collapsedWidth },
+            this.attr.collapseDuration,
+            function(){ container.trigger('collapsed'); });
         });
       });
     }

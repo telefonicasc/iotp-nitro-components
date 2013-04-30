@@ -90,12 +90,15 @@
   height: 448px;
   margin-top: -143px;
   margin-left: -180px;
-  background-color: #77868E;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
   box-shadow: #A1A1A1 0px 0px 11px;
+  border:5px solid #77868E;
+  .border-radius(25px, 25px, 25px, 25px);
+
+
+
+  .header{
+    display: none;
+  }
 
   .card-body{
     background-color: white;
@@ -103,20 +106,59 @@
     border-bottom-right-radius: 15px;
   }
   .card-header {
-    height: 100px;
-    background-color: #ccc;
-
+    background-color: #E6EDF0;
+    margin:10px 6px;
+    display: block;
     label, input {
-      float:left;
-
+      display: block;
     }
     label {
-      clear: right;
+      color: #8C9193;
+      font-size: 12px;
+      font-weight: 800;
     }
     input{
-
+      border:0;
+      background: transparent;
+      border-bottom: 1px dotted #C1BCA4;
+      width: 472px;
+      margin-top: 5px;
     }
-
+    .email-subject{
+      font-size: 1.6em;
+    }
+    .email-address{
+      font-size: 1.2em;
+      color:gray;
+    }
+  }
+  .card-body{
+    padding: 0 6px;
+    background: #fff;
+    textarea{
+      width: 472px;
+      height: 221px;
+      color: #4C4C4C;
+      border: 0;
+      font-size: 20px;
+      resize: none;
+    }
+  }
+  .token{
+    cursor: pointer;
+    margin: 12px 6px 0px 12px;
+    min-width: 125px;
+    height: 18px;
+    padding: 8px;
+    color: #788D9A;
+    display: inline-block;
+    font-size: 16px;
+    background-color: #BFDDF2;
+    .border-radius(27px, 27px, 27px, 27px);
+    text-align: center;
+  }
+  .token-selector {
+    border-top:1px solid #a0a0a0;
   }
 }
 

@@ -568,12 +568,26 @@ select {
   height: 448px;
   margin-top: -143px;
   margin-left: -180px;
-  background-color: #77868E;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
   box-shadow: #A1A1A1 0px 0px 11px;
+  border: 5px solid #77868E;
+  -webkit-border-top-right-radius: 25px;
+  -webkit-border-bottom-right-radius: 25px;
+  -webkit-border-bottom-left-radius: 25px;
+  -webkit-border-top-left-radius: 25px;
+  -moz-border-radius-topright: 25px;
+  -moz-border-radius-bottomright: 25px;
+  -moz-border-radius-bottomleft: 25px;
+  -moz-border-radius-topleft: 25px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.card.m2m-card-send-email.flip .back .header {
+  display: none;
 }
 .card.m2m-card-send-email.flip .back .card-body {
   background-color: white;
@@ -581,15 +595,74 @@ select {
   border-bottom-right-radius: 15px;
 }
 .card.m2m-card-send-email.flip .back .card-header {
-  height: 100px;
-  background-color: #ccc;
+  background-color: #E6EDF0;
+  margin: 10px 6px;
+  display: block;
 }
 .card.m2m-card-send-email.flip .back .card-header label,
 .card.m2m-card-send-email.flip .back .card-header input {
-  float: left;
+  display: block;
 }
 .card.m2m-card-send-email.flip .back .card-header label {
-  clear: right;
+  color: #8C9193;
+  font-size: 12px;
+  font-weight: 800;
+}
+.card.m2m-card-send-email.flip .back .card-header input {
+  border: 0;
+  background: transparent;
+  border-bottom: 1px dotted #C1BCA4;
+  width: 472px;
+  margin-top: 5px;
+}
+.card.m2m-card-send-email.flip .back .card-header .email-subject {
+  font-size: 1.6em;
+}
+.card.m2m-card-send-email.flip .back .card-header .email-address {
+  font-size: 1.2em;
+  color: gray;
+}
+.card.m2m-card-send-email.flip .back .card-body {
+  padding: 0 6px;
+  background: #fff;
+}
+.card.m2m-card-send-email.flip .back .card-body textarea {
+  width: 472px;
+  height: 221px;
+  color: #4C4C4C;
+  border: 0;
+  font-size: 20px;
+  resize: none;
+}
+.card.m2m-card-send-email.flip .back .token {
+  cursor: pointer;
+  margin: 12px 6px 0px 12px;
+  min-width: 125px;
+  height: 18px;
+  padding: 8px;
+  color: #788D9A;
+  display: inline-block;
+  font-size: 16px;
+  background-color: #BFDDF2;
+  -webkit-border-top-right-radius: 27px;
+  -webkit-border-bottom-right-radius: 27px;
+  -webkit-border-bottom-left-radius: 27px;
+  -webkit-border-top-left-radius: 27px;
+  -moz-border-radius-topright: 27px;
+  -moz-border-radius-bottomright: 27px;
+  -moz-border-radius-bottomleft: 27px;
+  -moz-border-radius-topleft: 27px;
+  border-top-right-radius: 27px;
+  border-bottom-right-radius: 27px;
+  border-bottom-left-radius: 27px;
+  border-top-left-radius: 27px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  text-align: center;
+}
+.card.m2m-card-send-email.flip .back .token-selector {
+  border-top: 1px solid #a0a0a0;
 }
 .start-card {
   height: 84px;

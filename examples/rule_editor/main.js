@@ -46,7 +46,8 @@ define(
                         cards: [{
                             cssClass: 'm2m-card-action m2m-card-send-email',
                             header: 'Send Email',
-                            component: 'SendEmail'
+                            component: 'SendEmail',
+                            tokens: ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name']
                         }]
                     }
                 };

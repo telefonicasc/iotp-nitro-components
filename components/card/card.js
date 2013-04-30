@@ -29,6 +29,7 @@ define(
 
       this.after('initialize', function() {
 
+        this.$node.on('click',_stopPropagation);
         this.$node.addClass('card');
         this.$node.addClass(this.attr.cssClass);
 
@@ -46,6 +47,10 @@ define(
           this.$back.hide();
         }
       });
+
+      function _stopPropagation(e){
+          e.stopPropagation();
+      }
     }
   }
 );

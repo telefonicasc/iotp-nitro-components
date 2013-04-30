@@ -9,7 +9,7 @@ define(
     function(ComponentManager, DataBinding, Card, Flippable) {
 
         var defaultAttrs = {
-            tokens: ['Light.ID', 'Light.Location', 'Bulb.Color', 'Light.Pitch', 'Light.Temp']
+            tokens: []
         };
         var BACK_TPL = $( ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',
@@ -19,22 +19,24 @@ define(
             '</div>',
             '<div class="card-body">',
                 '<textarea class="email-message"></textarea>',
-                '<div class="token-selector"></div>',
-            '</div>'].join('') );
+            '</div>',
+            '<div class="token-selector"></div>'].join('') );
         var FRONT_TPL = $( ['<p class="email-address"></p>',
             '<p class="email-subject"></p>',
-            '<p class="email-text"></p>'].join('') );
+            '<p class="email-message"></p>'].join('') );
+        var TOKEN_TPL = '<div class="token"></div>';
+        var TOKEN_SYMBOL = '+';
         var element = {
             back : {
                 subject : $(BACK_TPL).find('input.email-subject'),
                 address : $(BACK_TPL).find('input.email-address'),
-                message : $(BACK_TPL).find('email-message'),
-                token : $(BACK_TPL).find('token-selector')
+                message : $(BACK_TPL).find('.email-message'),
+                token : $(BACK_TPL[2])
             },
             front : {
-                address : $(FRONT_TPL).find('email-address'),
-                subject : $(FRONT_TPL).find('email-subject'),
-                text : $(FRONT_TPL).find('email-text')
+                address : $(FRONT_TPL[0]),
+                subject : $(FRONT_TPL[1]),
+                message : $(FRONT_TPL[2])
             }
         };
         function SendEmail() {
@@ -49,9 +51,42 @@ define(
             this.$back.find('.body').append(BACK_TPL);
 
             this.$back.on('click', _stopPropagation);
+
+            //@TODO
+            //hay que ver porque dublica también los elementos creados inicialmente
+            //el siguiente método de borrado no debería ser necsario
+            element.back.token.html('');
+            $.each(this.attr.tokens, _addToken);
+
+            element.back.address.on('change', _updateElementOnChange(element.front.addres) );
+            element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
+            element.back.message.on('change', _updateElementOnChange(element.front.message) );
+
+            var node = this.$node;
+            $(node.parent() ).on('click', function(){
+                node.removeClass('flip');
+            });
         }
         function _stopPropagation(e){
             e.stopPropagation();
+        }
+
+        function _addToken(index, name){
+            var ele = _makeSymbolElement(name);
+            element.back.token.append( ele );
+        }
+
+        function _makeSymbolElement(name){
+            var ele = $(TOKEN_TPL).text(TOKEN_SYMBOL+name);
+            return ele;
+        }
+
+        function _updateElementOnChange(elementTo){
+            var callbackToEvent = function(){
+                var value = $(this).val();
+                elementTo.text( value );
+            };
+            return callbackToEvent;
         }
 
         return ComponentManager.extend(Card, 'SendEmail', SendEmail, DataBinding);

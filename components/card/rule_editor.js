@@ -6,11 +6,12 @@ define(
         'components/card/card',
         'components/card/mixin/interactions',
         'components/card/mixin/and_interaction',
-        'components/mixin/data_binding'
+        'components/mixin/data_binding',
+        'components/slider'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, Interactions, AndInteraction, DataBinding) {
+            Card, Interactions, AndInteraction, DataBinding, Slider) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
                 Interactions, AndInteraction);
@@ -27,8 +28,24 @@ define(
                 this.connections = [];
                 this.value = this.attr.value;
 
-                this.$graphEditor = $('<div>').addClass('fit')
+                this.$mainArea = $('<div>').addClass('rule-editor-main fit')
                         .appendTo(this.$node);
+
+                this.$bottomToolbar = $('<div>')
+                        .addClass('rule-bottom-toolbar border-panel vertical-panel')
+                        .appendTo(this.$node);
+
+                this.$zoomSlider = $('<div>').appendTo(this.$bottomToolbar);
+                Slider.attachTo(this.$zoomSlider); 
+
+                this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
+                    this.$graphEditor.css({
+                        '-webkit-transform': 'scale(' + (parseFloat(o.value) / 100) + ')' 
+                    });
+                }, this));
+
+                this.$graphEditor = $('<div>').addClass('fit')
+                        .appendTo(this.$mainArea);
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
@@ -54,17 +71,20 @@ define(
                     this.relayoutCards();
                 }, this));
 
-                this.$cardToolbox = $('<div>').appendTo(this.$node);
+                this.$cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(this.$cardToolbox, {
                     cardSections: this.attr.cards
                 });
 
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {
                     var position = {},
-                        componentOffset = this.$node.offset(),
-                        helperOffset = $(ui.helper).offset();
-                    position.left = helperOffset.left - componentOffset.left;
-                    position.top = helperOffset.top - componentOffset.top;
+                        //componentOffset = this.$node.offset(),
+                        componentOffset = this.$cardToolbox.position(),
+                        helperOffset = $(ui.helper).position();
+                    position.left = helperOffset.left + componentOffset.left;
+                    position.top = helperOffset.top + componentOffset.top;
+
+                    console.log(position.left, position.top);
                     $(ui.helper).data(position);
                     this.$graphEditor.trigger('updateConnections');
                 }, this));
@@ -74,9 +94,14 @@ define(
                     drop: $.proxy(function(e, ui) {
                         ui.draggable.data('draggable').cancelHelperRemoval = true;
                         this.$graphEditor.trigger('addNode', { node: ui.helper });
+                        $(window).trigger('resize');
                         this.relayoutCards();
                     }, this)
                 });
+
+                this.$graphEditor.on('dragstop', $.proxy(function(e) {
+                    this.relayoutCards();
+                }, this));
 
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });

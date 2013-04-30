@@ -17,33 +17,56 @@ define(
                 nodes: {
                     'toggle': '.toggle-button',
                     'content': '.panel-content'
-                }
+                },
+
+                horizontal: true,
+                showToggle: false
             });
 
             this.after('initialize', function() {
                 this.$node.addClass('border-panel');
 
+                if (this.attr.horizontal) {
+                    this.$node.addClass('horizontal-panel');
+                } else {
+                    this.$node.addClass('vertical-panel');
+                }
+
                 this.expanded = true;
 
+                if (!this.attr.showToggle) {
+                    this.$toggle.hide();
+                }
+
                 this.$toggle.on('click', $.proxy(function() {
-                    if (this.expanded) {
-                        this.trigger('collapse');
-                    } else {
-                        this.trigger('expand');
-                    }
+                    this.trigger('toggle');
                 }, this));
 
                 this.on('expand', function() {
-                    this.$content.slideDown(400);
-                    this.expanded = true;
+                    if (!this.expanded) {
+                        this.toggle();
+                    }
                 });
 
                 this.on('collapse', function() {
-                    this.$content.slideUp(400);
-                    this.expanded = false;
+                    if (this.expanded) {
+                        this.toggle();
+                    }
                 });
 
+                this.on('toggle', function() {
+                    this.toggle();
+                });
             });
+
+            this.toggle = function() {
+                if (this.attr.horizontal) {
+                    this.$content.animate({ width: 'toggle' });
+                } else {
+                    this.$content.animate({ height: 'toggle' });
+                }
+                this.expanded = !this.expanded;
+            };
         }
     }
 );

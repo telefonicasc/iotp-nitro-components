@@ -2,7 +2,7 @@
 @card-width: 160px;
 @card-height: 195px;
 @card-flip-factor: 1.25;
-@card-preview-factor: 0.75;
+@card-preview-factor: 0.5;
 @card-header-height: 40px;
 
 .card {
@@ -87,6 +87,8 @@
 
 .card-toolbox {
   
+  width: 240px;
+
   .card {
     float: left;
     width: @card-width;
@@ -96,6 +98,14 @@
 
 .graph-editor {
   background-image: url("@{image-path}/ruleback.png");
+}
+
+.rule-editor-main {
+  bottom: 60px;
+}
+
+.rule-bottom-toolbar {
+    height: 60px;
 }
 
 .node-container {
@@ -112,4 +122,14 @@
 .card.ui-draggable-dragging {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+}
+
+// WIDGETS inside cards
+
+.card .body .battery-widget {
+    width: 40%;
+    left: 50%;
+    margin-left: -20%;
+    position: relative;    
+    height: 70%;
 }

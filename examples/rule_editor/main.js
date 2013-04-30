@@ -8,6 +8,7 @@ define(
   [
     'components/card/rule_editor',
     'components/sensor_widget/battery',
+    'components/sensor_widget/angle',
     'components/slider',
     'components/angular_directives'
   ],
@@ -37,12 +38,25 @@ define(
                                 }]
                             }
                         }, {
-                            header: 'Pitch'
+                            header: 'Pitch',
+                            front: {
+                                items: [{
+                                    component: 'AngleWidget'
+                                }]
+                            },
+                            back: {
+                                items: [{
+                                    component: 'Slider',
+                                    minValue: 0,
+                                    maxValue: 90
+                                }]
+                            }
                         }]
                     },
                     actions: {
                         label: 'Actions',
                         cards: [{
+                            header: 'Send email',
                             cssClass: 'action'    
                         }]
                     }

@@ -45,7 +45,11 @@ define(
                     position = card.data(),
                     left = position.left,
                     top = position.top;
+                
+                console.log('DRAG', left, top);
+
                 $.each(interactionAreas, $.proxy(function(i, area) {
+                    console.log('AREA', area.left, area.top);
                     if (left > area.left + 100 &&
                         left < area.left + 300 &&
                         top > area.top &&

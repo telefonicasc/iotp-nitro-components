@@ -1,12 +1,9 @@
 .border-panel {
   bottom: 0px;
   left: 0px;
-  right: 0px;
-  min-height: 10px;
   background-color: #E8E7E4;
   position: absolute;
   z-index: 10000;
-  border-top: 1px solid #BBB;
 
   .toggle-button {
     cursor: pointer;
@@ -21,5 +18,17 @@
     border-left: 1px solid #BBB;
     border-right: 1px solid #BBB;
     background-color: #E8E7E4;
+  }
+
+  &.vertical-panel {
+    right: 0px;
+    min-height: 10px;
+    border-top: 1px solid #BBB;
+  }
+
+  &.horizontal-panel {
+    top: 0px;    
+    min-width: 10px;
+    border-right: 1px solid #BBB;
   }
 }

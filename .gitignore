@@ -1,4 +1,6 @@
 *.swp
 node_modules
+bower_components
 reports
 .grunt
+.DS_STORE

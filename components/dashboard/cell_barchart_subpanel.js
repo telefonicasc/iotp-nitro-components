@@ -32,7 +32,11 @@ define(
     function CellBarchartSubpanel() {
 
       this.defaultAttrs({
-        items: []    
+        items: [],
+        text: {
+            title: { value: '', caption: '' },
+            content: { value: '', caption: '' }
+        }          
       });
 
       this.after('initialize', function() {

@@ -1,7 +1,7 @@
 Summary: Paquete de instalacion del Dashboard de DCA
 Name: neoidas-nitro-components
 Version: 1.0
-Release: draco.release.rhel5.5
+Release: eridani.release.rhel5.5
 License: GPL3
 Group: M2M
 URL: https://barricada.hi.inet/trac/IDAS/wiki

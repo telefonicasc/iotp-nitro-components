@@ -15,7 +15,8 @@ define(
         		grid: true,
         		data: {},
         		max_num_bars: 7,
-        		incremental: true   
+        		incremental: true,
+        		colors: ['#000000'] 
             });
 
             this.after("initialize", function() {
@@ -37,8 +38,8 @@ define(
 					yAxis = d3.svg.axis().scale(y).orient("right").tickFormat(d3.format("1"));		
 				}
 
-				var _data = this.attr.data,
-					_keys = Object.keys(_data),
+				this.value = this.attr.data,
+					_keys = Object.keys(this.value),
 					barGroups = context.selectAll(".barGroup").data(_keys),
 					backgroundGroups = context.append("g"),
 					subPanelgroup = context.append("g");
@@ -56,10 +57,11 @@ define(
 					backgroundGroups.remove();
 					subPanelgroup.remove();
 
-					_keys = Object.keys(_data); 
+					_keys = Object.keys(this.value); 
 					
 					//Grouping data by 'key'
 					var values = [], barIndexList = [];	
+					var _data = this.value;
 					_keys.forEach(function(k) {	
 						var barsGroup = [] ;	
 						barIndexList = [];	
@@ -219,7 +221,7 @@ define(
 					});
 					var daysRange = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
 					var d = this.prepareChartData(rawData, daysRange);
-					_data = d.data;
+					this.value = d.data;
 					this.attr.daysBar = d.daysBar;	
 					this.updateChart();
 					e.stopPropagation();

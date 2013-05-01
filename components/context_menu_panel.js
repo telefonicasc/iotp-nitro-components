@@ -11,7 +11,7 @@ define(
     function ContextMenuPanel() {
 
       this.defaultAttrs({
-
+        items: []
       });
 
       this.after('initialize', function() {

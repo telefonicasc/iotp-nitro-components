@@ -1,8 +1,0 @@
-{
-  "name": "m2m-nitro-components",
-  "version": "0.0.1",
-  "directory" : "bower_components",
-  "dependencies": {
-    "flight": "~1.0.7"
-  }
-}

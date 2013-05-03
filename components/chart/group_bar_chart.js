@@ -39,7 +39,7 @@ define(
 				}
 
 				this.value = this.attr.data,
-					_keys = Object.keys(this.value),
+					_keys = getObjKeys(this.value),
 					barGroups = context.selectAll(".barGroup").data(_keys),
 					backgroundGroups = context.append("g"),
 					subPanelgroup = context.append("g");
@@ -57,15 +57,15 @@ define(
 					backgroundGroups.remove();
 					subPanelgroup.remove();
 
-					_keys = Object.keys(this.value); 
+					_keys = getObjKeys(this.value); 
 					
 					//Grouping data by 'key'
 					var values = [], barIndexList = [];	
 					var _data = this.value;
-					_keys.forEach(function(k) {	
+					$.each(_keys, function(j, k){ 
 						var barsGroup = [] ;	
 						barIndexList = [];	
-						_data[k].forEach(function(val, i){
+						$.each(_data[k], function(i, val){ 
 							barIndexList.push(i);
 							barsGroup.push( {index: i, value: val} );
 						});
@@ -180,17 +180,17 @@ define(
 					var num_bars = numBars(period_days, this.attr.max_num_bars),
 					    _inc = this.attr.incremental,
 					    dataOut = {data:{}, daysBar: period_days/num_bars }, 
-						keys = null; 		
+						keys = null; 
 
-					dataIn.forEach(function(val, i){    	
+					$.each(dataIn, function(i, val){ 
 						if (!keys){
-							keys = Object.keys(val.value);		
-							keys.forEach(function(key){
+							keys = getObjKeys(val.value);		
+							$.each(keys, function(j, key){ 
 								dataOut.data[key] = zeros(num_bars);
 							});
 						} 
 						var x = i%num_bars;		
-						keys.forEach(function(key){
+						$.each(keys, function(j, key){ 
 							if (x > 0){
 								dataOut.data[key][x] = dataOut.data[key][x] + ((_inc)? dataOut.data[key][x-1] : 0) +val.value[key];
 							}else{
@@ -254,6 +254,12 @@ define(
 				for (var i = 0; i < length; i++) vector[i] = 0;
 				return vector;	
 			}
+
+			function getObjKeys(obj){
+		      var keys = [];
+		      for(var key in obj) keys.push(key);
+		      return keys;
+   			}
 		}
 	}  
 );

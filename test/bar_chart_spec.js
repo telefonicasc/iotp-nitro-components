@@ -1,8 +1,8 @@
 
 describeComponent('components/chart/bar_chart', function () {
  	
-  var test_data = {'valueField':[ { date:2, value:45 } ] };
- 		
+  var test_data = {'valueField':[ { date:2, value:45 }, { date:3, value:71 } ] };
+ 	var options = { value: test_data, range: [1, 10], valueRange: []  };	
   // initialize the component and attach it to the DOM
   beforeEach(function(){
   	setupComponent( {model: 'valueField'} );
@@ -13,11 +13,6 @@ describeComponent('components/chart/bar_chart', function () {
   });
 
   it('When trigger "valueChange" then updateChart is called', function () {
-  	var options = { 
-  		value: test_data, 
-  		range: [1, 10], 
-  		valueRange: [] 
-  	};
   	spyOn(this.component, 'updateChart');
     this.component.$node.trigger('valueChange', options); 	
     expect(this.component.updateChart).toHaveBeenCalled();
@@ -32,19 +27,16 @@ describeComponent('components/chart/bar_chart', function () {
   });
 
   it('When trigger "valueChange" and data within range', function () {
-  	var options = { 
-  		value: test_data, 
-  		range: [1, 10], 
-  		valueRange: [] 
-  	};
     this.component.$node.trigger('valueChange', options); 	
-    expect(this.component.attr.value).toEqual( [{ date:2, value:45 }] );
+    expect(this.component.attr.value).toEqual( test_data['valueField'] );
+    expect($('rect.bar').length).toEqual(test_data['valueField'].length);
   });
 
   it('When trigger "valueChange" and data OUT of range', function () {
   	var options = { value: test_data, range: [5, 10], valueRange: [] };
     this.component.$node.trigger('valueChange', options); 	
     expect(this.component.attr.value).toEqual( [] );
+    expect($('rect.bar').length).toEqual(0);
    
   });
 

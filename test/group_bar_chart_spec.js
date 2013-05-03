@@ -1,14 +1,19 @@
 describeComponent('components/chart/group_bar_chart', function () {
   
-  var test_data = { 'valueField':[ 
+  var test_data = {
+    'valueField':[ 
                    { date: 2, value: {'group1': 1, 'group2': 2 } },
-                   { date: 3, value: {'group1': 10, 'group2': 70 } }     
+                   { date: 3, value: {'group1': 6, 'group2': 7 } }     
                   ]};
-  var options = { value: test_data,  range: [1, 10],  valueRange: [] };                
+  var options = { value: test_data, range: [1, 10], valueRange: [] };
 
   // initialize the component and attach it to the DOM
   beforeEach(function(){
-  	setupComponent( {grid: false, model: 'valueField'} );
+  	setupComponent( {grid: false, model: 'valueField', incremental: true} );
+  });
+
+  it('component has attributes defined', function(){
+  	 expect(this.component).toBeDefined();
   });
 
   it('When trigger "valueChange" then updateChart is called', function () {
@@ -17,24 +22,31 @@ describeComponent('components/chart/group_bar_chart', function () {
     expect(this.component.updateChart).toHaveBeenCalled();
   });
   
-  it('with attr "incremental", trigger "valueChange", so data is processed and painted', function () {
-  	setupComponent( {grid: false, model: 'valueField', incremental: true} ); 
+  it('component values are incremental then trigger "valueChange", groups and bars are painted', function () {
     this.component.$node.trigger('valueChange', options); 	
-    expect(this.component.value).toEqual( { group1 : [ 1, 11 ], group2 : [ 2, 72 ] } );
-    expect($('.group').length).toEqual(2); //2 groups
+    expect($('.group').length).toEqual(2); // 2 groups
+    expect($('rect.chartbar').length).toEqual(4); //4 bars in total
   });
 
 
-  it('with attr "NOT incremental", trigger "valueChange", so data is processed and painted', function () {
-    setupComponent( {grid: false, model: 'valueField', incremental: false} ); 
-    this.component.$node.trigger('valueChange', options);   
-    expect(this.component.value).toEqual( { group1 : [ 1, 10 ], group2 : [ 2, 70 ] } );
-    expect($('.group').length).toEqual(2); //2 groups
+  it('component preprocess data (incremental)', function () {
+    setupComponent( {grid: false, model: 'valueField', incremental: true} );
+    var out = this.component.prepareChartData(test_data['valueField'], 11);
+    expect(out.data).toEqual({ group1 : [ 1, 7 ], group2 : [ 2, 9 ] });
   });
 
-  it('component is resized', function () {
+  it('component preprocess data (NOT incremental)', function () {
+    setupComponent( {grid: false, model: 'valueField', incremental: false} );
+    var out = this.component.prepareChartData(test_data['valueField'], 11);
+    expect(out.data).toEqual({ group1 : [ 1, 6 ], group2 : [ 2, 7 ] });
+  });
+
+  it('When trigger "resize" then updateChart is called', function () {
     spyOn(this.component, 'updateChart');
-    this.component.$node.trigger('resize', options);   
+    var test_size = {width: 200, height: 145};
+    this.component.$node.trigger('resize', test_size);
+    expect(this.component.width).toEqual(test_size.width);
+    expect(this.component.height).toEqual(test_size.height);
     expect(this.component.updateChart).toHaveBeenCalled();
   });
 

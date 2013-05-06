@@ -11,6 +11,7 @@ define(
     'components/chart/range_selection_chart',
     'components/dashboard/dashboard_main_panel',
     'components/dashboard/overview_subpanel'
+    //'components/dashboard/cell_barchart_subpanel'
   ],
   
   function() {
@@ -119,7 +120,8 @@ define(
             //rangeField: 'selectedRange'
           }]
         }]
-      }, {
+      },
+      {
         component: 'dashboardMainPanel',
         title: 'Timeline',
         className: 'timeline',
@@ -155,7 +157,7 @@ define(
             clipRange: 'selectedRange',
             //rangeField: 'selectedRange',
             cssClass: 'selected-chart'
-          }]
+          }],    
           //component: 'rangeSelectionChart'
         }]
       }],
@@ -233,7 +235,7 @@ define(
             }
           },
           caption: 'Online visitors (not registered)' 
-        }, {
+        },{
           className: 'vertical-panel-group last-section-panel',
           items: [{
             component: 'OverviewSubpanel',

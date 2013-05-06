@@ -22,7 +22,7 @@
       position: relative;
       margin-bottom: 14px;
 
-      header {
+      div {
         h1 {
           color: #708796;
           font-size: 20px;
@@ -34,7 +34,7 @@
 
       .dashboard-main-panel-content {
         position: absolute;
-        top: 33px;
+        top: 35px;
         left: 0px;
         right: 0px;
         bottom: 0px;
@@ -312,6 +312,76 @@
 
   .radar circle {
     fill: #64737b;
+  }
+}
+
+
+.cell-barchart-subpanel {
+  
+  width: 95%;
+  
+  background-color: #bfcecf;
+  color: #617789;
+  text-align: center;
+  
+  svg {
+    text {
+      font-size: 11px;
+      fill: #617789;
+      text-anchor: middle;
+    }
+    rect {
+      fill: #d6dddc;
+      stroke: #acbec5;
+      stroke-width: 0.5px;
+    }
+  }
+  .title {
+    padding:5px;
+    background-color: #64737b;
+    color: #efeeeb;
+    border-bottom: 1px solid white;
+    .caption {
+      font-size: 10px;
+      color: #adbabc;
+    }
+  }
+  .content {
+    padding: 10px;
+    text-align: center;
+    .value {
+      font-size: 26px;
+      color: #525f65;
+    }
+    .caption {
+      font-size: 10px;
+    }
+  }
+}
+
+
+.group-barchart {
+
+  fill: none;
+  .bg_group {
+    stroke-width: 1px;
+    stroke: #e2e2e0;
+    fill: #efeeeb;
+  }
+  .odd {
+    fill: #ecebe7;
+  }
+  .axis_x {
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    } 
+  }
+  .axis_y {
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
   }
 }
 

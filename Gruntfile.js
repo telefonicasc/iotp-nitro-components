@@ -52,16 +52,27 @@ module.exports = function(grunt) {
       components: {
         src: 'components/**/*.js',
         options: {
-          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js'],
+          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
+          'libs/test/jasmine-jquery.js',
+          'libs/test/flight-jasmine.js'],
           specs: 'test/*_spec.js',
-          template: require('grunt-template-jasmine-requirejs')
+          template: require('grunt-template-jasmine-requirejs'),
+          templateOptions: {
+            requireConfig: {
+              paths: {
+                flight: 'libs/test/flight_test'            
+              }
+            }
+          }
         }
       },
       coverage: {
         src: 'components/**/*.js',
         options: {
           specs: 'test/*_spec.js',
-          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js'],
+          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
+          'libs/test/jasmine-jquery.js',
+          'libs/test/flight-jasmine.js'],
           template: require('grunt-template-jasmine-istanbul'),
           templateOptions: {
             specs: 'test/*_spec.js',
@@ -69,12 +80,13 @@ module.exports = function(grunt) {
             templateOptions: {
               requireConfig: {
                 paths: {
-                  components: '.grunt/grunt-contrib-jasmine/components/'  
+                  components: '.grunt/grunt-contrib-jasmine/components/',
+                  flight: 'libs/test/flight_test'
                 }
               }
             },
             coverage: 'reports/coverage/coverage.json',
-            report: 'reports/coverate'
+            report: 'reports/coverage'
           }
         }
       }
@@ -88,6 +100,16 @@ module.exports = function(grunt) {
           stdout: true
         }
       }
+    },
+    plato: {
+      check: {
+	options: {
+          jshint : grunt.file.readJSON('.jshintrc')
+      	},
+        files: {
+	  'reports/complexity': ['components/**/*.js']
+        },
+      }
     }
   });
 
@@ -97,9 +119,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-styleguide');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-closure-linter');
+  grunt.loadNpmTasks('grunt-plato');
 
   grunt.registerTask('build', ['requirejs']);
-  grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('test', ['jasmine', 'plato']);
   grunt.registerTask('specpage', ['jasmine:components:build']);
   grunt.registerTask('specpage2', ['jasmine:coverage:build']);
 };

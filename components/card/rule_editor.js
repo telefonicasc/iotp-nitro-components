@@ -74,7 +74,8 @@ define(
 
                 this.$cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(this.$cardToolbox, {
-                    cardSections: this.attr.cards
+                    cardSections: this.attr.cards,
+                    pushPanel: this.$graphEditor
                 });
 
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {

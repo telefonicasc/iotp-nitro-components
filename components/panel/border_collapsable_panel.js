@@ -61,7 +61,15 @@ define(
 
             this.toggle = function() {
                 if (this.attr.horizontal) {
-                    this.$content.animate({ width: 'toggle' });
+                    this.$content.animate({ width: 'toggle' }, {
+                        progress: $.proxy(function(anim, progress) {
+                            if (this.attr.pushPanel) {
+                                this.attr.pushPanel.css({
+                                    left: this.$content.width()
+                                });
+                            }
+                        }, this)
+                    });
                 } else {
                     this.$content.animate({ height: 'toggle' });
                 }

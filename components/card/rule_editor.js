@@ -50,9 +50,13 @@ define(
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
+                this.$graphEditor.on('click', function(){
+                    $(this).find('.card.flip').removeClass('flip');
+                });
+
                 this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
                     var node = o.node,
-                        placeholder; 
+                        placeholder;
 
                     if (!node.hasClass('card-placeholder') &&
                         !this.getConnectedTo(node).length) {

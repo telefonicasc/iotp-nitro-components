@@ -17,7 +17,8 @@ define(
 
             this.defaultAttrs({
                 cardDefaults: {
-                    flippable: false
+                    flippable: false,
+                    component: 'Card'
                 }
             });
 
@@ -36,8 +37,12 @@ define(
                     this.$cardSectionSwitch.append(section.button);
                     $.each(section.cards, $.proxy(function(i, card) {
                         var cardEl = $('<div>').addClass('preview')
-                                        .appendTo(section.el);
-                        Card.attachTo(cardEl, $.extend({},
+                                        .appendTo(section.el),
+                            attrCard = $.extend({},
+                                        this.attr.cardDefaults, card),
+                            cardCmp = ComponentManager.get(attrCard.component);
+
+                        cardCmp.attachTo(cardEl, $.extend({},
                             this.attr.cardDefaults, card));
                         Draggable.attachTo(cardEl, {
                             helper: function() {

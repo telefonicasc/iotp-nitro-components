@@ -42,26 +42,28 @@ define(
                     this.trigger('toggle');
                 }, this));
 
-                this.on('expand', function() {
+                this.on('expand', function(e, o) {
                     if (!this.expanded) {
-                        this.toggle();
+                        this.toggle(o && o.duration);
                     }
                 });
 
-                this.on('collapse', function() {
+                this.on('collapse', function(e, o) {
                     if (this.expanded) {
-                        this.toggle();
+                        this.toggle(o && o.duration);
                     }
                 });
 
-                this.on('toggle', function() {
-                    this.toggle();
+                this.on('toggle', function(e, o) {
+                    this.toggle(o && o.duration);
                 });
             });
 
-            this.toggle = function() {
+            this.toggle = function(duration) {
                 if (this.attr.horizontal) {
-                    this.$content.animate({ width: 'toggle' }, {
+                    console.log('duratoi', duration);
+                    this.$node.animate({ width: 'toggle' }, {
+                        duration: duration,
                         progress: $.proxy(function(anim, progress) {
                             if (this.attr.pushPanel) {
                                 this.attr.pushPanel.css({
@@ -71,7 +73,7 @@ define(
                         }, this)
                     });
                 } else {
-                    this.$content.animate({ height: 'toggle' });
+                    this.$node.animate({ height: 'toggle' });
                 }
                 this.expanded = !this.expanded;
             };

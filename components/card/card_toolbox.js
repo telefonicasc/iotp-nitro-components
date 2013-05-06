@@ -71,6 +71,10 @@ define(
                     this.$cardSectionSwitch
                         .trigger('selected', { name: first });
                 }
+
+                // TODO : A bit ugly
+                this.trigger('collapse', { duration: 0 });
+                this.trigger('expand', { duration: 0 });
             });
         }
     }

@@ -22,17 +22,18 @@ describeComponent('components/panel/border_collapsable_panel', function () {
 
   it('component is expanded and click toggle', function(){
   	this.component.expanded = true;
-  	var collapse = spyOnEvent(document, 'collapse');
+  	var collapse = spyOnEvent(document, 'toggle');
   	this.component.$toggle.trigger('click');
   	expect(collapse).toHaveBeenTriggeredOn(document);
   });
 
   it('component is NOT expanded and click toggle', function(){
   	this.component.expanded = false;
-  	var expand = spyOnEvent(document, 'expand');
+  	var expand = spyOnEvent(document, 'toggle');
   	this.component.$toggle.trigger('click');
   	expect(expand).toHaveBeenTriggeredOn(document);
   });
 
 
-);  
+});  
+

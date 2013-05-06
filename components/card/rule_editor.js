@@ -58,7 +58,7 @@ define(
                     var node = o.node,
                         placeholder;
 
-                    if (!node.hasClass('card-placeholder') &&
+                    if (node.hasClass('start-card') &&
                         !this.getConnectedTo(node).length) {
                         placeholder = $('<div>');
                         placeholder.addClass('card-placeholder action-card');
@@ -113,7 +113,9 @@ define(
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });
 
                 this.on('valueChange', function(e, o) {
-                    //console.log('adasdas', o.value);
+                    if (e.target === this.node) {
+                        this.loadRuleData(o.value);
+                    }
                 });
             });
 
@@ -199,6 +201,47 @@ define(
                     start: start, end: end
                 });
 
+            };
+
+            this.loadRuleData = function(data) {
+                var nodes = [];
+
+                if (!data) return;
+
+                this.emptyRule();
+
+                // Add cards
+                $.each(data.cards, $.proxy(function(i, card) {
+                    var cardEl = $('<div>').attr('id', card.id);
+                    Card.attachTo(cardEl, $.extend({}, card.configData));
+                    this.$graphEditor.trigger('addNode', { node: cardEl });
+                }, this));
+
+                // Add connections
+                $.each(data.cards, $.proxy(function(i, card) {
+                    $.each(card.connectedTo, $.proxy(function(i, otherID) {
+                        var cardEl = this.getCard(card.id),
+                            otherEl = this.getCard(otherID);
+                        this.addConnection(cardEl, otherEl);
+                    }, this));
+                }, this));
+            };
+
+            this.getCard = function(cardId) {
+                return this.$graphEditor.find('#' + cardId);
+            };
+
+            this.emptyRule = function() {
+                var cards = this.$graphEditor.find('.node-container > *');
+
+                $.each(this.connections, $.proxy(function(i, connection) {
+                   this.$graphEditor.trigger('removeConnection', connection);  
+                }, this));
+                this.connections = [];
+
+                cards.each($.proxy(function(i, el) {
+                    this.$graphEditor.trigger('removeNode', { node: $(el) }); 
+                }, this));
             };
         }
     }

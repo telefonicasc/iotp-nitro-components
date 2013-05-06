@@ -22,7 +22,7 @@ define(
 
         angular.module('testApp').controller(
             'ruleController',
-            function($scope) {
+            function($scope, $http) {
                 $scope.cards = {
                     conditions: {
                         label: 'Conditions',
@@ -65,21 +65,9 @@ define(
                     }
                 };
 
-                $scope.ruleData = {
-                    'name': 'My rule',
-                    'cards': [{
-                        'id': 'card0',
-                        'sensorData': {
-
-                        },
-                        'configData': {
-
-                        },
-                        'connectedTo': ['card1']
-                    }, {
-                        'id': 'card1'
-                    }]
-                };
+                $http.get('rule.json').success(function(data) {
+                    $scope.ruleData = data.data[0];
+                });
             }
         );
 

@@ -45,6 +45,7 @@ define(
                             });
 
                     bars.exit().remove();
+                   
                 };
 
                 this.on('resize', function(e, chartSize) {
@@ -58,13 +59,13 @@ define(
 
                 this.on('valueChange', function(e, options) {
                     var valueField = this.attr.model;
-                    data = $.map(options.value[valueField], function(val, i) {
+                    this.attr.value = $.map(options.value[valueField], function(val, i) {
                             if (val.date > options.range[0] &&
                                 val.date < options.range[1]) {
                                 return val;
                             }
                         });
-
+                    data = this.attr.value;
                     x.domain(options.range);
                     y.domain(options.valueRange);
                     this.updateChart();

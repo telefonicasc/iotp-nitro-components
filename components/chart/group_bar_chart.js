@@ -14,7 +14,9 @@ define(
         	this.defaultAttrs({
         		grid: true,
         		data: {},
-        		max_num_bars: 7   
+        		max_num_bars: 7,
+        		incremental: true,
+        		colors: ['#000000'] 
             });
 
             this.after("initialize", function() {
@@ -36,8 +38,8 @@ define(
 					yAxis = d3.svg.axis().scale(y).orient("right").tickFormat(d3.format("1"));		
 				}
 
-				var _data = this.attr.data,
-					_keys = Object.keys(_data),
+				this.value = this.attr.data,
+					_keys = getObjKeys(this.value),
 					barGroups = context.selectAll(".barGroup").data(_keys),
 					backgroundGroups = context.append("g"),
 					subPanelgroup = context.append("g");
@@ -55,14 +57,15 @@ define(
 					backgroundGroups.remove();
 					subPanelgroup.remove();
 
-					_keys = Object.keys(_data); 
+					_keys = getObjKeys(this.value); 
 					
 					//Grouping data by 'key'
 					var values = [], barIndexList = [];	
-					_keys.forEach(function(k) {	
+					var _data = this.value;
+					$.each(_keys, function(j, k){ 
 						var barsGroup = [] ;	
 						barIndexList = [];	
-						_data[k].forEach(function(val, i){
+						$.each(_data[k], function(i, val){ 
 							barIndexList.push(i);
 							barsGroup.push( {index: i, value: val} );
 						});
@@ -170,6 +173,35 @@ define(
 					this.tooltip.hide();
 				};
 
+				this.prepareChartData = function(dataIn, period_days){
+					if (period_days > this.attr.max_num_bars && checkPrimo(period_days)){
+						period_days++;
+					}
+					var num_bars = numBars(period_days, this.attr.max_num_bars),
+					    _inc = this.attr.incremental,
+					    dataOut = {data:{}, daysBar: period_days/num_bars }, 
+						keys = null; 
+
+					$.each(dataIn, function(i, val){ 
+						if (!keys){
+							keys = getObjKeys(val.value);		
+							$.each(keys, function(j, key){ 
+								dataOut.data[key] = zeros(num_bars);
+							});
+						} 
+						var x = i%num_bars;		
+						$.each(keys, function(j, key){ 
+							if (x > 0){
+								dataOut.data[key][x] = dataOut.data[key][x] + ((_inc)? dataOut.data[key][x-1] : 0) +val.value[key];
+							}else{
+								dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
+							}
+						});
+
+					});
+					return dataOut;
+				}
+
 
 				this.on("resize", function(e, chartSize) {
 					this.width = chartSize.width;
@@ -187,39 +219,14 @@ define(
 							return val;
 						}
 					});
-					var days = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
-					var d = prepareData(rawData, days);
-					_data = d.data;
+					var daysRange = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
+					var d = this.prepareChartData(rawData, daysRange);
+					this.value = d.data;
 					this.attr.daysBar = d.daysBar;	
 					this.updateChart();
 					e.stopPropagation();
 					});
-				});	
-
-			function prepareData(dataIn, period_days){
-				
-				if (period_days > 7 && checkPrimo(period_days)){
-					period_days++;
-				}
-				var num_bars = numBars(period_days, 7);
-
-				var dataOut = {data:{}, daysBar: period_days/num_bars }, 
-					keys = null; 		
-				dataIn.forEach(function(val, i){    	
-					if (!keys){
-						keys = Object.keys(val.value);		
-						keys.forEach(function(key){
-							dataOut.data[key] = zeros(num_bars);
-						});
-					} 
-					var x = i%num_bars;		
-					keys.forEach(function(key){
-						dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];						
-					});
-
-				});
-				return dataOut;
-			}
+				});			
 
 			function checkPrimo(number){
 				var primo=0;
@@ -234,7 +241,7 @@ define(
 
 			function numBars(days, maxbars){
 				if (days <= maxbars) return days;
-				for (var i = 2 ; i <= days; i++) {
+				for (var i = maxbars ; i >= 2; i--) {
 					if ((days%i) == 0 && (days/i) <= maxbars ) {
 						return days/i;
 					}
@@ -247,6 +254,12 @@ define(
 				for (var i = 0; i < length; i++) vector[i] = 0;
 				return vector;	
 			}
+
+			function getObjKeys(obj){
+		      var keys = [];
+		      for(var key in obj) keys.push(key);
+		      return keys;
+   			}
 		}
 	}  
 );

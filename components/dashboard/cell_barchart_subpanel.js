@@ -32,7 +32,11 @@ define(
     function CellBarchartSubpanel() {
 
       this.defaultAttrs({
-        items: []    
+        items: [],
+        text: {
+            title: { value: '', caption: '' },
+            content: { value: '', caption: '' }
+        }          
       });
 
       this.after('initialize', function() {
@@ -53,12 +57,12 @@ define(
               return i * (_chartConf.width + _chartConf.barPadding);
             })
             .attr("y", function(obj) {
-              var value = obj[Object.keys(obj)[0]];
+              var value = obj[getObjKeys(obj)[0]];
               return _chartConf.maxHeight - value*_chartConf.maxHeight/100; 
             })
             .attr("width", _chartConf.width)
             .attr("height", function(obj) {
-              var key = Object.keys(obj)[0];
+              var key = getObjKeys(obj)[0];
               var value = obj[key];
               return parseInt(value)*_chartConf.maxHeight/100;
             });
@@ -66,7 +70,7 @@ define(
             svg.selectAll("text")
             .data(_data).enter().append("text")
             .text(function(obj) {
-                var key = Object.keys(obj)[0];
+                var key = getObjKeys(obj)[0];
                 return key;
              })
             .attr("x", function(obj, i) {
@@ -74,7 +78,13 @@ define(
             })
             .attr("y", function(obj) {
                 return (_chartConf.maxHeight-_chartConf.barPadding-2);
-            })
+            });
+
+            function getObjKeys(obj){
+              var keys = [];
+              for(var key in obj) keys.push(key);
+              return keys;
+            }
            
         }
         

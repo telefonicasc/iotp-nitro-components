@@ -47,6 +47,8 @@ define(
 
         function _install(){
             // this == scope of element in component
+            this.$element = element;
+
             this.$front.find('.body').append(FRONT_TPL);
             this.$back.find('.body').append(BACK_TPL);
 
@@ -58,7 +60,7 @@ define(
             element.back.token.html('');
             $.each(this.attr.tokens, _addToken);
 
-            element.back.address.on('change', _updateElementOnChange(element.front.addres) );
+            element.back.address.on('change', _updateElementOnChange(element.front.address) );
             element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
             element.back.message.on('change', _updateElementOnChange(element.front.message) );
 

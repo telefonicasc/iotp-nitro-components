@@ -9,8 +9,8 @@ define(
 
       this.after('initialize', function() {
 
-        this.width = 0;
-        this.height = 0;
+        this.width = this.$node.width();
+        this.height = this.$node.height();
 
         var updateSize = $.proxy(function() {
           this.width = this.$node.width();

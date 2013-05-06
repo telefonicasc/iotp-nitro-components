@@ -3,11 +3,12 @@ define(
     'components/component_manager',
     'components/mixin/template',
     'components/flippable',
-    'components/card/card_side'
+    'components/card/card_side',
+    'components/mixin/data_binding'
   ],
-  function(ComponentManager, Template, Flippable, CardSide) {
+  function(ComponentManager, Template, Flippable, CardSide, DataBinding) {
 
-    return ComponentManager.create('card', Template, Card);
+    return ComponentManager.create('Card', Template, Card, DataBinding);
 
     function Card() {
 
@@ -22,12 +23,20 @@ define(
         front: {
         },
         back: {
-        }
+        },
+        cssClass:'m2m-card-condition'
       });
 
       this.after('initialize', function() {
 
+        this.$node.on('click',_stopPropagation);
         this.$node.addClass('card');
+        this.$node.addClass(this.attr.cssClass);
+
+        if (this.attr.header) {
+            this.attr.front.header = this.attr.header;
+            this.attr.back.header = this.attr.header;
+        }
 
         CardSide.attachTo(this.$front, this.attr.front);
         CardSide.attachTo(this.$back, this.attr.back);
@@ -38,6 +47,10 @@ define(
           this.$back.hide();
         }
       });
+
+      function _stopPropagation(e){
+          e.stopPropagation();
+      }
     }
   }
 );

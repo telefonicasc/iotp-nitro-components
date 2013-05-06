@@ -28,7 +28,7 @@ define(
                 data[key] = value(o.value);
               }
             });
-            this.$node.html(this.compiledTpl.render(data));
+            //this.$node.html(this.compiledTpl.render(data));
           });
         }
 

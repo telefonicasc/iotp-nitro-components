@@ -7,6 +7,9 @@ requirejs.config({
 define(
   [
     'components/card/rule_editor',
+    'components/card/action/send_email',
+    'components/sensor_widget/battery',
+    'components/slider',
     'components/angular_directives'
   ],
 
@@ -23,16 +26,29 @@ define(
                     conditions: {
                         label: 'Conditions',
                         cards: [{
-
+                            header: 'Battery',
+                            front: {
+                                items: [{
+                                    component: 'Battery'
+                                }]
+                            },
+                            back: {
+                                items: [{
+                                    component: 'Slider'
+                                }]
+                            }
                         }, {
-
-                        }, {
-
+                            header: 'Pitch'
                         }]
                     },
                     actions: {
                         label: 'Actions',
-                        cards: []
+                        cards: [{
+                            cssClass: 'm2m-card-action m2m-card-send-email',
+                            header: 'Send Email',
+                            component: 'SendEmail',
+                            tokens: ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name']
+                        }]
                     }
                 };
 
@@ -41,14 +57,14 @@ define(
                     'cards': [{
                         'id': 'card0',
                         'sensorData': {
-                             
+
                         },
                         'configData': {
 
                         },
                         'connectedTo': ['card1']
                     }, {
-                        'id': 'card1' 
+                        'id': 'card1'
                     }]
                 };
             }

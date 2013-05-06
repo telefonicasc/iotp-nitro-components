@@ -7,11 +7,12 @@ define(
         'components/card/mixin/interactions',
         'components/card/mixin/and_interaction',
         'components/mixin/data_binding',
-        'components/slider'
+        'components/card/rule_editor_toolbar'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, Interactions, AndInteraction, DataBinding, Slider) {
+            Card, Interactions, AndInteraction, DataBinding,
+            RuleEditorToolbar) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
                 Interactions, AndInteraction);
@@ -32,15 +33,15 @@ define(
                         .appendTo(this.$node);
 
                 this.$bottomToolbar = $('<div>')
-                        .addClass('rule-bottom-toolbar border-panel vertical-panel')
                         .appendTo(this.$node);
 
-                this.$zoomSlider = $('<div>').appendTo(this.$bottomToolbar);
-                Slider.attachTo(this.$zoomSlider); 
+                RuleEditorToolbar.attachTo(this.$bottomToolbar);
 
-                this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
+                this.$bottomToolbar.on('zoomChange', $.proxy(function(e, o) {
+                    var zoomLevel = o.zoomLevel;
                     this.$graphEditor.css({
-                        '-webkit-transform': 'scale(' + (parseFloat(o.value) / 100) + ')' 
+                        '-webkit-transform': 'scale(' +
+                            (parseFloat(zoomLevel) / 100) + ')'
                     });
                 }, this));
 

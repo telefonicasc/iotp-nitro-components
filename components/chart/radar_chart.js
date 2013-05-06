@@ -12,7 +12,7 @@ define(
 
         function RadarChart() {
 
-            var data;
+            var data = null;
 
             this.defaultAttrs({
                 maxValues: [],
@@ -69,7 +69,7 @@ define(
                     return Math.sin(angle) * radarSize * d / max + radarY;
                 }
 
-                function updateChart() {
+                this.updateChart = function() {
                     var axisLines = axisEl.selectAll('line').data(axis),
                         axisCircles = axisEl.selectAll('circle').data(axis),
                         axisLabels = axisEl.selectAll('text').data(axis),
@@ -133,7 +133,7 @@ define(
                 this.on('valueChange', function(e, o) {
                     data = this.value = o.value;
                     maxValues = this.get('maxValues');
-                    updateChart();
+                    this.updateChart();
                 });
 
                 this.on('resize', function() {

@@ -157,6 +157,10 @@ define(
                     }
                 });
 
+                this.on('rangeSelected', function(e, value){
+                    $(rangeSelection.node()).trigger('rangeSelected', value);
+                });
+
             });
         }
     }

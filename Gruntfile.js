@@ -60,7 +60,7 @@ module.exports = function(grunt) {
           templateOptions: {
             requireConfig: {
               paths: {
-                flight: 'libs/test/flight'            
+                flight: 'libs/test/flight_test'            
               }
             }
           }
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
               requireConfig: {
                 paths: {
                   components: '.grunt/grunt-contrib-jasmine/components/',
-                  flight: 'libs/test/flight'
+                  flight: 'libs/test/flight_test'
                 }
               }
             },

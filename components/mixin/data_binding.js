@@ -17,6 +17,7 @@ define(
 
                 this.$node.attr('data-bind', '');
 
+                // TODO: Jquery deprecated
                 this.on('changeData', function(e, attr, value) {
                     if (attr === 'value') {
                         this.trigger('valueChange', { value: value });
@@ -53,12 +54,16 @@ define(
                     this.$node.trigger('valueChange', {
                         value: value, silent: true
                     });
-                });
+                });                
 
                 this.on('valueChange', function(e, o) {
                     var value = o.value,
                         nestedDatabinds = this.$node
                             .find('[data-bind] [data-bind]');
+
+                    if (e.target === this.node) {
+                        this.$node.data('m2mValue', value);
+                    }
 
                     this.$node.find('[data-bind]')
                         .not(nestedDatabinds).each(function() {

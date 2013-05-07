@@ -16,7 +16,8 @@ define(
 
       this.defaultAttrs({
         cardDefaults: {
-          flippable: false
+          flippable: false,
+          component:'Card'
         }
       });
 
@@ -24,23 +25,30 @@ define(
 
         this.$node.addClass('card-toolbox');
 
-        this.$cardSectionSwitch = $('<div>');        
+        this.$cardSectionSwitch = $('<div>');
 
-        $.each(this.attr.cardSections, $.proxy(function(key, section) {          
-          section.el = $('<div>').addClass('card-toolbox-section').appendTo(this.$content);
+        $.each(this.attr.cardSections, $.proxy(function(key, section) {
+          section.el = $('<div>')
+            .addClass('card-toolbox-section')
+            .appendTo(this.$content);
+
           section.button = $('<input>')
             .attr({ 'type': 'radio', 'name': key })
             .data('label', section.label);
           this.$cardSectionSwitch.append(section.button);
           $.each(section.cards, $.proxy(function(i, card) {
-            var cardEl = $('<div>').addClass('preview').appendTo(section.el);
-            Card.attachTo(cardEl, $.extend({}, this.attr.cardDefaults, card));
-            Draggable.attachTo(cardEl, { 
-              helper: function() { 
+            var cardEl = $('<div>')
+              .addClass('preview')
+              .appendTo(section.el);
+            var attrCard = $.extend({}, this.attr.cardDefaults, card);
+            var cmp  = ComponentManager.get(attrCard.component);
+            cmp.attachTo(cardEl, attrCard);
+            Draggable.attachTo(cardEl, {
+              helper: function() {
                 var newCardEl = $('<div>');
-                Card.attachTo(newCardEl, card);
-                return newCardEl;               
-              }            
+                cmp.attachTo(newCardEl, card);
+                return newCardEl;
+              }
             });
           }, this));
         }, this));

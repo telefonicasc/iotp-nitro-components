@@ -26,33 +26,7 @@ define(
                 $scope.cards = {
                     conditions: {
                         label: 'Conditions',
-                        cards: [{
-                            header: 'Battery',
-                            front: {
-                                items: [{
-                                    component: 'Battery'
-                                }]
-                            },
-                            back: {
-                                items: [{
-                                    component: 'Slider'
-                                }]
-                            }
-                        }, {
-                            header: 'Pitch',
-                            front: {
-                                items: [{
-                                    component: 'AngleWidget'
-                                }]
-                            },
-                            back: {
-                                items: [{
-                                    component: 'Slider',
-                                    minValue: 0,
-                                    maxValue: 90
-                                }]
-                            }
-                        }]
+                        cards: []
                     },
                     actions: {
                         label: 'Actions',
@@ -65,6 +39,11 @@ define(
                     }
                 };
 
+                $http.get('cards.json').success(function(data) {
+                    var cards = processCards(data.data);
+                    $scope.cards.conditions.cards = cards; 
+                });
+
                 $http.get('rule.json').success(function(data) {
                     $scope.ruleData = data.data[0];
                 });
@@ -74,6 +53,37 @@ define(
         angular.bootstrap(document, ['testApp']);
 
     });
+
+    function processCards(cardsData) {
+        var cards = [];
+        $.each(cardsData, function(i, cardData) {
+            var card = $.extend({}, cardData.configData);
+            card.header = cardData.sensorData.measureName;  
+            cards.push(card);
+
+            if (cardData.sensorData.phenomenon === 
+                "urn:x-ogc:def:phenomenon:IDAS:1.0:angle") {
+                card.front = { 
+                        items: [{
+                            component: 'AngleWidget'
+                        }]
+                    };
+                card.back = {
+                        items: [{
+                            component: 'Slider'
+                        }]
+                    };
+            } else if (cardData.sensorData.phenomenon ===
+                "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential") {
+                card.front = { 
+                    items: [{
+                        component: 'Battery'
+                    }]
+                };
+            }
+        });
+        return cards;
+    }
 
   }
 );

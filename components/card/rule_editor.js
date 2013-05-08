@@ -82,6 +82,14 @@ define(
                     pushPanel: this.$graphEditor
                 });
 
+                this.on('optionsChange', function(e, o) {
+                    if (e.target === this.node) {
+                        this.$cardToolbox.trigger('optionsChange', {
+                            cardSections: o.cards
+                        });
+                    }
+                });
+
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {
                     var position = {},
                         //componentOffset = this.$node.offset(),

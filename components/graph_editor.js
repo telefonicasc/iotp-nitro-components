@@ -34,13 +34,8 @@ define(
                                 start: o.start,
                                 end: o.end
                             };
-
-                    connection.path = this.paper.path(
-                        this.getPathArray(o.start, o.end));
-                    connection.path.attr({
-                        stroke: '#efeeeb', 'stroke-width': 40
-                    });
                     this.connections.push(connection);
+                    this.updateConnections();
                     this.trigger('connectionAdded', {
                             connection: connection,
                             connections: this.connections
@@ -78,6 +73,10 @@ define(
                         connection.path.remove();
                         index = this.connections.indexOf(connection);
                         this.connections.splice(index, 1);
+                        this.trigger('connectionRemoved', {
+                                connection: connection,
+                                connections: this.connections
+                        });
                     }
                 });
 
@@ -108,15 +107,32 @@ define(
 
                 });
                 this.on('saveConnections', function() {
-                    console.log('saveConnections');
-                    this.savedConnections = $.extend(true, [], this.connections);
-                    this.updateConnections();
+                    this.savedConnections = [];
+                    $.each(this.connections, $.proxy(function(i, connection) {
+                        this.savedConnections.push({
+                            start: connection.start, end: connection.end
+                        });
+                    }, this));
                 });
  
                 this.on('restoreConnections', function() {
-                    console.log('restoreConnections');
+
+                    $.each(this.connections, $.proxy(function(i, connection) {
+                        this.trigger('removeConnection', connection );
+                    }, this));
+
                     this.connections = $.extend(true, [], this.savedConnections);
+                    this.trigger('connectionsChange', { 
+                        connections : this.connections 
+                    });
+                    console.log('restoreConnections', this.connections);
                     this.updateConnections();
+                });
+
+                this.on('connectionAdded connectionRemoved', function() {
+                    this.trigger('connectionsChange', { 
+                        connections : this.connections
+                    });
                 });
 
                 this.on('updateConnections', function() {
@@ -126,6 +142,12 @@ define(
 
             this.updateConnections = function() {
                 $.each(this.connections, $.proxy(function(i, connection) {
+                    if (!connection.path) {
+                        connection.path = this.paper.path();
+                        connection.path.attr({
+                            stroke: '#efeeeb', 'stroke-width': 40
+                        });
+                    } 
                     connection.path.attr('path',
                         this.getPathArray(connection.start, connection.end));
                 }, this));

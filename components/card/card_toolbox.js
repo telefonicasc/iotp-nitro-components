@@ -28,7 +28,35 @@ define(
 
                 this.$cardSectionSwitch = $('<div>');
 
-                $.each(this.attr.cardSections, $.proxy(function(key, section) {
+                this.setCardSections(this.attr.cardSections);
+
+                this.$content.prepend(this.$cardSectionSwitch);
+                RadioButton.attachTo(this.$cardSectionSwitch, {});
+
+                this.$cardSectionSwitch.on('selected', $.proxy(function(e, o) {
+                    var section = this.cardSections[o.name];
+                    this.$node.find('.card-toolbox-section')
+                        .css('display', 'none');
+                    section.el.css('display', 'block');
+                }, this));
+
+                this.on('optionsChange', function(e, o) {
+                    this.setCardSections(o.cardSections);
+                });
+
+                this.selectFirstSection();
+
+                // TODO : A bit ugly
+                this.trigger('collapse', { duration: 0 });
+                this.trigger('expand', { duration: 0 });
+            });
+
+            this.setCardSections = function(cardSections) {
+
+                this.emptyCardSections();
+
+                this.cardSections = $.extend({}, cardSections);
+                $.each(this.cardSections, $.proxy(function(key, section) {
                     section.el = $('<div>').addClass('card-toolbox-section')
                                     .appendTo(this.$content);
                     section.button = $('<input>')
@@ -53,29 +81,22 @@ define(
                         });
                     }, this));
                 }, this));
+            };
 
-                this.$content.prepend(this.$cardSectionSwitch);
-                RadioButton.attachTo(this.$cardSectionSwitch, {});
-
-                this.$cardSectionSwitch.on('selected', $.proxy(function(e, o) {
-                    var section = this.attr.cardSections[o.name];
-                    this.$node.find('.card-toolbox-section')
-                        .css('display', 'none');
-                    section.el.css('display', 'block');
-                }, this));
-
-                if (this.attr.cardSections) {
-                    var first = $.map(this.attr.cardSections, function(o, key) {
+            this.selectFirstSection = function() {
+                if (this.cardSections) {
+                    var first = $.map(this.cardSections, function(o, key) {
                             return key;
                         })[0];
                     this.$cardSectionSwitch
                         .trigger('selected', { name: first });
                 }
+            };
 
-                // TODO : A bit ugly
-                this.trigger('collapse', { duration: 0 });
-                this.trigger('expand', { duration: 0 });
-            });
+            this.emptyCardSections = function() {
+                this.$node.find('.card-toolbox-section').remove();
+                this.$cardSectionSwitch.empty();
+            };
         }
     }
 );

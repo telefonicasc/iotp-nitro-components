@@ -20,12 +20,17 @@ define(
                 this.$node.addClass('rule-bottom-toolbar');
                 this.$node.addClass('border-panel vertical-panel');
                
-                this.$zoomSlider = $('<div>').appendTo(this.$node);
-                Slider.attachTo(this.$zoomSlider);  
+                this.$zoom = $('<div>')
+                    .addClass('zoom')
+                    .appendTo(this.$node);
 
+                this.$zoomSlider = $('<div>').appendTo(this.$zoom);
+                Slider.attachTo(this.$zoomSlider);  
+        
                 this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
                     this.trigger('zoomChange', { zoomLevel: o.value });
                 }, this));
+                this.$zoomSlider.trigger('valueChange', { value: 100 });
             });
         }
 

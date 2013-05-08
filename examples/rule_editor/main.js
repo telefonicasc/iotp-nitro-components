@@ -44,9 +44,9 @@ define(
                     $scope.cards.conditions.cards = cards; 
                 });
 
-                $http.get('rule.json').success(function(data) {
-                    $scope.ruleData = data.data[0];
-                });
+                //$http.get('rule.json').success(function(data) {
+                //    $scope.ruleData = data.data[0];
+                //});
             }
         );
 

@@ -71,10 +71,14 @@ define(
                     }
                 }, this));
 
-                this.$graphEditor.on('connectionAdded', $.proxy(function(e, o) {
-                    this.connections = o.connections;
-                    this.relayoutCards();
-                }, this));
+                this.$graphEditor.on('connectionsChange',
+                    $.proxy(function(e, o) {
+                        this.connections = o.connections;
+                        if (this.connections.length > 2) {
+                            debugger;
+                        }
+                        this.relayoutCards();
+                    }, this));
 
                 this.$cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(this.$cardToolbox, {
@@ -93,12 +97,12 @@ define(
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {
                     var position = {},
                         //componentOffset = this.$node.offset(),
-                        componentOffset = this.$cardToolbox.position(),
+                        componentOffset = this.$graphEditor.position(),
                         helperOffset = $(ui.helper).position();
-                    position.left = helperOffset.left + componentOffset.left;
-                    position.top = helperOffset.top + componentOffset.top;
 
-                    console.log(position.left, position.top);
+                    position.left = helperOffset.left - componentOffset.left;
+                    position.top = helperOffset.top - componentOffset.top;
+
                     $(ui.helper).data(position);
                     this.$graphEditor.trigger('updateConnections');
                 }, this));
@@ -117,18 +121,20 @@ define(
                     this.relayoutCards();
                 }, this));
 
-                this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { node: this.$startCard });
+                this.on('newRule', function() {
+                    this.newRule();
+                });
 
                 this.on('valueChange', function(e, o) {
                     if (e.target === this.node) {
                         this.loadRuleData(o.value);
                     }
                 });
+
+                this.trigger('newRule');
             });
 
             this.relayoutCards = function() {
-                console.log('Relayout cards');
                 var cards = this.getAllCards(),
                         colWidth = 300,
                         height = this.$graphEditor.height();
@@ -237,6 +243,12 @@ define(
 
             this.getCard = function(cardId) {
                 return this.$graphEditor.find('#' + cardId);
+            };
+
+            this.newRule = function() {
+                this.emptyRule();        
+                this.$startCard = $('<div>').addClass('start-card');
+                this.$graphEditor.trigger('addNode', { node: this.$startCard });
             };
 
             this.emptyRule = function() {

@@ -199,15 +199,29 @@
 }
 
 .graph-editor {
-  background-image: url("@{image-path}/ruleback.png");
 }
 
 .rule-editor-main {
   bottom: 60px;
+  top: 60px;
+  background-image: url("@{image-path}/ruleback.png");
+  overflow: hidden;
 }
 
 .rule-bottom-toolbar {
     height: 60px;
+    overflow: hidden;
+
+    .zoom {
+      width: 500px;
+      position: relative;
+      left: 50%;
+      margin-left: -250px;
+
+      .slider-handler {
+        margin-top: -50px;
+      } 
+    }
 }
 
 .node-container {

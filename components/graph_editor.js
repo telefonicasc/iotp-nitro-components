@@ -95,7 +95,9 @@ define(
                 });
 
                 this.on('removeNode', function(e, o) {
-
+                    var node = o.node;
+                    node.remove();
+                    this.trigger('nodeRemoved', { node: node });
                 });
 
                 this.on('nodeAdded', function() {

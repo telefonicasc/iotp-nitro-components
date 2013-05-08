@@ -9,6 +9,7 @@ define(
     'components/card/rule_editor',
     'components/card/action/send_email',
     'components/sensor_widget/battery',
+    'components/sensor_widget/angle',
     'components/slider',
     'components/angular_directives'
   ],
@@ -21,7 +22,7 @@ define(
 
         angular.module('testApp').controller(
             'ruleController',
-            function($scope) {
+            function($scope, $http) {
                 $scope.cards = {
                     conditions: {
                         label: 'Conditions',
@@ -38,7 +39,19 @@ define(
                                 }]
                             }
                         }, {
-                            header: 'Pitch'
+                            header: 'Pitch',
+                            front: {
+                                items: [{
+                                    component: 'AngleWidget'
+                                }]
+                            },
+                            back: {
+                                items: [{
+                                    component: 'Slider',
+                                    minValue: 0,
+                                    maxValue: 90
+                                }]
+                            }
                         }]
                     },
                     actions: {
@@ -52,21 +65,9 @@ define(
                     }
                 };
 
-                $scope.ruleData = {
-                    'name': 'My rule',
-                    'cards': [{
-                        'id': 'card0',
-                        'sensorData': {
-
-                        },
-                        'configData': {
-
-                        },
-                        'connectedTo': ['card1']
-                    }, {
-                        'id': 'card1'
-                    }]
-                };
+                $http.get('rule.json').success(function(data) {
+                    $scope.ruleData = data.data[0];
+                });
             }
         );
 

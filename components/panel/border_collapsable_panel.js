@@ -17,33 +17,66 @@ define(
                 nodes: {
                     'toggle': '.toggle-button',
                     'content': '.panel-content'
-                }
+                },
+
+                horizontal: true,
+                showToggle: false
             });
 
             this.after('initialize', function() {
                 this.$node.addClass('border-panel');
 
+                if (this.attr.horizontal) {
+                    this.$node.addClass('horizontal-panel');
+                } else {
+                    this.$node.addClass('vertical-panel');
+                }
+
                 this.expanded = true;
 
+                if (!this.attr.showToggle) {
+                    this.$toggle.hide();
+                }
+
                 this.$toggle.on('click', $.proxy(function() {
-                    if (this.expanded) {
-                        this.trigger('collapse');
-                    } else {
-                        this.trigger('expand');
-                    }
+                    this.trigger('toggle');
                 }, this));
 
-                this.on('expand', function() {
-                    this.$content.slideDown(400);
-                    this.expanded = true;
+                this.on('expand', function(e, o) {
+                    if (!this.expanded) {
+                        this.toggle(o && o.duration);
+                    }
                 });
 
-                this.on('collapse', function() {
-                    this.$content.slideUp(400);
-                    this.expanded = false;
+                this.on('collapse', function(e, o) {
+                    if (this.expanded) {
+                        this.toggle(o && o.duration);
+                    }
                 });
 
+                this.on('toggle', function(e, o) {
+                    this.toggle(o && o.duration);
+                });
             });
+
+            this.toggle = function(duration) {
+                if (this.attr.horizontal) {
+                    console.log('duratoi', duration);
+                    this.$node.animate({ width: 'toggle' }, {
+                        duration: duration,
+                        progress: $.proxy(function(anim, progress) {
+                            if (this.attr.pushPanel) {
+                                this.attr.pushPanel.css({
+                                    left: this.$content.width()
+                                });
+                            }
+                        }, this)
+                    });
+                } else {
+                    this.$node.animate({ height: 'toggle' });
+                }
+                this.expanded = !this.expanded;
+            };
         }
     }
 );

@@ -33,10 +33,14 @@ define(
                 });
 
                 this.on('resize', function() {
+                    this.paper.setSize(this.width, this.height);
+                    this.scaleRect.attr({
+                        width: this.width
+                    });
                     this.updateScale();
                 });
 
-                this.updateScale();
+                this.trigger('render');
             });
 
             this.updateScale = function() {

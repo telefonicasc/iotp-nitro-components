@@ -6,11 +6,13 @@ define(
         'components/card/card',
         'components/card/mixin/interactions',
         'components/card/mixin/and_interaction',
-        'components/mixin/data_binding'
+        'components/mixin/data_binding',
+        'components/card/rule_editor_toolbar'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, Interactions, AndInteraction, DataBinding) {
+            Card, Interactions, AndInteraction, DataBinding,
+            RuleEditorToolbar) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
                 Interactions, AndInteraction);
@@ -27,8 +29,24 @@ define(
                 this.connections = [];
                 this.value = this.attr.value;
 
-                this.$graphEditor = $('<div>').addClass('fit')
+                this.$mainArea = $('<div>').addClass('rule-editor-main fit')
                         .appendTo(this.$node);
+
+                this.$bottomToolbar = $('<div>')
+                        .appendTo(this.$node);
+
+                RuleEditorToolbar.attachTo(this.$bottomToolbar);
+
+                this.$bottomToolbar.on('zoomChange', $.proxy(function(e, o) {
+                    var zoomLevel = o.zoomLevel;
+                    this.$graphEditor.css({
+                        '-webkit-transform': 'scale(' +
+                            (parseFloat(zoomLevel) / 100) + ')'
+                    });
+                }, this));
+
+                this.$graphEditor = $('<div>').addClass('fit')
+                        .appendTo(this.$mainArea);
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
@@ -40,7 +58,7 @@ define(
                     var node = o.node,
                         placeholder;
 
-                    if (!node.hasClass('card-placeholder') &&
+                    if (node.hasClass('start-card') &&
                         !this.getConnectedTo(node).length) {
                         placeholder = $('<div>');
                         placeholder.addClass('card-placeholder action-card');
@@ -58,17 +76,21 @@ define(
                     this.relayoutCards();
                 }, this));
 
-                this.$cardToolbox = $('<div>').appendTo(this.$node);
+                this.$cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(this.$cardToolbox, {
-                    cardSections: this.attr.cards
+                    cardSections: this.attr.cards,
+                    pushPanel: this.$graphEditor
                 });
 
                 this.$cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {
                     var position = {},
-                        componentOffset = this.$node.offset(),
-                        helperOffset = $(ui.helper).offset();
-                    position.left = helperOffset.left - componentOffset.left;
-                    position.top = helperOffset.top - componentOffset.top;
+                        //componentOffset = this.$node.offset(),
+                        componentOffset = this.$cardToolbox.position(),
+                        helperOffset = $(ui.helper).position();
+                    position.left = helperOffset.left + componentOffset.left;
+                    position.top = helperOffset.top + componentOffset.top;
+
+                    console.log(position.left, position.top);
                     $(ui.helper).data(position);
                     this.$graphEditor.trigger('updateConnections');
                 }, this));
@@ -78,15 +100,22 @@ define(
                     drop: $.proxy(function(e, ui) {
                         ui.draggable.data('draggable').cancelHelperRemoval = true;
                         this.$graphEditor.trigger('addNode', { node: ui.helper });
+                        $(window).trigger('resize');
                         this.relayoutCards();
                     }, this)
                 });
+
+                this.$graphEditor.on('dragstop', $.proxy(function(e) {
+                    this.relayoutCards();
+                }, this));
 
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });
 
                 this.on('valueChange', function(e, o) {
-                    //console.log('adasdas', o.value);
+                    if (e.target === this.node) {
+                        this.loadRuleData(o.value);
+                    }
                 });
             });
 
@@ -172,6 +201,47 @@ define(
                     start: start, end: end
                 });
 
+            };
+
+            this.loadRuleData = function(data) {
+                var nodes = [];
+
+                if (!data) return;
+
+                this.emptyRule();
+
+                // Add cards
+                $.each(data.cards, $.proxy(function(i, card) {
+                    var cardEl = $('<div>').attr('id', card.id);
+                    Card.attachTo(cardEl, $.extend({}, card.configData));
+                    this.$graphEditor.trigger('addNode', { node: cardEl });
+                }, this));
+
+                // Add connections
+                $.each(data.cards, $.proxy(function(i, card) {
+                    $.each(card.connectedTo, $.proxy(function(i, otherID) {
+                        var cardEl = this.getCard(card.id),
+                            otherEl = this.getCard(otherID);
+                        this.addConnection(cardEl, otherEl);
+                    }, this));
+                }, this));
+            };
+
+            this.getCard = function(cardId) {
+                return this.$graphEditor.find('#' + cardId);
+            };
+
+            this.emptyRule = function() {
+                var cards = this.$graphEditor.find('.node-container > *');
+
+                $.each(this.connections, $.proxy(function(i, connection) {
+                   this.$graphEditor.trigger('removeConnection', connection);  
+                }, this));
+                this.connections = [];
+
+                cards.each($.proxy(function(i, el) {
+                    this.$graphEditor.trigger('removeNode', { node: $(el) }); 
+                }, this));
             };
         }
     }

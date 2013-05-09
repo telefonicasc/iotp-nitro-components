@@ -44,9 +44,13 @@ define(
                     $scope.cards.conditions.cards = cards; 
                 });
 
-                //$http.get('rule.json').success(function(data) {
-                //    $scope.ruleData = data.data[0];
-                //});
+                /*$http.get('rule.json').success(function(data) {
+                    $scope.ruleData = data.data[0];
+                });*/
+                
+                $scope.$watch('ruleData', function() {
+                    console.log('RuleData change', $scope.ruleData);
+                });
             }
         );
 
@@ -80,6 +84,11 @@ define(
                         component: 'Battery'
                     }]
                 };
+                card.back = {
+                        items: [{
+                            component: 'Slider'
+                        }]
+                    };
             }
         });
         return cards;

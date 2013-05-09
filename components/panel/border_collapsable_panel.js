@@ -61,7 +61,6 @@ define(
 
             this.toggle = function(duration) {
                 if (this.attr.horizontal) {
-                    console.log('duratoi', duration);
                     this.$node.animate({ width: 'toggle' }, {
                         duration: duration,
                         progress: $.proxy(function(anim, progress) {

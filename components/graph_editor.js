@@ -125,7 +125,6 @@ define(
                     this.trigger('connectionsChange', { 
                         connections : this.connections 
                     });
-                    console.log('restoreConnections', this.connections);
                     this.updateConnections();
                 });
 

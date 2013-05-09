@@ -20,9 +20,23 @@ define(
                 this.$node.addClass('rule-bottom-toolbar');
                 this.$node.addClass('border-panel vertical-panel');
                
+                this.$cardButtons = $('<div>')
+                        .addClass('card-buttons')
+                        .appendTo(this.$node);
+
+                this.$conditionsButton = $('<div>')
+                        .addClass('conditions-button')
+                        .html('Conditions')
+                        .appendTo(this.$cardButtons);
+                
+                this.$actionsButton = $('<div>')
+                        .addClass('actions-button')
+                        .html('Actions')
+                        .appendTo(this.$cardButtons);
+
                 this.$zoom = $('<div>')
-                    .addClass('zoom')
-                    .appendTo(this.$node);
+                        .addClass('zoom')
+                        .appendTo(this.$node);
 
                 this.$zoomSlider = $('<div>').appendTo(this.$zoom);
                 Slider.attachTo(this.$zoomSlider);  
@@ -30,6 +44,15 @@ define(
                 this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
                     this.trigger('zoomChange', { zoomLevel: o.value });
                 }, this));
+
+                this.$conditionsButton.on('click', $.proxy(function() {
+                    this.trigger('conditionsSelected');
+                }, this));
+
+                this.$actionsButton.on('click', $.proxy(function() {
+                    this.trigger('actionsSelected');
+                }, this));
+
                 this.$zoomSlider.trigger('valueChange', { value: 100 });
             });
         }

@@ -3,9 +3,9 @@ define(
 
     function() {
 
-        return AndInteraction;
+        return ActionDropInteraction;
 
-        function AndInteraction() {
+        function ActionDropInteraction() {
             this.after('initialize', function() {
                 this.registerInteraction({
                     getAreas: getAreas,
@@ -16,30 +16,32 @@ define(
 
         function getAreas(cards, draggingCard) {
             var areas = [];
-            if (draggingCard.hasClass('m2m-card-condition')) {
+
+            if (draggingCard.hasClass('m2m-card-action')) {
                 cards.each($.proxy(function(i, el) {
-                    if ($(el).hasClass('m2m-card-condition') ||
-                        $(el).hasClass('start-card')) {
+                    if ($(el).hasClass('card-placeholder') &&
+                        $(el).hasClass('action-card')) {
                         var area = $(el).position();
-                        area.left = area.left + 100;
                         area.width = 200;
                         area.height = 200;
-                        area.card = $(el);
+                        area.placeholder = $(el);
                         areas.push(area);
                     }
                 }, this));
             }
+
             return areas;
         }
 
         function activate(area, card) {
-            var nextcard = this.getConnectedTo(area.card);
+            var previousCard = this.getConnectedFrom(area.placeholder);
 
-            this.addConnection(area.card, card);
-            if (nextcard) {
-                this.removeConnection(area.card, nextcard);
-                this.addConnection(card, nextcard);
+            if (previousCard) {
+                this.removeConnection(previousCard, area.placeholder);
+                this.tempRemoveCard(area.placeholder);
+                this.addConnection(previousCard, card);
             }
         }
+
     }
 );

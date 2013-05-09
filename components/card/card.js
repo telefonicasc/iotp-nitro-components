@@ -34,8 +34,8 @@ define(
                 this.$node.addClass(this.attr.cssClass);
 
                 if (this.attr.header) {
-                        this.attr.front.header = this.attr.header;
-                        this.attr.back.header = this.attr.header;
+                    this.attr.front.header = this.attr.header;
+                    this.attr.back.header = this.attr.header;
                 }
 
                 CardSide.attachTo(this.$front, this.attr.front);
@@ -54,7 +54,7 @@ define(
             });
 
             function _stopPropagation(e){
-                    e.stopPropagation();
+                e.stopPropagation();
             }
         }
     }

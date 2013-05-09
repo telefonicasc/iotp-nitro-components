@@ -7,7 +7,7 @@ define(
         'components/radio_button'
     ],
 
-    function(ComponentManager, BorderCollapsablePanel, Card, 
+    function(ComponentManager, BorderCollapsablePanel, Card,
              Draggable, RadioButton) {
 
         return ComponentManager.extend(BorderCollapsablePanel,
@@ -36,7 +36,7 @@ define(
                 this.trigger('collapse', { duration: 0 });
                 this.trigger('expand', { duration: 0 });
             });
-
+            //=====================
             this.setCardSections = function(cardSections) {
 
                 this.emptyCardSections();
@@ -61,7 +61,7 @@ define(
                             helper: function() {
                                 var newCardEl = $('<div>');
                                 cardCmp.attachTo(newCardEl, card);
-                                newCardEl.data('cardConfig', card);
+                                newCardEl.data('cardConfig', card);//===========
                                 return newCardEl;
                             }
                         });

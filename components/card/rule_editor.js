@@ -12,7 +12,7 @@ define(
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, Interactions, AndInteraction, ActionDropInteraction, 
+            Card, Interactions, AndInteraction, ActionDropInteraction,
             DataBinding, RuleEditorToolbar) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
@@ -95,7 +95,7 @@ define(
                         this.connections = o.connections;
                         this.relayoutCards();
                     }, this));
-
+                //===========================
                 this.$conditionsToolbox = this.createCardToolbox(
                     this.attr.cards.conditions);
                 this.$actionsToolbox = this.createCardToolbox(
@@ -138,7 +138,9 @@ define(
                     if (e.target === this.node &&
                         !o.ruleEngineUpdate) {
                         this.disableChangeEvent = true;
-                        this.loadRuleData(o.value);
+                        if(o.value){
+                            this.loadRuleData(o.value);
+                        }
                         this.disableChangeEvent = false;
                     }
                 });
@@ -224,13 +226,15 @@ define(
 
             this.addConnection = function(start, end) {
                 this.$graphEditor.trigger('addConnection', {
-                    start: start, end: end
+                    start: start,
+                    end: end
                 });
             };
 
             this.removeConnection = function(start, end) {
                 this.$graphEditor.trigger('removeConnection', {
-                    start: start, end: end
+                    start: start,
+                    end: end
                 });
 
             };
@@ -238,15 +242,19 @@ define(
             this.loadRuleData = function(data) {
                 var nodes = [];
 
-                if (!data) return;
-
                 this.emptyRule();
-
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
-                    var cardEl = $('<div>').attr('id', card.id);
-                    Card.attachTo(cardEl, $.extend({}, card.configData));
-                    this.$graphEditor.trigger('addNode', { node: cardEl });
+                    var cardEl = $('<div>')
+                        .attr('id', card.id)
+                        .data('cardConfig', card);
+                    var data = _cardParseData(card);
+                    var node = {
+                        'node': cardEl
+                    };
+                    debugger
+                    Card.attachTo(cardEl, data);
+                    this.$graphEditor.trigger('addNode', node);
                 }, this));
 
                 // Add connections
@@ -261,7 +269,7 @@ define(
 
             this.getRuleData = function() {
                 var ruleData = [],
-                    cards = this.$graphEditor.find('.node-container > *'); 
+                    cards = this.$graphEditor.find('.node-container > *');
 
                 $.each(cards, $.proxy(function(i, card) {
                     if (!$(card).hasClass('start-card')) {
@@ -274,7 +282,7 @@ define(
 
             this.updateValue = function() {
                 if (!this.disableChangeEvent) {
-                    this.trigger('valueChange', { 
+                    this.trigger('valueChange', {
                         value: this.getRuleData(),
                         ruleEngineUpdate: true
                     });
@@ -286,7 +294,7 @@ define(
             };
 
             this.newRule = function() {
-                this.emptyRule();        
+                this.emptyRule();
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });
             };
@@ -296,13 +304,13 @@ define(
 
                 $.each(this.connections, $.proxy(function(i, connection) {
                     if (connection) {
-                       this.$graphEditor.trigger('removeConnection', connection);  
+                       this.$graphEditor.trigger('removeConnection', connection);
                     }
                 }, this));
                 this.connections = [];
 
                 cards.each($.proxy(function(i, el) {
-                    this.$graphEditor.trigger('removeNode', { node: $(el) }); 
+                    this.$graphEditor.trigger('removeNode', { node: $(el) });
                 }, this));
             };
 
@@ -310,7 +318,7 @@ define(
                 var cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(cardToolbox, {
                     cardSections: {
-                        cards: cards  
+                        cards: cards
                     },
                     pushPanel: this.$graphEditor
                 });
@@ -327,10 +335,54 @@ define(
                     this.$graphEditor.trigger('updateConnections');
                 }, this));
 
-                cardToolbox.trigger('collapse');            
+                cardToolbox.trigger('collapse');
 
                 return cardToolbox;
             };
+        }
+
+        //************************
+
+        function _cardParseData(cardData) {
+            var card = $.extend(cardData, cardData.configData);
+            //card.header = cardData.sensorData.measureName;//cardData.configData.header
+
+            if(card.type === 'SensorCard'){
+                if (cardData.sensorData.phenomenon ===
+                    'urn:x-ogc:def:phenomenon:IDAS:1.0:angle') {
+                    card.front = {
+                            items: [{
+                                component: 'AngleWidget'
+                            }]
+                        };
+                    card.back = {
+                            items: [{
+                                component: 'Slider'
+                            }]
+                        };
+                } else if (cardData.sensorData.phenomenon ===
+                    'urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential') {
+                    card.front = {
+                        items: [{
+                            component: 'Battery'
+                        }]
+                    };
+                    card.back = {
+                            items: [{
+                                component: 'Slider'
+                            }]
+                        };
+                }
+            }else if(card.type === 'ActionCard'){
+                if(card.actionData.type === 'SendEmailAction'){
+                    card.cssClass = 'm2m-card-action m2m-card-send-email';
+                    card.header = 'Send Email';
+                    card.component = 'SendEmail';
+                    card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
+
+                }
+            }
+            return card;
         }
     }
 );

@@ -1,6 +1,8 @@
 
 @card-width: 160px;
 @card-height: 195px;
+@card-action-width: 160px;
+@card-action-height: 120px;
 @card-flip-factor: 1.25;
 @card-preview-factor: 0.5;
 @card-header-height: 40px;
@@ -13,6 +15,14 @@
     width: @card-width;
     height: @card-height;
     box-shadow: 0px 2px 3px #AAA;
+    background-color: white;
+  }
+
+  &.m2m-card-action {
+    .front, .back {
+        width: @card-action-width;
+        height: @card-action-height;        
+    }
   }
 
   .front {
@@ -50,11 +60,19 @@
       width: round(@card-width*@card-flip-factor);
       height: round(@card-height*@card-flip-factor);
     }
+
   }
 
   &.preview {
     -webkit-transform: scale(@card-preview-factor);
   }
+}
+
+.m2m-card-action.flip {
+    .front, .back {
+      width: round(@card-action-width*@card-flip-factor);
+      height: round(@card-action-height*@card-flip-factor);
+    }
 }
 
 .m2m-card-condition .front {
@@ -85,7 +103,7 @@
     }
 }
 
-.card.m2m-card-send-email.flip .back{
+.card.m2m-card-send-email .back{
   width: 487px;
   height: 448px;
   margin-top: -143px;
@@ -93,8 +111,6 @@
   box-shadow: #A1A1A1 0px 0px 11px;
   border:5px solid #77868E;
   .border-radius(25px, 25px, 25px, 25px);
-
-
 
   .header{
     display: none;
@@ -182,10 +198,6 @@
   border-radius: 13px;
 }
 
-.action-card {
-
-}
-
 .card-toolbox {
   
   width: 240px;
@@ -195,6 +207,11 @@
     margin: 10px;
     width: @card-width * @card-preview-factor;
     height: @card-height * @card-preview-factor;
+
+    .m2m-card-action {
+        width: @card-action-width * @card-preview-factor;
+        height: @card-action-height * @card-preview-factor;
+    }
   }
 }
 
@@ -232,12 +249,22 @@
   .card {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+
+    &.m2m-card-action {
+      margin-left: 0-round(@card-action-width/2);
+      margin-top: 0-round(@card-action-height/2);
+    }
   }
 }
 
 .card.ui-draggable-dragging {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+
+    &.m2m-card-action {
+      margin-left: 0-round(@card-action-width/2);
+      margin-top: 0-round(@card-action-height/2);
+    }
 }
 
 // WIDGETS inside cards

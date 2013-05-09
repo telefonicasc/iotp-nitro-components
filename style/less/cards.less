@@ -2,7 +2,7 @@
 @card-width: 160px;
 @card-height: 195px;
 @card-flip-factor: 1.25;
-@card-preview-factor: 0.75;
+@card-preview-factor: 0.5;
 @card-header-height: 40px;
 
 .card {
@@ -187,16 +187,41 @@
 }
 
 .card-toolbox {
+  
+  width: 240px;
 
   .card {
     float: left;
-    width: @card-width;
-    height: @card-height;
+    margin: 10px;
+    width: @card-width * @card-preview-factor;
+    height: @card-height * @card-preview-factor;
   }
 }
 
 .graph-editor {
+}
+
+.rule-editor-main {
+  bottom: 60px;
+  top: 60px;
   background-image: url("@{image-path}/ruleback.png");
+  overflow: hidden;
+}
+
+.rule-bottom-toolbar {
+    height: 60px;
+    overflow: hidden;
+
+    .zoom {
+      width: 500px;
+      position: relative;
+      left: 50%;
+      margin-left: -250px;
+
+      .slider-handler {
+        margin-top: -50px;
+      } 
+    }
 }
 
 .node-container {
@@ -213,4 +238,14 @@
 .card.ui-draggable-dragging {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+}
+
+// WIDGETS inside cards
+
+.card .body .battery-widget {
+    width: 40%;
+    left: 50%;
+    margin-left: -20%;
+    position: relative;    
+    height: 70%;
 }

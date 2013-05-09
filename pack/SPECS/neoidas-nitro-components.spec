@@ -27,6 +27,7 @@ fi
 
 cp -rf ${WORKSPACE}/* $RPM_BUILD_ROOT%{_dcadir}/
 rm -rf $RPM_BUILD_ROOT%{_dcadir}/node_modules
+rm -rf $RPM_BUILD_ROOT%{_dcadir}/pack
 
 
 # -------------------------------------------------------------------------------------------- #

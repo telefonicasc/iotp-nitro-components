@@ -29,6 +29,7 @@ define(
             this.onDragStart = function() {
                 var cards = this.getAllCards();
                 interactionAreas = [];
+                this.$graphEditor.trigger('saveConnections');
                 $.each(interactions, $.proxy(function(i, interaction) {
                     var areas = interaction.getAreas.call(this, cards);
                     if (areas) {
@@ -45,6 +46,7 @@ define(
                     position = card.data(),
                     left = position.left,
                     top = position.top;
+                
                 $.each(interactionAreas, $.proxy(function(i, area) {
                     if (left > area.left + 100 &&
                         left < area.left + 300 &&
@@ -57,11 +59,15 @@ define(
 
                 if (newActive) {
                     if (newActive !== activeArea) {
+                        console.log('old', activeArea, 'new', newActive);
                         this.$graphEditor.trigger('restoreConnections');
                         newActive.interaction.activate.call(this, newActive, card);
                     }
                 } else {
-                    this.$graphEditor.trigger('saveConnections'); 
+                    console.log('none active. old:', activeArea);
+                    if (activeArea) {
+                        this.$graphEditor.trigger('restoreConnections'); 
+                    }
                 }
                 activeArea = newActive;
             };

@@ -17,9 +17,12 @@ define(
         function getAreas(cards) {
             var areas = [];
             cards.each($.proxy(function(i, el) {
-                var area = $(el).position();
-                area.card = $(el);
-                areas.push(area);
+                if ($(el).hasClass('m2m-card-condition') ||
+                    $(el).hasClass('start-card')) {
+                    var area = $(el).position();
+                    area.card = $(el);
+                    areas.push(area);
+                }
             }, this));
             return areas;
         }

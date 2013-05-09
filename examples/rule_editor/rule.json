@@ -1,0 +1,106 @@
+{
+    "count": 2,
+    "data": [
+        {
+            "name": "TestRule",
+            "active": 1,
+            "cards": [
+                {
+                    "id": "5110e5ee8aa7c4e6e2bede28",
+                    "model": "SemaphoresModel",
+                    "type": "SensorCard",
+                    "sensorData": {
+                        "measureName": "angle",
+                        "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                        "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                        "dataType": "Quantity",
+                        "uom": "deg"
+                    },
+                    "configData": {
+                        "scope": "OBSERVATION",
+                        "cardType": "pitchcard",
+                        "header": "Pitch"
+                    },
+                    "connectedTo": [
+                        "idCardByVGR1"
+                    ],
+                    "conditionList": [
+                        {
+                            "parameterValue": "10",
+                            "not": false,
+                            "operator": "GREATER_THAN"
+                        },
+                        {
+                            "parameterValue": "16",
+                            "not": true,
+                            "operator": "GREATER_THAN"
+                        }
+                    ]
+                },
+                {
+                    "id": "idCardByVGR1",
+                    "type": "ActionCard",
+                    "configData": {
+                        "header": "SendMail"
+                    },
+                    "actionData": {
+                        "type": "SendEmailAction",
+                        "emailAddress": "lucas@tid.es",
+                        "subject": "Test Rule",
+                        "message": "Test Rule"
+                    },
+                    "connectedTo": []
+                }
+            ],
+            "creationTime": {
+                "$date": "2013-04-24T07:51:30.411Z"
+            }
+        },
+        {
+            "name": "TestRuleSprint",
+            "active": 1,
+            "cards": [
+                {
+                    "id": "5110e5ee8aa7c4e6e2bede28",
+                    "model": "SemaphoresModel",
+                    "type": "SensorCard",
+                    "sensorData": {
+                        "measureName": "angle",
+                        "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                        "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                        "dataType": "Quantity",
+                        "uom": "deg"
+                    },
+                    "configData": {
+                        "scope": "OBSERVATION",
+                        "cardType": "pitchcard"
+                    },
+                    "connectedTo": [
+                        "idCardByVGR1"
+                    ],
+                    "conditionList": [
+                        {
+                            "parameterValue": "10",
+                            "not": false,
+                            "operator": "GREATER_THAN"
+                        }
+                    ]
+                },
+                {
+                    "id": "idCardByVGR1",
+                    "type": "ActionCard",
+                    "actionData": {
+                        "type": "SendEmailAction",
+                        "emailAddress": "lucas@tid.es",
+                        "subject": "Test Rule",
+                        "message": "Test Rule"
+                    },
+                    "connectedTo": []
+                }
+            ],
+            "creationTime": {
+                "$date": "2013-04-25T07:51:09.125Z"
+            }
+        }
+    ]
+}

@@ -8,8 +8,19 @@ define([], function() {
                     restrict: 'A',
                     link: function(scope, element, attr) {
                         var jqplugin = attr.nitroComponent,
-                            options = scope.$eval(attr.nitroOptions);
+                            options = angular.copy(
+                                scope.$eval(attr.nitroOptions), {});
                         $(element)[jqplugin](options);
+
+                        scope.$watch(function() {
+                            var newOptions = angular.copy(
+                                scope.$eval(attr.nitroOptions), {});
+                            if (!angular.equals(options, newOptions)) {
+                                console.log('OPTIONS CHANGE');
+                                options = angular.copy(newOptions);
+                                element.trigger('optionsChange', newOptions);
+                            }
+                        });
                     }
                 };
             })
@@ -32,7 +43,8 @@ define([], function() {
                             value: getValue(scope)
                         });
                         element.on('valueChange', function(e, o) {
-                            if (o.angularUpdate !== false) {
+                            if (e.target === element[0] &&
+                                o.angularUpdate !== false) {
                                 scope.$apply(function() {
                                     setValue(scope, o.value);
                                 });

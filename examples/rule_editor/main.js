@@ -9,6 +9,7 @@ define(
     'components/card/rule_editor',
     'components/card/action/send_email',
     'components/sensor_widget/battery',
+    'components/sensor_widget/angle',
     'components/slider',
     'components/angular_directives'
   ],
@@ -21,25 +22,11 @@ define(
 
         angular.module('testApp').controller(
             'ruleController',
-            function($scope) {
+            function($scope, $http) {
                 $scope.cards = {
                     conditions: {
                         label: 'Conditions',
-                        cards: [{
-                            header: 'Battery',
-                            front: {
-                                items: [{
-                                    component: 'Battery'
-                                }]
-                            },
-                            back: {
-                                items: [{
-                                    component: 'Slider'
-                                }]
-                            }
-                        }, {
-                            header: 'Pitch'
-                        }]
+                        cards: []
                     },
                     actions: {
                         label: 'Actions',
@@ -52,27 +39,51 @@ define(
                     }
                 };
 
-                $scope.ruleData = {
-                    'name': 'My rule',
-                    'cards': [{
-                        'id': 'card0',
-                        'sensorData': {
+                $http.get('cards.json').success(function(data) {
+                    var cards = processCards(data.data);
+                    $scope.cards.conditions.cards = cards; 
+                });
 
-                        },
-                        'configData': {
-
-                        },
-                        'connectedTo': ['card1']
-                    }, {
-                        'id': 'card1'
-                    }]
-                };
+                //$http.get('rule.json').success(function(data) {
+                //    $scope.ruleData = data.data[0];
+                //});
             }
         );
 
         angular.bootstrap(document, ['testApp']);
 
     });
+
+    function processCards(cardsData) {
+        var cards = [];
+        $.each(cardsData, function(i, cardData) {
+            var card = $.extend({}, cardData.configData);
+            card.header = cardData.sensorData.measureName;  
+            cards.push(card);
+
+            if (cardData.sensorData.phenomenon === 
+                "urn:x-ogc:def:phenomenon:IDAS:1.0:angle") {
+                card.front = { 
+                        items: [{
+                            component: 'AngleWidget'
+                        }]
+                    };
+                card.back = {
+                        items: [{
+                            component: 'Slider'
+                        }]
+                    };
+            } else if (cardData.sensorData.phenomenon ===
+                "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential") {
+                card.front = { 
+                    items: [{
+                        component: 'Battery'
+                    }]
+                };
+            }
+        });
+        return cards;
+    }
 
   }
 );

@@ -183,20 +183,22 @@ define(
             });
 
             this.relayoutCards = function() {
-                var cards = this.getAllCards(),
+                if (!this.disableRelayout) {
+                    var cards = this.getAllCards(),
                         colWidth = 300,
                         height = this.$graphEditor.height();
 
-                this.calculatePositions();
+                    this.calculatePositions();
 
-                cards.each(function(i) {
-                    var el = $(this);
-                    el.trigger('move', {
-                        left: (el.data('col') + (el.data('colwidth') / 2)) *
-                            colWidth,
-                        top: (el.data('row') + 0.5) * height
+                    cards.each(function(i) {
+                        var el = $(this);
+                        el.trigger('move', {
+                            left: (el.data('col') + (el.data('colwidth') / 2)) *
+                                colWidth,
+                            top: (el.data('row') + 0.5) * height
+                        });
                     });
-                });
+                }
             };
 
             this.calculatePositions = function(parentCard) {

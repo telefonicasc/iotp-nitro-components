@@ -16,9 +16,10 @@ define(
                 orientation: 'bottom',
                 valueField: 'totalRegistered',
                 rangeField: 'selectedRange',
-                tickFormat: '%e-%b',
-                stepType: 'day',                //day, month, year
-                stepTick: 1
+                tickFormat: '%e-%b',            // https://github.com/mbostock/d3/wiki/Time-Formatting
+                stepType: 'day',                // day, month, year
+                stepTick: 1,                    // 
+                paddingTick: 0                  // Distance each tick should display away from its theorical center
             });
 
             this.getTransform = function() {
@@ -39,9 +40,18 @@ define(
                         var ticks = [], // = d3.time.days(t0, t1, steps);
                             t = t0;
 
-                        while (t < t1) {
-                            t = d3.time.day.offset(t, attribs.stepTick);
-                            ticks.push(t);
+                        var i = 0;
+                        while (t <= t1) {
+                            t = d3.time.day.offset(t, 1);
+                            if (attribs.stepType === 'month'){
+                                if (t.getUTCDate() === 3 && i%attribs.stepTick === 0){
+                                    ticks.push(t);
+                                }
+                            }else if (attribs.stepType === 'day' && i%attribs.stepTick === 0){
+                                ticks.push(t);
+                            }
+
+                            i++;
                         }
 
                         ticks.pop();
@@ -59,12 +69,11 @@ define(
                 }
 
                 this.on('resize', function(e, chartSize) {
-                    
                     this.width = chartSize.width;
                     this.height = chartSize.height;
 
                     if (this.attr.orientation === 'bottom') {
-                        this.scale.range([0, this.width]);
+                        this.scale.range([0+this.attr.paddingTick, this.width]);
                     } else {
                         this.scale.range([this.height, 0]);
                     }

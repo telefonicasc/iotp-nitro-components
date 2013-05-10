@@ -10,7 +10,7 @@ define(
         'components/chart/axis/axis'
     ],
 
-    function(ComponentManager, Grid, RangeSelection, DataBinding, 
+    function(ComponentManager, Grid, RangeSelection, DataBinding,
         WatchResize, GUID) {
 
         return ComponentManager.create('chartContainer',
@@ -24,13 +24,10 @@ define(
                 gridStrokeColor: '#AAA',
                 marginBottom: 0,
                 marginRight: 0,
-                axisx:false,       
-                axisy:false, 
+                axisx:false,
+                axisy:false,
                 timeAxis: {
-                    tickFormat: '%e-%b',
-                    margin: 0,
-                    step: 'day',
-                    tick: 1               
+                    margin: 0      
                 }
             });
 
@@ -122,7 +119,6 @@ define(
                         rangeField = this.attr.rangeField,
                         range = rangeField && model[rangeField],
                         valueRange = [];
-
                     if (!range) {
                         range = d3.extent(value, function(d) {
                             return new Date(d.date);

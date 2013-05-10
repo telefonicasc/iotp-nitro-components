@@ -60,7 +60,7 @@ define(
             }, {
               text: 'Unconstrained',
               action: 'action-unconstrained',
-              range: 7
+              range: -1
             }],
             onSelect: function(item){
               $('.range-selection-chart').trigger('rangeSelected', item);
@@ -71,7 +71,7 @@ define(
             rangeField: 'range',
             valueField: 'totalRegistered',
             axisx: true,
-            timeAxis: { tickFormat: '%e', margin: -20, stepType: 'day' },
+            timeAxis: { tickFormat: '%B', margin: -20, stepType: 'month', paddingTick: 25, stepTick: 1 },
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',

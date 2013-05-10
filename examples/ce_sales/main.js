@@ -32,8 +32,6 @@ define(
             grid: false,
             marginBottom: 150,
             marginRight: 30,
-            axisx: false,
-            axisy: false,
             charts: [{
               type: 'groupBarChart',
               model: 'bundleSales',
@@ -72,7 +70,8 @@ define(
             component: 'chartContainer', 
             rangeField: 'range',
             valueField: 'totalRegistered',
-            axisx: false,
+            axisx: true,
+            timeAxis: { tickFormat: '%e', margin: -20, stepType: 'day' },
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',

@@ -108,6 +108,7 @@ define(
           marginBottom: 20,
           marginRight: 45,
           axisx: true,
+          timeAxis: { stepTick: 6, margin: 0 }, 
           axisy: true,
           charts: [{
             type: 'barChart',

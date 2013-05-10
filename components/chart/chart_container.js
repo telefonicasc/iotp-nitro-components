@@ -23,11 +23,18 @@ define(
                 gridStrokeWidth: 1,
                 gridStrokeColor: '#AAA',
                 marginBottom: 0,
-                marginRight: 0
+                marginRight: 0,
+                axisx:false,       
+                axisy:false, 
+                timeAxis: {
+                    tickFormat: '%e-%b',
+                    margin: 0,
+                    step: 'day',
+                    tick: 1               
+                }
             });
 
             this.after('initialize', function() {
-
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     clipId = GUID.get(),
@@ -65,7 +72,7 @@ define(
 
                 if (this.attr.axisx) {
                     var axisx = svg.append('g').attr('class', 'x axis');
-                    ComponentManager.get('timeAxis').attachTo(axisx.node());
+                    ComponentManager.get('timeAxis').attachTo(axisx.node(), this.attr.timeAxis);
                 }
 
                 if (this.attr.axisy) {
@@ -90,16 +97,15 @@ define(
                         .attr('height', chartSize.height);
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
-                    this.$node.find('g.chart, g.grid, g.brush')
+                    this.$node.find('g.chart, g.grid, g.brush, g.axis')
                         .trigger('resize', chartSize);
-
                     if (this.attr.axisx) {
                         axisx.attr('transform', 'translate(0,' +
-                            chartSize.height + ')');
+                            (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }
                     if (this.attr.axisy) {
                         axisy.attr('transform', 'translate(' +
-                            chartSize.width + ',0)');
+                            (chartSize.width) + ',0)');
                         this.$node.find('g.axis.y').trigger('resize', {
                             height: chartSize.height,
                             width: this.attr.marginRight

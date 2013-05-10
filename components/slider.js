@@ -31,6 +31,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.attr.updateOnValueChange = false;
+
                 this.$node.addClass('m2m-slider');
 
                 var handler = $('.slider-handler', this.$node),

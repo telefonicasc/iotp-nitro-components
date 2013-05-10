@@ -33,6 +33,42 @@ define(
                 this.$mainArea = $('<div>').addClass('rule-editor-main fit')
                         .appendTo(this.$node);
 
+                this.$graphContainer = $('<div>')
+                        .addClass('rule-graph-container fit')
+                        .appendTo(this.$mainArea);
+
+                this.graphContainerX = 0;
+                this.graphContainerY = 0;
+                this.$graphContainer.on('mousedown', $.proxy(function(e) {
+                    if ($(e.target).hasClass('node-container') ||
+                        $(e.target).hasClass('rule-graph-container')) {
+                        this.panning = true;
+                        this.panningX = e.pageX;
+                        this.panningY = e.pageY;
+                    }
+                }, this));
+
+                this.$graphContainer.on('mouseup', $.proxy(function(e) {
+                    this.panning = false;
+                }, this));
+
+                this.$graphContainer.on('mousemove', $.proxy(function(e) {
+                    if (this.panning) {
+                        this.graphContainerX += e.pageX - this.panningX;
+                        this.graphContainerY += e.pageY - this.panningY;
+                        this.$graphContainer.css({
+                            marginLeft: this.graphContainerX,
+                            marginTop: this.graphContainerY
+                        });
+                        this.panningX = e.pageX;
+                        this.panningY = e.pageY;
+                    }
+                }, this));
+
+                this.$topToolbar = $('<div>')
+                    .addClass('rule-top-toolbar')
+                    .prependTo(this.$node);
+
                 this.$bottomToolbar = $('<div>')
                         .appendTo(this.$node);
 
@@ -59,7 +95,7 @@ define(
                     }, this));
 
                 this.$graphEditor = $('<div>').addClass('fit')
-                        .appendTo(this.$mainArea);
+                        .appendTo(this.$graphContainer);
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
@@ -320,8 +356,10 @@ define(
                         componentOffset = this.$graphEditor.position(),
                         helperOffset = $(ui.helper).position();
 
-                    position.left = helperOffset.left - componentOffset.left;
-                    position.top = helperOffset.top - componentOffset.top;
+                    position.left = helperOffset.left - componentOffset.left -
+                            this.graphContainerX;
+                    position.top = helperOffset.top - componentOffset.top -
+                            this.graphContainerY;
 
                     $(ui.helper).data(position);
                     this.$graphEditor.trigger('updateConnections');

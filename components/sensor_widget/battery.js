@@ -23,8 +23,12 @@ define(
                 this.$node.addClass('battery-widget');
                 this.$batteryBody = $('.battery-body', this.$node);
                 this.$scale = $('<div>').appendTo(this.$batteryBody);
-                ScaleWidget.attachTo(this.$scale, {});
-
+                ScaleWidget.attachTo(this.$scale, {
+                    scaleRectStyle: {
+                        fill: '#B0C0C5',
+                        stroke: 'none'
+                    }
+                });
             });
         }
     }

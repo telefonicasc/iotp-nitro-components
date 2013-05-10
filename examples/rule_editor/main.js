@@ -41,12 +41,16 @@ define(
 
                 $http.get('cards.json').success(function(data) {
                     var cards = processCards(data.data);
-                    $scope.cards.conditions.cards = cards; 
+                    $scope.cards.conditions.cards = cards;
                 });
 
-                //$http.get('rule.json').success(function(data) {
-                //    $scope.ruleData = data.data[0];
-                //});
+                $http.get('rule.json').success(function(data) {
+                    $scope.ruleData = data.data[0];
+                });
+
+                $scope.$watch('ruleData', function() {
+                    console.log('RuleData change', $scope.ruleData);
+                });
             }
         );
 
@@ -58,12 +62,12 @@ define(
         var cards = [];
         $.each(cardsData, function(i, cardData) {
             var card = $.extend({}, cardData.configData);
-            card.header = cardData.sensorData.measureName;  
+            card.header = cardData.sensorData.measureName;
             cards.push(card);
 
-            if (cardData.sensorData.phenomenon === 
+            if (cardData.sensorData.phenomenon ===
                 "urn:x-ogc:def:phenomenon:IDAS:1.0:angle") {
-                card.front = { 
+                card.front = {
                         items: [{
                             component: 'AngleWidget'
                         }]
@@ -75,11 +79,16 @@ define(
                     };
             } else if (cardData.sensorData.phenomenon ===
                 "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential") {
-                card.front = { 
+                card.front = {
                     items: [{
                         component: 'Battery'
                     }]
                 };
+                card.back = {
+                        items: [{
+                            component: 'Slider'
+                        }]
+                    };
             }
         });
         return cards;

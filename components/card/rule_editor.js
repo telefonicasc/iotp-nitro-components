@@ -4,6 +4,7 @@ define(
         'components/graph_editor',
         'components/card/card_toolbox',
         'components/card/card',
+        'components/card/card_data',
         'components/card/mixin/interactions',
         'components/card/mixin/and_interaction',
         'components/card/mixin/action_drop_interaction',
@@ -12,7 +13,7 @@ define(
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, Interactions, AndInteraction, ActionDropInteraction,
+            Card, CardData, Interactions, AndInteraction, ActionDropInteraction,
             DataBinding, RuleEditorToolbar) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
@@ -22,11 +23,13 @@ define(
 
             this.defaultAttrs({
                 cards: {},
-                value: { cards: [] }
+                value: { cards: [] },
+                cardDefaults: {
+                    component: 'Card'
+                }
             });
 
             this.after('initialize', function() {
-
                 this.connections = [];
                 this.value = this.attr.value;
 
@@ -79,7 +82,8 @@ define(
                             node: placeholder
                         });
                         this.$graphEditor.trigger('addConnection', {
-                            start: node, end: placeholder
+                            start: node,
+                            end: placeholder
                         });
                     }
 
@@ -87,6 +91,10 @@ define(
                 }, this));
 
                 this.$graphEditor.on('nodeRemoved', $.proxy(function(e, o) {
+                    this.updateValue();
+                }, this));
+
+                this.$graphEditor.on('valueChange', '.card', $.proxy(function() {
                     this.updateValue();
                 }, this));
 
@@ -247,13 +255,14 @@ define(
                 $.each(data.cards, $.proxy(function(i, card) {
                     var cardEl = $('<div>')
                         .attr('id', card.id)
-                        .data('cardConfig', card);
-                    var data = _cardParseData(card);
+                        .data('cardConfig', $.extend({}, card) );
+                    var data = CardData.encode(card);
+                    var attrCard = $.extend({}, this.attr.cardDefaults, data);
+                    var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
                         'node': cardEl
                     };
-                    debugger
-                    Card.attachTo(cardEl, data);
+                    cardCmp.attachTo(cardEl, data);
                     this.$graphEditor.trigger('addNode', node);
                 }, this));
 
@@ -272,8 +281,15 @@ define(
                     cards = this.$graphEditor.find('.node-container > *');
 
                 $.each(cards, $.proxy(function(i, card) {
+                    var cardConfig;
+                    var cardValue;
                     if (!$(card).hasClass('start-card')) {
-                        ruleData.push($(card).data('cardConfig'));
+                        cardConfig = $(card).data('cardConfig');
+                        cardValue = $(card).data('cardValue');
+                        if(cardConfig && cardValue){
+                            cardConfig = CardData.decode(cardConfig, cardValue);
+                        }
+                        ruleData.push(cardConfig);
                     }
                 }, this));
 
@@ -304,7 +320,7 @@ define(
 
                 $.each(this.connections, $.proxy(function(i, connection) {
                     if (connection) {
-                       this.$graphEditor.trigger('removeConnection', connection);
+                        this.$graphEditor.trigger('removeConnection', connection);
                     }
                 }, this));
                 this.connections = [];
@@ -339,50 +355,6 @@ define(
 
                 return cardToolbox;
             };
-        }
-
-        //************************
-
-        function _cardParseData(cardData) {
-            var card = $.extend(cardData, cardData.configData);
-            //card.header = cardData.sensorData.measureName;//cardData.configData.header
-
-            if(card.type === 'SensorCard'){
-                if (cardData.sensorData.phenomenon ===
-                    'urn:x-ogc:def:phenomenon:IDAS:1.0:angle') {
-                    card.front = {
-                            items: [{
-                                component: 'AngleWidget'
-                            }]
-                        };
-                    card.back = {
-                            items: [{
-                                component: 'Slider'
-                            }]
-                        };
-                } else if (cardData.sensorData.phenomenon ===
-                    'urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential') {
-                    card.front = {
-                        items: [{
-                            component: 'Battery'
-                        }]
-                    };
-                    card.back = {
-                            items: [{
-                                component: 'Slider'
-                            }]
-                        };
-                }
-            }else if(card.type === 'ActionCard'){
-                if(card.actionData.type === 'SendEmailAction'){
-                    card.cssClass = 'm2m-card-action m2m-card-send-email';
-                    card.header = 'Send Email';
-                    card.component = 'SendEmail';
-                    card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
-
-                }
-            }
-            return card;
         }
     }
 );

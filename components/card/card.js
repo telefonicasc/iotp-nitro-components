@@ -6,8 +6,7 @@ define(
         'components/card/card_side',
         'components/mixin/data_binding'
     ],
-    function(ComponentManager, Template, Flippable, CardSide, DataBinding) {
-
+    function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
         return ComponentManager.create('Card', Template, Card, DataBinding);
 
         function Card() {

@@ -45,7 +45,11 @@ define(
                 CardSide.attachTo(this.$back, this.attr.back);
 
                 if (this.attr.flippable) {
-                    Flippable.attachTo(this.node);
+                    //Flippable.attachTo(this.node);
+                    this.$node.addClass('flippable');
+                    this.$front.on('click', $.proxy(function() {
+                        this.$node.addClass('flip');
+                    }, this));
                 }else {
                     this.$back.hide();
                 }
@@ -57,7 +61,7 @@ define(
             });
 
             function _stopPropagation(e){
-                    e.stopPropagation();
+                e.stopPropagation();
             }
         }
     }

@@ -8,12 +8,13 @@ define(
         'components/card/mixin/and_interaction',
         'components/card/mixin/action_drop_interaction',
         'components/mixin/data_binding',
-        'components/card/rule_editor_toolbar'
+        'components/card/rule_editor_toolbar',
+        'components/card/delimiter'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
             Card, Interactions, AndInteraction, ActionDropInteraction, 
-            DataBinding, RuleEditorToolbar) {
+            DataBinding, RuleEditorToolbar, Delimiter) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
                 Interactions, AndInteraction, ActionDropInteraction);
@@ -105,7 +106,8 @@ define(
 
                 this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
                     var node = o.node,
-                        placeholder;
+                        placeholder,
+                        delimiter;
 
                     if (node.hasClass('start-card') &&
                         !this.getConnectedTo(node).length) {
@@ -118,6 +120,14 @@ define(
                             start: node, end: placeholder
                         });
                     }
+
+                    if (node.hasClass('m2m-card-condition')) {
+                        delimiter = $('<div>').appendTo(
+                            this.$graphEditor.find('.node-container'));
+                        Delimiter.attachTo(delimiter);
+                    }
+
+                    node.data('delimiter', delimiter);
 
                     this.updateValue();
                 }, this));

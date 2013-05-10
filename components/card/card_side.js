@@ -23,6 +23,7 @@ define(
                         $('<div>').addClass('card-title-label')
                                 .html('Card title').appendTo(this.$header);     
                         this.$headerText  = $('<textarea>').appendTo(this.$header);
+                        this.$headerText.val(this.attr.header);
                     } else {
                         if (typeof this.attr.header === 'string') {
                             $('<h1>').html(this.attr.header).appendTo(this.$header);

@@ -49,6 +49,14 @@
     }
   }
 
+  textarea {
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    border: none;
+    resize: none;
+  }
+
   &.flippable {
     .front, .back {
       -webkit-transition: -webkit-transform 0.5s, width 0.5s, height 0.5s;
@@ -76,17 +84,60 @@
     }
 }
 
-.m2m-card-condition .front {
-    background-color: white;
-    .header {
-      background-color: #64737b;
-      color: white;
-      h1 {
-        padding-top: 13px;
-      }
+.m2m-card-condition {
+    .front {
+        background-color: white;
+        .header {
+          background-color: #64737b;
+          color: white;
+          h1 {
+            padding-top: 13px;
+          }
+        }
+        .body {
+          background-color: #dde6e9;
+        }
     }
-    .body {
-      background-color: #dde6e9;
+
+    .back {
+        background-color: #D3D9DC;
+        padding: 4px;
+
+        .header {
+
+            .card-title-label {
+                padding: 8px;
+                color: #B3B8BE;
+                font-weight: bold;
+                font-size: 12px;
+            }
+
+            textarea {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 28px;
+                width: 134px;
+                margin-top: -10px;
+                padding-left: 14px;
+                padding-right: 14px;
+                text-align: center;
+                color: gray;
+                margin-left: 10px;
+                margin-right: 10px;
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAhCAYAAAD+kAr7AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QIMDyYiT4DMdAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAJklEQVQoz2P8////fwYkwMSABkYFRpLA9buPGRgYGBhgNCN6+gAAxvQNZz2iTh8AAAAASUVORK5CYII=);
+            }
+
+            background-color: white;
+            height: 100px;
+        }
+
+        .body {
+            background-color: white;
+            position: absolute;
+            bottom: 4px;
+            top: 100px;
+            left: 4px;
+            right: 4px;
+        }
     }
 }
 

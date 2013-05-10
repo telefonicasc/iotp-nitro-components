@@ -105,7 +105,6 @@ define(
             var callbackToEvent = function(){
                 var value = $(this).val();
                 elementTo.text( value );
-                console.log('-----', this);
             };
             return callbackToEvent;
         }

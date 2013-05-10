@@ -29,6 +29,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.attr.updateOnValueChange = false;
+
                 this.$node.on('click',_stopPropagation);
                 this.$node.addClass('card');
                 this.$node.addClass(this.attr.cssClass);

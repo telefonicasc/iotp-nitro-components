@@ -25,6 +25,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.attr.updateOnValueChange = false;
+
                 this.$node.addClass('graph-editor');
 
                 this.paper = Raphael(this.$connections[0]);

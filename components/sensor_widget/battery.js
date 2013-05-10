@@ -19,7 +19,7 @@ define(
             });
 
             this.after('initialize', function() {
-
+                this.attr.updateOnValueChange = false;
                 this.$node.addClass('battery-widget');
                 this.$batteryBody = $('.battery-body', this.$node);
                 this.$scale = $('<div>').appendTo(this.$batteryBody);

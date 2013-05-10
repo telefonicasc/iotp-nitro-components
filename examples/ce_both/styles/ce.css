@@ -25,6 +25,7 @@
   background-color: #b5c9cd;
 }
 
+
 .dashboard .overview-content .date-range {
     color: white;
     font-size: 14px;
@@ -69,7 +70,6 @@
   stroke-width: 2px;
   stroke: #788d9a;
 }
-user agent stylesheet
 
 .chart.grey.dashed rect {
   fill: #7F8C8D;

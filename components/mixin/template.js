@@ -10,6 +10,10 @@ define(
 
     function TemplateMixin() {
 
+      this.defaultAttrs({
+        updateOnValueChange: true
+      });
+
       this.after('initialize', function() {
         if (this.attr.tpl) {
           this.compiledTpl = Hogan.compile(this.attr.tpl);
@@ -28,7 +32,9 @@ define(
                 data[key] = value(o.value);
               }
             });
-            //this.$node.html(this.compiledTpl.render(data));
+            if (this.attr.updateOnValueChange) {
+              this.$node.html(this.compiledTpl.render(data));
+            }
           });
         }
 

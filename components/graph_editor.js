@@ -127,7 +127,6 @@ define(
                     this.trigger('connectionsChange', { 
                         connections : this.connections 
                     });
-                    console.log('restoreConnections', this.connections);
                     this.updateConnections();
                 });
 
@@ -147,7 +146,7 @@ define(
                     if (!connection.path) {
                         connection.path = this.paper.path();
                         connection.path.attr({
-                            stroke: '#efeeeb', 'stroke-width': 40
+                            stroke: '#2d3336', 'stroke-width': 40
                         });
                     } 
                     connection.path.attr('path',

@@ -15,7 +15,8 @@ define(
 
             this.defaultAttrs({
                 value: 0,
-                maxValue: 100
+                maxValue: 100,
+                scaleRectStyle: {}
             });
 
             this.after('initialize', function() {
@@ -26,6 +27,7 @@ define(
 
                 this.paper = Raphael(this.node, this.width, this.height);
                 this.scaleRect = this.paper.rect(0, 0, this.width, 0);
+                this.scaleRect.attr(this.attr.scaleRectStyle);
 
                 this.on('valueChange', function(e, o) {
                     this.value = o.value;

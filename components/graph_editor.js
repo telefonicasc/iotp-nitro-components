@@ -25,6 +25,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.attr.updateOnValueChange = false;
+
                 this.$node.addClass('graph-editor');
 
                 this.paper = Raphael(this.$connections[0]);
@@ -144,7 +146,7 @@ define(
                     if (!connection.path) {
                         connection.path = this.paper.path();
                         connection.path.attr({
-                            stroke: '#efeeeb', 'stroke-width': 40
+                            stroke: '#2d3336', 'stroke-width': 40
                         });
                     } 
                     connection.path.attr('path',

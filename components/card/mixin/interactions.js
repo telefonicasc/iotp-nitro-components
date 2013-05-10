@@ -62,6 +62,7 @@ define(
                     }
                 }, this));
 
+                this.disableRelayout = true;
                 if (newActive) {
                     if (newActive !== activeArea) {
                         this.$graphEditor.trigger('restoreConnections');
@@ -74,6 +75,8 @@ define(
                         this.undoTempRemoved();
                     }
                 }
+                this.disableRelayout = false;
+                this.relayoutCards();
                 activeArea = newActive;
             };
 

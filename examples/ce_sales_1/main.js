@@ -15,7 +15,7 @@ define(
   
   function() {
   
-    requirejs(['components/jquery_plugins'], function() {
+    requirejs(['dashce.js','components/jquery_plugins'], function() {
       
       $('.dashboard').m2mdashboard({
         mainContent: [
@@ -107,64 +107,10 @@ define(
             }
           ]
         },
-        data: function(cb) {
-          var from  = 1356998400000, to = 1364688000000,
-              url = 'http://mongodb1-1:27080/dashce/';
-
-          //var uriBundles = encodeURI(url+'bundles/_find?batch_size=1000&criteria={"ts": {"$gte": {"$date" : '+from+'}, "$lte": {"$date" : '+to+'}}}');
-          //var uriAccounts = encodeURI(url+'accounts/_find?batch_size=1000&criteria={"ts": {"$gte": {"$date" : '+from+'}, "$lte": {"$date" : '+to+'}}}');
-          var uriBundles = 'data/bundles.json', uriAccounts = 'data/accounts.json';
-          var queryBundles = $.getJSON(uriBundles);
-          var queryAccounts = $.getJSON(uriAccounts);
-          
-          $.when( queryBundles, queryAccounts ).done(function(res1, res2) {
-              var data = createDataObject(res1, res2)
-              cb(data);
-          }).fail(function(e) {
-            alert('Error fetching data from server');
-          });
+        data: function(cb) { 
+          DashCE.doQuery(cb);
         }
       });
-      
-      function createDataObject(bundlesData, accountsData){
-        var data = {
-                totalRegistered: [],
-                onlineRegistered: [],
-                visitors: [],
-                registrations: [],
-                deactivations: [],
-                bundleSales: [],
-                bundleSalesSum: []
-              }
-
-        var results = bundlesData[0].results;
-        $.each(results, function(i, item) {
-          var obj = { date: item.ts.$date, value:{} };
-          var objSum = { date: item.ts.$date, value: 0 };
-          $.each(item.type, function(j, bundle){
-              obj.value[bundle.name] = bundle.purchased;
-              objSum.value = objSum.value + bundle.purchased;
-          });
-          data['bundleSales'].push(obj);
-          data['bundleSalesSum'].push(objSum);
-        });
-
-        results = accountsData[0].results;
-        var sumRegistered = 0;
-        var sumOnlineRegistered = 0;
-        $.each(results, function(i, item) {
-          sumRegistered += item.new_registers.count;
-          sumOnlineRegistered += item.online.count;
-          data['registrations'].push({ date: item.ts.$date, value:item.new_registers.count });
-          data['totalRegistered'].push({ date: item.ts.$date, value:sumRegistered });
-          data['onlineRegistered'].push({ date: item.ts.$date, value:sumOnlineRegistered });
-          data['deactivations'].push({ date: item.ts.$date, value:item.deactivations });
-          data['visitors'].push({ data: item.ts.$date, value: item.visitors.newly_registered})
-        });
-
-        return data;
-      }
-
     });
   }
 );

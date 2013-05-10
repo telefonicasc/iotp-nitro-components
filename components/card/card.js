@@ -28,6 +28,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.attr.updateOnValueChange = false;
+
                 this.$node.on('click',_stopPropagation);
                 this.$node.addClass('card');
                 this.$node.addClass(this.attr.cssClass);
@@ -35,13 +37,18 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = this.attr.header;
+                    this.attr.back.editableHeader = true;
                 }
 
                 CardSide.attachTo(this.$front, this.attr.front);
                 CardSide.attachTo(this.$back, this.attr.back);
 
                 if (this.attr.flippable) {
-                    Flippable.attachTo(this.node);
+                    //Flippable.attachTo(this.node);
+                    this.$node.addClass('flippable');
+                    this.$front.on('click', $.proxy(function() {
+                        this.$node.addClass('flip');
+                    }, this));
                 }else {
                     this.$back.hide();
                 }

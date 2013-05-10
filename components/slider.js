@@ -15,6 +15,8 @@ define(
                 value: 0,
                 minValue: 0,
                 maxValue: 100,
+                showSliderLabel: true,
+                showSliderValue: true,
                 tpl: '<label class="slider-label">{{label}}</label>' +
                      '<div class="slider-bar">' +
                         '<div class="slider-level"></div>' +                        
@@ -30,6 +32,8 @@ define(
             });
 
             this.after('initialize', function() {
+
+                this.attr.updateOnValueChange = false;
 
                 this.$node.addClass('m2m-slider');
 
@@ -49,6 +53,8 @@ define(
                     e.stopPropagation();
                 });
 
+                this.$valueSpan = $('.slider-handler > span', this.$node);
+
                 handler.on('drag', $.proxy(function(e, ui) {
                     var value = ui.position.left * this.attr.maxValue
                             / bar.width();
@@ -62,16 +68,30 @@ define(
                     this.setSliderValue(o.value);
                 });
 
+                if (!this.attr.showSliderLabel) {
+                    this.$node.find('.slider-label').hide();
+                }
+
+                if (this.attr.sliderMinLabel) {
+                    $('.slider-min', this.$node).html(this.attr.sliderMinLabel); 
+                }
+
+                if (this.attr.sliderMaxLabel) {
+                    $('.slider-max', this.$node).html(this.attr.sliderMaxLabel);            
+                }
+
                 this.setSliderValue(this.attr.value);
             });
 
             this.setSliderValue = function(value) {
                 var level = $('.slider-level', this.$node),
                     bar = $('.slider-bar', this.$node),
-                    handler = $('.slider-handler', this.$node),
-                    span = $('.slider-handler > span', this.$node);
+                    handler = $('.slider-handler', this.$node);
 
-                span.html(value);
+                if (this.attr.showSliderValue) {
+                    this.$valueSpan.html(value);
+                }
+
                 level.css({
                     right: (96 * (1 - parseFloat(value)/this.attr.maxValue)) + '%' 
                 });

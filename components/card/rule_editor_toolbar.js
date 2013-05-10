@@ -39,7 +39,12 @@ define(
                         .appendTo(this.$node);
 
                 this.$zoomSlider = $('<div>').appendTo(this.$zoom);
-                Slider.attachTo(this.$zoomSlider);  
+                Slider.attachTo(this.$zoomSlider, {
+                    showSliderLabel: false,
+                    showSliderValue: false,
+                    sliderMinLabel: '-',
+                    sliderMaxLabel: '+'   
+                });  
         
                 this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
                     this.trigger('zoomChange', { zoomLevel: o.value });
@@ -51,6 +56,16 @@ define(
 
                 this.$actionsButton.on('click', $.proxy(function() {
                     this.trigger('actionsSelected');
+                }, this));
+
+                this.on('conditionsSelected', $.proxy(function() {
+                    this.$conditionsButton.addClass('selected');
+                    this.$actionsButton.removeClass('selected');
+                }, this));
+
+                this.on('actionsSelected', $.proxy(function() {
+                    this.$conditionsButton.removeClass('selected');
+                    this.$actionsButton.addClass('selected');
                 }, this));
 
                 this.$zoomSlider.trigger('valueChange', { value: 100 });

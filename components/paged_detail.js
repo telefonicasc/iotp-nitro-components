@@ -6,22 +6,22 @@ define(
 
     function(ComponentManager, ContainerMixin) {
 
-        return ComponentManager.create('pagedPanel', PagedPanel, ContainerMixin);
+        return ComponentManager.create('pagedDetail', PagedDetail, ContainerMixin);
 
         var self;
         
-        function PagedPanel() {
+        function PagedDetail() {
 
             this.currentPage = 1;
             this.pageCount = 1;
             this.pagerVisible = false;
             this.defaultAttrs({
                 header: '',
-                insertionPoint: '.paged-content',
-                pagerLocator: '.paged-navigation',
-                pageDisplay: '.paged-navigation-display',
-                buttonLeftClass: '.paged-button-left',
-                buttonRightClass: '.paged-button-right',
+                insertionPoint: '.detail-content',
+                pagerLocator: '.detail-navigation',
+                pageDisplay: '.detail-navigation-display',
+                buttonLeftClass: '.detail-button-left',
+                buttonRightClass: '.detail-button-right',
                 ID: '',
                 items: [],
                 triggers: []
@@ -132,23 +132,23 @@ define(
 
             this.after('initialize', function() {
                 self = this;
-                this.$node.addClass('paged-panel');
+                this.$node.addClass('detail-panel');
                 this.$node.addClass(self.attr.ID);
                 this.$node.attr('id',self.attr.ID);
-                this.$nodeMap = $('<div>').addClass('paged-header')
+                this.$nodeMap = $('<div>').addClass('detail-header')
                     .html(self.attr.header).appendTo(this.$node);
-                this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
-                this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);
+                this.$nodeMap = $('<div>').addClass('detail-content').appendTo(this.$node);
+                this.$nodeMap = $('<div>').addClass('detail-navigation').appendTo(this.$node);
 
                 // Create navigation buttons and current page display
-                var nav = this.$node.find('.paged-navigation');
-                nav.append('<button type="button" class="paged-button-left"><</button>');
-                nav.append('<div class="paged-navigation-display" style="display:inline"></div>');
-                nav.append('<button type="button" class="paged-button-right">></button>');
+                var nav = this.$node.find('.detail-navigation');
+                nav.append('<button type="button" class="detail-button-left"><</button>');
+                nav.append('<div class="detail-navigation-display" style="display:inline"></div>');
+                nav.append('<button type="button" class="detail-button-right">></button>');
 
                 // Adds button click events
-                this.$node.find('.paged-button-left').click(this.pageLeft);
-                this.$node.find('.paged-button-right').click(this.pageRight);
+                this.$node.find('.detail-button-left').click(this.pageLeft);
+                this.$node.find('.detail-button-right').click(this.pageRight);
                 
                 // Bind update on window resize
                 $(window).bind('resize', self.updateView);

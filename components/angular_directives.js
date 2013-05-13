@@ -16,7 +16,6 @@ define([], function() {
                             var newOptions = angular.copy(
                                 scope.$eval(attr.nitroOptions), {});
                             if (!angular.equals(options, newOptions)) {
-                                console.log('OPTIONS CHANGE');
                                 options = angular.copy(newOptions);
                                 element.trigger('optionsChange', newOptions);
                             }

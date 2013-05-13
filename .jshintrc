@@ -26,6 +26,8 @@
     "describeComponent": true,
     "d3": true,
     "beforeEach": true,
-    "setupComponent" : true
+    "setupComponent" : true,
+    "expect": true,
+    "it": true
   }
 }

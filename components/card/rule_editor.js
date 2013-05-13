@@ -14,7 +14,7 @@ define(
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, CardData, Interactions, AndInteraction, ActionDropInteraction, 
+            Card, CardData, Interactions, AndInteraction, ActionDropInteraction,
             DataBinding, RuleEditorToolbar, Delimiter) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
@@ -326,7 +326,7 @@ define(
 
             this.getRuleData = function() {
                 var ruleData = [],
-                    cards = this.$graphEditor.find('.node-container > *');
+                    cards = this.$graphEditor.find('.node-container > .card');
 
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
@@ -337,7 +337,11 @@ define(
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
-                        ruleData.push(cardConfig);
+                        if(cardConfig){
+                            ruleData.push(cardConfig);
+                        }else{
+                            throw 'RuleEditor :: "cardConfig" in Card is undefined';
+                        }
                     }
                 }, this));
 

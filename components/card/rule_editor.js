@@ -303,6 +303,8 @@ define(
                 var nodes = [];
 
                 this.emptyRule();
+
+                this._rawData = $.extend({}, data);
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
                     var cardEl = $('<div>')
@@ -329,8 +331,9 @@ define(
             };
 
             this.getRuleData = function() {
-                var ruleData = [],
-                    cards = this.$graphEditor.find('.node-container > .card');
+                var cardsData = [],
+                    cards = this.$graphEditor.find('.node-container > .card'),
+                    data = this._rawData || {'cards':[]};
 
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
@@ -342,14 +345,18 @@ define(
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
-                            ruleData.push(cardConfig);
+                            cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
                         }
                     }
                 }, this));
 
-                return ruleData;
+                //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
+                //data.name = "";
+                data.cards = cardsData;
+
+                return data;
             };
 
             this.updateValue = function() {

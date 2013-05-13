@@ -157,16 +157,20 @@ define(
 
                 this.on('optionsChange', function(e, o) {
                     if (e.target === this.node) {
-                        this.$conditionsToolbox.trigger('optionsChange', {
-                            cardSections: {
-                                cards: o.cards.conditions || []
-                            }
-                        });
-                        this.$actionsToolbox.trigger('optionsChange', {
-                            cardSections: {
-                                cards: o.cards.actions
-                            }
-                        });
+                        if (o.cards.conditions) {
+                            this.$conditionsToolbox.trigger('optionsChange', {
+                                cardSections: {
+                                    cards: o.cards.conditions || []
+                                }
+                            });
+                        }
+                        if (o.cards.actions) {
+                            this.$actionsToolbox.trigger('optionsChange', {
+                                cardSections: {
+                                    cards: o.cards.actions
+                                }
+                            });
+                        }
                     }
                 });
 

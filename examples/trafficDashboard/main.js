@@ -8,12 +8,18 @@ define(
         'components/minimap',
         'components/dashboard/overview_subpanel',
         'components/paged_panel',
+        'components/paged_detail',
         'components/detail_panel',
         'components/map'
     ],
   
     function() {
 
+        /*
+        var swapPanels = function (locator) {
+            console.log("Swap locator: " + locator);
+        };
+        */
         // CONFIG: This config should override the one provided by default below (for testing)
         var features = [
             {
@@ -35,7 +41,7 @@ define(
                 'properties': {
                     'marker-color': '#01DF01',
                     'marker-symbol': 'garden',
-                    'title': 'Rotonda'
+                    'title': 'Rotonda__1'
                 }
             }
         ]
@@ -71,9 +77,64 @@ define(
             caption: 'Dynamic subpanel'
         };
 
+        var details = {
+            component:'pagedPanel',
+            name:'pagedDet',
+            header:'Asset Details',
+            ID:'details',
+            items: [
+                {
+                    component: 'OverviewSubpanel',
+                    iconClass: 'dot black',
+                    text: 'Detailed asset 1',
+                    caption: 'More info pending'
+                },
+                {
+                    component: 'OverviewSubpanel',
+                    iconClass: 'dot black',
+                    text: 'Detailed asset 2',
+                    caption: 'More info pending'
+                }    
+            ]
+        
+        };
+
+        var compList = [
+            {
+                component: 'OverviewSubpanel',
+                className: 'elem1',
+                iconClass: 'dot red',
+                text: 'First element',
+                caption: 'Sample error 1'
+            },
+            {
+                component: 'OverviewSubpanel',
+                className: 'elem2',
+                iconClass: 'dot red',
+                text: 'Second element',
+                caption: 'Sample error 2'
+            },
+            {
+                component: 'OverviewSubpanel',
+                className: 'elem3',
+                iconClass: 'dot red',
+                text: 'Third element',
+                caption: 'Sample error 3'
+            }
+            //, details
+        ];
+
         // LOADER ==========================================
 
         requirejs(['components/jquery_plugins'], function() {
+
+            var self = this;
+
+            var swapPanels = function (locator) {
+                console.log("Swap locator is: " + locator);
+                $('.panel-list').slideToggle();
+                $('.panel-detail').slideToggle();
+            };
 
             $('.dashboard').m2mdashboard({
                 mainContent: [
@@ -98,24 +159,20 @@ define(
                     items: [
                         {
                             component: 'pagedPanel',
+                            className: 'panel-list',
+                            insertionPoint: '.panel-content-list',
                             header: 'Panel List',
                             ID: 'panel-list',
-                            items:[],
-                            triggers: [
-                            {
-                                name: 'test',
-                                task: function (ev, elem, items) { 
-                                    console.log('test!!');
-                                }
-                            }    
-                                
-                            ]
-                        },
+                            items: compList,
+                        }
+                        ,
                         {
                             component: 'pagedPanel',
+                            className: 'panel-detail',
+                            insertionPoint: '.panel-content-details',
                             header: 'Panel Details',
                             ID: 'panel-detail',
-                            items: [ minimap ]
+                            items: [ ]
                         }
                     ]
                 },
@@ -142,28 +199,27 @@ define(
                     };
                     details.push(newItem);
                 }
-                $('#panel-list').trigger('load-items', [details]);
+                $('.panel-detail').trigger('load-items', [details]);
             });
 
             // (DEBUG) Send the initial trigger
             $(this).trigger('update-dashboard', [features, center, zoom]);
 
-
-            /*
-            // expect map marker announcements
-            var annTgr = 'announce-features';
-            var locator = window;
-            // This function should receive the marker models
-            $(this).on (annTgr, function (event, data) {
-                debugger;    
-            });
-            // send the trigger
-            $('.mapbox').trigger('announce-markers', [locator, annTgr]);
-            */
+            // Hide details on load
+            $('.panel-detail').hide();
 
             // Update paged panel, to adjust components on load
             $('.paged-panel').trigger('update-view');
-
+            
+            $(window).bind('resize', function () {
+                $('.panel-list').trigger('update-view');    
+                $('.panel-detail').trigger('update-view');    
+            }); 
+        
+            $('.overview-subpanel').on('click',function () {
+                console.log("Element: " + $(this).attr('class'));
+                swapPanels('test');
+            });
 
         }); // requirejs
     }

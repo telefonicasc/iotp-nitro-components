@@ -3,7 +3,7 @@
   top: 0px;
   bottom: 0px;
   left: 0px;
-  right: 0px; 
+  right: 0px;
 }
 
 .mapbox-mini {
@@ -64,4 +64,13 @@
 .paged-navigation {
     padding-top: 5px;
     text-align: center;
+}
+
+.paged-header {
+    text-align: center;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    padding-top: 2px;
+    background: #0000FF;
+    color: white;
 }

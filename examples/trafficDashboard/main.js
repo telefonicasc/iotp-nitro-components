@@ -91,8 +91,8 @@ define(
             }
         ];
         
-        var center_germany = { lat: 50.094596, lon: 8.645854 };
-        var zoom_germany = 12;
+        var center_germany = { lat: 50.1, lon: 8.625 };
+        var zoom_germany = 14;
 
         var features = [
             {
@@ -225,8 +225,8 @@ define(
                         hoveringTooltip: true,
                         debug: true,
                         center: center_germany,
-                        zoomInitial: 12,
-                        zoomMin: 10,
+                        zoomInitial: 14,
+                        zoomMin: 12,
                         zoomMax: 20,
                         centerOnClick: true,
                         markerClickEventTarget: '.mapbox-mini',
@@ -313,6 +313,8 @@ define(
             $('.lights-widget').trigger('drawLights');
             //$('.battery-widget').trigger('drawBattery');
 
+            // Fix count 
+            $('.overview-count').html('3');
         }); // requirejs
     }
 );

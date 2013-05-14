@@ -1,11 +1,11 @@
-.dashboard {
+/*.dashboard {
   position: absolute;
   top: 0px;
   bottom: 0px;
   left: 0px;
   right: 0px;
 }
-
+*/
 .mapbox-mini {
     height: 220px;
     width: 90%;
@@ -167,3 +167,6 @@
 
 }
 
+.overview-count {
+    background-color: #DF0101;
+}

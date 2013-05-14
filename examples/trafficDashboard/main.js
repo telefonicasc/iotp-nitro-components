@@ -10,7 +10,10 @@ define(
         'components/paged_panel',
         'components/paged_detail',
         'components/detail_panel',
-        'components/map'
+        'components/map',
+        'components/widget_temperature',
+        'components/widget_pitch',
+        'components/widget_lights'
     ],
   
     function() {
@@ -21,6 +24,75 @@ define(
         };
         */
         // CONFIG: This config should override the one provided by default below (for testing)
+        //
+        // Config germany 
+        var features_germany = [
+            {
+                'geometry': { coordinates: [ 8.645, 50.113 ] },
+                'properties': {
+                    'marker-color': '#088A85',
+                    'marker-symbol': 'circle',
+                    'title': 'Asset Semaphore 1'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.63, 50.09 ] },
+                'properties': {
+                    'marker-color': '#DF0101',
+                    'marker-symbol': 'circle',
+                    'title': 'Asset Semaphore 2'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.61, 50.111 ] },
+                'properties': {
+                    'marker-color': '#DF0101',
+                    'marker-symbol': 'circle',
+                    'title': 'Asset Semaphore 3'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.691902, 80.088759 ] },
+                'properties': {
+                    'marker-color': '#DF0101',
+                    'marker-symbol': 'circle',
+                    'title': 'Asset Semaphore 4'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.467712, 80.125861 ] },
+                'properties': {
+                    'marker-color': '#088A85',
+                    'marker-symbol': 'circle',
+                    'title': 'Asset Semaphore 5'
+                }
+            }
+        ];
+
+        var warnings_germany = [
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore2',
+                caption: 'Inclination change: +10'
+            },
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore3',
+                caption: 'Voltage < 10V'
+            },
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore4',
+                caption: 'No red light for +5 min'
+            }
+        ];
+        
+        var center_germany = { lat: 50.094596, lon: 8.645854 };
+        var zoom_germany = 12;
+
         var features = [
             {
                 'geometry': { coordinates: [ -3.662782, 40.515528 ] },
@@ -52,13 +124,13 @@ define(
         var minimap = {
             component: 'minimap',
             zoomValue: 16,
-            movable: false,
+            movable: true,
             markerModel: {
-                geometry: { coordinates: [ -3.6665, 40.51535 ] },
+                geometry: { coordinates: [ 8.61, 50.111 ] },
                 properties: {
                     'marker-color': '#FF0000',
-                    'marker-symbol': 'industrial',
-                    'title': 'Telefonica I+D'
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore3'
                 }
             }
         };
@@ -77,28 +149,6 @@ define(
             caption: 'Dynamic subpanel'
         };
 
-        var details = {
-            component:'pagedPanel',
-            name:'pagedDet',
-            header:'Asset Details',
-            ID:'details',
-            items: [
-                {
-                    component: 'OverviewSubpanel',
-                    iconClass: 'dot black',
-                    text: 'Detailed asset 1',
-                    caption: 'More info pending'
-                },
-                {
-                    component: 'OverviewSubpanel',
-                    iconClass: 'dot black',
-                    text: 'Detailed asset 2',
-                    caption: 'More info pending'
-                }    
-            ]
-        
-        };
-
         var compList = [
             {
                 component: 'OverviewSubpanel',
@@ -108,20 +158,39 @@ define(
                 caption: 'Sample error 1'
             },
             {
-                component: 'OverviewSubpanel',
-                className: 'elem2',
-                iconClass: 'dot red',
-                text: 'Second element',
-                caption: 'Sample error 2'
+                component: 'detailPanel',
+                header: 'Physical conditions',
+                id: 'physical-conditions',
+                items: [
+                    {
+                        component: 'temperatureWidget',
+                        className: 'temperature-widget' 
+                    },
+                    {
+                        component: 'pitchWidget',
+                        className: 'pitch-widget'
+                    }
+                ]
             },
             {
-                component: 'OverviewSubpanel',
-                className: 'elem3',
-                iconClass: 'dot red',
-                text: 'Third element',
-                caption: 'Sample error 3'
+                component: 'detailPanel',
+                header: 'Light color',
+                id: 'light-color',
+                items: [
+                    {
+                        component: 'lightsWidget',
+                        className: 'lights-widget'
+                    }    
+                ]
+            },
+            {
+                component: 'detailPanel',
+                header: 'Last Location',
+                id: 'last-location',
+                items: [minimap]
+                
             }
-            //, details
+
         ];
 
         // LOADER ==========================================
@@ -143,36 +212,36 @@ define(
                         showZoomButtons: true,
                         hoveringTooltip: true,
                         debug: true,
-                        center: { lat: 40.51535, lon: -3.6665 },
-                        zoomInitial: 15,
+                        center: center_germany,
+                        zoomInitial: 12,
                         zoomMin: 10,
                         zoomMax: 20,
                         centerOnClick: true,
                         markerClickEventTarget: '.mapbox-mini',
                         markerClickEvent: 'updateMinimap',
-                        features: []
+                        features: features_germany
                     }
                 ],
                 overviewPanel: {
-                    title: 'Traffic Lights',
+                    title: 'Lights with warnings',
                     count: 3,
                     items: [
                         {
                             component: 'pagedPanel',
                             className: 'panel-list',
                             insertionPoint: '.panel-content-list',
-                            header: 'Panel List',
+                            header: '',
                             ID: 'panel-list',
-                            items: compList,
+                            items: warnings_germany
                         }
                         ,
                         {
                             component: 'pagedPanel',
                             className: 'panel-detail',
                             insertionPoint: '.panel-content-details',
-                            header: 'Panel Details',
+                            header: 'Asset details',
                             ID: 'panel-detail',
-                            items: [ ]
+                            items: compList
                         }
                     ]
                 },
@@ -199,11 +268,11 @@ define(
                     };
                     details.push(newItem);
                 }
-                $('.panel-detail').trigger('load-items', [details]);
+                $('.panel-list').trigger('load-items', [details]);
             });
 
             // (DEBUG) Send the initial trigger
-            $(this).trigger('update-dashboard', [features, center, zoom]);
+            //$(this).trigger('update-dashboard', [features_germany, center_germany, zoom_germany]);
 
             // Hide details on load
             $('.panel-detail').hide();
@@ -215,11 +284,21 @@ define(
                 $('.panel-list').trigger('update-view');    
                 $('.panel-detail').trigger('update-view');    
             }); 
-        
+       
+            $('.overview-header').on('click', function () {
+                swapPanels('');
+            
+            });
+
             $('.overview-subpanel').on('click',function () {
                 console.log("Element: " + $(this).attr('class'));
-                swapPanels('test');
+                swapPanels($(this).attr('class'));
             });
+
+            // Update widgets
+            $('.temperature-widget').trigger('drawTemperature');
+            $('.pitch-widget').trigger('drawPitch');
+            $('.lights-widget').trigger('drawLights');
 
         }); // requirejs
     }

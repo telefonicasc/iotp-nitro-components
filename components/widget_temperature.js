@@ -6,20 +6,18 @@ define (
                                 
 function (ComponentManager) {
     
-    return ComponentManager.create('batteryWidget', BatteryWidget);
+    return ComponentManager.create('temperatureWidget', TemperatureWidget);
                                                         
-    function BatteryWidget () {
+    function TemperatureWidget () {
         
         this.defaultAttrs({
             detailsTitle: '.details-title',
             temperatureChart: '.temperature-chart',
             temperatureLabel: '.temperature-label',
-            pitchChart: '.pitch-chart',
-            pitchLabel: '.pitch-label',
             fillColor: '#6F8388',
             borderColor: '#6F8388',
             baseColor: '#E9EFF0',
-            id: 'battery-widget',
+            id: 'temperature-widget',
             tmin: 0,
             tmax: 20,
             temp: 15.6
@@ -32,7 +30,7 @@ function (ComponentManager) {
 
             //var obj = this.createTemperatureChart();
             this.on('drawTemperature', function () {
-                console.log('Drawing battery widget');
+                console.log('Drawing temperature widget');
                 this.attr.widget = this.createTemperatureChart(); 
                 this.drawTemperature(this.attr.widget, this.attr.temp);
                 $(this.attr.temperatureLabel).html(this.attr.temp + 'ºC');

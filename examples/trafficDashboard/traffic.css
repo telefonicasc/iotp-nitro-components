@@ -28,7 +28,6 @@
     padding-left: 5px;
     padding-right: 5px;
     background: #FFFFFF;
-
 }
 
 .zoomer {
@@ -74,3 +73,44 @@
     background: #0000FF;
     color: white;
 }
+
+.temperature-widget {
+    width: 50%;
+    display : inline-block;
+    position: relative;
+}
+
+.temperature-label {
+    position: absolute;
+    top: 18px;
+    left: 45px;
+    font-weight: bold;
+    color: #6F8388;
+    font-size: 28px;
+}
+
+.pitch-widget {
+    width: 50%;
+    display : inline-block;
+    position: relative;
+}
+
+.pitch-label {
+    position: absolute;
+    top: 18px;
+    left: 45px;
+    font-weight: bold;
+    color: #6F8388;
+    font-size: 28px;
+}
+
+.overview-header:hover {
+    cursor: pointer;
+    color:white;
+}
+
+.overview-subpanel:hover {
+    cursor: pointer;
+    color: white;
+}
+

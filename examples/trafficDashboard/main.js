@@ -13,7 +13,8 @@ define(
         'components/map',
         'components/widget_temperature',
         'components/widget_pitch',
-        'components/widget_lights'
+        'components/widget_lights',
+        'components/widget_battery'
     ],
   
     function() {
@@ -152,10 +153,10 @@ define(
         var compList = [
             {
                 component: 'OverviewSubpanel',
-                className: 'elem1',
+                className: 'detail-element-header',
                 iconClass: 'dot red',
-                text: 'First element',
-                caption: 'Sample error 1'
+                text: 'AssetSemaphore2',
+                caption: 'Inclination change +10'
             },
             {
                 component: 'detailPanel',
@@ -183,6 +184,17 @@ define(
                     }    
                 ]
             },
+            /*{
+                component: 'detailPanel',
+                header: 'Battery Level',
+                id: 'battery-level',
+                items: [
+                    {
+                        component: 'batteryWidget',
+                        className: 'battery-widget'
+                    }    
+                ]
+            },*/
             {
                 component: 'detailPanel',
                 header: 'Last Location',
@@ -299,6 +311,7 @@ define(
             $('.temperature-widget').trigger('drawTemperature');
             $('.pitch-widget').trigger('drawPitch');
             $('.lights-widget').trigger('drawLights');
+            //$('.battery-widget').trigger('drawBattery');
 
         }); // requirejs
     }

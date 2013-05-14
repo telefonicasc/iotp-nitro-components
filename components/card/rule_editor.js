@@ -115,7 +115,8 @@ define(
                         placeholder,
                         delimiter;
 
-                    if (node.hasClass('start-card') &&
+                    if (o.addPlaceholder !== false &&
+                        node.hasClass('start-card') &&
                         !this.getConnectedTo(node).length) {
                         placeholder = $('<div>');
                         placeholder.addClass('card-placeholder action-card');
@@ -141,12 +142,13 @@ define(
 
                 this.$graphEditor.on('moved', '.card', $.proxy(function(e, o) {
                     var el = $(e.target),
-                        delimiter = el.data('delimiter');
+                        delimiter = el.data('delimiter'),
+                        position = el.position();
                     
                     if (delimiter) {
                         delimiter.css({
-                            left: o.left,
-                            top: o.top
+                            left: position.left,
+                            top: position.top
                         });
                     }
                 }, this));
@@ -279,7 +281,9 @@ define(
             };
 
             this.getAllCards = function() {
-                return $('.node-container > .card', this.$graphEditor);
+                return $('.node-container > .card, ' + 
+                        '.node-container > .start-card, ' +
+                        '.node-container > .card-placeholder', this.$graphEditor);
             };
 
             this.getTopCards = function() {
@@ -354,6 +358,17 @@ define(
                         this.addConnection(cardEl, otherEl);
                     }, this));
                 }, this));
+
+                this.$startCard = $('<div>').addClass('start-card');
+                this.$graphEditor.trigger('addNode', { 
+                    node: this.$startCard,
+                    addPlaceholder: false
+                });
+
+                var topCards = this.getTopCards();
+                $.each(topCards, $.proxy(function(i, card) {
+                    this.addConnection(this.$startCard, $(card));
+                }, this));
             };
 
             this.getRuleData = function() {
@@ -402,6 +417,7 @@ define(
                 this.emptyRule();
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { node: this.$startCard });
+                this.relayoutCards();
             };
 
             this.emptyRule = function() {

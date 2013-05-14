@@ -92,7 +92,7 @@ define(
                     if (o.draggable !== false) {
                         Draggable.attachTo(node, {});
                     }
-                    this.trigger('nodeAdded', { node: node });
+                    this.trigger('nodeAdded', o);
                 });
 
                 this.on('removeNode', function(e, o) {

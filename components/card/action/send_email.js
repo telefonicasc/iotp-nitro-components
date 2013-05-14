@@ -14,7 +14,7 @@ define(
             message:'',
             tokens: []
         };
-        var BACK_TPL = $( ['<div class="card-header">',
+        var BACK_TPL = ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',
                 '<input class="email-subject">',
                 '<label class="email-address-label">To</label>',
@@ -23,10 +23,10 @@ define(
             '<div class="card-body">',
                 '<textarea class="email-message"></textarea>',
             '</div>',
-            '<div class="token-selector"></div>'].join('') );
-        var FRONT_TPL = $( ['<p class="email-address"></p>',
+            '<div class="token-selector"></div>'].join('');
+        var FRONT_TPL = ['<p class="email-address"></p>',
             '<p class="email-subject"></p>',
-            '<p class="email-message"></p>'].join('') );
+            '<p class="email-message"></p>'].join('') ;
         var TOKEN_TPL = '<div class="token"></div>';
         var TOKEN_SYMBOL = '+';
 

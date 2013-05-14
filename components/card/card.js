@@ -48,6 +48,7 @@ define(
                     this.$node.addClass('flippable');
                     this.$front.on('click', $.proxy(function() {
                         this.$node.addClass('flip');
+                        this.$node.trigger('flipped');
                     }, this));
                 }else {
                     this.$back.hide();

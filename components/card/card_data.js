@@ -59,6 +59,7 @@ function() {
     var encode = function (card) {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
+        card = $.extend({}, card);
         if(card.type === cardType.SENSOR_CARD){
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];

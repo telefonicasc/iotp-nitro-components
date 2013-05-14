@@ -142,8 +142,11 @@ define(
                 this.$node.addClass('paged-panel');
                 //this.$node.addClass(self.attr.ID);
                 this.$node.attr('id',self.attr.ID);
-                this.$nodeMap = $('<div>').addClass('paged-header')
-                    .html(self.attr.header).appendTo(this.$node);
+                
+                if (this.attr.header !='') {
+                    this.$nodeMap = $('<div>').addClass('paged-header').html(self.attr.header).appendTo(this.$node);
+                }
+
                 //this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass(self.attr.insertionPoint.substring(1)).appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);

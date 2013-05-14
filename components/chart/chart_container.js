@@ -27,7 +27,8 @@ define(
                 axisx:false,
                 axisy:false,
                 timeAxis: {
-                    margin: 0      
+                    margin: 0,
+                    height: 20  
                 }
             });
 
@@ -41,7 +42,7 @@ define(
                             .attr('height', this.height),
                     grid, clip, rangeSelection, border;
 
-                this.$node.data('value', data);
+                this.$node.data('value', data);    
 
                 if (this.attr.grid) {
                     grid = svg.append('g').attr('class', 'grid');
@@ -69,6 +70,7 @@ define(
 
                 if (this.attr.axisx) {
                     var axisx = svg.append('g').attr('class', 'x axis');
+                    axisx.append('rect').attr('class',this.attr.timeAxis.className);
                     ComponentManager.get('timeAxis').attachTo(axisx.node(), this.attr.timeAxis);
                 }
 
@@ -97,6 +99,7 @@ define(
                     this.$node.find('g.chart, g.grid, g.brush, g.axis')
                         .trigger('resize', chartSize);
                     if (this.attr.axisx) {
+                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 20);
                         axisx.attr('transform', 'translate(0,' +
                             (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }

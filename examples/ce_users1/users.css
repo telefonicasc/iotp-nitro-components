@@ -21,8 +21,9 @@
   margin-left: 20px;
 }
 
+
 .dashboard .sidebar {
-  background-color: #b5c9cd;
+  background-color: #e9eff0;
 }
 
 .dashboard .overview-content .date-range {
@@ -56,6 +57,14 @@
   stroke: #90a5b2;
 }
 
+.timeaxis_bg {
+    fill:#778d98;
+}
+
+.chart .timeaxis_bg text{
+    fill: white;
+}
+
 .brush .extent {
   fill: #0f0f0f;
   stroke: #788d9a;
@@ -80,6 +89,10 @@ user agent stylesheet
 .chart .green path.area {
   opacity: 0.5;
   fill: #effac4;
+}
+
+.chart .cyan path.area {
+    fill: #d5e0e6;
 }
 
 .chart .green path.line {

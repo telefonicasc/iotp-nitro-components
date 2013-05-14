@@ -180,7 +180,6 @@ define(
 						daysPeriod++;
 					}
 					var num = numBars(daysPeriod, this.attr.maxNumBars),
-                        _inc = this.attr.incremental,
                         dataOut = {data:{}, daysBar: daysPeriod/num },
                         keys = null;
 
@@ -193,14 +192,19 @@ define(
 						}
 						var x = i%num;
 						$.each(keys, function(j, key){
-							if (x > 0){
-								dataOut.data[key][x] = dataOut.data[key][x] + ((_inc)? dataOut.data[key][x-1] : 0) +val.value[key];
-							}else{
-								dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];
-							}
+							dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];
 						});
-
 					});
+
+                    if (this.attr.incremental){
+                        $.each(keys, function(j, key){
+                            $.each(dataOut.data[key], function(i, val){
+                                if (i > 0) {
+                                    dataOut.data[key][i] += dataOut.data[key][i-1];
+                                }
+                            });
+                        });
+                    }
 					return dataOut;
 				};
 

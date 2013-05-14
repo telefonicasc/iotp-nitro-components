@@ -199,7 +199,6 @@ define(
                     if (this.attr.incremental){
                         $.each(keys, function(j, key){
                             $.each(dataOut.data[key], function(i, val){
-                                console.log('i: '+ i, val);
                                 if (i > 0) {
                                     dataOut.data[key][i] += dataOut.data[key][i-1];
                                 }

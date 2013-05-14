@@ -141,12 +141,13 @@ define(
 
                 this.$graphEditor.on('moved', '.card', $.proxy(function(e, o) {
                     var el = $(e.target),
-                        delimiter = el.data('delimiter');
+                        delimiter = el.data('delimiter'),
+                        position = el.position();
                     
                     if (delimiter) {
                         delimiter.css({
-                            left: o.left,
-                            top: o.top
+                            left: position.left,
+                            top: position.top
                         });
                     }
                 }, this));

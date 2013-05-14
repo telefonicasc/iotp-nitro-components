@@ -104,7 +104,10 @@ define(
                 GraphEditor.attachTo(this.$graphEditor, {});
 
                 this.$graphEditor.on('click', function(){
-                    $(this).find('.card.flip').removeClass('flip');
+                    $(this).find('.card.flip').each(function() {
+                        $(this).removeClass('flip');
+                        $(this).trigger('flipped');
+                    });
                 });
 
                 this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
@@ -134,6 +137,29 @@ define(
                     node.data('delimiter', delimiter);
 
                     this.updateValue();
+                }, this));
+
+                this.$graphEditor.on('moved', '.card', $.proxy(function(e, o) {
+                    var el = $(e.target),
+                        delimiter = el.data('delimiter');
+                    
+                    if (delimiter) {
+                        delimiter.css({
+                            left: o.left,
+                            top: o.top
+                        });
+                    }
+                }, this));
+
+                this.$graphEditor.on('flipped', '.card', $.proxy(function(e, o){
+                    var delimiter = $(e.target).data('delimiter'); 
+                    if (delimiter) {
+                        if ($(e.target).hasClass('flip')) {
+                            delimiter.fadeOut();
+                        } else {
+                            delimiter.fadeIn();
+                        }
+                    }
                 }, this));
 
                 this.$graphEditor.on('nodeRemoved', $.proxy(function(e, o) {
@@ -253,7 +279,7 @@ define(
             };
 
             this.getAllCards = function() {
-                return $('.node-container', this.$graphEditor).children();
+                return $('.node-container > .card', this.$graphEditor);
             };
 
             this.getTopCards = function() {

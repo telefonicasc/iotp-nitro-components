@@ -441,23 +441,29 @@
     height: 70%;
 }
 
+.m2m-card-delimiter {
+    position: absolute;
+    margin-top: 85px;
+    z-index: 2000;
+}
+
 .delimiter-value {
+    z-index: 2;
     font-family: Helvetica, Arial, sans-serif;
-    width: 95px;
+    background-color: #7f919e;
+    margin-left: -62px;
+    width: 124px;
     height: 20px;
     .border-radius(12px, 12px, 12px, 12px);
-    border: 2px solid white;
-    .drop-shadow(0px, 2px, 3px, 0.5);
-    color: #737471;
     text-align: center;
-    color: 737471;
     font-weight: bold;
-    .gradient(#D9D5D3, #D9D5D3, #F2EFED);
 
     span {
-        color: #737471;
+        color: #e9ecee;
         text-align: center;
         font-weight: bold;
         font-size: 12px;
+        padding-top: 5px;
+        display: block;
     }
 }

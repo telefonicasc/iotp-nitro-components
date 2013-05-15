@@ -50,14 +50,11 @@ define(
                             }else if (attribs.stepType === 'day' && i%attribs.stepTick === 0){
                                 ticks.push(t);
                             }
-
                             i++;
                         }
-
-                        ticks.pop();
                         return ticks;
                     })
-                    .tickSize(1, 1, 1)
+                    .tickSize(1,1,1)
                     .tickFormat(d3.time.format(this.attr.tickFormat));
 
                 context.call(this.axis);

@@ -56,15 +56,24 @@ var DashCE_users = DashCE_users || {};
           component: 'chartContainer',
           rangeField: 'selectedRange',
           valueField: 'totalRegistered',
-          className: 'chart',
+          className: 'chart top',
           marginRight: 45,
-          marginBottom: 40,
-          axisy: false,
+          marginBottom: 20,
+          axisy: true,
           axisx: true,
           timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 7 },
           grid: false,
-          axisy: true,
           charts: [{
+            type: 'columnChart',
+            model: 'visitors',
+            rangeField: 'selectedRange',
+            items: [{
+              component: 'cellBarchartSubpanel',
+              text: {
+                  title: { value: '' , caption: 'of users online' },
+              }
+            }]
+          },{
             type: 'areaChart',
             tooltip: true,
             model: 'totalRegistered',
@@ -84,6 +93,39 @@ var DashCE_users = DashCE_users || {};
             model: 'visitors',
             rangeField: 'selectedRange',
             cssClass: 'brown'
+          }]
+        },
+        {
+          component: 'chartContainer',
+          rangeField: 'selectedRange',
+          valueField: 'totalRegistered',
+          className: 'chart bottom',
+          marginRight: 45,
+          marginBottom: 20,
+          axisy: false,
+          axisx: false,
+          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 7 },
+          grid: false,
+          charts: [
+          {
+            type: 'columnChart',
+            model: 'visitors',
+            rangeField: 'selectedRange',
+            fixHeight: 170,
+            items: [{
+              component: 'cellBarchartSubpanel',
+              text: {
+                  content: { value: '' , caption: 'unique users online' },
+              },
+              chart: {        //(optional)
+                  conf: {
+                    maxHeight: 80,
+                    width: 60,
+                    barPadding: 4
+                  },
+                  data: []    //values from 0 - 100 
+              }
+            }]
           }]
         }]
       },
@@ -119,6 +161,7 @@ var DashCE_users = DashCE_users || {};
           rangeField: 'range',
           valueField: 'totalRegistered',
           className: 'chart range-selection-chart',
+          marginRight: 0,
           axisx: true,
           timeAxis: { tickFormat: '%B', margin: -20, stepType: 'month', paddingTick: 25, stepTick: 1 },
           rangeSelection: {
@@ -414,11 +457,6 @@ var DashCE_users = DashCE_users || {};
       $.when( $.getJSON(uris[0]), $.getJSON(uris[1]) ).done(function(res1, res2) {
             var data = createDataObject(res1, res2)
             cb(data);
-            $('.range-selection-chart').trigger('rangeSelected', {
-              text: 'Month',
-              action: 'action-month',
-              range: 35 // 5 weeks of 7 days
-            });
         }).fail(function(e) {
             alert('Error fetching data from server');
       });

@@ -26,11 +26,14 @@ function (ComponentManager) {
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
             
-            this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
+            //this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
 
             //var obj = this.createTemperatureChart();
-            this.on('drawTemperature', function () {
+            this.on('drawTemperature', function (event, temp) {
                 console.log('Drawing temperature widget');
+                if (temp != null) this.attr.temp = temp;
+                this.$node.empty();
+                this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
                 this.attr.widget = this.createTemperatureChart(); 
                 this.drawTemperature(this.attr.widget, this.attr.temp);
                 $(this.attr.temperatureLabel).html(this.attr.temp + 'ºC');

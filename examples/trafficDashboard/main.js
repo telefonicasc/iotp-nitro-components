@@ -33,7 +33,7 @@ define(
                 'properties': {
                     'marker-color': '#088A85',
                     'marker-symbol': 'circle',
-                    'title': 'Asset Semaphore 1'
+                    'title': 'AssetSemaphore1'
                 }
             },
             {
@@ -41,7 +41,8 @@ define(
                 'properties': {
                     'marker-color': '#DF0101',
                     'marker-symbol': 'circle',
-                    'title': 'Asset Semaphore 2'
+                    'title': 'AssetSemaphore2',
+                    'description': 'Semaphore'
                 }
             },
             {
@@ -49,23 +50,25 @@ define(
                 'properties': {
                     'marker-color': '#DF0101',
                     'marker-symbol': 'circle',
-                    'title': 'Asset Semaphore 3'
+                    'title': 'AssetSemaphore3'
                 }
             },
+            
             {
-                'geometry': { coordinates: [ 8.691902, 80.088759 ] },
+                'geometry': { coordinates: [ 8.691902, 50.088759 ] },
                 'properties': {
                     'marker-color': '#DF0101',
                     'marker-symbol': 'circle',
-                    'title': 'Asset Semaphore 4'
+                    'title': 'AssetSemaphore4'
                 }
             },
             {
-                'geometry': { coordinates: [ 8.467712, 80.125861 ] },
+                'geometry': { coordinates: [ 8.467712, 50.125861 ] },
+//                'geometry': { coordinates: [ 8.467712, 50.0 ] },
                 'properties': {
                     'marker-color': '#088A85',
                     'marker-symbol': 'circle',
-                    'title': 'Asset Semaphore 5'
+                    'title': 'AssetSemaphore5'
                 }
             }
         ];
@@ -94,34 +97,6 @@ define(
         var center_germany = { lat: 50.1, lon: 8.625 };
         var zoom_germany = 14;
 
-        var features = [
-            {
-                'geometry': { coordinates: [ -3.662782, 40.515528 ] },
-                'properties': {
-                    'marker-color': '#DF0101',
-                    'marker-symbol': 'rail-underground',
-                    'title': 'Ronda de la Comunicacion'
-                }
-            },{
-                'geometry': { coordinates: [ -3.6665, 40.51535 ] },
-                'properties': {
-                    'marker-color': '#0101DF',
-                    'marker-symbol': 'industrial',
-                    'title': 'Telefonica I+D'
-                }
-            },{
-                'geometry': { coordinates: [ -3.664282, 40.513367 ] },
-                'properties': {
-                    'marker-color': '#01DF01',
-                    'marker-symbol': 'garden',
-                    'title': 'Rotonda__1'
-                }
-            }
-        ]
-
-        var center = { lat: 40.51535, lon: -3.6665 };
-        var zoom = 15;
-
         var minimap = {
             component: 'minimap',
             zoomValue: 16,
@@ -134,20 +109,6 @@ define(
                     'title': 'AssetSemaphore3'
                 }
             }
-        };
-
-        var detailsPanel = {
-            component: 'detail-panel',
-            id: 'panel-details',
-            header: 'Asset details',
-            items: [minimap]
-        }
-
-        var dynamicComponent = {
-            component: 'OverviewSubpanel',
-            iconClass: 'dot black',
-            text: 'Zero',
-            caption: 'Dynamic subpanel'
         };
 
         var compList = [
@@ -200,7 +161,6 @@ define(
                 header: 'Last Location',
                 id: 'last-location',
                 items: [minimap]
-                
             }
 
         ];
@@ -209,13 +169,9 @@ define(
 
         requirejs(['components/jquery_plugins'], function() {
 
-            var self = this;
+            
+            
 
-            var swapPanels = function (locator) {
-                console.log("Swap locator is: " + locator);
-                $('.panel-list').slideToggle();
-                $('.panel-detail').slideToggle();
-            };
 
             $('.dashboard').m2mdashboard({
                 mainContent: [
@@ -223,10 +179,10 @@ define(
                         component: 'map',
                         showZoomButtons: true,
                         hoveringTooltip: true,
-                        debug: true,
+                        debug: false,
                         center: center_germany,
-                        zoomInitial: 14,
-                        zoomMin: 12,
+                        zoomInitial: 13,
+                        zoomMin: 5,
                         zoomMax: 20,
                         centerOnClick: true,
                         markerClickEventTarget: '.mapbox-mini',
@@ -245,8 +201,7 @@ define(
                             header: '',
                             ID: 'panel-list',
                             items: warnings_germany
-                        }
-                        ,
+                        },
                         {
                             component: 'pagedPanel',
                             className: 'panel-detail',
@@ -298,13 +253,20 @@ define(
             }); 
        
             $('.overview-header').on('click', function () {
-                swapPanels('');
-            
+//                swapPanels('');
+                $('.panel-list').slideDown();
+                $('.panel-detail').slideUp();
             });
 
-            $('.overview-subpanel').on('click',function () {
+            $('.overview-subpanel .text').on('click',function (event) {
                 console.log("Element: " + $(this).attr('class'));
-                swapPanels($(this).attr('class'));
+                var data = {
+                    properties: {
+                        title: $(event.target).html()
+                    }
+                };
+                $('.dashboard').trigger('updateMinimap', data);
+                //swapPanels($(this).attr('class'));
             });
 
             // Update widgets
@@ -313,8 +275,67 @@ define(
             $('.lights-widget').trigger('drawLights');
             //$('.battery-widget').trigger('drawBattery');
 
+            var swapPanels = function (locator) {
+                console.log("Swap locator is: " + locator);
+                $('.panel-list').slideToggle();
+                $('.panel-detail').slideToggle();
+            };
+
+            // MOCK ============================================================
+            
             // Fix count 
             $('.overview-count').html('3');
+            
+            var infoUpdater = function (id) {
+                console.log('Received update request for device: ' + id);
+            };
+            
+            $('.dashboard').on('updateMinimap', function (event, data) {
+                // Make sure correct panel is displayed
+                $('.panel-list').slideUp();
+                $('.panel-detail').slideDown();
+//                $('.panel-list').trigger('update-view');    
+//                $('.panel-detail').trigger('update-view'); 
+                $('.paged-panel').trigger('update-view');
+                
+                var callingElement = data.properties.title;
+                console.log('Received element name: ' + callingElement);
+                $('.detail-element-header .text').html(callingElement);
+                if (callingElement === 'AssetSemaphore1') {
+                    $('.temperature-widget').trigger('drawTemperature',15.3);
+                    $('.pitch-widget').trigger('drawPitch',90);                    
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No problems detected');
+                }
+                else if (callingElement === 'AssetSemaphore2') {
+                    $('.temperature-widget').trigger('drawTemperature',15.1);
+                    $('.pitch-widget').trigger('drawPitch',75);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('Inclination change +10');
+                }
+                else if (callingElement === 'AssetSemaphore3') {
+                    $('.temperature-widget').trigger('drawTemperature',15.7);
+                    $('.pitch-widget').trigger('drawPitch', 23);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('Voltage < 10V<br/>Inclination change +10');
+                }
+                else if (callingElement === 'AssetSemaphore4') {
+                    $('.temperature-widget').trigger('drawTemperature',14.8 );
+                    $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No red light for +5m');
+                }
+                else if (callingElement === 'AssetSemaphore5') {
+                    $('.temperature-widget').trigger('drawTemperature',14.8);
+                    $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No problems detected');
+                }
+                else {
+                    console.log('Received unexpected asset id');
+                }
+            });
+            
         }); // requirejs
     }
 );

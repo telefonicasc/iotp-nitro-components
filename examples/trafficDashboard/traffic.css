@@ -39,7 +39,6 @@
     right: 5px;
     padding-left: 5px;
     padding-right: 5px;
-    #background: #AECACE
 }
 
 .zoomer {
@@ -114,6 +113,7 @@
     font-weight: bold;
     color: #6F8388;
     font-size: 28px;
+    margin-left: 20px;
 }
 .battery-chart {
     width: 50%;
@@ -157,7 +157,7 @@
     color:white;
 }
 
-.overview-subpanel:hover {
+.overview-subpanel .text:hover {
     cursor: pointer;
     color: white;
 }

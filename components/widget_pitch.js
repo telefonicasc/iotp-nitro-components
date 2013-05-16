@@ -23,12 +23,15 @@ function (ComponentManager) {
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
             
-            this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);
+            //this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);
 
             //var obj = this.createTemperatureChart();
-            this.on('drawPitch', function () {
+            this.on('drawPitch', function (event, angle) {
                 console.log('Drawing pitch widget');
-                this.attr.widget = this.createPitchChart(); 
+                if (angle != null) this.attr.angle = angle;
+                this.$node.empty();
+                this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);
+                this.attr.widget = this.createPitchChart();
                 this.drawPitch(this.attr.widget, this.attr.angle);
                 $(this.attr.pitchLabel).html(this.attr.angle + 'º');
             });

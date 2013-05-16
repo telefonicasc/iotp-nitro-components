@@ -90,14 +90,14 @@ function(ComponentManager) {
 
         /* === Component default attributes === */
         this.defaultAttrs({
-		    mapId: 'keithtid.map-w594ylml',
+            mapId: 'keithtid.map-w594ylml',
             center: { lat: 40.414431, lon: -3.703696 },
-			zoomInitial: 15,
+            zoomInitial: 15,
             zoomMin: 15,
             zoomMax: 20,
             showZoomButtons: false,
             features: [],
-			markers: [],
+            markers: [],
             markerAnnounceTrigger: 'announce-trigger',
             markerClickEventTarget: '',
             markerClickEvent: 'marker-clicked',
@@ -135,9 +135,10 @@ function(ComponentManager) {
 			var interaction = mapbox.markers.interaction(this.markerLayer);
 			this.mapC.addLayer(this.markerLayer);
             // ==> Remove hovering tooltips?
-            if (this.attr.hoveringTooltip == false) {
-                interaction.showOnHover(false);
-            } 
+            interaction.showOnHover(this.attr.hoveringTooltip);
+//            if (this.attr.hoveringTooltip == false) {
+//                interaction.showOnHover(false);
+//            } 
             if (self.attr.debug) {
                 // ==> Event suscriptions and handlers
                 console.log('Created click event debug handler');

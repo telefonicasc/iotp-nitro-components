@@ -10,7 +10,11 @@ define(
         'components/paged_panel',
         'components/paged_detail',
         'components/detail_panel',
-        'components/map'
+        'components/map',
+        'components/widget_temperature',
+        'components/widget_pitch',
+        'components/widget_lights',
+        'components/widget_battery'
     ],
   
     function() {
@@ -21,120 +25,153 @@ define(
         };
         */
         // CONFIG: This config should override the one provided by default below (for testing)
-        var features = [
+        //
+        // Config germany 
+        var features_germany = [
             {
-                'geometry': { coordinates: [ -3.662782, 40.515528 ] },
+                'geometry': { coordinates: [ 8.645, 50.113 ] },
+                'properties': {
+                    'marker-color': '#088A85',
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore1'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.63, 50.09 ] },
                 'properties': {
                     'marker-color': '#DF0101',
-                    'marker-symbol': 'rail-underground',
-                    'title': 'Ronda de la Comunicacion'
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore2',
+                    'description': 'Semaphore'
                 }
-            },{
-                'geometry': { coordinates: [ -3.6665, 40.51535 ] },
+            },
+            {
+                'geometry': { coordinates: [ 8.61, 50.111 ] },
                 'properties': {
-                    'marker-color': '#0101DF',
-                    'marker-symbol': 'industrial',
-                    'title': 'Telefonica I+D'
+                    'marker-color': '#DF0101',
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore3'
                 }
-            },{
-                'geometry': { coordinates: [ -3.664282, 40.513367 ] },
+            },
+            
+            {
+                'geometry': { coordinates: [ 8.691902, 50.088759 ] },
                 'properties': {
-                    'marker-color': '#01DF01',
-                    'marker-symbol': 'garden',
-                    'title': 'Rotonda__1'
+                    'marker-color': '#DF0101',
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore4'
+                }
+            },
+            {
+                'geometry': { coordinates: [ 8.467712, 50.125861 ] },
+//                'geometry': { coordinates: [ 8.467712, 50.0 ] },
+                'properties': {
+                    'marker-color': '#088A85',
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore5'
                 }
             }
-        ]
+        ];
 
-        var center = { lat: 40.51535, lon: -3.6665 };
-        var zoom = 15;
+        var warnings_germany = [
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore2',
+                caption: 'Inclination change: +10'
+            },
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore3',
+                caption: 'Voltage < 10V'
+            },
+            {
+                component: 'OverviewSubpanel',
+                iconClass: 'dot red',
+                text: 'AssetSemaphore4',
+                caption: 'No red light for +5 min'
+            }
+        ];
+        
+        var center_germany = { lat: 50.1, lon: 8.625 };
+        var zoom_germany = 14;
 
         var minimap = {
             component: 'minimap',
             zoomValue: 16,
-            movable: false,
+            movable: true,
             markerModel: {
-                geometry: { coordinates: [ -3.6665, 40.51535 ] },
+                geometry: { coordinates: [ 8.61, 50.111 ] },
                 properties: {
                     'marker-color': '#FF0000',
-                    'marker-symbol': 'industrial',
-                    'title': 'Telefonica I+D'
+                    'marker-symbol': 'circle',
+                    'title': 'AssetSemaphore3'
                 }
             }
-        };
-
-        var detailsPanel = {
-            component: 'detail-panel',
-            id: 'panel-details',
-            header: 'Asset details',
-            items: [minimap]
-        }
-
-        var dynamicComponent = {
-            component: 'OverviewSubpanel',
-            iconClass: 'dot black',
-            text: 'Zero',
-            caption: 'Dynamic subpanel'
-        };
-
-        var details = {
-            component:'pagedPanel',
-            name:'pagedDet',
-            header:'Asset Details',
-            ID:'details',
-            items: [
-                {
-                    component: 'OverviewSubpanel',
-                    iconClass: 'dot black',
-                    text: 'Detailed asset 1',
-                    caption: 'More info pending'
-                },
-                {
-                    component: 'OverviewSubpanel',
-                    iconClass: 'dot black',
-                    text: 'Detailed asset 2',
-                    caption: 'More info pending'
-                }    
-            ]
-        
         };
 
         var compList = [
             {
                 component: 'OverviewSubpanel',
-                className: 'elem1',
+                className: 'detail-element-header',
                 iconClass: 'dot red',
-                text: 'First element',
-                caption: 'Sample error 1'
+                text: 'AssetSemaphore2',
+                caption: 'Inclination change +10'
             },
             {
-                component: 'OverviewSubpanel',
-                className: 'elem2',
-                iconClass: 'dot red',
-                text: 'Second element',
-                caption: 'Sample error 2'
+                component: 'detailPanel',
+                header: 'Physical conditions',
+                id: 'physical-conditions',
+                items: [
+                    {
+                        component: 'temperatureWidget',
+                        className: 'temperature-widget' 
+                    },
+                    {
+                        component: 'pitchWidget',
+                        className: 'pitch-widget'
+                    }
+                ]
             },
             {
-                component: 'OverviewSubpanel',
-                className: 'elem3',
-                iconClass: 'dot red',
-                text: 'Third element',
-                caption: 'Sample error 3'
+                component: 'detailPanel',
+                header: 'Light color',
+                id: 'light-color',
+                items: [
+                    {
+                        component: 'lightsWidget',
+                        className: 'lights-widget'
+                    }    
+                ]
+            },
+            /*{
+                component: 'detailPanel',
+                header: 'Battery Level',
+                id: 'battery-level',
+                items: [
+                    {
+                        component: 'batteryWidget',
+                        className: 'battery-widget'
+                    }    
+                ]
+            },*/
+            {
+                component: 'detailPanel',
+                header: 'Last Location',
+                id: 'last-location',
+                items: [minimap]
             }
-            //, details
+
         ];
 
         // LOADER ==========================================
 
         requirejs(['components/jquery_plugins'], function() {
 
-            var self = this;
+            
+            
 
-            var swapPanels = function (locator) {
-                console.log("Swap locator is: " + locator);
-                $('.panel-list').slideToggle();
-                $('.panel-detail').slideToggle();
-            };
 
             $('.dashboard').m2mdashboard({
                 mainContent: [
@@ -142,37 +179,36 @@ define(
                         component: 'map',
                         showZoomButtons: true,
                         hoveringTooltip: true,
-                        debug: true,
-                        center: { lat: 40.51535, lon: -3.6665 },
-                        zoomInitial: 15,
-                        zoomMin: 10,
+                        debug: false,
+                        center: center_germany,
+                        zoomInitial: 13,
+                        zoomMin: 5,
                         zoomMax: 20,
                         centerOnClick: true,
                         markerClickEventTarget: '.mapbox-mini',
                         markerClickEvent: 'updateMinimap',
-                        features: []
+                        features: features_germany
                     }
                 ],
                 overviewPanel: {
-                    title: 'Traffic Lights',
+                    title: 'Lights with warnings',
                     count: 3,
                     items: [
                         {
                             component: 'pagedPanel',
                             className: 'panel-list',
                             insertionPoint: '.panel-content-list',
-                            header: 'Panel List',
+                            header: '',
                             ID: 'panel-list',
-                            items: compList,
-                        }
-                        ,
+                            items: warnings_germany
+                        },
                         {
                             component: 'pagedPanel',
                             className: 'panel-detail',
                             insertionPoint: '.panel-content-details',
-                            header: 'Panel Details',
+                            header: 'Asset details',
                             ID: 'panel-detail',
-                            items: [ ]
+                            items: compList
                         }
                     ]
                 },
@@ -199,11 +235,11 @@ define(
                     };
                     details.push(newItem);
                 }
-                $('.panel-detail').trigger('load-items', [details]);
+                $('.panel-list').trigger('load-items', [details]);
             });
 
             // (DEBUG) Send the initial trigger
-            $(this).trigger('update-dashboard', [features, center, zoom]);
+            //$(this).trigger('update-dashboard', [features_germany, center_germany, zoom_germany]);
 
             // Hide details on load
             $('.panel-detail').hide();
@@ -215,12 +251,91 @@ define(
                 $('.panel-list').trigger('update-view');    
                 $('.panel-detail').trigger('update-view');    
             }); 
-        
-            $('.overview-subpanel').on('click',function () {
-                console.log("Element: " + $(this).attr('class'));
-                swapPanels('test');
+       
+            $('.overview-header').on('click', function () {
+//                swapPanels('');
+                $('.panel-list').slideDown();
+                $('.panel-detail').slideUp();
             });
 
+            $('.overview-subpanel .text').on('click',function (event) {
+                console.log("Element: " + $(this).attr('class'));
+                var data = {
+                    properties: {
+                        title: $(event.target).html()
+                    }
+                };
+                $('.dashboard').trigger('updateMinimap', data);
+                //swapPanels($(this).attr('class'));
+            });
+
+            // Update widgets
+            $('.temperature-widget').trigger('drawTemperature');
+            $('.pitch-widget').trigger('drawPitch');
+            $('.lights-widget').trigger('drawLights');
+            //$('.battery-widget').trigger('drawBattery');
+
+            var swapPanels = function (locator) {
+                console.log("Swap locator is: " + locator);
+                $('.panel-list').slideToggle();
+                $('.panel-detail').slideToggle();
+            };
+
+            // MOCK ============================================================
+            
+            // Fix count 
+            $('.overview-count').html('3');
+            
+            var infoUpdater = function (id) {
+                console.log('Received update request for device: ' + id);
+            };
+            
+            $('.dashboard').on('updateMinimap', function (event, data) {
+                // Make sure correct panel is displayed
+                $('.panel-list').slideUp();
+                $('.panel-detail').slideDown();
+//                $('.panel-list').trigger('update-view');    
+//                $('.panel-detail').trigger('update-view'); 
+                $('.paged-panel').trigger('update-view');
+                
+                var callingElement = data.properties.title;
+                console.log('Received element name: ' + callingElement);
+                $('.detail-element-header .text').html(callingElement);
+                if (callingElement === 'AssetSemaphore1') {
+                    $('.temperature-widget').trigger('drawTemperature',15.3);
+                    $('.pitch-widget').trigger('drawPitch',90);                    
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No problems detected');
+                }
+                else if (callingElement === 'AssetSemaphore2') {
+                    $('.temperature-widget').trigger('drawTemperature',15.1);
+                    $('.pitch-widget').trigger('drawPitch',75);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('Inclination change +10');
+                }
+                else if (callingElement === 'AssetSemaphore3') {
+                    $('.temperature-widget').trigger('drawTemperature',15.7);
+                    $('.pitch-widget').trigger('drawPitch', 23);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('Voltage < 10V<br/>Inclination change +10');
+                }
+                else if (callingElement === 'AssetSemaphore4') {
+                    $('.temperature-widget').trigger('drawTemperature',14.8 );
+                    $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No red light for +5m');
+                }
+                else if (callingElement === 'AssetSemaphore5') {
+                    $('.temperature-widget').trigger('drawTemperature',14.8);
+                    $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.detail-element-header .text').html(callingElement);
+                    $('.detail-element-header .caption').html('No problems detected');
+                }
+                else {
+                    console.log('Received unexpected asset id');
+                }
+            });
+            
         }); // requirejs
     }
 );

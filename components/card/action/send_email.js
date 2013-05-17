@@ -74,9 +74,12 @@ define(
             element.back.message.on('change', _triggerUpdateOnChange(element, this) );
 
             //set values
-            element.back.subject.val(this.attr.subject).change();
-            element.back.emailAddress.val(this.attr.emailAddress).change();
-            element.back.message.val(this.attr.message).change();
+            element.back.subject.val(this.attr.subject);
+            element.back.emailAddress.val(this.attr.emailAddress);
+            element.back.message.val(this.attr.message);
+
+            element.front.subject.text(this.attr.subject);
+            element.front.message.text(this.attr.message);
 
             var node = this.$node;
             $(node.parent() ).on('click', function(){

@@ -24,8 +24,8 @@ define(
                 '<textarea class="email-message"></textarea>',
             '</div>',
             '<div class="token-selector"></div>'].join('');
-        var FRONT_TPL = ['<p class="email-address"></p>',
-            '<p class="email-subject"></p>',
+        var FRONT_TPL = ['<i class="email-address"></i>',
+            '<h3 class="email-subject"></h3>',
             '<p class="email-message"></p>'].join('') ;
         var TOKEN_TPL = '<div class="token"></div>';
         var TOKEN_SYMBOL = '+';
@@ -60,18 +60,12 @@ define(
 
             this.$back.on('click', _stopPropagation);
 
-            //set values
-            element.back.subject.val(this.attr.subject).change();
-            element.back.emailAddress.val(this.attr.emailAddress).change();
-            element.back.message.val(this.attr.message).change();
-
             //@TODO
             //hay que ver porque dublica también los elementos creados inicialmente
             //el siguiente método de borrado no debería ser necsario
             element.back.token.html('');
             $.each(this.attr.tokens, _addToken(element));
 
-            element.back.emailAddress.on('change', _updateElementOnChange(element.front.emailAddress) );
             element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
             element.back.message.on('change', _updateElementOnChange(element.front.message) );
 
@@ -79,6 +73,10 @@ define(
             element.back.subject.on('change', _triggerUpdateOnChange(element, this) );
             element.back.message.on('change', _triggerUpdateOnChange(element, this) );
 
+            //set values
+            element.back.subject.val(this.attr.subject).change();
+            element.back.emailAddress.val(this.attr.emailAddress).change();
+            element.back.message.val(this.attr.message).change();
 
             var node = this.$node;
             $(node.parent() ).on('click', function(){

@@ -45,7 +45,6 @@ function() {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = 'Send Email';
             card.component = component.SEND_EMAIL;
-            card.tokens = [];
             return card;
         }
     };

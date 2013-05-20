@@ -104,6 +104,7 @@ define(
             }
 
             this.pageRight = function () {
+                debugger
                 var self = this;
                 if (self.currentPage < self.pageCount) {
                     self.currentPage = self.currentPage + 1;
@@ -142,8 +143,12 @@ define(
                 this.$node.addClass('paged-panel');
                 //this.$node.addClass(self.attr.ID);
                 this.$node.attr('id',self.attr.ID);
-                this.$nodeMap = $('<div>').addClass('paged-header')
-                    .html(self.attr.header).appendTo(this.$node);
+                this.$node.attr('page','1');
+                
+                if (this.attr.header !='') {
+                    this.$nodeMap = $('<div>').addClass('paged-header').html(self.attr.header).appendTo(this.$node);
+                }
+
                 //this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass(self.attr.insertionPoint.substring(1)).appendTo(this.$node);
                 this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);

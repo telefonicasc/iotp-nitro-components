@@ -11,7 +11,9 @@ define(
     'components/sensor_widget/battery',
     'components/sensor_widget/angle',
     'components/slider',
-    'components/angular_directives'
+    'components/angular_directives',
+    'components/card/front/text',
+    'components/card/back/text'
   ],
 
   function() {
@@ -89,6 +91,19 @@ define(
                             component: 'Slider'
                         }]
                     };
+            } else if (cardData.sensorData.phenomenon ===
+                "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown") {
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText'
+                    }]
+                };
+                card.back = {
+                        items: [{
+                            component: 'CardBackText'
+                        }]
+                    };
+
             }
         });
         return cards;

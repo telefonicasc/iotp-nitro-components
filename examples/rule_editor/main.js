@@ -89,6 +89,28 @@ define(
                             component: 'Slider'
                         }]
                     };
+            } else if (card.Data.sensorData.dataType === "Boolean") {
+                card.front = {
+                    items: [{
+                        component: 'CardFrontBinary'
+                        trueLabel: 'True',
+                        trueValue: 'true',
+                        falseLabel: 'False',
+                        falseValue: 'false' 
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'Dropdown',
+                        options: [{
+                            label: 'True', 
+                            value: 'true'
+                        }, {
+                            label: 'False', 
+                            value: 'false'
+                        }]
+                };
+
             }
         });
         return cards;

@@ -65,7 +65,6 @@ var DashCE = (function () {
             $.each(data.deactivations, function(i, item) {
               item.value = 0 - item.value;
             });
-            var data = generateRandomData(1356998400000, 35);    
             cb(data);
         });
 	}

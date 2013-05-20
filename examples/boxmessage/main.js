@@ -25,7 +25,7 @@ define(
       })
       .controller('main', ['$scope', 'BoxMessage', function($scope, BM){
         $scope.test = function(){
-          BM.open({message:'test', confirmModal:true, okCallback:function(){
+          BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte? <br/><br/><br/><br/><br/>', confirmModal:true, okCallback:function(){
             BM.close();
           }});
         };

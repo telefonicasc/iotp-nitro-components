@@ -169,10 +169,6 @@ define(
 
         requirejs(['components/jquery_plugins'], function() {
 
-            
-            
-
-
             $('.dashboard').m2mdashboard({
                 mainContent: [
                     {
@@ -206,7 +202,7 @@ define(
                             component: 'pagedPanel',
                             className: 'panel-detail',
                             insertionPoint: '.panel-content-details',
-                            header: 'Asset details',
+//                            header: 'Asset details',
                             ID: 'panel-detail',
                             items: compList
                         }

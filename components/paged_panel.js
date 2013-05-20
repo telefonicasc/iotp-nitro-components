@@ -20,6 +20,8 @@ define(
                 pageDisplay: '.paged-navigation-display',
                 buttonLeftClass: '.paged-button-left',
                 buttonRightClass: '.paged-button-right',
+                pageLeftLocator: '.page-left',
+                pageRightLocator: '.page-right',
                 ID: '',
                 headerGap: 50,
                 items: [],
@@ -27,38 +29,38 @@ define(
             });
 
             this.updateView = function () {
-                var self = this;
-                //console.log('Updating view for component: ' + self.attr.ID);
                 // Restart pageCount
-                self.pageCount = 1;
+                var pageCount = 1;
                 // Page scanning now
-                var page = 1;                
+                var page = 1;
+                // current page
+                var currentPage = parseInt($(this.$node[0]).attr('page'));
                 // Parent height
                 //var ph = self.$node.parent().height();
-                var ph = $(window).height() - self.attr.headerGap;
+                var ph = $(window).height() - this.attr.headerGap;
                 // Reduce parent height by the navigation bar height
-                ph = ph - self.$node.find(self.attr.pagerLocator).height()
+                ph = ph - this.$node.find(this.attr.pagerLocator).height();
                 // Initial height
                 var initialPH = ph;
                 // Parent node is the component items insertion point
                 //var parentNode = self.$node.find(self.attr.insertionPoint);
-                var parentNode = self.$node.find(self.attr.insertionPoint);
+                var parentNode = this.$node.find(this.attr.insertionPoint);
                 // Pager is not show initially
-                self.showPager(false);
+                this.showPager(false);
                 // Hide/Show components
                 for (var i = 0; i < parentNode.children().length; i++) {
 
                     // Get children with index 'i'
                     el = parentNode.children().filter(
                         function (index) {
-                            return index == i;
+                            return index === i;
                         }
                     );
 
-                    if (ph - el.height() >= 0 || i == 0) {
+                    if (ph - el.height() >= 0 || i === 0) {
 
                         ph = ph - el.height();
-                        if (self.currentPage == page) {
+                        if (currentPage === page) {
                             el.css('display',''); /* Make sure element is displayed */
                         }
                         else {
@@ -68,13 +70,13 @@ define(
                     }
                     else {
                         // There is more than one page, show pager
-                        self.showPager(true);
+                        this.showPager(true);
                         // change page
                         page = page + 1;
-                        self.pageCount = page;
+                        pageCount = page;
                         // update ph
                         ph = initialPH - el.height(); // what if a component doesn't fit anyway
-                        if (self.currentPage == page) {
+                        if (currentPage === page) {
                             el.css('display','');
                         }
                         else {
@@ -82,52 +84,61 @@ define(
                         }
                     }
                 }
-                self.updatePager();
-            }
+                // Update values
+                $(this.$node[0]).attr('page',currentPage);
+                $(this.$node[0]).attr('pageCount',pageCount);
+                // Update pager
+                this.updatePager();
+            };
 
             this.showPager = function (show) {
-                var self = this;
                 if (show) {
-                    self.$node.find(self.attr.pagerLocator).css('display','');
+                    this.$node.find(this.attr.pagerLocator).css('display','');
                 }
                 else {
-                    self.$node.find(self.attr.pagerLocator).css('display','none');
+                    this.$node.find(this.attr.pagerLocator).css('display','none');
                 }
-            }
+            };
 
             this.pageLeft = function () {
-                var self = this;
-                if (self.currentPage > 1) {
-                    self.currentPage = self.currentPage - 1; 
+                
+                var currentPage = parseInt($(this.$node[0]).attr('page'));
+//                var pageCount = parseInt($(this.$node[0]).attr('pageCount'));
+                if (currentPage > 1) {
+                    currentPage = currentPage - 1; 
                 }
-                self.updateView();
-            }
+                $(this.$node[0]).attr('page',currentPage);
+                this.updateView();                
+            };
 
             this.pageRight = function () {
-                debugger
-                var self = this;
-                if (self.currentPage < self.pageCount) {
-                    self.currentPage = self.currentPage + 1;
+                
+                var currentPage = parseInt($(this.$node[0]).attr('page'));
+                var pageCount = parseInt($(this.$node[0]).attr('pageCount'));
+                if (currentPage < pageCount) {
+                    currentPage = currentPage + 1;
                 }
-                self.updateView();
-            }
+                $(this.$node[0]).attr('page',currentPage);
+                this.updateView();
+            };
 
             this.updatePager = function () {
-                var self = this;
-                var element = self.$node.find(self.attr.pageDisplay);
-                if (self.pageCount == 1) {
+                var element = this.$node.find(this.attr.pageDisplay);
+                var currentPage = parseInt($(this.$node[0]).attr('page'));
+                var pageCount = parseInt($(this.$node[0]).attr('pageCount'));
+                if (pageCount === 1) {
                     element.html('');
                 }
                 else {
-                    element.html(self.currentPage + '/' + self.pageCount);
+                    element.html(currentPage + '/' + pageCount);
                 }
 
                 // Current page has dissapeared?
-                if (self.currentPage > self.pageCount) {
-                    self.currentPage = 1;
-                    self.updateView();
+                if (currentPage > pageCount) {
+                    currentPage = 1;
+                    updateView();
                 }
-            }
+            };
 
             // Do not use, seems to load thigs wrong when there is another paged-panel
             this.loadItems = function (items) {
@@ -136,60 +147,54 @@ define(
                     self.attr.items.push(item);
                 })); 
                 self.renderItems();
-            }
+            };
 
             this.after('initialize', function() {
-                var self = this;
                 this.$node.addClass('paged-panel');
-                //this.$node.addClass(self.attr.ID);
-                this.$node.attr('id',self.attr.ID);
+                this.$node.attr('id',this.attr.ID);
                 this.$node.attr('page','1');
+                this.$node.attr('pageCount','1');
                 
-                if (this.attr.header !='') {
-                    this.$nodeMap = $('<div>').addClass('paged-header').html(self.attr.header).appendTo(this.$node);
+                if (this.attr.header !== '') {
+                    this.$nodeMap = $('<div>').addClass('paged-header').html(this.attr.header).appendTo(this.$node);
                 }
 
-                //this.$nodeMap = $('<div>').addClass('paged-content').appendTo(this.$node);
-                this.$nodeMap = $('<div>').addClass(self.attr.insertionPoint.substring(1)).appendTo(this.$node);
+                this.$nodeMap = $('<div>').addClass(this.attr.insertionPoint.substring(1)).appendTo(this.$node);
+                
+                var left = $('<div>').addClass('page-left');
+                var right = $('<div>').addClass('page-right');
+                
                 this.$nodeMap = $('<div>').addClass('paged-navigation').appendTo(this.$node);
 
                 // Create navigation buttons and current page display
                 var nav = this.$node.find('.paged-navigation');
-                nav.append('<button type="button" class="paged-button-left"><</button>');
-                nav.append('<div class="paged-navigation-display" style="display:inline"></div>');
-                nav.append('<button type="button" class="paged-button-right">></button>');
 
-                // Adds button click events
-                this.$node.find('.paged-button-left').click(this.pageLeft);
-                this.$node.find('.paged-button-right').click(this.pageRight);
+                nav.append(left);
+                nav.append('<div class="paged-navigation-display" style="display:inline"></div>');
+                nav.append(right);
                 
-                // Bind update on window resize
-                //$(window).bind('resize', self.updateView);
+                // add click triggers
+                var self = this;
+                this.select('pageLeftLocator').on('click', function () { self.pageLeft(); });
+                this.select('pageRightLocator').on('click', function () { self.pageRight(); });
                 
                 // Update event handler
                 this.on('update-view', function () {
-                    self.updateView();
+                    this.updateView();
                     return false;
                 });
 
                 this.on('load-items', function (event, items) {
-                    if (items != null) {
-                        self.loadItems(items);
+                    if (items !== null) {
+                        this.loadItems(items);
                     }
                     else console.error('Required parameter: items []');
                 });
 
                 this.on('remove-component', function (event, comp) {
                     console.error("TODO!: paged_panel:remove-component");
-                });
-                
-                // Load dynamic triggers
-                /*
-                for (var i = 0; i < self.attr.triggers.length; i++) {
-                    console.log('loading dynamic trigger');
-                    self.on(self.attr.triggers[i].name, self.attr.triggers[i].task);
-                }
-                */
+                });                
+
             });
         }
     }

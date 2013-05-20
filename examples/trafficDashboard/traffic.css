@@ -1,3 +1,55 @@
+/*@import url("http://api.tiles.mapbox.com/mapbox.js/v0.6.4/mapbox.css");*/
+
+
+/* Marker tooltip css */
+
+.marker-popup {
+  position:relative;
+  left:-50%;
+  max-width:400px;
+  background:#e9eff0;
+  border:2px solid #ccc;
+  color:#60777e;  
+  font-size: small;
+  font-weight: bold;
+  padding:10px;
+  -webkit-user-select:auto;
+     -moz-user-select:auto;
+          user-select:auto;
+  -webkit-box-shadow: 2px 2px 5px -2px #ccc;
+          box-shadow: 2px 2px 5px -2px #ccc;
+  -webkit-border-radius: 8px;
+          border-radius: 8px;
+  }
+  .marker-popup:after,
+  .marker-popup:before {
+    top:100%;
+    /*bottom: 100%;*/
+    border:solid transparent;
+    content:'';
+    height:0;
+    width:0;
+    left:50%;
+    position:absolute;
+    pointer-events:none;
+    }
+
+  .marker-popup:after {
+    border-top-color:#e9eff0;
+    /*border-bottom-color:#e9eff0;*/
+    border-width:15px;
+    margin-left:-15px;
+    }
+
+  .marker-popup:before {
+    border-top-color:#ccc;
+    /*border-bottom-color:#ccc;*/
+    border-width:18px;
+    margin-left:-18px;
+    }
+
+/* The rest of the css goes here */
+
 /*.dashboard {
   position: absolute;
   top: 0px;
@@ -6,13 +58,18 @@
   right: 0px;
 }
 */
+
+.dashboard .main-content {
+    margin: 0;
+}
+
 .mapbox-mini {
-    height: 220px;
-    width: 90%;
-    bottom: 22x;
-    left: 5%;
-    top:5px;
-    border: 2px solid black;
+    height: 200px;
+    /*width: 90%;*/
+    bottom: 20px;
+    /*left: 5%;*/
+    top:1px;
+    /*border: 2px solid black;*/
 }
 
 .detail-element-header {
@@ -21,7 +78,7 @@
 }
 
 .detail-panel-header {
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
     text-align: left;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -35,17 +92,27 @@
 }
 
 .detail-panel {
-    left: 5px;
-    right: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
+    left: 8px;
+    right: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
+
+.panel-detail {
+    min-height: 100%; 
+    height: auto !important; /*Cause footer to stick to bottom in IE 6*/
+    height: 100%; 
+    margin: 0 auto -100px; /*Allow for footer height*/
+    vertical-align:bottom;
+    background-color: #AECACE;
+}
+
 
 .zoomer {
     background-color:#FFF;
     border-color:#202020;
-    -webkit-border-radius:25%;
-    border-radius:20%;
+    -webkit-border-radius:10%;
+    border-radius:10%;
     position:absolute;
     font-size:30px;
     width:30px;
@@ -54,6 +121,7 @@
     text-align:center;
     border:1px solid #C0C0C0;
     vertical-align:middle;
+    top: 20px;
 }
 
 .zoomer:hover {
@@ -61,19 +129,27 @@
 }
 
 .zoomin {
-    left:31px;
+    left:51px;
 }
 
 .zoomout {
-    left:0px;
+    left:20px;
 }
 
 .paged-panel {
 }
 
+.dashboard .overview-header .overview-count {
+    background-color: #CA3430;
+}
+
 .paged-navigation {
-    padding-top: 5px;
+    padding-top: 10px;
     text-align: center;
+    background: #9EB9BF;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 .paged-header {
@@ -141,7 +217,7 @@
     height: 90px;
     margin-left: 10px;
     margin-right: 10px;
-    margin-top: 10px;
+    margin-top: 1px;
 }
 
 .lights-label {
@@ -152,9 +228,25 @@
     margin-left: 18px;
 }
 
-.overview-header:hover {
+.overview-header :hover {
     cursor: pointer;
-    color:white;
+    color: white;
+}
+
+.detail-element-header {
+    background: #aecace;
+}
+
+.detail-panel-header {
+    font-size: 14px;
+    font-weight: normal;
+    color: #5D747C;
+    border-top: 1px solid #C6DADC;
+}
+
+.overview-subpanel {
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .overview-subpanel .text:hover {
@@ -170,3 +262,27 @@
 .overview-count {
     background-color: #DF0101;
 }
+
+.page-left {
+  border-width: 5px 8px 5px 8px;
+  border-style: solid;
+  background: 0px;
+  height: 0px;
+  display: inline-block;
+  margin-right: 7px;
+  border-color: transparent #5A6568 transparent transparent;
+  cursor: pointer;
+}
+
+.page-right {
+  border-width: 5px 8px 5px 8px;
+  border-style: solid;
+  background: 0px;
+  height: 0px;
+  display: inline-block;
+  margin-left: 4px;
+  border-color: transparent transparent transparent #5A6568;
+  cursor: pointer;
+}
+
+

@@ -21,12 +21,14 @@ define(
     requirejs(['dashce.js','components/jquery_plugins'], function() {
       
       $('.dashboard').m2mdashboard(DashCE_users.config);
-      $('.range-selection-chart').trigger('rangeSelected', {
+      setTimeout(function(){
+          $('.range-selection-chart').trigger('rangeSelected', {
               text: 'Month',
               action: 'action-month',
               range: 35 // 5 weeks of 7 days
-            });
-
+          });
+      }, 500);
+    
     });
   }
 );

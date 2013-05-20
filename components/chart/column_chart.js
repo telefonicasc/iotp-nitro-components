@@ -68,10 +68,10 @@ define(
                                 setting.text.content.value = Math.floor(Math.random()*(1230)+100);
                             }
                             if (setting.text.title){
-                                setting.text.title.value = Math.floor(Math.random()*(91)+10)+'%';
+                                setting.text.title.value = Math.floor(Math.random()*(91)+1)+'%';
                             }
                             if (setting.chart && setting.chart.data){
-                                setting.chart.data = [ { gains: Math.floor(Math.random()*(81)+10) }, { losses: Math.floor(Math.random()*(81)+10) } ]
+                                setting.chart.data = [ { gains: Math.floor(Math.random()*(setting.chart.conf.maxHeight)+1) }, { losses: Math.floor(Math.random()*(setting.chart.conf.maxHeight)+1) } ]
                             }
                             ComponentManager.get(_items[0].component).attachTo(this,setting);
                             return 'cell-barchart-subpanel';

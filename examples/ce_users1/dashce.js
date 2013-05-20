@@ -64,16 +64,6 @@ var DashCE_users = DashCE_users || {};
           timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 7 },
           grid: false,
           charts: [{
-            type: 'columnChart',
-            model: 'visitors',
-            rangeField: 'selectedRange',
-            items: [{
-              component: 'cellBarchartSubpanel',
-              text: {
-                  title: { value: '' , caption: 'of users online' },
-              }
-            }]
-          },{
             type: 'areaChart',
             tooltip: true,
             model: 'totalRegistered',
@@ -82,7 +72,7 @@ var DashCE_users = DashCE_users || {};
           }, {
             type: 'areaChart',
             tooltip: true,
-            area: false,
+            area: true,
             model: 'onlineRegistered',
             rangeField: 'selectedRange',
             cssClass: 'green'
@@ -93,6 +83,14 @@ var DashCE_users = DashCE_users || {};
             model: 'visitors',
             rangeField: 'selectedRange',
             cssClass: 'brown'
+          },
+          {
+            type: 'areaChart',
+            tooltip: true,
+            area: true,
+            model: 'deactivations',
+            rangeField: 'selectedRange',
+            cssClass: 'blue'
           }]
         },
         {
@@ -351,7 +349,7 @@ var DashCE_users = DashCE_users || {};
             },
             caption: 'Usage churn'
           }]
-        }, {
+        }/*, {
           component: 'radarChart',
           maxValues: function(attr, value) {
             if (value) {
@@ -397,18 +395,19 @@ var DashCE_users = DashCE_users || {};
                   deactivations, totalUsers, registration]
             }];
           }
-        }]
+        }*/]
       },
       data: function(cb) {
-          doQuery2(cb);
+          doQuery(cb);
       }
     };
 
     function doQuery2(cb){
       $.getJSON('data/fake_data.json', function(data) {
           $.each(data.deactivations, function(i, item) {
-            item.value = 0 - item.value;
+            //item.value = 0 - item.value;
           });
+
           cb(data);
       });
     }
@@ -447,8 +446,8 @@ var DashCE_users = DashCE_users || {};
 
 
   var doQuery = function(cb, from, to){
-      //var uris = ['data/bundles.json', 'data/accounts.json'];
-      var uris = getAllDataUris();
+      var uris = ['data/bundles.json', 'data/accounts.json'];
+      //var uris = getAllDataUris();
 
       if (from && to){
         uris = getDataUris(from, to);

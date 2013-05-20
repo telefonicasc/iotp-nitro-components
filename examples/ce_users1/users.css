@@ -8,7 +8,7 @@
 
 .dashboard .main-content {
   margin: 0px;
-  background-color:#e7e7e7;
+  background-color:#efeeeb;
 overflow: auto
 }
 
@@ -28,7 +28,7 @@ overflow: auto
 
 
 .dashboard .sidebar {
-  background-color: #e9eff0;
+  background-color: #b5c9cd;
 }
 
 .dashboard .overview-content .date-range {
@@ -71,7 +71,7 @@ overflow: auto
 }
 
 .timeaxis_bg {
-    fill:#778d98;
+    fill:#e6e5e1;
 }
 
 .chart .timeaxis_bg text{
@@ -79,6 +79,7 @@ overflow: auto
 }
 
 .brush .extent {
+
   fill: #0f0f0f;
   stroke: #788d9a;
   stroke-width: 2px;
@@ -91,7 +92,6 @@ overflow: auto
   stroke-width: 2px;
   stroke: #788d9a;
 }
-user agent stylesheet
 
 .chart.grey.dashed rect {
   fill: #7F8C8D;
@@ -131,7 +131,7 @@ user agent stylesheet
 
 .timeline {
   height: 15%;
-  background-color: #e7e7e7;
+  background-color: #e2e0d8;
 }
 
 .chart.green path.line {
@@ -145,48 +145,14 @@ user agent stylesheet
   border: 0.5px solid #b5c9cd;
 }
 
-rect.bar_column{
-  fill: #335db0;
+.radar-chart {
+  background-color: #60767e;
 }
 
-.cell-barchart-subpanel {
-  background-color: transparent;
-  color: #617789;
-  text-align: center;
+.radar-chart .axis text {
+  fill: #b5c9cd;
 }
-.cell-barchart-subpanel svg text {
-  font-size: 11px;
-  fill: white;
-  text-anchor: middle;
-  font-weight: normal;
-}
-.cell-barchart-subpanel svg rect {
-  fill: #c8ced2;
-  stroke:#778d99;
-  stroke-width: 0.5px;
-}
-.cell-barchart-subpanel .title {
-  padding: 5px;
-  background-color: transparent;
-  color: #778d99;
-  border-bottom: 0;
-}
-.cell-barchart-subpanel .title .value {
-  font-size: 30px;
-  color: #778d99;
-}
-.cell-barchart-subpanel .title .caption {
-  font-size: 12px;
-  color: #adbabc;
-}
-.cell-barchart-subpanel .content {
-  padding: 10px;
-  text-align: center;
-}
-.cell-barchart-subpanel .content .value {
-  font-size: 30px;
-  color: #778d99;
-}
-.cell-barchart-subpanel .content .caption {
-  font-size: 12px;
+
+.radar-chart .radar path {
+  fill: #bfcecf;
 }

@@ -58,6 +58,7 @@ define(
                         cardCmp.attachTo(cardEl, $.extend({},
                             this.attr.cardDefaults, card));
                         Draggable.attachTo(cardEl, {
+                            appendTo: 'body',
                             helper: function() {
                                 var newCardEl = $('<div>');
                                 cardCmp.attachTo(newCardEl, card);

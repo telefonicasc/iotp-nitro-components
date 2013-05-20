@@ -253,7 +253,15 @@
   width: 240px;
   background-color: #6d8189;
   border-right: 1px solid #2b3236;
+  overflow: hidden;
   .drop-shadow(1px, 0px, 3px);
+
+  .panel-content {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    margin-right: -30px;
+  }
 
   .card {
     float: left;
@@ -424,6 +432,7 @@
 .card.ui-draggable-dragging {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+    z-index: 10000;
 
     &.m2m-card-action {
       margin-left: 0-round(@card-action-width/2);

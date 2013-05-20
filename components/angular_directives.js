@@ -13,6 +13,7 @@ define([], function() {
                         $(element)[jqplugin](options);
 
                         scope.$watch(function() {
+                            debugger;
                             var newOptions = angular.copy(
                                 scope.$eval(attr.nitroOptions), {});
                             if (!angular.equals(options, newOptions)) {
@@ -29,6 +30,7 @@ define([], function() {
                 return {
                     restrict: 'A',
                     link: function(scope, element, attr) {
+                        debugger;
                         var getValue = $parse(attr.nitroValue),
                             setValue = getValue.assign,
                             currentValue;

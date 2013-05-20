@@ -59,6 +59,7 @@ define(
     });
 
     function processCards(cardsData) {
+        debugger;
         var cards = [];
         $.each(cardsData, function(i, cardData) {
             var card = $.extend({}, cardData.configData);

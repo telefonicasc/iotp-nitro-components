@@ -11,7 +11,11 @@ define(
     'components/sensor_widget/battery',
     'components/sensor_widget/angle',
     'components/slider',
-    'components/angular_directives'
+    'components/angular_directives',
+    'components/card/front/text',
+    'components/card/back/text',
+    'components/card/front/binary',
+    'components/form/dropdown'
   ],
 
   function() {
@@ -44,9 +48,9 @@ define(
                     $scope.cards.conditions.cards = cards;
                 });
 
-                $http.get('rule.json').success(function(data) {
-                    $scope.ruleData = data.data[0];
-                });
+                //$http.get('rule.json').success(function(data) {
+                //    $scope.ruleData = data.data[0];
+                //});
 
                 $scope.$watch('ruleData', function() {
                     console.log('RuleData change', $scope.ruleData);
@@ -89,19 +93,16 @@ define(
                             component: 'Slider'
                         }]
                     };
-            } else if (card.Data.sensorData.dataType === "Boolean") {
+            } else if (cardData.sensorData.dataType === "Boolean") {
                 card.front = {
                     items: [{
                         component: 'CardFrontBinary'
-                        trueLabel: 'True',
-                        trueValue: 'true',
-                        falseLabel: 'False',
-                        falseValue: 'false' 
                     }]
                 };
                 card.back = {
                     items: [{
                         component: 'Dropdown',
+                        defaultValue: 'false',
                         options: [{
                             label: 'True', 
                             value: 'true'
@@ -109,8 +110,19 @@ define(
                             label: 'False', 
                             value: 'false'
                         }]
+                    }]
                 };
-
+            } else {
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText'
+                    }]
+                };
+                card.back = {
+                        items: [{
+                            component: 'CardBackText'
+                        }]
+                    };
             }
         });
         return cards;

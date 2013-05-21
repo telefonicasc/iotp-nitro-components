@@ -186,18 +186,12 @@ define(
                 this.on('optionsChange', function(e, o) {
                     if (e.target === this.node) {
                         if (o.cards.conditions) {
-                            this.$conditionsToolbox.trigger('optionsChange', {
-                                cardSections: {
-                                    cards: o.cards.conditions || []
-                                }
-                            });
+                            this.loadToolboxCards(this.$conditionsToolbox,
+                                o.cards.conditions.cards || []);
                         }
                         if (o.cards.actions) {
-                            this.$actionsToolbox.trigger('optionsChange', {
-                                cardSections: {
-                                    cards: o.cards.actions
-                                }
-                            });
+                            this.loadToolboxCards(this.$actionsToolbox,
+                                o.cards.actions.cards || []);
                         }
                     }
                 });
@@ -329,6 +323,21 @@ define(
 
             };
 
+            this.loadToolboxCards = function(toolbox, cards) {
+                var parsedCards = [];
+                $.each(cards, $.proxy(function(i, card) {
+                    var data = CardData.encode(card);
+                    parsedCards.push($.extend({},
+                        this.attr.cardDefaults, data));
+                }, this));
+
+                toolbox.trigger('optionsChange', {
+                    cardSections: {
+                        section: { cards: parsedCards }
+                    }
+                });
+            };
+
             this.loadRuleData = function(data) {
                 var nodes = [];
 
@@ -359,13 +368,12 @@ define(
                     }, this));
                 }, this));
 
+                var topCards = this.getTopCards();
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { 
                     node: this.$startCard,
                     addPlaceholder: false
                 });
-
-                var topCards = this.getTopCards();
                 $.each(topCards, $.proxy(function(i, card) {
                     this.addConnection(this.$startCard, $(card));
                 }, this));

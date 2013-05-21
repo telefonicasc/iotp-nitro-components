@@ -7,7 +7,8 @@ define(
         'components/mixin/watch_resize',
         'libs/guid',
         'components/chart/axis/time_axis',
-        'components/chart/axis/axis'
+        'components/chart/axis/axis',
+        'components/chart/axis/axis_labels'
     ],
 
     function(ComponentManager, Grid, RangeSelection, DataBinding,

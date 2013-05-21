@@ -55,28 +55,49 @@ var DashCE_users = DashCE_users || {};
         items: [{
           component: 'chartContainer',
           rangeField: 'selectedRange',
-          valueField: 'totalRegistered',
+          valueField: 'total_users',
           className: 'chart top',
           marginRight: 45,
           marginBottom: 20,
           axisy: true,
           axisx: true,
-          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 7 },
+          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0 },
           grid: false,
           charts: [{
             type: 'areaChart',
             tooltip: true,
-            model: 'totalRegistered',
+            model: 'total_users',
             rangeField: 'selectedRange',
-            cssClass: 'cyan'
-          }, {
+            cssClass: 'brown'
+          },
+          {
+            type: 'areaChart',
+            tooltip: true,
+            model: 'deactivations',
+            rangeField: 'selectedRange',
+            cssClass: 'green'
+          },
+          {
             type: 'areaChart',
             tooltip: true,
             area: true,
-            model: 'onlineRegistered',
+            model: 'newly_registers_acc',
             rangeField: 'selectedRange',
-            cssClass: 'green'
-          }, {
+            cssClass: 'yellow'
+          },
+          {
+            type: 'areaChart',
+            tooltip: true,
+            area: false,
+            model: 'consumers',
+            rangeField: 'selectedRange',
+            cssClass: 'blue'
+          },
+          {
+            type: 'columnChart',
+            model: 'total_users',
+            rangeField: 'selectedRange' 
+          }/*, {
             type: 'areaChart',
             tooltip: true,
             area: false,
@@ -91,23 +112,22 @@ var DashCE_users = DashCE_users || {};
             model: 'deactivations',
             rangeField: 'selectedRange',
             cssClass: 'blue'
-          }]
+          }*/]
         },
         {
           component: 'chartContainer',
           rangeField: 'selectedRange',
-          valueField: 'totalRegistered',
+          valueField: 'total_users',
           className: 'chart bottom',
           marginRight: 45,
-          marginBottom: 20,
+          marginBottom: 10,
           axisy: false,
           axisx: false,
-          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 7 },
           grid: false,
           charts: [
           {
             type: 'columnChart',
-            model: 'visitors',
+            model: 'total_users',
             rangeField: 'selectedRange',
             fixHeight: 170,
             items: [{
@@ -136,19 +156,19 @@ var DashCE_users = DashCE_users || {};
             items: [{
               text: 'Week',
               action: 'action-week',
-              range: 7
+              fixRange: 7
             }, {
               text: 'Month',
               action: 'action-month',
-              range: 35 // 5 weeks of 7 days
+              fixRange: 35 // 5 weeks of 7 days
             }, {
               text: 'Quarter',
               action: 'action-quarter',
-              range: 140 // 20 weeks of 7 days
+              fixRange: 140 // 20 weeks of 7 days
             }, {
               text: 'Unconstrained',
               action: 'action-unconstrained',
-              range: -1
+              fixRange: -1
             }],
             onSelect: function(item){
               $('.range-selection-chart').trigger('rangeSelected', item);
@@ -157,7 +177,7 @@ var DashCE_users = DashCE_users || {};
         items: [{
           component: 'chartContainer',
           rangeField: 'range',
-          valueField: 'totalRegistered',
+          valueField: 'total_users',
           className: 'chart range-selection-chart',
           marginRight: 0,
           axisx: true,
@@ -168,12 +188,12 @@ var DashCE_users = DashCE_users || {};
           },
           charts: [{
             type: 'areaChart',
-            model: 'onlineRegistered',
+            model: 'total_users',
             //rangeField: 'range',
             cssClass: 'whole-chart'
           }, {
             type: 'areaChart',
-            model: 'onlineRegistered',
+            model: 'total_users',
             clipRange: 'selectedRange',
             //rangeField: 'selectedRange',
             cssClass: 'selected-chart'
@@ -222,10 +242,21 @@ var DashCE_users = DashCE_users || {};
           }
         }, {
           component: 'OverviewSubpanel',
-          iconClass: 'dot cyan',
+          iconClass: 'cyan',
           text: function(data) {
             if (data) {
-              return last(range(data.totalRegistered, data.selectedRange));
+              return sum(data.newly_registers, data.selectedRange);
+            } else {
+              return 0;
+            }
+          },
+          caption: 'New users'
+        }, {
+          component: 'OverviewSubpanel',
+          iconClass: 'blue',
+          text: function(data) {
+            if (data) {
+              return last(data.total_users, data.selectedRange);
             } else {
               return 0;
             }
@@ -233,22 +264,11 @@ var DashCE_users = DashCE_users || {};
           caption: 'Total registered users'
         }, {
           component: 'OverviewSubpanel',
-          iconClass: 'dot blue',
-          text: function(data) {
-            if (data) {
-              return sum(data.onlineRegistered, data.selectedRange);
-            } else {
-              return 0;
-            }
-          },
-          caption: 'Online registered users'
-        }, {
-          component: 'OverviewSubpanel',
-          iconClass: 'dot purple',
+          iconClass: 'purple',
           className: 'last-section-panel',
           text: function(data) {
             if (data) {
-              return sum(data.visitors, data.selectedRange);
+              return sum(data.deactivations, data.selectedRange);
             } else {
               return 0;
             }
@@ -261,10 +281,10 @@ var DashCE_users = DashCE_users || {};
             className: 'vertical-panel',
             iconClass: function(data) {
               if (data) {
-                var baseVisitors = sum(data.visitors),
-                    baseRegistrations = sum(data.registrations),
-                    visitors = sum(data.visitors, data.selectedRange),
-                    registrations = sum(data.registrations, data.selectedRange),
+                var baseVisitors = last(data.consumers_acc),
+                    baseRegistrations = last(data.total_users),
+                    visitors = sum(data.consumers, data.selectedRange),
+                    registrations = sum(data.newly_registers, data.selectedRange),
                     baseCr = baseVisitors/baseRegistrations,
                     cr = visitors/registrations;
 
@@ -279,8 +299,8 @@ var DashCE_users = DashCE_users || {};
             },
             text: function(data) {
               if (data) {
-                var visitors = sum(data.visitors, data.selectedRange),
-                    registrations = sum(data.registrations, data.selectedRange);
+                var visitors = sum(data.consumers, data.selectedRange),
+                    registrations = sum(data.newly_registers, data.selectedRange);
                 return (registrations/visitors*100).toFixed(1) + '%';
               } else {
                 return '';
@@ -292,10 +312,10 @@ var DashCE_users = DashCE_users || {};
             className: 'vertical-panel',
             iconClass: function(data) {
               if (data) {
-                var registered = last(range(data.totalRegistered, data.selectedRange)),
-                    deactivations = 0-sum(data.deactivations, data.selectedRange),
-                    baseRegistered = last(data.totalRegistered),
-                    baseDeactivations = 0-sum(data.deactivations),
+                var registered = last(data.total_users, data.selectedRange),
+                    deactivations = sum(data.deactivations, data.selectedRange),
+                    baseRegistered = last(data.total_users),
+                    baseDeactivations = sum(data.deactivations),
                     dc = deactivations/registered,
                     baseDc = baseDeactivations/baseRegistered;
                 if (baseDc > dc) {
@@ -309,7 +329,7 @@ var DashCE_users = DashCE_users || {};
             },
             text: function(data) {
               if (data) {
-                var registered = last(range(data.totalRegistered, data.selectedRange)),
+                var registered = last(data.total_users, data.selectedRange),
                     deactivations = 0-sum(data.deactivations, data.selectedRange);
                 return (deactivations/registered*100).toFixed(1) + '%';
               } else {
@@ -322,10 +342,10 @@ var DashCE_users = DashCE_users || {};
             className: 'vertical-panel last-vertical-panel',
             iconClass: function(data) {
               if (data) {
-                var registered = last(range(data.totalRegistered, data.selectedRange)),
-                    online = avg(range(data.onlineRegistered, data.selectedRange)),
-                    baseRegistered = last(data.totalRegistered),
-                    baseOnline = avg(data.onlineRegistered),
+                var registered = last(data.total_users, data.selectedRange),
+                    online = avg(range(data.consumers, data.selectedRange)),
+                    baseRegistered = last(data.total_users),
+                    baseOnline = avg(data.consumers),
                     uc = online/registered,
                     baseUc = baseOnline/baseRegistered;
 
@@ -340,8 +360,8 @@ var DashCE_users = DashCE_users || {};
             },
             text: function(data) {
               if (data) {
-                var registered = last(range(data.totalRegistered, data.selectedRange)),
-                    online = avg(range(data.onlineRegistered, data.selectedRange));
+                var registered = last(data.total_users, data.selectedRange),
+                    online = avg(range(data.consumers, data.selectedRange));
                 return (online/registered*100).toFixed(1) + '%';
               } else {
                 return '';
@@ -412,8 +432,18 @@ var DashCE_users = DashCE_users || {};
       });
     }
 
-    function last(a) {
-        return a ? a[a.length - 1].value : 0;
+    function last(a, range) {  
+        var res = a ? a[a.length - 1].value : 0; 
+        if (a && range) {
+          $.each(a, function(i, item) {
+            if (!range ||
+              item.date >= range[0] &&
+              item.date <= range[1]) {
+              res = item.value;
+            }
+          });
+          return res;
+        }
     }
 
     function sum(a, range) {
@@ -452,10 +482,13 @@ var DashCE_users = DashCE_users || {};
       if (from && to){
         uris = getDataUris(from, to);
       }
-      console.log('uris', uris);
+      
       $.when( $.getJSON(uris[0]), $.getJSON(uris[1]) ).done(function(res1, res2) {
-            var data = createDataObject(res1, res2)
-            cb(data);
+          console.log('bundles', res1);
+          console.log('accounts', res2);
+          var data = createDataObject(res1, res2);
+          console.log('processData', data);
+          cb(data);
         }).fail(function(e) {
             alert('Error fetching data from server');
       });
@@ -476,40 +509,30 @@ var DashCE_users = DashCE_users || {};
 
   var createDataObject = function(bundlesData, accountsData){
       var data = {
-              totalRegistered: [],
-              onlineRegistered: [],
-              visitors: [],
-              registrations: [],
+              total_users: [],
               deactivations: [],
-              bundleSales: [],
-              bundleSalesSum: []
+              newly_registers: [],
+              newly_registers_acc: [],
+              consumers: [],
+              consumers_acc: []
             }
 
-      var results = bundlesData[0].results;
+      results = accountsData[0];
       $.each(results, function(i, item) {
-        var obj = { date: item.ts.$date, value:{} };
-        var objSum = { date: item.ts.$date, value: 0 };
-        $.each(item.type, function(j, bundle){
-            obj.value[bundle.name] = bundle.purchased;
-            objSum.value = objSum.value + bundle.purchased;
-        });
-        data['bundleSales'].push(obj);
-        data['bundleSalesSum'].push(objSum);
-      });
+        var ts = item.ts;
+        data['total_users'].push({ date: ts, value:item.total_users });
+        data['deactivations'].push({ date: ts, value:item.deactivations });
+        data['newly_registers'].push({ date: ts, value:item.new_registers.count });
+        data['consumers'].push({ date: ts, value:item.consumers.count });
+        data['newly_registers_acc'].push({ date: ts, value:item.total_users+item.new_registers.count });
+        if (i === 0){
+          data['consumers_acc'].push({ date: ts, value:item.consumers.count });
+        }else{
+          data['consumers_acc'].push({ date: ts, value:data['consumers_acc'][i-1].value+item.consumers.count });
+        }
 
-      results = accountsData[0].results;
-      var sumRegistered = 0;
-      var sumOnlineRegistered = 0;
-      $.each(results, function(i, item) {
-        sumRegistered += item.new_registers.count;
-        sumOnlineRegistered += item.online.count;
-        data['registrations'].push({ date: item.ts.$date, value:item.new_registers.count });
-        data['totalRegistered'].push({ date: item.ts.$date, value:sumRegistered });
-        data['onlineRegistered'].push({ date: item.ts.$date, value:sumOnlineRegistered });
-        data['deactivations'].push({ date: item.ts.$date, value:item.deactivations });
-        data['visitors'].push({ data: item.ts.$date, value: item.visitors.newly_registered})
+        
       });
-
       return data;
   };
 

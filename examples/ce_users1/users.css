@@ -156,3 +156,25 @@ overflow: auto
 .radar-chart .radar path {
   fill: #bfcecf;
 }
+
+
+/*************************/
+
+.chart .yellow path.area {
+  opacity: 0.3;
+  fill: yellow;
+}
+
+.chart .brown path.area {
+  opacity: 0.3;
+  fill: brown;
+}
+
+.chart .green path.area {
+  opacity: 0.3;
+  fill: green;
+}
+.chart .blue path.area {
+  opacity: 0.3;
+  fill: blue;
+}

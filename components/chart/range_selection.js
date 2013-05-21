@@ -75,12 +75,12 @@ define(
         });
 
         this.on('rangeSelected', function(e, item){
-          
-          this.attr.fixRange = item.range;
+          this.attr.fixRange = item.fixRange;
           
           if (this.attr.fixRange > 0){
             var ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
             this.value[this.attr.selectedRangeField] = ext;
+            this.value['fixRange'] = item.fixRange;
             this.updateExtent(ext);
           }
 

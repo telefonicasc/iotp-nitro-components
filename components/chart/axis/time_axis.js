@@ -55,7 +55,13 @@ define(
                         return ticks;
                     })
                     .tickSize(1,1,1)
-                    .tickFormat(d3.time.format(this.attr.tickFormat));
+                    .tickFormat(function(t,i){
+                        var format = d3.time.format(attribs.tickFormat);
+                        if (i===0 && attribs.stepType === 'day'){
+                            format = d3.time.format('%b %e');
+                        }
+                        return format(t);
+                    });
 
                 context.call(this.axis);
 

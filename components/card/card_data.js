@@ -129,7 +129,7 @@ function() {
 
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
-            name;
+            name, phenomenon;
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             if (phenomenon === 'angle') {

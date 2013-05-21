@@ -520,6 +520,12 @@ select {
   stroke: #acbec5;
   stroke-width: 0.5px;
 }
+.cell-barchart-subpanel svg rect.color1 {
+  fill: #d6dddc;
+}
+.cell-barchart-subpanel svg rect.color2 {
+  fill: #cad7d8;
+}
 .cell-barchart-subpanel .title {
   padding: 5px;
   background-color: #64737b;
@@ -802,9 +808,16 @@ select {
   width: 240px;
   background-color: #6d8189;
   border-right: 1px solid #2b3236;
+  overflow: hidden;
   -webkit-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
+}
+.card-toolbox .panel-content {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+  margin-right: -30px;
 }
 .card-toolbox .card {
   float: left;
@@ -1022,6 +1035,7 @@ select {
 .card.ui-draggable-dragging {
   margin-left: -80px;
   margin-top: -98px;
+  z-index: 10000;
 }
 .card.ui-draggable-dragging.m2m-card-action {
   margin-left: -80px;

@@ -95,7 +95,7 @@ define(
         ];
         
         var center_germany = { lat: 50.1, lon: 8.625 };
-        var zoom_germany = 14;
+        var zoom_germany = 13;
 
         var minimap = {
             component: 'minimap',
@@ -177,7 +177,7 @@ define(
                         hoveringTooltip: true,
                         debug: false,
                         center: center_germany,
-                        zoomInitial: 13,
+                        zoomInitial: zoom_germany,
                         zoomMin: 5,
                         zoomMax: 20,
                         centerOnClick: true,
@@ -204,6 +204,7 @@ define(
                             insertionPoint: '.panel-content-details',
 //                            header: 'Asset details',
                             ID: 'panel-detail',
+                            allwaysVisible: [0],
                             items: compList
                         }
                     ]

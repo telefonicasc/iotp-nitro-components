@@ -10,9 +10,9 @@ define(
 
         function PagedPanel() {
 
-            this.currentPage = 1;
-            this.pageCount = 1;
-            this.pagerVisible = false;
+//            this.currentPage = 1;
+//            this.pageCount = 1;
+//            this.pagerVisible = false;
             this.defaultAttrs({
                 header: '',
                 insertionPoint: '.paged-content',
@@ -24,8 +24,7 @@ define(
                 pageRightLocator: '.page-right',
                 ID: '',
                 headerGap: 50,
-                items: [],
-                triggers: []
+                items: []
             });
 
             this.updateView = function () {
@@ -60,7 +59,7 @@ define(
                     if (ph - el.height() >= 0 || i === 0) {
 
                         ph = ph - el.height();
-                        if (currentPage === page) {
+                        if (currentPage === page || this.attr.allwaysVisible.indexOf(i) !== -1) {
                             el.css('display',''); /* Make sure element is displayed */
                         }
                         else {
@@ -136,7 +135,8 @@ define(
                 // Current page has dissapeared?
                 if (currentPage > pageCount) {
                     currentPage = 1;
-                    updateView();
+                    $(this.$node[0]).attr('page',currentPage);
+                    this.updateView();
                 }
             };
 

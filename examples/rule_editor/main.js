@@ -13,7 +13,9 @@ define(
     'components/slider',
     'components/angular_directives',
     'components/card/front/text',
-    'components/card/back/text'
+    'components/card/back/text',
+    'components/card/front/binary',
+    'components/form/dropdown'
   ],
 
   function() {
@@ -46,9 +48,9 @@ define(
                     $scope.cards.conditions.cards = cards;
                 });
 
-                $http.get('rule.json').success(function(data) {
-                    $scope.ruleData = data.data[0];
-                });
+                //$http.get('rule.json').success(function(data) {
+                //    $scope.ruleData = data.data[0];
+                //});
 
                 $scope.$watch('ruleData', function() {
                     console.log('RuleData change', $scope.ruleData);
@@ -91,8 +93,26 @@ define(
                             component: 'Slider'
                         }]
                     };
-            } else if (cardData.sensorData.phenomenon ===
-                "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown") {
+            } else if (cardData.sensorData.dataType === "Boolean") {
+                card.front = {
+                    items: [{
+                        component: 'CardFrontBinary'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'Dropdown',
+                        defaultValue: 'false',
+                        options: [{
+                            label: 'True', 
+                            value: 'true'
+                        }, {
+                            label: 'False', 
+                            value: 'false'
+                        }]
+                    }]
+                };
+            } else {
                 card.front = {
                     items: [{
                         component: 'CardFrontText'
@@ -103,7 +123,6 @@ define(
                             component: 'CardBackText'
                         }]
                     };
-
             }
         });
         return cards;

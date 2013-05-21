@@ -529,6 +529,39 @@ li.delimiter-value {
             margin-left: 6px;
         }
     }
+
+    .m2m-card-binary {
+        position: absolute;
+        top: 20%;
+        bottom: 20%;
+        left: 10%;
+        right: 10%;
+        border: 3px solid rgb(168, 186, 194);
+        background-color: rgb(255, 255, 255);
+        padding: 4px;
+        .border-radius(6px, 6px, 6px, 6px);
+
+        .binary-button {
+            border: 0px none rgb(160, 160, 160);
+            .border-radius(3px, 3px, 3px, 3px);
+            height: 50%;
+            text-align: center;
+            color: rgb(168, 186, 194);
+            font-size: 16px;
+
+            span {
+                display: inline-block;
+                margin-top: 6px;
+            }
+
+            &.selected {
+                background-color: rgb(158, 215, 111);
+                font-weight: bold;
+                font-size: 22px;
+                color: #FFFFFF;
+            }
+        }
+    }
 }
 
 .back {
@@ -548,6 +581,11 @@ li.delimiter-value {
             margin-left: -5px;
             padding: 4px;
         }
+    }
+
+    select {
+        width: 90%;
+        margin-left: 5%;
     }
 
 }

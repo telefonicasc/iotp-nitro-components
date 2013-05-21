@@ -13,7 +13,9 @@ define(
     'components/slider',
     'components/angular_directives',
     'components/card/front/text',
-    'components/card/back/text'
+    'components/card/back/text',
+    'components/card/front/binary',
+    'components/form/dropdown'
   ],
 
   function() {
@@ -32,18 +34,16 @@ define(
                     },
                     actions: {
                         label: 'Actions',
-                        cards: [{
-                            cssClass: 'm2m-card-action m2m-card-send-email',
-                            header: 'Send Email',
-                            component: 'SendEmail',
-                            tokens: ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name']
-                        }]
+                        cards: []
                     }
                 };
 
+                $http.get('actions.json').success(function(data) {
+                    $scope.cards.actions.cards = data.data;
+                });
+
                 $http.get('cards.json').success(function(data) {
-                    var cards = processCards(data.data);
-                    $scope.cards.conditions.cards = cards;
+                    $scope.cards.conditions.cards = data.data;
                 });
 
                 $http.get('rule.json').success(function(data) {
@@ -59,55 +59,5 @@ define(
         angular.bootstrap(document, ['testApp']);
 
     });
-
-    function processCards(cardsData) {
-        var cards = [];
-        $.each(cardsData, function(i, cardData) {
-            var card = $.extend({}, cardData.configData);
-            card.header = cardData.sensorData.measureName;
-            cards.push(card);
-
-            if (cardData.sensorData.phenomenon ===
-                "urn:x-ogc:def:phenomenon:IDAS:1.0:angle") {
-                card.front = {
-                        items: [{
-                            component: 'AngleWidget'
-                        }]
-                    };
-                card.back = {
-                        items: [{
-                            component: 'Slider'
-                        }]
-                    };
-            } else if (cardData.sensorData.phenomenon ===
-                "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential") {
-                card.front = {
-                    items: [{
-                        component: 'Battery'
-                    }]
-                };
-                card.back = {
-                        items: [{
-                            component: 'Slider'
-                        }]
-                    };
-            } else if (cardData.sensorData.phenomenon ===
-                "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown") {
-                card.front = {
-                    items: [{
-                        component: 'CardFrontText'
-                    }]
-                };
-                card.back = {
-                        items: [{
-                            component: 'CardBackText'
-                        }]
-                    };
-
-            }
-        });
-        return cards;
-    }
-
   }
 );

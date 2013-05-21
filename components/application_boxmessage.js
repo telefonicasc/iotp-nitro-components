@@ -8,9 +8,9 @@ define(
         bg: $('<div class="box-message-bg"></div>'),
         box: $('<div class="box-message-msg"></div>'),
         title: $('<p class="box-message-title"></p>'),
-        message: $('<p></p>'),
+        message: $('<p class="box-message-content"></p>'),
         btndiv: $('<div><button name="close"></button></div>'),
-        btnsdiv: $('<div><button name="cancel" class="m2m-btn"></button><button name="ok" class="m2m-btn accept"></button></div>')
+        btnsdiv: $('<div class="box-message-buttons"><button name="cancel" class="m2m-btn"></button><button name="ok" class="m2m-btn accept"></button></div>')
     };
 
     var BUTTON_TEXT_CLOSE = 'Accept';

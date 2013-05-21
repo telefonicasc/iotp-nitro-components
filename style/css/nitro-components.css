@@ -1534,18 +1534,36 @@ li.delimiter-value {
   margin-top: -100px;
   padding-top: 5px;
   overflow: hidden;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
 .box-message-msg p {
   padding: 5px 15px;
 }
-.box-message-msg div {
+.box-message-msg .box-message-buttons {
   padding: 5px;
   background-color: #eeeeee;
   border-top: 1px solid #ccc;
   text-align: center;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.box-message-msg .box-message-content {
+  min-height: 140px;
 }
 .box-message-msg button {
   margin: 15px 10px;
@@ -1554,6 +1572,7 @@ li.delimiter-value {
 }
 .box-message-msg .box-message-title {
   font-weight: 800;
+  margin: 5px 0 10px 0;
 }
 .m2m-slider {
   width: 100%;

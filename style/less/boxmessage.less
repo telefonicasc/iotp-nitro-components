@@ -19,20 +19,28 @@
   margin-top: -100px;
   padding-top: 5px;
   overflow: hidden;
-  .rounded(5px);
+  .rounded(10px);
 
   p{
     padding: 5px 15px; }
 
-  div{
+  .box-message-buttons {
     padding: 5px;
     background-color:#eeeeee;
     border-top: 1px solid #ccc;
-    text-align: center; }
+    text-align: center;
+    .border-radius(@topright: 0, 10px, 10px, 0)
+  }
+  .box-message-content{
+    min-height: 140px;
+  }
   button {
     margin: 15px 10px;
     min-width: 140px;
     font-size: 14px;
   }
-  .box-message-title { font-weight: 800}
+  .box-message-title {
+    font-weight: 800;
+    margin: 5px 0 10px 0;
+  }
 }

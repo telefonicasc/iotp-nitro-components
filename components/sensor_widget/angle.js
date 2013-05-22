@@ -35,7 +35,7 @@ define(
 
             this.after('initialize', function() {
     
-                this.value = this.attr.value;
+                this.value = this.attr.value || 90;
 
                 this.$node.addClass('angle-widget');
 
@@ -74,20 +74,22 @@ define(
                     arcy = attr.marginTop + angleHeight - 
                             (Math.sin(value*Math.PI / 180) * angleHeight);
 
-                this.arc.attr({
-                    path: ['M', this.width - attr.marginRight-5, 
-                                this.height - attr.marginBottom - 5,
-                           'A', floorWidth, floorWidth, 0, 0, 0, arcx, arcy]
-                });
+                if (this.width > 0 && this.height > 0) {
+                    this.arc.attr({
+                        path: ['M', this.width - attr.marginRight-5, 
+                                    this.height - attr.marginBottom - 5,
+                               'A', floorWidth, floorWidth, 0, 0, 0, arcx, arcy]
+                    });
 
-                this.bar.attr({
-                    height: angleHeight + 4
-                });
-                this.floor.attr({
-                    y: angleHeight + attr.marginTop, width: floorWidth
-                });
-                this.bar.transform(['r', 90-value, attr.marginLeft+7,
-                        attr.marginTop+angleHeight+2]);
+                    this.bar.attr({
+                        height: angleHeight + 4
+                    });
+                    this.floor.attr({
+                        y: angleHeight + attr.marginTop, width: floorWidth
+                    });
+                    this.bar.transform(['r', 90-value, attr.marginLeft+7,
+                            attr.marginTop+angleHeight+2]);
+                }
             };
         }
     }

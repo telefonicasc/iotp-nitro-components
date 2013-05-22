@@ -22,8 +22,10 @@ define(
 
         var container = this.appContent = $(this.attr.applicationContent);
 
-        this.$node.on('click', $.proxy(function() {
-          this.trigger('expand');
+        this.$node.on('click', $.proxy(function(e) {
+          if (e.target === this.node) {
+              this.trigger('expand');
+          }
         }, this));
 
         this.appContent.on('click', $.proxy(function() {
@@ -31,6 +33,8 @@ define(
         }, this));
 
         this.on('expand', function(e, options) {
+          var w = this.appContent.width();
+          this.appContent.css('width', w);
           this.appContent.animate({
             left: this.attr.expandedWidth
           }, this.attr.expandDuration);
@@ -39,7 +43,10 @@ define(
         this.on('collapse', function(e, options) {
           this.appContent.animate({ left: this.attr.collapsedWidth },
             this.attr.collapseDuration,
-            function(){ container.trigger('collapsed'); });
+            function(){
+              container.trigger('collapsed');
+              container.css('width', 'auto');
+            });
         });
       });
     }

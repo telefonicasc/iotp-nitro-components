@@ -68,7 +68,23 @@ function() {
             };
             card.back = {
                 items: [{
-                    component: 'CardBackText'
+                    component: 'CardBackText',
+                    label: 'Value'
+                }]
+            };
+            return card;
+        },
+        'quantityValue': function(card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    units: card.sensorData.uom
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: 'Value'
                 }]
             };
             return card;
@@ -80,7 +96,6 @@ function() {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = 'Send Email';
             card.component = component.SEND_EMAIL;
-            card.tokens = [];
             return card;
         }
     };
@@ -138,6 +153,8 @@ function() {
                 name = 'battery';
             } else if (sensorData.dataType === 'Boolean') {
                 name = 'binary';
+            } else if (sensorData.dataType === 'Quantity') {
+                name = 'quantityValue';
             } else {
                 name = 'text';
             }

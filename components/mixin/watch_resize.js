@@ -12,17 +12,11 @@ define(
         this.width = this.$node.width();
         this.height = this.$node.height();
 
-        var updateSize = $.proxy(function() {
-          this.width = this.$node.width();
-          this.height = this.$node.height();
-          this.trigger('resize', { width: this.width, height: this.height });
-        }, this);
-
         var onRender = $.proxy(function() {
           $(window).on('resize', $.proxy(function() {
-            updateSize();
+            this.updateSize();
           }, this));
-          updateSize();
+          this.updateSize();
         }, this);
 
         this.on('resize', function(e) {
@@ -34,7 +28,18 @@ define(
             onRender();
           }
         });
+
+        this.on('updateSize', function() {
+            this.updateSize();
+        });
+
       });
+
+      this.updateSize = function() {
+          this.width = this.$node.width();
+          this.height = this.$node.height();
+          this.trigger('resize', { width: this.width, height: this.height });
+      };
     }
 
   }

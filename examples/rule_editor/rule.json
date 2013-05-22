@@ -47,7 +47,8 @@
                         "type": "SendEmailAction",
                         "emailAddress": "lucas@tid.es",
                         "subject": "Test Rule",
-                        "message": "Test Rule"
+                        "message": "Test Rule",
+                        "tokens": ["device_latitude", "device_longitude", "measure.value", "device.asset.name"]
                     },
                     "connectedTo": []
                 }
@@ -93,7 +94,8 @@
                         "type": "SendEmailAction",
                         "emailAddress": "lucas@tid.es",
                         "subject": "Test Rule",
-                        "message": "Test Rule"
+                        "message": "Test Rule",
+                        "tokens": ["device_latitude", "device_longitude", "measure.value", "device.asset.name"]
                     },
                     "connectedTo": []
                 }

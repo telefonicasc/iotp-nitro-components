@@ -13,6 +13,7 @@ describeComponent('components/card/card_side.js', function () {
   });
   
   it('component has a div in its body', function(){
+    setupComponent( {header: 'HELLO'} );
   	expect(this.component.$body).toHaveClass('body');
   });
 

@@ -120,7 +120,9 @@ define(
                 this.on('restoreConnections', function() {
 
                     $.each(this.connections, $.proxy(function(i, connection) {
-                        this.trigger('removeConnection', connection );
+                        if (connection) {
+                            this.trigger('removeConnection', connection );
+                        }
                     }, this));
 
                     this.connections = $.extend(true, [], this.savedConnections);

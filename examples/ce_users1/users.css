@@ -9,6 +9,11 @@
 .dashboard .main-content {
   margin: 0px;
   background-color:#efeeeb;
+overflow: auto
+}
+
+.dashboard .main-content .dashboard-main-panel{
+    
 }
 
 .dashboard .main-content .dashboard-main-panel .dashboard-main-panel-content {
@@ -21,23 +26,31 @@
   margin-left: 20px;
 }
 
+
 .dashboard .sidebar {
   background-color: #b5c9cd;
 }
 
-
 .dashboard .overview-content .date-range {
     color: white;
     font-size: 14px;
-  text-align: center;
+    text-align: center;
 }
 
 .chart {
-  position: absolute;
+  position: relative;
   top: 0px;
   bottom: 0px;
   left: 0px;
   right: 0px;
+}
+
+.top {
+  height: 70%;
+}
+
+.bottom {
+  height: 30%;
 }
 
 .chart path.area {
@@ -47,7 +60,7 @@
 
 .chart path.line {
   fill: none;
-  stroke-width: 4px;
+  stroke-width: 2px;
   stroke: #788d9a;
 }
 
@@ -57,7 +70,16 @@
   stroke: #90a5b2;
 }
 
+.timeaxis_bg {
+    fill:#e6e5e1;
+}
+
+.chart .timeaxis_bg text{
+    fill: white;
+}
+
 .brush .extent {
+
   fill: #0f0f0f;
   stroke: #788d9a;
   stroke-width: 2px;
@@ -82,18 +104,29 @@
   fill: #effac4;
 }
 
+.chart .cyan path.area {
+    fill: #d5e0e6;
+}
+
 .chart .green path.line {
   fill: none;
-  stroke-width: 5px;
+  stroke-width: 3px;
   stroke: #effac4;
 }
 
-.online-users {
-  height: 55%;
+.chart .brown path.area {
+  opacity: 0.5;
+  fill: #898173;
 }
 
-.registrations {
-  height: 25%;
+.chart .brown path.line {
+  fill: none;
+  stroke-width: 3px;
+  stroke: #898173;
+}
+
+.online-users {
+  height: 80%;
 }
 
 .timeline {
@@ -101,13 +134,25 @@
   background-color: #e2e0d8;
 }
 
-.product-mix {
-    height: 80%;
-    margin: 15px 0 15px 
+.chart.green path.line {
+  stroke: #95a860;
 }
 
 .range-selection-chart {
+  position: absolute;
   background-color: #efeeeb;
   margin: 10px;
   border: 0.5px solid #b5c9cd;
+}
+
+.radar-chart {
+  background-color: #60767e;
+}
+
+.radar-chart .axis text {
+  fill: #b5c9cd;
+}
+
+.radar-chart .radar path {
+  fill: #bfcecf;
 }

@@ -25,12 +25,12 @@ describeComponent('components/card/action/send_email.js', function () {
         expect(tokenContainer.text()).toEqual(value);
     });
 
-    it('update address in front card', function(){
+    it('update emailAddress in front card', function(){
         var value = 'test@test.com';
-        $element.back.address.val(value);
-        $element.back.address.trigger('change');
+        $element.back.emailAddress.val(value);
+        $element.back.emailAddress.trigger('change');
 
-        expect($element.front.address).toHaveText(value);
+        expect($element.front.emailAddress).toHaveText(value);
 
     });
 

@@ -32,8 +32,6 @@ define(
             grid: false,
             marginBottom: 150,
             marginRight: 30,
-            axisx: false,
-            axisy: false,
             charts: [{
               type: 'groupBarChart',
               model: 'bundleSales',
@@ -62,7 +60,7 @@ define(
             }, {
               text: 'Unconstrained',
               action: 'action-unconstrained',
-              range: 7
+              range: -1
             }],
             onSelect: function(item){
               $('.range-selection-chart').trigger('rangeSelected', item);
@@ -72,7 +70,8 @@ define(
             component: 'chartContainer', 
             rangeField: 'range',
             valueField: 'totalRegistered',
-            axisx: false,
+            axisx: true,
+            timeAxis: { tickFormat: '%B', margin: -20, stepType: 'month', paddingTick: 25, stepTick: 1 },
             className: 'chart range-selection-chart',
             rangeSelection: {
               rangeField: 'range',

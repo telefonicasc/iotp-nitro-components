@@ -55,7 +55,7 @@ module.exports = function(grunt) {
           vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
           'libs/test/jasmine-jquery.js',
           'libs/test/flight-jasmine.js'],
-          specs: 'test/*_spec.js',
+          specs: 'test/**/*_spec.js',
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       coverage: {
         src: 'components/**/*.js',
         options: {
-          specs: 'test/*_spec.js',
+          specs: 'test/**/*_spec.js',
           vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
           'libs/test/jasmine-jquery.js',
           'libs/test/flight-jasmine.js'],

@@ -289,7 +289,15 @@
   width: 240px;
   background-color: #6d8189;
   border-right: 1px solid #2b3236;
+  overflow: hidden;
   .drop-shadow(1px, 0px, 3px);
+
+  .panel-content {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    margin-right: -30px;
+  }
 
   .card {
     float: left;
@@ -460,6 +468,7 @@
 .card.ui-draggable-dragging {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+    z-index: 10000;
 
     &.m2m-card-action {
       margin-left: 0-round(@card-action-width/2);
@@ -507,4 +516,112 @@ li.delimiter-value {
         padding-top: 5px;
         display: block;
     }
+}
+
+.front {
+
+    .m2m-card-text {
+        position: absolute;
+        top: 0px;
+        left: 32px;
+        right: 32px;
+        bottom: 0px;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+    }
+
+    .m2m-card-text-value {
+        color: rgb(89, 108, 115);
+        font-size: 30px;
+        word-wrap: break-word;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        width: 100%;
+        min-height: 30px;
+
+        &::before, &::after {
+            position: absolute;
+            color: rgb(124, 145, 158);
+            font-family: Times, 'Times New Roman', Georgia, serif;
+            opacity: 0.5;
+            font-size: 50px;
+            font-weight: bold;
+            margin-top: -6px;
+        }
+
+        &::before {
+            content: '\201C';
+            margin-left: -30px;
+        }
+
+        &::after {
+            content: '\201D';
+            margin-left: 6px;
+        }
+    }
+
+    .m2m-card-binary {
+        position: absolute;
+        top: 20%;
+        bottom: 20%;
+        left: 10%;
+        right: 10%;
+        border: 3px solid rgb(168, 186, 194);
+        background-color: rgb(255, 255, 255);
+        padding: 4px;
+        .border-radius(6px, 6px, 6px, 6px);
+
+        .binary-button {
+            border: 0px none rgb(160, 160, 160);
+            .border-radius(3px, 3px, 3px, 3px);
+            height: 50%;
+            text-align: center;
+            color: rgb(168, 186, 194);
+            font-size: 16px;
+
+            span {
+                display: inline-block;
+                margin-top: 6px;
+            }
+
+            &.selected {
+                background-color: rgb(158, 215, 111);
+                font-weight: bold;
+                font-size: 22px;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+.back {
+
+    .m2m-card-text {
+
+        margin: 10px; 
+
+        input {
+            padding: 8px;
+            color: rgb(89, 108, 115);
+            font-family: 'American Typewriter', 'Courier New', Courier, monospace;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid rgb(188, 192, 193);
+            .border-radius(4px, 4px, 4px, 4px);
+            margin-left: -5px;
+            padding: 4px;
+        }
+    }
+
+    select {
+        width: 90%;
+        margin-left: 5%;
+    }
+
 }

@@ -63,7 +63,7 @@ define(
                             helper: function() {
                                 var newCardEl = $('<div>');
                                 cardCmp.attachTo(newCardEl, card);
-                                newCardEl.data('cardConfig', card);//===========
+                                newCardEl.data('cardConfig', card['__cardConfig']);//===========
                                 return newCardEl;
                             }
                         });

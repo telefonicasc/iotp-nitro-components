@@ -153,7 +153,7 @@ define(
                     var el = $(e.target),
                         delimiter = el.data('delimiter'),
                         position = el.position();
-                    
+
                     if (delimiter) {
                         delimiter.css({
                             left: position.left,
@@ -163,7 +163,7 @@ define(
                 }, this));
 
                 this.$graphEditor.on('flipped', '.card', $.proxy(function(e, o){
-                    var delimiter = $(e.target).data('delimiter'); 
+                    var delimiter = $(e.target).data('delimiter');
                     if (delimiter) {
                         if ($(e.target).hasClass('flip')) {
                             delimiter.fadeOut();
@@ -289,7 +289,7 @@ define(
             };
 
             this.getAllCards = function() {
-                return $('.node-container > .card, ' + 
+                return $('.node-container > .card, ' +
                         '.node-container > .start-card, ' +
                         '.node-container > .card-placeholder', this.$graphEditor);
             };
@@ -345,10 +345,10 @@ define(
             };
 
             // TODO: This only work for one parent one child
-            this.detachCard = function(card) {                
+            this.detachCard = function(card) {
                 var from = this.getConnectedFrom(card)[0],
                     to = this.getConnectedTo(card)[0];
-                
+
                 card.data('detached', true);
                 this.disableRelayout = true;
                 if (from) {
@@ -368,7 +368,11 @@ define(
             this.loadToolboxCards = function(toolbox, cards) {
                 var parsedCards = [];
                 $.each(cards, $.proxy(function(i, card) {
+                    var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
+                    // esta variable es importante porque se usa en card_toolbox.js para asignar
+                    // el valor devuelto por servidor
+                    data['__cardConfig'] = cardConfig;
                     parsedCards.push($.extend({},
                         this.attr.cardDefaults, data));
                 }, this));
@@ -412,7 +416,7 @@ define(
 
                 var topCards = this.getTopCards();
                 this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { 
+                this.$graphEditor.trigger('addNode', {
                     node: this.$startCard,
                     draggable: false,
                     addPlaceholder: false
@@ -468,7 +472,7 @@ define(
             this.newRule = function() {
                 this.emptyRule();
                 this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { 
+                this.$graphEditor.trigger('addNode', {
                     node: this.$startCard,
                     draggable: false
                 });

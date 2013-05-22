@@ -46,9 +46,9 @@ define(
                     $scope.cards.conditions.cards = data.data;
                 });
 
-                $http.get('rule.json').success(function(data) {
-                    $scope.ruleData = data.data[0];
-                });
+                //$http.get('rule.json').success(function(data) {
+                //    $scope.ruleData = data.data[0];
+                //});
 
                 $scope.$watch('ruleData', function() {
                     console.log('RuleData change', $scope.ruleData);

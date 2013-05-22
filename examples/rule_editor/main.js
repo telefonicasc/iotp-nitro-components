@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/m2m-nitro-components',
+  baseUrl: '../../',
   nitroComponents: [
   ]
 });

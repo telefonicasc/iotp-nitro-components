@@ -22,8 +22,10 @@ define(
 
         var container = this.appContent = $(this.attr.applicationContent);
 
-        this.$node.on('click', $.proxy(function() {
-          this.trigger('expand');
+        this.$node.on('click', $.proxy(function(e) {
+          if (e.target === this.node) {
+              this.trigger('expand');
+          }
         }, this));
 
         this.appContent.on('click', $.proxy(function() {

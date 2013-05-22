@@ -594,11 +594,8 @@ select {
 .card .front .header h1 {
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-<<<<<<< HEAD
   height: 39px;
   line-height: 39px;
-=======
->>>>>>> develop
 }
 .card .front .body {
   margin: 7px;
@@ -713,7 +710,6 @@ select {
 .card.m2m-card-send-email .back .header {
   display: none;
 }
-<<<<<<< HEAD
 .card.m2m-card-send-email .back .body {
   -webkit-border-top-right-radius: 20px;
   -webkit-border-bottom-right-radius: 20px;
@@ -731,20 +727,13 @@ select {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-=======
->>>>>>> develop
 .card.m2m-card-send-email .back .card-body {
   background-color: white;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
 .card.m2m-card-send-email .back .card-header {
-<<<<<<< HEAD
   padding: 10px 6px;
-=======
-  background-color: #E6EDF0;
-  margin: 10px 6px;
->>>>>>> develop
   display: block;
   background-color: #E6EDF0;
   -webkit-border-top-right-radius: 20px;
@@ -879,23 +868,17 @@ select {
   width: 240px;
   background-color: #6d8189;
   border-right: 1px solid #2b3236;
-<<<<<<< HEAD
-=======
   overflow: hidden;
->>>>>>> develop
   -webkit-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
 }
-<<<<<<< HEAD
-=======
 .card-toolbox .panel-content {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
   margin-right: -30px;
 }
->>>>>>> develop
 .card-toolbox .card {
   float: left;
   margin: 10px;
@@ -1019,7 +1002,6 @@ select {
 }
 .rule-bottom-toolbar .zoom .slider-max {
   right: 0px;
-<<<<<<< HEAD
 }
 .rule-bottom-toolbar .card-buttons {
   position: absolute;
@@ -1094,82 +1076,6 @@ select {
   background-clip: padding-box;
   border-left: 1px solid #b3c6cb;
 }
-=======
-}
-.rule-bottom-toolbar .card-buttons {
-  position: absolute;
-  left: 28px;
-  top: 11px;
-}
-.rule-bottom-toolbar .card-buttons div {
-  display: inline-block;
-  font-family: Arial, Helvetica, Sans-serif;
-  font-size: 13px;
-  color: #404d50;
-  padding: 5px 0px;
-  text-align: center;
-  width: 80px;
-  border-top: 1px solid #c6d6db;
-  border-bottom: 1px solid #546166;
-  cursor: pointer;
-  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  background: #bed0d5;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #97abb0), color-stop(1, #bed0d5));
-  background: -ms-linear-gradient(bottom, #97abb0, #bed0d5);
-  background: -moz-linear-gradient(center bottom, #97abb0 0%, #bed0d5 100%);
-  background: -o-linear-gradient(#bed0d5, #97abb0);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bed0d5', endColorstr='#97abb0', GradientType=0);
-}
-.rule-bottom-toolbar .card-buttons .selected {
-  background: #455960;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #566a71), color-stop(1, #455960));
-  background: -ms-linear-gradient(bottom, #566a71, #455960);
-  background: -moz-linear-gradient(center bottom, #566a71 0%, #455960 100%);
-  background: -o-linear-gradient(#455960, #566a71);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#455960', endColorstr='#566a71', GradientType=0);
-  border-top: 1px solid #617278;
-  border-bottom: 1px solid #3b484c;
-  color: #a8b8bc;
-}
-.rule-bottom-toolbar .card-buttons .conditions-button {
-  -webkit-border-top-right-radius: 0px;
-  -webkit-border-bottom-right-radius: 0px;
-  -webkit-border-bottom-left-radius: 3px;
-  -webkit-border-top-left-radius: 3px;
-  -moz-border-radius-topright: 0px;
-  -moz-border-radius-bottomright: 0px;
-  -moz-border-radius-bottomleft: 3px;
-  -moz-border-radius-topleft: 3px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border-right: 1px solid #66757a;
-}
-.rule-bottom-toolbar .card-buttons .actions-button {
-  -webkit-border-top-right-radius: 3px;
-  -webkit-border-bottom-right-radius: 3px;
-  -webkit-border-bottom-left-radius: 0px;
-  -webkit-border-top-left-radius: 0px;
-  -moz-border-radius-topright: 3px;
-  -moz-border-radius-bottomright: 3px;
-  -moz-border-radius-bottomleft: 0px;
-  -moz-border-radius-topleft: 0px;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border-left: 1px solid #b3c6cb;
-}
->>>>>>> develop
 .rule-bottom-toolbar .card-buttons .actions-button.selected {
   border-left: 1px solid #66747a;
 }
@@ -1285,6 +1191,63 @@ li.delimiter-value {
   content: '\201D';
   margin-left: 6px;
 }
+.front .m2m-card-binary {
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  border: 3px solid #a8bac2;
+  background-color: #ffffff;
+  padding: 4px;
+  -webkit-border-top-right-radius: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  -webkit-border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  -moz-border-radius-topleft: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.front .m2m-card-binary .binary-button {
+  border: 0px none #a0a0a0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  height: 50%;
+  text-align: center;
+  color: #a8bac2;
+  font-size: 16px;
+}
+.front .m2m-card-binary .binary-button span {
+  display: inline-block;
+  margin-top: 6px;
+}
+.front .m2m-card-binary .binary-button.selected {
+  background-color: #9ed76f;
+  font-weight: bold;
+  font-size: 22px;
+  color: #FFFFFF;
+}
 .back .m2m-card-text {
   margin: 10px;
 }
@@ -1313,58 +1276,9 @@ li.delimiter-value {
   margin-left: -5px;
   padding: 4px;
 }
-.card.ui-draggable-dragging.m2m-card-action {
-  margin-left: -80px;
-  margin-top: -60px;
-}
-.card .body .battery-widget {
-  width: 40%;
-  left: 50%;
-  margin-left: -20%;
-  position: relative;
-  height: 70%;
-}
-.m2m-card-delimiter {
-  position: absolute;
-  margin-top: 85px;
-  z-index: 2000;
-}
-li.delimiter-value {
-  margin-top: 8px;
-}
-.delimiter-value {
-  cursor: pointer;
-  z-index: 2;
-  font-family: Helvetica, Arial, sans-serif;
-  background-color: #7f919e;
-  margin-left: -62px;
-  width: 124px;
-  height: 20px;
-  -webkit-border-top-right-radius: 12px;
-  -webkit-border-bottom-right-radius: 12px;
-  -webkit-border-bottom-left-radius: 12px;
-  -webkit-border-top-left-radius: 12px;
-  -moz-border-radius-topright: 12px;
-  -moz-border-radius-bottomright: 12px;
-  -moz-border-radius-bottomleft: 12px;
-  -moz-border-radius-topleft: 12px;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  border-bottom-left-radius: 12px;
-  border-top-left-radius: 12px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  text-align: center;
-  font-weight: bold;
-}
-.delimiter-value span {
-  color: #e9ecee;
-  text-align: center;
-  font-weight: bold;
-  font-size: 12px;
-  padding-top: 5px;
-  display: block;
+.back select {
+  width: 90%;
+  margin-left: 5%;
 }
 .flippable {
   position: relative;

@@ -55,10 +55,32 @@ define(
                 }, this));
 
                 this.$nodes.on('move', '*', $.proxy(function(e, o) {
+                    var lastLeft;
+
                     if (e.target.parentNode === e.delegateTarget) {
                         $(e.target).data({ left: o.left, top: o.top });
-                        $(e.target).css(o);
-                        $(e.target).trigger('moved', o);
+
+                        if (!o.animated) {
+                            $(e.target).css(o);
+                            $(e.target).trigger('moved', o);
+                        } else {
+                            $(e.target).animate(o, {
+                                step: function(now, tween) {
+                                    if (tween.prop === 'left') {
+                                        lastLeft = now;
+                                    } else if (tween.prop === 'top') {
+                                        $(e.target).trigger('moved', {
+                                            left: lastLeft,
+                                            top: now
+                                        });
+                                        
+                                    }
+                                }, 
+                                complete: function() {
+                                    $(e.target).trigger('moved', o);
+                                }
+                            });
+                        }
                       }
                 }, this));
 
@@ -143,17 +165,23 @@ define(
 
             this.updateConnections = function() {
                 $.each(this.connections, $.proxy(function(i, connection) {
+                    var pathArray;
                     if (!connection.path) {
                         connection.path = this.paper.path();
                         connection.path.attr({
                             stroke: '#2d3336', 'stroke-width': 40
                         });
-                    } 
-                    connection.path.attr('path',
-                        this.getPathArray(connection.start, connection.end));
+                    }
+
+                    pathArray = this.getPathArray(connection.start,
+                            connection.end);
+
+                    if (pathArray.length) {
+                        connection.path.attr('path', pathArray);
+                    }
                 }, this));
             };
-            
+
             this.getConnection = function(start, end) {
                 var conn = null;
 
@@ -173,10 +201,14 @@ define(
                     diffX = endPosition.left - startPosition.left,
                     diffY = endPosition.top - startPosition.top;
 
-                pathArray.push('M', startPosition.left, startPosition.top,
-                    'c', 100, 0);
-
-                pathArray.push(diffX - 100, diffY, diffX, diffY);
+                if (startPosition.left !== undefined &&
+                    startPosition.top !== undefined &&
+                    endPosition.left !== undefined &&
+                    endPosition.top !== undefined) {
+                    pathArray.push('M', startPosition.left, startPosition.top,
+                        'c', 100, 0);
+                    pathArray.push(diffX - 100, diffY, diffX, diffY);
+                }
 
                 return pathArray;
             };

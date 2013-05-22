@@ -93,6 +93,7 @@ define(
                         this.$actionsToolbox.trigger('collapse', {
                             complete: $.proxy(function() {
                                 this.$conditionsToolbox.trigger('expand');
+                                $(window).trigger('resize');
                             }, this)
                         });
                     }, this));
@@ -173,6 +174,10 @@ define(
                 }, this));
 
                 this.$graphEditor.on('nodeRemoved', $.proxy(function(e, o) {
+                    var delimiter = $(o.node).data('delimiter');
+                    if (delimiter) {
+                        delimiter.remove();
+                    }
                     this.updateValue();
                 }, this));
 
@@ -249,7 +254,8 @@ define(
                         el.trigger('move', {
                             left: (el.data('col') + (el.data('colwidth') / 2)) *
                                 colWidth,
-                            top: (el.data('row') + 0.5) * height
+                            top: (el.data('row') + 0.5) * height,
+                            animated: false
                         });
                     });
                 }
@@ -289,10 +295,17 @@ define(
             };
 
             this.getTopCards = function() {
-                var topCards = this.getAllCards();
+                var topCards = this.getAllCards(),
+                    detached = $([]);
                 $.each(this.connections, function(i, connection) {
                     topCards = topCards.not(connection.end);
                 });
+                $.each(topCards, function(i, card) {
+                    if ($(card).data('detached')) {
+                        detached = detached.add(card);
+                    }
+                });
+                topCards = topCards.not(detached);
                 return topCards;
             };
 
@@ -329,6 +342,27 @@ define(
                     end: end
                 });
 
+            };
+
+            // TODO: This only work for one parent one child
+            this.detachCard = function(card) {                
+                var from = this.getConnectedFrom(card)[0],
+                    to = this.getConnectedTo(card)[0];
+                
+                card.data('detached', true);
+                this.disableRelayout = true;
+                if (from) {
+                    if (to) {
+                        this.addConnection($(from), $(to));
+                    }
+                    this.removeConnection(from, card);
+                }
+
+                if (to) {
+                    this.removeConnection(card, to);
+                }
+                this.disableRelayout = false;
+                this.relayoutCards();
             };
 
             this.loadToolboxCards = function(toolbox, cards) {
@@ -386,6 +420,7 @@ define(
                 $.each(topCards, $.proxy(function(i, card) {
                     this.addConnection(this.$startCard, $(card));
                 }, this));
+                $(window).trigger('resize');
             };
 
             this.getRuleData = function() {

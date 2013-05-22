@@ -88,14 +88,20 @@ define(
 
                 this.$bottomToolbar.on('conditionsSelected',
                     $.proxy(function(e, o) {
-                        this.$actionsToolbox.trigger('collapse');
-                        this.$conditionsToolbox.trigger('expand');
+                        this.$actionsToolbox.trigger('collapse', {
+                            complete: $.proxy(function() {
+                                this.$conditionsToolbox.trigger('expand');
+                            }, this)
+                        });
                     }, this));
 
                 this.$bottomToolbar.on('actionsSelected',
                     $.proxy(function(e, o) {
-                        this.$conditionsToolbox.trigger('collapse');
-                        this.$actionsToolbox.trigger('expand');
+                        this.$conditionsToolbox.trigger('collapse', {
+                            complete: $.proxy(function() {
+                                this.$actionsToolbox.trigger('expand');
+                            }, this)
+                        });
                     }, this));
 
                 this.$graphEditor = $('<div>').addClass('fit')

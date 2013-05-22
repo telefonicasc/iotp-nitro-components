@@ -16,6 +16,13 @@ define(
             this.after('initialize', function() {
                 
                 this.$node.addClass('m2m-card-text');
+
+                if (this.attr.label) {
+                    $('<label>')
+                        .html(this.attr.label)
+                        .appendTo(this.$node);
+                }
+
                 this.$input = $('<input>').appendTo(this.$node);
 
                 this.$input.on('keyup', $.proxy(function(e) {

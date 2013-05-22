@@ -65,7 +65,9 @@ define(
                 this.disableRelayout = true;
                 if (newActive) {
                     if (newActive !== activeArea) {
-                        this.$graphEditor.trigger('restoreConnections');
+                        if (activeArea) {
+                            this.$graphEditor.trigger('restoreConnections');
+                        }
                         this.undoTempRemoved();
                         newActive.interaction.activate.call(this, newActive, card);
                     }

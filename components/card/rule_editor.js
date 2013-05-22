@@ -34,6 +34,8 @@ define(
                 this.connections = [];
                 this.value = this.attr.value;
 
+                this.$node.addClass('m2m-rule-editor');
+
                 this.$mainArea = $('<div>').addClass('rule-editor-main fit')
                         .appendTo(this.$node);
 
@@ -378,6 +380,7 @@ define(
                 this.$startCard = $('<div>').addClass('start-card');
                 this.$graphEditor.trigger('addNode', { 
                     node: this.$startCard,
+                    draggable: false,
                     addPlaceholder: false
                 });
                 $.each(topCards, $.proxy(function(i, card) {
@@ -430,7 +433,10 @@ define(
             this.newRule = function() {
                 this.emptyRule();
                 this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { node: this.$startCard });
+                this.$graphEditor.trigger('addNode', { 
+                    node: this.$startCard,
+                    draggable: false
+                });
                 this.relayoutCards();
             };
 
@@ -452,6 +458,7 @@ define(
             this.createCardToolbox = function(cards) {
                 var cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(cardToolbox, {
+                    containment: this.$mainArea,
                     cardSections: {
                         cards: cards
                     },

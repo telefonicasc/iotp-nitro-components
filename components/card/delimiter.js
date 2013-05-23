@@ -2,29 +2,29 @@ define(
     [
         'components/component_manager'
     ],
-    
+
     function(ComponentManager) {
-     
+
         return ComponentManager.create('CardDelimiter', CardDelimiter);
-        
+
         function CardDelimiter() {
-            
+
             this.defaultAttrs({
                 delimiterList: [
                     'IS',
                     'IS NOT',
                     'BELOW',
                     'ABOVE'
-                ] 
+                ]
             });
 
             this.after('initialize', function() {
 
                 this.$node.addClass('m2m-card-delimiter');
-                
+
                 this.$delimiterValue = $('<div>')
                         .addClass('delimiter-value')
-                        .appendTo(this.$node);  
+                        .appendTo(this.$node);
 
                 this.$delimiterValueSpan = $('<span>')
                         .appendTo(this.$delimiterValue);
@@ -35,7 +35,7 @@ define(
                 $.each(this.attr.delimiterList, $.proxy(function(i, del) {
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
-                            .append($('<span>').html(del)); 
+                            .append($('<span>').html(del));
                 }, this));
 
                 this.$delimiterValue.on('click', $.proxy(function() {
@@ -59,8 +59,9 @@ define(
             this.setDelimiterValue = function(value) {
                 this.$delimiterValueSpan.html(value);
                 this.delimiterValue = value;
+                this.$node.data('operator', value);
                 this.trigger('valueChange', { value: value });
-            }
-        }        
+            };
+        }
     }
 );

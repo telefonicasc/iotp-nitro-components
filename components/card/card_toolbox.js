@@ -64,7 +64,7 @@ define(
                                 var newCardEl = $('<div>');
                                 var data = $.extend({}, card, {id:null});
                                 cardCmp.attachTo(newCardEl, data);
-                                newCardEl.data('cardConfig', card);//===========
+                                newCardEl.data('cardConfig', card['__cardConfig']);//===========
                                 return newCardEl;
                             }
                         });

@@ -378,7 +378,11 @@ define(
             this.loadToolboxCards = function(toolbox, cards) {
                 var parsedCards = [];
                 $.each(cards, $.proxy(function(i, card) {
+                    var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
+                    // esta variable es importante porque se usa en card_toolbox.js para asignar
+                    // el valor devuelto por servidor
+                    data['__cardConfig'] = cardConfig;
                     parsedCards.push($.extend({},
                         this.attr.cardDefaults, data));
                 }, this));

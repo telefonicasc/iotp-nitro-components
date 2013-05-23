@@ -61,7 +61,7 @@ var DashCE_users = DashCE_users || {};
           marginBottom: 20,
           axisy: true,
           axisx: true,
-          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0 },
+          timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 1 },
           grid: false,
           charts: [{
             type: 'areaChart',
@@ -95,24 +95,9 @@ var DashCE_users = DashCE_users || {};
           },
           {
             type: 'columnChart',
-            model: 'total_users',
-            rangeField: 'selectedRange' 
-          }/*, {
-            type: 'areaChart',
-            tooltip: true,
-            area: false,
-            model: 'visitors',
-            rangeField: 'selectedRange',
-            cssClass: 'brown'
-          },
-          {
-            type: 'areaChart',
-            tooltip: true,
-            area: true,
-            model: 'deactivations',
-            rangeField: 'selectedRange',
-            cssClass: 'blue'
-          }*/]
+            model: 'gainsLosses',
+            rangeField: 'selectedRange'
+          }]
         },
         {
           component: 'chartContainer',
@@ -133,11 +118,12 @@ var DashCE_users = DashCE_users || {};
             items: [{
               component: 'cellBarchartSubpanel',
               text: {
+                  title: { value: '' , caption: '' },
                   content: { value: '' , caption: 'unique users online' },
               },
               chart: {        //(optional)
                   conf: {
-                    maxHeight: 80,
+                    maxHeight: 70,
                     width: 60,
                     barPadding: 4
                   },
@@ -161,14 +147,6 @@ var DashCE_users = DashCE_users || {};
               text: 'Month',
               action: 'action-month',
               fixRange: 35 // 5 weeks of 7 days
-            }, {
-              text: 'Quarter',
-              action: 'action-quarter',
-              fixRange: 140 // 20 weeks of 7 days
-            }, {
-              text: 'Unconstrained',
-              action: 'action-unconstrained',
-              fixRange: -1
             }],
             onSelect: function(item){
               $('.range-selection-chart').trigger('rangeSelected', item);
@@ -201,7 +179,7 @@ var DashCE_users = DashCE_users || {};
         }]
       }],
       overviewPanel: {
-        title: 'Days of sales',
+        title: 'days of sales',
         contextMenu: {
           onSelect: function(item) {
             if (item.actionid === 'export') {
@@ -230,9 +208,9 @@ var DashCE_users = DashCE_users || {};
         },
         items: [{
           className: 'date-range last-section-panel',
-          tpl: '{{#value}} {{start}} to {{end}} {{/value}}',
+          tpl: '{{#value}} {{start}} - {{end}} {{/value}}',
           model: function(value) {
-            var format = d3.time.format('%e-%b-%y');
+            var format = d3.time.format('%e %b %Y');
             if (value && value.selectedRange) {
               return {
                 start: format(value.selectedRange[0]),
@@ -293,7 +271,7 @@ var DashCE_users = DashCE_users || {};
             className: 'vertical-panel',
             iconClass: function(data) {
               if (data) {
-                var baseVisitors = last(data.consumers_acc),
+                var baseVisitors = sum(data.consumers),
                     baseRegistrations = last(data.total_users),
                     visitors = sum(data.consumers, data.selectedRange),
                     registrations = sum(data.newly_registers, data.selectedRange),
@@ -381,7 +359,7 @@ var DashCE_users = DashCE_users || {};
             },
             caption: 'Usage churn'
           }]
-        }/*, {
+        }, {
           component: 'radarChart',
           maxValues: function(attr, value) {
             if (value) {
@@ -393,41 +371,50 @@ var DashCE_users = DashCE_users || {};
             }
           },
           model: function(data) {
-            var onlineUser = 0,
+            var onlineUser = 1,
                 onlineUserBase = 1,
                 unseen = 1,
                 unseenBase = 1,
-                visitor = 0,
-                visitorBase = 1,
-                deactivations = 0,
+                deactivations = 1,
                 deactivationsBase = 1,
-                totalUsers = 0,
+                totalUsers = 1,
                 totalUsersBase = 1,
-                registration = 0,
+                registration = 1,
                 registrationBase = 1;
-
-
-            onlineUserBase = avg(data.onlineRegistered);
-            onlineUser = avg(range(data.onlineRegistered, data.selectedRange));
-            visitorBase = avg(data.visitors);
-            visitor = avg(range(data.visitors, data.selectedRange));
-            totalUsersBase = last(data.totalRegistered);
-            totalUsers = last(range(data.totalRegistered, data.selectedRange));
-            deactivationsBase = avg(data.deactivations);
-            deactivations = avg(range(data.deactivations, data.selectedRange));
-            registrationBase = avg(data.registrations);
-            registration = avg(range(data.registrations,data.selectedRange));
+           
+            totalUsers = last(range(data.total_users, data.selectedRange));
+            totalUsersBase = last(data.total_users);
+            deactivationsBase = avg(data.deactivations_acc);
+            deactivations = avg(range(data.deactivations_acc, data.selectedRange));
+            onlineUserBase = avg(data.consumers_acc);
+            onlineUser = avg(range(data.consumers_acc, data.selectedRange));
+            registrationBase = avg(data.newly_registers);
+            registration = avg(range(data.newly_registers, data.selectedRange));
+            unseen = avg(range(data.unseen_in_sixty_days_acc, data.selectedRange));
+            unseenBase = avg(data.unseen_in_sixty_days_acc);
+            
+            /*
+            console.log('onlineUserBase', onlineUserBase);
+            console.log('onlineUser', onlineUser);
+            console.log('totalUsersBase', totalUsersBase);
+            console.log('totalUsers', totalUsers);
+            console.log('deactivationsBase', deactivationsBase);
+            console.log('deactivations', deactivations);
+            console.log('unseenBase', unseenBase);
+            console.log('unseen', unseen);
+            */
+            
 
             return [{
-              values: [onlineUserBase, unseenBase, visitorBase,
+              values: [onlineUserBase, unseenBase, 1, 
                   deactivationsBase, totalUsersBase, registrationBase],
               className: 'base'
             }, {
-              values: [onlineUser, unseen, visitor,
+              values: [onlineUser, unseen, 1,
                   deactivations, totalUsers, registration]
             }];
           }
-        }*/]
+        }]
       },
       data: function(cb) {
           doQuery(cb);
@@ -453,9 +440,9 @@ var DashCE_users = DashCE_users || {};
               item.date <= range[1]) {
               res = item.value;
             }
-          });
-          return res;
+          });     
         }
+        return res;
     }
 
     function sum(a, range) {
@@ -488,7 +475,7 @@ var DashCE_users = DashCE_users || {};
 
 
   var doQuery = function(cb, from, to){
-      var uris = ['data/bundles.json', 'data/accounts.json'];
+      var uris = ['data/bundles2.json', 'data/accounts2.json'];
       //var uris = getAllDataUris();
 
       if (from && to){
@@ -496,10 +483,7 @@ var DashCE_users = DashCE_users || {};
       }
       
       $.when( $.getJSON(uris[0]), $.getJSON(uris[1]) ).done(function(res1, res2) {
-          console.log('bundles', res1);
-          console.log('accounts', res2);
           var data = createDataObject(res1, res2);
-          console.log('processData', data);
           cb(data);
         }).fail(function(e) {
             alert('Error fetching data from server');
@@ -523,25 +507,47 @@ var DashCE_users = DashCE_users || {};
       var data = {
               total_users: [],
               deactivations: [],
+              deactivations_acc: [],
               newly_registers: [],
               newly_registers_acc: [],
               consumers: [],
-              consumers_acc: []
+              consumers_acc: [],
+              unseen_in_sixty_days: [],
+              unseen_in_sixty_days_acc: [],
+              gainsLosses: [],
+              stackArea: []
             }
 
       results = accountsData[0];
       $.each(results, function(i, item) {
         var ts = item.ts;
-        data['total_users'].push({ date: ts, value:item.total_users });
-        data['deactivations'].push({ date: ts, value:item.deactivations });
-        data['newly_registers'].push({ date: ts, value:item.new_registers.count });
-        data['consumers'].push({ date: ts, value:item.consumers.count });
-        data['newly_registers_acc'].push({ date: ts, value:item.total_users+item.new_registers.count });
+        var totalUsers = { date: ts, value:item.total_users };
+        var deactivations = { date: ts, value:item.deactivations };
+        var unSeen = {date: ts, value: item.unseen_in_sixty_days};
+        var newRegistration = { date: ts, value:item.new_registers.count };
+        var newRegistrationAcc = { date: ts, value:item.total_users+item.new_registers.count };
+        var consumers = { date: ts, value:item.consumers.count };
+        var gainsLosses = { date: ts, value:item.new_registers.count, value2: item.deactivations };
+        
+        data['total_users'].push(totalUsers);
+        data['deactivations'].push(deactivations);
+        data['unseen_in_sixty_days'].push(unSeen);
+        data['newly_registers'].push(newRegistration);
+        data['consumers'].push(consumers);
+        data['newly_registers_acc'].push(newRegistrationAcc);
+        data['gainsLosses'].push(gainsLosses);
+
         if (i === 0){
           data['consumers_acc'].push({ date: ts, value:item.consumers.count });
+          data['deactivations_acc'].push({ date: ts, value:item.deactivations });
+          data['unseen_in_sixty_days_acc'].push({ date: ts, value:item.unseen_in_sixty_days });
         }else{
           data['consumers_acc'].push({ date: ts, value:data['consumers_acc'][i-1].value+item.consumers.count });
+          data['deactivations_acc'].push({ date: ts, value:data['deactivations_acc'][i-1].value+item.deactivations });
+          data['unseen_in_sixty_days_acc'].push({ date: ts, value:data['unseen_in_sixty_days_acc'][i-1].value+item.unseen_in_sixty_days });
         }
+
+        data['stackArea'].push({ date: ts, value:deactivations.value, value2: totalUsers.value, value3:newRegistrationAcc.value });
 
         
       });

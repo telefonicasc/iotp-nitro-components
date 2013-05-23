@@ -10,12 +10,19 @@ define(
         function CardDelimiter() {
 
             this.defaultAttrs({
-                delimiterList: [
-                    'IS',
-                    'IS NOT',
-                    'BELOW',
-                    'ABOVE'
-                ]
+                delimiterList: [{
+                    label: 'IS',
+                    operator: 'EQUAL_TO'
+                }, {                    
+                    label: 'IS NOT',
+                    operator: 'DIFFERENT_TO'
+                }, {
+                    label: 'BELOW',
+                    operator: 'MINOR_THAN'
+                }, {
+                    label: 'ABOVE',
+                    operator: 'GREATER_THAN'
+                }]
             });
 
             this.after('initialize', function() {
@@ -35,7 +42,8 @@ define(
                 $.each(this.attr.delimiterList, $.proxy(function(i, del) {
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
-                            .append($('<span>').html(del));
+                            .data('value', del)
+                            .append($('<span>').html(del.label));
                 }, this));
 
                 this.$delimiterValue.on('click', $.proxy(function() {
@@ -43,12 +51,12 @@ define(
                 }, this));
 
                 this.$delimiterList.on('click', 'li', $.proxy(function(e) {
-                    this.setDelimiterValue($(e.currentTarget).find('span').html());
+                    this.setDelimiterValue($(e.currentTarget).data('value'));
                     this.$delimiterList.find('li').slideToggle(200);
                 }, this));
 
                 this.on('valueChange', function(e, o) {
-                    this.$delimiterValueSpan.html(o.value);
+                    this.$delimiterValueSpan.html(o.value.label);
                 });
 
                 this.$delimiterList.find('li').slideToggle(0);
@@ -56,11 +64,11 @@ define(
                 this.setDelimiterValue(this.attr.delimiterList[0]);
             });
 
-            this.setDelimiterValue = function(value) {
-                this.$delimiterValueSpan.html(value);
-                this.delimiterValue = value;
-                this.$node.data('operator', value);
-                this.trigger('valueChange', { value: value });
+            this.setDelimiterValue = function(del) {
+                this.$delimiterValueSpan.html(del.label);
+                this.delimiterValue = del;
+                this.$node.data('operator', del.operator);
+                this.trigger('valueChange', { value: del });
             };
         }
     }

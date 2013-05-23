@@ -68,14 +68,14 @@ var DashCE_users = DashCE_users || {};
             tooltip: true,
             model: 'total_users',
             rangeField: 'selectedRange',
-            cssClass: 'brown'
+            cssClass: 'green'
           },
           {
             type: 'areaChart',
             tooltip: true,
             model: 'deactivations',
             rangeField: 'selectedRange',
-            cssClass: 'green'
+            cssClass: 'brown'
           },
           {
             type: 'areaChart',
@@ -91,7 +91,7 @@ var DashCE_users = DashCE_users || {};
             area: false,
             model: 'consumers',
             rangeField: 'selectedRange',
-            cssClass: 'blue'
+            cssClass: 'purple'
           },
           {
             type: 'columnChart',
@@ -201,7 +201,7 @@ var DashCE_users = DashCE_users || {};
         }]
       }],
       overviewPanel: {
-        title: 'Days of user stats',
+        title: 'Days of sales',
         contextMenu: {
           onSelect: function(item) {
             if (item.actionid === 'export') {
@@ -242,7 +242,7 @@ var DashCE_users = DashCE_users || {};
           }
         }, {
           component: 'OverviewSubpanel',
-          iconClass: 'cyan',
+          iconClass: 'yellow',
           text: function(data) {
             if (data) {
               return sum(data.newly_registers, data.selectedRange);
@@ -253,7 +253,7 @@ var DashCE_users = DashCE_users || {};
           caption: 'New users'
         }, {
           component: 'OverviewSubpanel',
-          iconClass: 'blue',
+          iconClass: 'green',
           text: function(data) {
             if (data) {
               return last(data.total_users, data.selectedRange);
@@ -264,7 +264,7 @@ var DashCE_users = DashCE_users || {};
           caption: 'Total registered users'
         }, {
           component: 'OverviewSubpanel',
-          iconClass: 'purple',
+          iconClass: 'brown',
           className: 'last-section-panel',
           text: function(data) {
             if (data) {
@@ -273,8 +273,20 @@ var DashCE_users = DashCE_users || {};
               return 0;
             }
           },
-          caption: 'Online visitors (not registered)'
+          caption: 'Lost users'
         },{
+          component: 'OverviewSubpanel',
+          iconClass: 'purble-line',
+          className: 'last-section-panel',
+          text: function(data) {
+            if (data) {
+              return sum(data.consumers, data.selectedRange);
+            } else {
+              return 0;
+            }
+          },
+          caption: 'Online users'
+        }, {
           className: 'vertical-panel-group last-section-panel',
           items: [{
             component: 'OverviewSubpanel',

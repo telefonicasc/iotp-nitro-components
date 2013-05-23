@@ -172,9 +172,41 @@ overflow: auto
 
 .chart .green path.area {
   opacity: 0.3;
-  fill: green;
+  fill: rgb(12, 109, 197);
 }
 .chart .blue path.area {
   opacity: 0.3;
   fill: blue;
+}
+
+.green {
+  background-color: #c4d79d;
+}
+.yellow {
+  background-color: #f4f3a5;
+}
+
+.yellow2 {
+  background-color: #dbc177;
+}
+
+.brown {
+  background-color: #9b393b;
+}
+.purble-line {
+  background: #9355ab;
+  max-height: 3px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body .text {
+  padding-left: 8px;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body .caption {
+  padding-left: 8px;
+}
+.dashboard .overview-header {
+  height: 40px;
 }

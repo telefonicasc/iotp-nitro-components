@@ -319,6 +319,16 @@ define(
                 return connectedTo;
             };
 
+            this.getConnectedToId = function(card){
+                var connections = this.getConnectedTo(card);
+                var ids = [];
+                $.each(connections, function(i,connection){
+                    var id = $(connection).attr('id');
+                    ids.push(id);
+                });
+                return ids;
+            };
+
             this.getConnectedFrom = function(card) {
                 var connectedFrom = $([]);
                 $.each(this.connections, function(i, connection) {
@@ -393,7 +403,6 @@ define(
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
                     var cardEl = $('<div>')
-                        .attr('id', card.id)
                         .data('cardConfig', $.extend({}, card) );
                     var data = CardData.encode(card);
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
@@ -435,13 +444,17 @@ define(
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
                     var cardValue;
+                    var elementId;
                     if (!$(card).hasClass('start-card')) {
                         cardConfig = $(card).data('cardConfig');
                         cardValue = $(card).data('cardValue');
+                        elementId = $(card).attr('id');
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
+                            cardConfig.connectedTo = this.getConnectedToId(card);
+                            cardConfig.id = elementId;
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';

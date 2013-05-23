@@ -7,6 +7,12 @@ define(
         'components/mixin/data_binding'
     ],
     function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
+        var ELEMENT_ID_PREFIX = 'card_';
+        var id=0;
+        var _getNexId = function(){
+            return ELEMENT_ID_PREFIX + (id++);
+        };
+
         return ComponentManager.create('Card', Template, Card, DataBinding);
 
         function Card() {
@@ -28,11 +34,14 @@ define(
 
             this.after('initialize', function() {
 
+                var elementId = this.attr.id || _getNexId();
+
                 this.attr.updateOnValueChange = false;
 
                 this.$node.on('click',_stopPropagation);
                 this.$node.addClass('card');
                 this.$node.addClass(this.attr.cssClass);
+                this.$node.attr('id', elementId );
 
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;

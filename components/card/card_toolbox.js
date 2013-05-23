@@ -62,7 +62,8 @@ define(
                             containment: this.attr.containment,
                             helper: function() {
                                 var newCardEl = $('<div>');
-                                cardCmp.attachTo(newCardEl, card);
+                                var data = $.extend({}, card, {id:null});
+                                cardCmp.attachTo(newCardEl, data);
                                 newCardEl.data('cardConfig', card['__cardConfig']);//===========
                                 return newCardEl;
                             }

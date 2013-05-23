@@ -440,14 +440,17 @@ define(
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
                     var cardValue;
+                    var elementId;
                     if (!$(card).hasClass('start-card')) {
                         cardConfig = $(card).data('cardConfig');
                         cardValue = $(card).data('cardValue');
+                        elementId = $(card).attr('id');
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
-                            cardConfig.connectdTo = this.getConnectedToId(card);
+                            cardConfig.connectedTo = this.getConnectedToId(card);
+                            cardConfig.id = elementId;
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';

@@ -10,9 +10,6 @@ define(
 
         function PagedPanel() {
 
-//            this.currentPage = 1;
-//            this.pageCount = 1;
-//            this.pagerVisible = false;
             this.defaultAttrs({
                 header: '',
                 insertionPoint: '.paged-content',
@@ -24,6 +21,7 @@ define(
                 pageRightLocator: '.page-right',
                 ID: '',
                 headerGap: 50,
+                allwaysVisible: [],
                 items: []
             });
 

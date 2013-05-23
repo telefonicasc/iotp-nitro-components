@@ -69,7 +69,7 @@
  *
  * ==> To sent an event (example):
  *
- * $('.mapbox').trigger('update-marker',{title: 'Marker 1'});
+ * $('.mapbox').trigger('update-marker',{title: 'Marker 1'});update-marker-features
  */
 
 define(
@@ -236,7 +236,22 @@ define(
                     // >> Handles model updates << \\
                     // =========================== \\
                     this.on('update-marker-features', function(event, features, center, zoom) {
-                        self.setFeatures(features, center, zoom);
+                        this.setFeatures(features, center, zoom);
+                    });
+
+                    // =================================== \\
+                    // >> Handles model partial updates << \\
+                    // =================================== \\
+                    this.on('add-marker-feature', function(event, feature) {
+                        this.attr.features.push(feature);
+                        this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
+                    });
+                    
+                    // ================ \\
+                    // >> Center map << \\
+                    // ================ \\
+                    this.on('center-map', function (event, latitude, longitude) {
+                        this.mapC.center({lat: latitude, lon: longitude});
                     });
 
                     // ============================ \\

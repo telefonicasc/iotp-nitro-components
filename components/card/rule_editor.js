@@ -254,12 +254,14 @@ define(
 
                     cards.each(function(i) {
                         var el = $(this);
-                        el.trigger('move', {
-                            left: (el.data('col') + (el.data('colwidth') / 2)) *
-                                colWidth,
-                            top: (el.data('row') + 0.5) * height,
-                            animated: false
-                        });
+                        if (!el.data('dragging')) {
+                            el.trigger('move', {
+                                left: (el.data('col') +
+                                    (el.data('colwidth') / 2)) * colWidth,
+                                top: (el.data('row') + 0.5) * height,
+                                animated: false
+                            });
+                        }
                     });
                 }
             };

@@ -79,6 +79,7 @@ define(
                         interactionAreas = interactionAreas.concat(areas);
                     }
                 }, this));
+                card.data('dragging', true);
             };
 
             this.onDrag = function(card) {
@@ -86,7 +87,7 @@ define(
                     position = card.data(),
                     left = position.left,
                     top = position.top;
-                
+
                 $.each(interactionAreas, $.proxy(function(i, area) {
                     if (left > area.left &&
                         left < area.left + area.width &&
@@ -132,6 +133,9 @@ define(
             };
 
             this.onDragStop = function(card) {
+                card.data('dragging', false);
+                this.relayoutCards();
+
                 if (activeArea) {
                     $.each(tempRemovedCards, $.proxy(function(i, card) {
                         this.$graphEditor.trigger('removeNode', { node: card });
@@ -141,6 +145,10 @@ define(
                 }
 
                 if (card.data('detached')) {
+                    var delimiter = $(card).data('delimiter');
+                    if (delimiter) {
+                        delimiter.remove();
+                    }
                     this.$graphEditor.trigger('removeNode', { node: card });
                 }
             };

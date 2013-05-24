@@ -29,7 +29,7 @@ define(
 
                 this.$node.addClass('graph-editor');
 
-                this.paper = Raphael(this.$connections[0]);
+                this.paper = Raphael(this.$connections[0], 10000, 10000);
 
                 this.on('addConnection', function(e, o) {
                     var connection = {

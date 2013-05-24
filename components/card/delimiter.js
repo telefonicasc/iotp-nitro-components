@@ -22,11 +22,15 @@ define(
                 }, {
                     label: 'ABOVE',
                     operator: 'GREATER_THAN'
-                }]
+                }],
+                cardConfig : {'conditionList':[]}
             });
 
             this.after('initialize', function() {
                 var cardElement = this.attr.node;
+                var cardConfig = this.attr.cardConfig;
+                var delimiterValue;
+
                 this.$node.addClass('m2m-card-delimiter');
 
                 this.$delimiterValue = $('<div>')
@@ -61,8 +65,14 @@ define(
                 });
 
                 this.$delimiterList.find('li').slideToggle(0);
+                if(cardConfig.conditionList.length){
+                    delimiterValue = _getDelimiterFromCondition(this.attr.delimiterList, cardConfig.conditionList[0]);
+                }else{
+                    delimiterValue = this.attr.delimiterList[0];
+                }
 
-                this.setDelimiterValue(this.attr.delimiterList[0]);
+                this.setDelimiterValue(delimiterValue);
+
             });
 
             this.setDelimiterValue = function(del) {
@@ -71,6 +81,17 @@ define(
                 this.$node.data('operator', del.operator);
                 this.trigger('valueChange', { value: del });
             };
+        }
+
+        function _getDelimiterFromCondition(delimiterList, condition){
+            var delimiter;
+            $.each(delimiterList, function(i,del){
+                if( del.operator === condition.operator){
+                    delimiter = del;
+                }
+            });
+            return delimiter;
+
         }
     }
 );

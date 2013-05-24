@@ -405,13 +405,14 @@ define(
                 this._rawData = $.extend({}, data);
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
-                    var cardEl = $('<div>')
-                        .data('cardConfig', $.extend({}, card) );
+                    var cardConfig = $.extend({}, card);
+                    var cardEl = $('<div>').data('cardConfig', cardConfig );
                     var data = CardData.encode(card);
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
                     var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
-                        'node': cardEl
+                        'node': cardEl,
+                        'cardConfig': cardConfig
                     };
                     cardCmp.attachTo(cardEl, data);
                     this.$graphEditor.trigger('addNode', node);

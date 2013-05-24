@@ -7,10 +7,11 @@ define(
         'components/mixin/watch_resize',
         'libs/guid',
         'components/chart/axis/time_axis',
-        'components/chart/axis/axis'
+        'components/chart/axis/axis',
+        'components/chart/axis/axis_labels'
     ],
 
-    function(ComponentManager, Grid, RangeSelection, DataBinding, 
+    function(ComponentManager, Grid, RangeSelection, DataBinding,
         WatchResize, GUID) {
 
         return ComponentManager.create('chartContainer',
@@ -23,11 +24,16 @@ define(
                 gridStrokeWidth: 1,
                 gridStrokeColor: '#AAA',
                 marginBottom: 0,
-                marginRight: 0
+                marginRight: 0,
+                axisx:false,
+                axisy:false,
+                timeAxis: {
+                    margin: 0,
+                    height: 20  
+                }
             });
 
             this.after('initialize', function() {
-
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     clipId = GUID.get(),
@@ -37,7 +43,7 @@ define(
                             .attr('height', this.height),
                     grid, clip, rangeSelection, border;
 
-                this.$node.data('value', data);
+                this.$node.data('value', data);    
 
                 if (this.attr.grid) {
                     grid = svg.append('g').attr('class', 'grid');
@@ -65,7 +71,8 @@ define(
 
                 if (this.attr.axisx) {
                     var axisx = svg.append('g').attr('class', 'x axis');
-                    ComponentManager.get('timeAxis').attachTo(axisx.node());
+                    axisx.append('rect').attr('class',this.attr.timeAxis.className);
+                    ComponentManager.get('timeAxis').attachTo(axisx.node(), this.attr.timeAxis);
                 }
 
                 if (this.attr.axisy) {
@@ -90,16 +97,16 @@ define(
                         .attr('height', chartSize.height);
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
-                    this.$node.find('g.chart, g.grid, g.brush')
+                    this.$node.find('g.chart, g.grid, g.brush, g.axis')
                         .trigger('resize', chartSize);
-
                     if (this.attr.axisx) {
+                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 20);
                         axisx.attr('transform', 'translate(0,' +
-                            chartSize.height + ')');
+                            (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }
                     if (this.attr.axisy) {
                         axisy.attr('transform', 'translate(' +
-                            chartSize.width + ',0)');
+                            (chartSize.width) + ',0)');
                         this.$node.find('g.axis.y').trigger('resize', {
                             height: chartSize.height,
                             width: this.attr.marginRight
@@ -116,7 +123,6 @@ define(
                         rangeField = this.attr.rangeField,
                         range = rangeField && model[rangeField],
                         valueRange = [];
-
                     if (!range) {
                         range = d3.extent(value, function(d) {
                             return new Date(d.date);

@@ -44,13 +44,17 @@ define(
 
                 this.on('expand', function(e, o) {
                     if (!this.expanded) {
-                        this.toggle(o && o.duration);
+                        this.toggle(o && o.duration, o && o.complete);
+                    }else{
+                        o.complete();
                     }
                 });
 
                 this.on('collapse', function(e, o) {
                     if (this.expanded) {
-                        this.toggle(o && o.duration);
+                        this.toggle(o && o.duration, o && o.complete);
+                    }else{
+                        o.complete();
                     }
                 });
 
@@ -59,8 +63,10 @@ define(
                 });
             });
 
-            this.toggle = function(duration) {
+            this.toggle = function(duration, complete) {
+                this.expanded = !this.expanded;
                 if (this.attr.horizontal) {
+                    this.$node.stop(true, true);
                     this.$node.animate({ width: 'toggle' }, {
                         duration: duration,
                         progress: $.proxy(function(anim, progress) {
@@ -69,12 +75,12 @@ define(
                                     left: this.$content.width()
                                 });
                             }
-                        }, this)
+                        }, this),
+                        complete: complete
                     });
                 } else {
                     this.$node.animate({ height: 'toggle' });
                 }
-                this.expanded = !this.expanded;
             };
         }
     }

@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/m2m-nitro-components',
+  baseUrl: '../../',
   nitroComponents: [
   ]
 });
@@ -12,7 +12,7 @@ define(
   ],
 
   function() {
-    
+
     angular.module('testApp', ['nitroComponents'])
       .run(function() {
         console.log('init_app');

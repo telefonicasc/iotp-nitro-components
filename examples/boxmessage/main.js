@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/m2m-nitro-components',
+  baseUrl: '/',
   nitroComponents: [
   ]
 });
@@ -25,7 +25,9 @@ define(
       })
       .controller('main', ['$scope', 'BoxMessage', function($scope, BM){
         $scope.test = function(){
-          BM.open({message:'test'});
+          BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte?', confirmModal:true, okCallback:function(){
+            BM.close();
+          }});
         };
       }]);
 

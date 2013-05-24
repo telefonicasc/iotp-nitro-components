@@ -34,6 +34,8 @@ define(
                 this.connections = [];
                 this.value = this.attr.value;
 
+                this.$node.addClass('m2m-rule-editor');
+
                 this.$mainArea = $('<div>').addClass('rule-editor-main fit')
                         .appendTo(this.$node);
 
@@ -88,14 +90,21 @@ define(
 
                 this.$bottomToolbar.on('conditionsSelected',
                     $.proxy(function(e, o) {
-                        this.$actionsToolbox.trigger('collapse');
-                        this.$conditionsToolbox.trigger('expand');
+                        this.$actionsToolbox.trigger('collapse', {
+                            complete: $.proxy(function() {
+                                this.$conditionsToolbox.trigger('expand');
+                                $(window).trigger('resize');
+                            }, this)
+                        });
                     }, this));
 
                 this.$bottomToolbar.on('actionsSelected',
                     $.proxy(function(e, o) {
-                        this.$conditionsToolbox.trigger('collapse');
-                        this.$actionsToolbox.trigger('expand');
+                        this.$conditionsToolbox.trigger('collapse', {
+                            complete: $.proxy(function() {
+                                this.$actionsToolbox.trigger('expand');
+                            }, this)
+                        });
                     }, this));
 
                 this.$graphEditor = $('<div>').addClass('fit')
@@ -132,6 +141,9 @@ define(
                     if (node.hasClass('m2m-card-condition')) {
                         delimiter = $('<div>').appendTo(
                             this.$graphEditor.find('.node-container'));
+                        delimiter.on('valueChange', $.proxy(function(){
+                            this.updateValue();
+                        }, this));
                         Delimiter.attachTo(delimiter);
                     }
 
@@ -144,7 +156,7 @@ define(
                     var el = $(e.target),
                         delimiter = el.data('delimiter'),
                         position = el.position();
-                    
+
                     if (delimiter) {
                         delimiter.css({
                             left: position.left,
@@ -154,7 +166,7 @@ define(
                 }, this));
 
                 this.$graphEditor.on('flipped', '.card', $.proxy(function(e, o){
-                    var delimiter = $(e.target).data('delimiter'); 
+                    var delimiter = $(e.target).data('delimiter');
                     if (delimiter) {
                         if ($(e.target).hasClass('flip')) {
                             delimiter.fadeOut();
@@ -165,6 +177,10 @@ define(
                 }, this));
 
                 this.$graphEditor.on('nodeRemoved', $.proxy(function(e, o) {
+                    var delimiter = $(o.node).data('delimiter');
+                    if (delimiter) {
+                        delimiter.remove();
+                    }
                     this.updateValue();
                 }, this));
 
@@ -186,18 +202,12 @@ define(
                 this.on('optionsChange', function(e, o) {
                     if (e.target === this.node) {
                         if (o.cards.conditions) {
-                            this.$conditionsToolbox.trigger('optionsChange', {
-                                cardSections: {
-                                    cards: o.cards.conditions || []
-                                }
-                            });
+                            this.loadToolboxCards(this.$conditionsToolbox,
+                                o.cards.conditions.cards || []);
                         }
                         if (o.cards.actions) {
-                            this.$actionsToolbox.trigger('optionsChange', {
-                                cardSections: {
-                                    cards: o.cards.actions
-                                }
-                            });
+                            this.loadToolboxCards(this.$actionsToolbox,
+                                o.cards.actions.cards || []);
                         }
                     }
                 });
@@ -247,7 +257,8 @@ define(
                         el.trigger('move', {
                             left: (el.data('col') + (el.data('colwidth') / 2)) *
                                 colWidth,
-                            top: (el.data('row') + 0.5) * height
+                            top: (el.data('row') + 0.5) * height,
+                            animated: false
                         });
                     });
                 }
@@ -281,16 +292,23 @@ define(
             };
 
             this.getAllCards = function() {
-                return $('.node-container > .card, ' + 
+                return $('.node-container > .card, ' +
                         '.node-container > .start-card, ' +
                         '.node-container > .card-placeholder', this.$graphEditor);
             };
 
             this.getTopCards = function() {
-                var topCards = this.getAllCards();
+                var topCards = this.getAllCards(),
+                    detached = $([]);
                 $.each(this.connections, function(i, connection) {
                     topCards = topCards.not(connection.end);
                 });
+                $.each(topCards, function(i, card) {
+                    if ($(card).data('detached')) {
+                        detached = detached.add(card);
+                    }
+                });
+                topCards = topCards.not(detached);
                 return topCards;
             };
 
@@ -302,6 +320,16 @@ define(
                     }
                 });
                 return connectedTo;
+            };
+
+            this.getConnectedToId = function(card){
+                var connections = this.getConnectedTo(card);
+                var ids = [];
+                $.each(connections, function(i,connection){
+                    var id = $(connection).attr('id');
+                    ids.push(id);
+                });
+                return ids;
             };
 
             this.getConnectedFrom = function(card) {
@@ -329,6 +357,46 @@ define(
 
             };
 
+            // TODO: This only work for one parent one child
+            this.detachCard = function(card) {
+                var from = this.getConnectedFrom(card)[0],
+                    to = this.getConnectedTo(card)[0];
+
+                card.data('detached', true);
+                this.disableRelayout = true;
+                if (from) {
+                    if (to) {
+                        this.addConnection($(from), $(to));
+                    }
+                    this.removeConnection(from, card);
+                }
+
+                if (to) {
+                    this.removeConnection(card, to);
+                }
+                this.disableRelayout = false;
+                this.relayoutCards();
+            };
+
+            this.loadToolboxCards = function(toolbox, cards) {
+                var parsedCards = [];
+                $.each(cards, $.proxy(function(i, card) {
+                    var cardConfig = $.extend({}, card);
+                    var data = CardData.encode(card);
+                    // esta variable es importante porque se usa en card_toolbox.js para asignar
+                    // el valor devuelto por servidor
+                    data['__cardConfig'] = cardConfig;
+                    parsedCards.push($.extend({},
+                        this.attr.cardDefaults, data));
+                }, this));
+
+                toolbox.trigger('optionsChange', {
+                    cardSections: {
+                        section: { cards: parsedCards }
+                    }
+                });
+            };
+
             this.loadRuleData = function(data) {
                 var nodes = [];
 
@@ -338,7 +406,6 @@ define(
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
                     var cardEl = $('<div>')
-                        .attr('id', card.id)
                         .data('cardConfig', $.extend({}, card) );
                     var data = CardData.encode(card);
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
@@ -359,16 +426,17 @@ define(
                     }, this));
                 }, this));
 
+                var topCards = this.getTopCards();
                 this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { 
+                this.$graphEditor.trigger('addNode', {
                     node: this.$startCard,
+                    draggable: false,
                     addPlaceholder: false
                 });
-
-                var topCards = this.getTopCards();
                 $.each(topCards, $.proxy(function(i, card) {
                     this.addConnection(this.$startCard, $(card));
                 }, this));
+                $(window).trigger('resize');
             };
 
             this.getRuleData = function() {
@@ -379,13 +447,22 @@ define(
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
                     var cardValue;
+                    var elementId;
+                    var delimiter;
                     if (!$(card).hasClass('start-card')) {
                         cardConfig = $(card).data('cardConfig');
                         cardValue = $(card).data('cardValue');
+                        elementId = $(card).attr('id');
+                        delimiter = $(card).data('delimiter');
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
+                            cardConfig.connectedTo = this.getConnectedToId(card);
+                            cardConfig.id = elementId;
+                            if(delimiter){
+                                cardConfig.conditionList = this.getConditionList(card, delimiter);
+                            }
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
@@ -416,7 +493,10 @@ define(
             this.newRule = function() {
                 this.emptyRule();
                 this.$startCard = $('<div>').addClass('start-card');
-                this.$graphEditor.trigger('addNode', { node: this.$startCard });
+                this.$graphEditor.trigger('addNode', {
+                    node: this.$startCard,
+                    draggable: false
+                });
                 this.relayoutCards();
             };
 
@@ -438,6 +518,7 @@ define(
             this.createCardToolbox = function(cards) {
                 var cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(cardToolbox, {
+                    containment: this.$mainArea,
                     cardSections: {
                         cards: cards
                     },
@@ -461,6 +542,18 @@ define(
                 cardToolbox.trigger('collapse');
 
                 return cardToolbox;
+            };
+
+            this.getConditionList = function(card, delimiter){
+                var operator = delimiter.data('operator');
+                var parameterValue = $(card).data('cardValue') || '';
+                var condition = {
+                    'scope': 'OBSERVATION',
+                    'parameterValue': parameterValue,
+                    'not': false,
+                    'operator': operator
+                };
+                return [condition];
             };
         }
     }

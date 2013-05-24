@@ -1,7 +1,7 @@
 describeComponent('components/chart/range_selection', function () {
   
   var test_data = {'valueField':[ { date:2, value:45 } ] };	 
-  var test_selection = { text: 'text', action: 'action', range: 7 };		
+  var test_selection = { text: 'text', action: 'action', fixRange: 7 };		
 
   // initialize the component and attach it to the DOM
   beforeEach(function(){
@@ -27,7 +27,7 @@ describeComponent('components/chart/range_selection', function () {
   it('When trigger "rangeSelected" a range is set', function () {
   	this.component.value = test_data;
     this.component.$node.trigger('rangeSelected', test_selection); 	
-    expect(this.component.attr.fixRange).toEqual(test_selection.range);
+    expect(this.component.attr.fixRange).toEqual(test_selection.fixRange);
   });
 
   it('When trigger "resize" range changes and chart is resized', function () {

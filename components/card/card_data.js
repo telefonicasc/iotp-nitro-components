@@ -13,7 +13,7 @@ function() {
         'SEND_EMAIL':'SendEmail'
     };
     var encodeSensor = {
-        'angle':function(card){
+        'angle': function(card){
             card.front = {
                 items: [{
                     component: component.ANGLE
@@ -26,7 +26,7 @@ function() {
             };
             return card;
         },
-        'electricPotential':function(card){
+        'battery': function(card){
             card.front = {
                 items: [{
                     component: component.BATTERY
@@ -38,14 +38,64 @@ function() {
                 }]
             };
             return card;
+        },
+        'binary': function(card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontBinary'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'Dropdown',
+                    defaultValue: 'false',
+                    options: [{
+                        label: 'True', 
+                        value: 'true'
+                    }, {
+                        label: 'False', 
+                        value: 'false'
+                    }]
+                }]
+            };
+            return card;
+        },
+        'text': function(card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontText'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: 'Value'
+                }]
+            };
+            return card;
+        },
+        'quantityValue': function(card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    units: card.sensorData.uom
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: 'Value'
+                }]
+            };
+            return card;
         }
     };
+
     var encodeAction = {
         'SendEmailAction':function(card){
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = 'Send Email';
             card.component = component.SEND_EMAIL;
-            card.tokens = [];
             return card;
         }
     };
@@ -60,7 +110,11 @@ function() {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
         card = $.extend({}, card);
+
         if(card.type === cardType.SENSOR_CARD){
+            if (!card.header && card.sensorData) {
+                card.header = card.sensorData.measureName;            
+            }
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];
 
@@ -89,9 +143,21 @@ function() {
     };
 
     var _getMethodNameForPase = function(cardConfig){
-        var name;
+        var sensorData = cardConfig.sensorData,
+            name, phenomenon;
         if(cardConfig.type === cardType.SENSOR_CARD){
-            name = cardConfig.sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            if (phenomenon === 'angle') {
+                name = 'angle';
+            } else if (phenomenon === 'electricPotential') {
+                name = 'battery';
+            } else if (sensorData.dataType === 'Boolean') {
+                name = 'binary';
+            } else if (sensorData.dataType === 'Quantity') {
+                name = 'quantityValue';
+            } else {
+                name = 'text';
+            }
         }else if(cardConfig.type === cardType.ACTION_CARD){
             name = cardConfig.actionData.type;
         }

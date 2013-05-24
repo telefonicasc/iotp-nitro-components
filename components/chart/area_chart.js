@@ -11,6 +11,10 @@ define(
 
         function AreaChartComponent() {
 
+            this.defaultAttrs({
+                area: true
+            });
+
             this.showTooltip = function(circle, d) {
                 var pos = $(circle).offset();
                 this.tooltip.html(d[this.attr.y.key]);
@@ -78,7 +82,8 @@ define(
 
                     pathArea.datum(this.value);
                     pathLine.datum(this.value);
-                    pathArea.attr('d', area);
+                    if (this.attr.area)
+                        pathArea.attr('d', area);
                     pathLine.attr('d', line);
                 });
             });

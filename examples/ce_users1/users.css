@@ -1,0 +1,233 @@
+.dashboard {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.dashboard .main-content {
+  margin: 0px;
+  background-color:#efeeeb;
+  overflow: auto;
+}
+
+.dashboard .main-content .dashboard-main-panel .dashboard-main-panel-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.dashboard .main-content .dashboard-main-panel div h1 {
+  font-size: 16px;
+  margin-left: 20px;
+}
+
+
+.dashboard .sidebar {
+  background-color: #b5c9cd;
+}
+
+.dashboard .overview-content .date-range {
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+.chart {
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.top {
+  height: 68%;
+}
+
+.bottom {
+  height: 32%;
+}
+
+.chart path.area {
+  opacity: 0.5;
+  fill: #8FB7DB;
+}
+
+.chart path.line {
+  fill: none;
+  stroke-width: 2px;
+  stroke: #788d9a;
+}
+
+.chart rect.bar {
+  fill-opacity: 0.5;
+  fill: #a7bbc3;
+  stroke: #90a5b2;
+}
+
+.timeaxis_bg {
+    fill:#e6e5e1;
+}
+
+.chart .timeaxis_bg text{
+    fill: white;
+}
+
+.brush .extent {
+  fill: #e1dab0;
+  stroke: #788d9a;
+  stroke-width: 2px;
+  opacity: 0.5;
+}
+
+.brush .resize rect {
+  width: 10px;
+  fill: #64737b;
+  stroke-width: 2px;
+  stroke: #788d9a;
+}
+
+.chart.grey.dashed rect {
+  fill: #7F8C8D;
+  stroke: #7F8C8D;
+  stroke-dasharray: 3,3;
+}
+
+.chart .green path.area {
+  opacity: 0.5;
+  fill: #effac4;
+}
+
+.chart .cyan path.area {
+    fill: #d5e0e6;
+}
+
+.chart .green path.line {
+  fill: none;
+  stroke-width: 3px;
+  stroke: #effac4;
+}
+
+.chart .brown path.area {
+  opacity: 0.5;
+  fill: #898173;
+}
+
+.chart .brown path.line {
+  fill: none;
+  stroke-width: 3px;
+  stroke: #898173;
+}
+
+.online-users {
+  height: 80%;
+}
+
+.timeline {
+  height: 15%;
+  background-color: #e2e0d8;
+}
+
+.chart.green path.line {
+  stroke: #95a860;
+}
+
+.range-selection-chart {
+  position: absolute;
+  background-color: #efeeeb;
+  margin: 10px;
+  border: 0.5px solid #b5c9cd;
+}
+
+.radar-chart {
+  background-color: #60767e;
+}
+
+.radar-chart .axis text {
+  fill: #b5c9cd;
+}
+
+.radar-chart .radar path {
+  fill: #bfcecf;
+}
+
+
+/*************************/
+
+.chart .yellow path.area {
+  opacity: 0.3;
+  fill: yellow;
+}
+
+.chart .brown path.area {
+  opacity: 0.3;
+  fill: brown;
+}
+
+.chart .green path.area {
+  opacity: 0.3;
+  fill: rgb(12, 109, 197);
+}
+.chart .blue path.area {
+  opacity: 0.3;
+  fill: blue;
+}
+
+.green {
+  background-color: #c4d79d;
+}
+.yellow {
+  background-color: #f4f3a5;
+}
+
+.yellow2 {
+  background-color: #dbc177;
+}
+
+.brown {
+  background-color: #9b393b;
+}
+.dashboard .overview-subpanel .icon.green {
+  background-color: #bcce96;
+}
+.purble-line {
+  background: #9355ab;
+  max-height: 3px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.dashboard .overview-header {
+  height: 30px;
+}
+.dashboard .overview-subpanel .overview-subpanel-body .text {
+  padding-left: 8px;
+  color: #434d52;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body .caption {
+  padding-left: 8px;
+  color: #718187;
+}
+
+.dashboard .overview-subpanel .icon {
+  height: 53px;
+  vertical-align: bottom;
+}
+
+.dashboard .overview-subpanel {
+  border: none;
+
+}
+
+.dashboard .overview-content .date-range {
+  background-color: #64737b;
+  color: #b5c9cd;
+}
+
+.dashboard .overview-header .overview-count {
+  background-color: #525f65;
+  min-width: 27px;
+  height: 50px;
+}

@@ -45,11 +45,10 @@ define(
 
             var _chartConf = this.attr.chart.conf;
             var _data = this.attr.chart.data;
-
             var svg = d3.select(this.node)
             .append("svg")
             .attr("width", _chartConf.width*_data.length + _chartConf.barPadding*(_data.length - 1))
-            .attr("height", _chartConf.maxHeight);       
+            .attr("height", _chartConf.maxHeight);
 
             svg.selectAll("rect")
             .data(_data).enter().append("rect")
@@ -65,6 +64,9 @@ define(
               var key = getObjKeys(obj)[0];
               var value = obj[key];
               return parseInt(value)*_chartConf.maxHeight/100;
+            })
+            .attr('class', function(d, i){
+              return ( i%2 === 0 )? 'color2' : 'color1';
             });
 
             svg.selectAll("text")
@@ -90,13 +92,16 @@ define(
         
         this.before('renderItems', function() {
           var _text = this.attr.text;
-          this.attr.items = [{
-            tag: 'div',
-            html: '<div class="title"><div class="value">'+_text.title.value+'</div>' +
-                  '<div class="caption">'+_text.title.caption+'</div></div>' +
-                  '<div class="content"><div class="value text">'+_text.content.value+'</div>' +
-                  '<div class="caption">'+_text.content.caption+'</div></div>',
-          }];
+          if (_text){
+            var html = (_text.title)? '<div class="title"><div class="value">'+_text.title.value+'</div><div class="caption">'+_text.title.caption+'</div></div>' : '';
+            html += (_text.content)? '<div class="content"><div class="value text">'+_text.content.value+'</div><div class="caption">'+_text.content.caption+'</div></div>' : '';
+
+            this.attr.items = [{
+              tag: 'div',
+              html: html
+            }];
+          }
+          
         });
 
         this.after('renderItems', function() {
@@ -104,7 +109,12 @@ define(
           if (this.attr.chart){
             this.createChart();
           }    
-        });     
+        });  
+
+        this.on('resize', function(e, chartSize) {
+          //this.createChart();
+          e.stopPropagation();
+        });   
 
       });
     }

@@ -290,7 +290,8 @@ define(
 //            var url = 'http://nitroic:5371/m2m/v2/services/TrafficLightsDE/assets';
 //            var secureURL = 'http://nitroic:5371/secure/m2m/v2/services/TrafficLightsDE/assets';
 
-            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+//            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+            var assetsURL = 'http://localhost:5371/m2m/v2/services/TrafficLightsDE/assets';
             
             /* Updates sidebar asset list */
             var updateAssets = function () {

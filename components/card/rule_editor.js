@@ -200,14 +200,18 @@ define(
                     this.attr.cards.actions);
 
                 this.on('optionsChange', function(e, o) {
+                    var defaultConditionList = [];
+                    var cards;
                     if (e.target === this.node) {
+                        cards = o.cards.conditions.cards || [];
                         if (o.cards.conditions) {
-                            this.loadToolboxCards(this.$conditionsToolbox,
-                                o.cards.conditions.cards || []);
+                            $.each(cards, function(i,o){
+                                o['conditionList']=defaultConditionList;
+                            });
+                            this.loadToolboxCards(this.$conditionsToolbox, cards);
                         }
                         if (o.cards.actions) {
-                            this.loadToolboxCards(this.$actionsToolbox,
-                                o.cards.actions.cards || []);
+                            this.loadToolboxCards(this.$actionsToolbox, cards);
                         }
                     }
                 });

@@ -144,7 +144,7 @@ define(
                         delimiter.on('valueChange', $.proxy(function(){
                             this.updateValue();
                         }, this));
-                        Delimiter.attachTo(delimiter);
+                        Delimiter.attachTo(delimiter, o);
                     }
 
                     node.data('delimiter', delimiter);

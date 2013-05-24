@@ -35,6 +35,7 @@ define(
             this.after('initialize', function() {
 
                 var elementId = this.attr.id || _getNexId();
+                var currentConditionOperator = null;
 
                 this.attr.updateOnValueChange = false;
 
@@ -66,6 +67,13 @@ define(
                 this.on('valueChange', function(e, o) {
                     this.$node.data('cardValue', o.value);
                 });
+
+                this.on('conditionOperatorChange', function(e,o){
+                    currentConditionOperator = o.operator;
+                    console.log('currentConditionOperator', currentConditionOperator);
+                });
+
+                this.$node.find('.body > *' ).trigger('valueChange', {value:50});
 
             });
 

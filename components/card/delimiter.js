@@ -13,7 +13,7 @@ define(
                 delimiterList: [{
                     label: 'IS',
                     operator: 'EQUAL_TO'
-                }, {                    
+                }, {
                     label: 'IS NOT',
                     operator: 'DIFFERENT_TO'
                 }, {
@@ -26,7 +26,7 @@ define(
             });
 
             this.after('initialize', function() {
-
+                var cardElement = this.attr.node;
                 this.$node.addClass('m2m-card-delimiter');
 
                 this.$delimiterValue = $('<div>')
@@ -57,6 +57,7 @@ define(
 
                 this.on('valueChange', function(e, o) {
                     this.$delimiterValueSpan.html(o.value.label);
+                    cardElement.trigger('conditionOperatorChange', o.value);
                 });
 
                 this.$delimiterList.find('li').slideToggle(0);

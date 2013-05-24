@@ -34,7 +34,8 @@ define(
 
             this.after('initialize', function() {
 
-                var elementId = this.attr.id || _getNexId();
+                var elementId = this.attr.id || _getNexId(),
+                    dragCheck = false, clickCheck = false;
 
                 this.attr.updateOnValueChange = false;
 
@@ -55,10 +56,27 @@ define(
                 if (this.attr.flippable) {
                     //Flippable.attachTo(this.node);
                     this.$node.addClass('flippable');
-                    this.$front.on('click', $.proxy(function() {
-                        this.$node.addClass('flip');
-                        this.$node.trigger('flipped');
+
+                    this.$front.on('mousedown', function() {
+                        clickCheck = true;
+                    });
+
+                    this.$front.on('mouseup', $.proxy(function() {
+                        if (!dragCheck && clickCheck) {
+                            this.$node.addClass('flip');
+                            this.$node.trigger('flipped');
+                        }
+                        clickCheck = false;
                     }, this));
+
+                    this.on('drag', function() {
+                        dragCheck = true;
+                    });
+
+                    this.on('dragstop', function() {
+                        dragCheck = false;
+                    });
+
                 }else {
                     this.$back.hide();
                 }

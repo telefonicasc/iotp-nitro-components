@@ -45,11 +45,10 @@ define(
 
             var _chartConf = this.attr.chart.conf;
             var _data = this.attr.chart.data;
-
             var svg = d3.select(this.node)
             .append("svg")
             .attr("width", _chartConf.width*_data.length + _chartConf.barPadding*(_data.length - 1))
-            .attr("height", _chartConf.maxHeight);       
+            .attr("height", _chartConf.maxHeight);
 
             svg.selectAll("rect")
             .data(_data).enter().append("rect")
@@ -99,7 +98,7 @@ define(
 
             this.attr.items = [{
               tag: 'div',
-              html: html,
+              html: html
             }];
           }
           

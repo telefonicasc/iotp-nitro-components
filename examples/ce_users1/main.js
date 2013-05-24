@@ -25,7 +25,7 @@ define(
           $('.range-selection-chart').trigger('rangeSelected', {
               text: 'Month',
               action: 'action-month',
-              range: 35 // 5 weeks of 7 days
+              fixRange: 35 // 5 weeks of 7 days
           });
       }, 500);
     

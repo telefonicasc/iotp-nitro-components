@@ -11,7 +11,8 @@ define(
         function ColumnChart() {
 
             this.defaultAttrs({
-                step: 7
+                step: 7,
+                opacity: 0.04
             });
 
             this.after('initialize', function() {
@@ -23,37 +24,31 @@ define(
 
                 context.attr('class', 'chart ' + this.attr.cssClass);
                 var subPanelgroup = context.append('g');
-
+                var carousel = [];
+                var setting = fakeData();
 
                 this.updateChart = function() {
-                    
-                    var _width = this.width;
-                    var _height = this.height;
+                    var _width = this.width,
+                        _height = this.height,
+                        _attr = this.attr;
+                    carousel.length = 0;
+
                     subPanelgroup.remove();
-                   
+
+
                     this.bars = context.selectAll('.bar_column').data(data);
-                        
                     this.bars.enter().append('rect').attr('class', 'bar_column');
-                    this.bars.attr('x', function(d) {
-                        return x(d.date);
+                    this.bars.attr('x', function(date) {
+                        return x(date);
                     })
                     .style('opacity', function(d, i){
-                        
-                        if (i%2 !== 0){
-                            return 0.04;
-                        }else{
-                            return 0;
-                        }
-                       
+                        return (i%2 !== 0)? _attr.opacity: 0;
                     })
-                    .attr('width', _width/(data.length+1))
-                    .attr('y', 0)
-                    .attr('height', _height)
-                    .attr('y', 0)
+                    .attr('width', _width/(this.attr.step-2))
                     .attr('height', _height);
 
                     this.bars.exit().remove();
-                    _items = this.attr.items;
+                    var _items = this.attr.items;
                     if (_items && _items.length > 0){
 
                         subPanelgroup = context.append('g');
@@ -61,25 +56,15 @@ define(
                         subPanelgroup.selectAll('.foreignObject')
                         .data(data)
                         .enter().append('foreignObject')
-                        .attr('class', function(d){
-                            var setting = _items[0];
-                            /* THIS IS FAKE DATA, it will be removed when real data available */
-                            if (setting.text.content){
-                                setting.text.content.value = Math.floor(Math.random()*(1230)+100);
-                            }
-                            if (setting.text.title){
-                                setting.text.title.value = Math.floor(Math.random()*(91)+1)+'%';
-                            }
-                            if (setting.chart && setting.chart.data){
-                                setting.chart.data = [ { gains: Math.floor(Math.random()*(setting.chart.conf.maxHeight)+1) }, { losses: Math.floor(Math.random()*(setting.chart.conf.maxHeight)+1) } ]
-                            }
-                            ComponentManager.get(_items[0].component).attachTo(this,setting);
+                        .attr('class', function(date, i){
+                            var component = ComponentManager.get(_items[0].component).attachTo(this, setting[i]);
+                            carousel.push({component: component, date: date});
                             return 'cell-barchart-subpanel';
                         })
-                        .attr('x', function(d) {
-                            return x(d.date);
+                        .attr('x', function(date) {
+                            return x(date);
                         })
-                        .attr('width', _width/(data.length+1))
+                        .attr('width', _width/(this.attr.step-2)+3)
                         .attr('height', _height);
                     }
                 };
@@ -87,8 +72,6 @@ define(
                 this.on('resize', function(e, chartSize) {
                     this.width = chartSize.width;
                     this.height = chartSize.height;
-                    //this.$node.find('.cell-barchart-subpanel')
-                    //    .trigger('resize', {width:  chartSize.width/(data.length+1), height: 0});
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
                     this.updateChart();
@@ -96,35 +79,53 @@ define(
                 });
 
                 this.on('valueChange', function(e, options) {
-                    
                     var valueField = this.attr.model;
                     this.attr.value = $.map(options.value[valueField], function(val, i) {
                         if (val.date > options.range[0] &&
-                            val.date < options.range[1]) {
+                            val.date <= options.range[1]) {
+                            val.date = d3.time.day.round(new Date(val.date));
                             return val;
                         }
-                    });
-                    
-                    var res = [],
-                    step = this.attr.step;
-                    var _fixHeight = this.attr.fixHeight;
-                    var sum = 0;
-                    $.each(this.attr.value, function(i, item){
-                        sum += item.value;
-                        if (i%step === 0) {
-                           res.push({date: item.date, value: sum });
-                           sum = 0;
-                        }
-                    });
-                    res.pop();
-                    data = res;
+                    });         
+
+                    if (!this.res){
+                        var step = this.attr.step;                        
+                        this.res = $.map(this.attr.value, function(val, i) {
+                            if (i % step === 0) {
+                                return val.date;
+                            }
+                        });            
+                        this.res.pop();
+                    }
+
+                    data = this.res;
 
                     x.domain(options.range);
                     y.domain(options.valueRange);
                     this.updateChart();
                     e.stopPropagation();
                 });
-            });
+
+            });        
+        }
+
+        function fakeData(){
+            var fake = [];
+            for (var i = 30 - 1; i >= 0; i--) {
+                var setting = { 
+                        text: {
+                          title: { value: Math.floor(Math.random()*(91)+1)+'%', caption: '' },
+                          content: { value: Math.floor(Math.random()*(1230)+100) , caption: 'unique users online' },
+                        },
+                        chart: {       
+                            conf: { maxHeight: 70, width: 55, barPadding: 4 },
+                        data: [{ gains: Math.floor(Math.random()*(70)+1) },
+                               { losses: Math.floor(Math.random()*(70)+1) }]
+                        }
+                };
+                fake.push(setting);
+            };
+            return fake;
         }
     }
 );

@@ -9,11 +9,7 @@
 .dashboard .main-content {
   margin: 0px;
   background-color:#efeeeb;
-overflow: auto
-}
-
-.dashboard .main-content .dashboard-main-panel{
-    
+  overflow: auto;
 }
 
 .dashboard .main-content .dashboard-main-panel .dashboard-main-panel-content {
@@ -46,11 +42,11 @@ overflow: auto
 }
 
 .top {
-  height: 70%;
+  height: 68%;
 }
 
 .bottom {
-  height: 30%;
+  height: 32%;
 }
 
 .chart path.area {
@@ -79,11 +75,10 @@ overflow: auto
 }
 
 .brush .extent {
-
-  fill: #0f0f0f;
+  fill: #e1dab0;
   stroke: #788d9a;
   stroke-width: 2px;
-  opacity: 0.1
+  opacity: 0.5;
 }
 
 .brush .resize rect {
@@ -155,4 +150,84 @@ overflow: auto
 
 .radar-chart .radar path {
   fill: #bfcecf;
+}
+
+
+/*************************/
+
+.chart .yellow path.area {
+  opacity: 0.3;
+  fill: yellow;
+}
+
+.chart .brown path.area {
+  opacity: 0.3;
+  fill: brown;
+}
+
+.chart .green path.area {
+  opacity: 0.3;
+  fill: rgb(12, 109, 197);
+}
+.chart .blue path.area {
+  opacity: 0.3;
+  fill: blue;
+}
+
+.green {
+  background-color: #c4d79d;
+}
+.yellow {
+  background-color: #f4f3a5;
+}
+
+.yellow2 {
+  background-color: #dbc177;
+}
+
+.brown {
+  background-color: #9b393b;
+}
+.dashboard .overview-subpanel .icon.green {
+  background-color: #bcce96;
+}
+.purble-line {
+  background: #9355ab;
+  max-height: 3px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.dashboard .overview-header {
+  height: 30px;
+}
+.dashboard .overview-subpanel .overview-subpanel-body .text {
+  padding-left: 8px;
+  color: #434d52;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body .caption {
+  padding-left: 8px;
+  color: #718187;
+}
+
+.dashboard .overview-subpanel .icon {
+  height: 53px;
+  vertical-align: bottom;
+}
+
+.dashboard .overview-subpanel {
+  border: none;
+
+}
+
+.dashboard .overview-content .date-range {
+  background-color: #64737b;
+  color: #b5c9cd;
+}
+
+.dashboard .overview-header .overview-count {
+  background-color: #525f65;
+  min-width: 27px;
+  height: 50px;
 }

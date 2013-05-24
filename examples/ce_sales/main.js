@@ -48,19 +48,19 @@ define(
             items: [{
               text: 'Week',
               action: 'action-week',
-              range: 7
+              fixRange: 7
             }, {
               text: 'Month',
               action: 'action-month',
-              range: 35 // 5 weeks of 7 days
+              fixRange: 35 // 5 weeks of 7 days
             }, {
               text: 'Quarter',
               action: 'action-quarter',
-              range: 140 // 20 weeks of 7 days
+              fixRange: 140 // 20 weeks of 7 days
             }, {
               text: 'Unconstrained',
               action: 'action-unconstrained',
-              range: -1
+              fixRange: -1
             }],
             onSelect: function(item){
               $('.range-selection-chart').trigger('rangeSelected', item);

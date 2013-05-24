@@ -69,6 +69,7 @@
   }
 
   &.flippable {
+    -webkit-transition: margin-left 0.5s, margin-top 0.5s;
     .front, .back {
       -webkit-transition: -webkit-transform 0.5s, width 0.5s, height 0.5s;
     }
@@ -470,6 +471,12 @@
   .card {
     margin-left: 0-round(@card-width/2);
     margin-top: 0-round(@card-height/2);
+    
+    &.flip {
+      margin-left: 0-round(@card-width*@card-flip-factor/2);
+      margin-top: 0-round(@card-height*@card-flip-factor/2);
+
+    }
 
     &.m2m-card-action {
       margin-left: 0-round(@card-action-width/2);

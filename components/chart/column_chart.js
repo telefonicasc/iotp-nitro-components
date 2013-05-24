@@ -44,7 +44,7 @@ define(
                     .style('opacity', function(d, i){
                         return (i%2 !== 0)? _attr.opacity: 0;
                     })
-                    .attr('width', _width/5)
+                    .attr('width', _width/(this.attr.step-2))
                     .attr('height', _height);
 
                     this.bars.exit().remove();
@@ -64,7 +64,7 @@ define(
                         .attr('x', function(date) {
                             return x(date);
                         })
-                        .attr('width', _width/5+3)
+                        .attr('width', _width/(this.attr.step-2)+3)
                         .attr('height', _height);
                     }
                 };

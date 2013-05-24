@@ -19,13 +19,8 @@ define(
   
     function() {
 
-        /*
-        var swapPanels = function (locator) {
-            console.log("Swap locator: " + locator);
-        };
-        */
         // CONFIG: This config should override the one provided by default below (for testing)
-        //
+
         // Config germany 
         var features_germany = [
             {
@@ -64,7 +59,6 @@ define(
             },
             {
                 'geometry': { coordinates: [ 8.467712, 50.125861 ] },
-//                'geometry': { coordinates: [ 8.467712, 50.0 ] },
                 'properties': {
                     'marker-color': '#088A85',
                     'marker-symbol': 'circle',
@@ -99,6 +93,7 @@ define(
 
         var minimap = {
             component: 'minimap',
+            mapId: 'keithtid.map-z1eeg2ge',        
             zoomValue: 16,
             movable: true,
             markerModel: {
@@ -202,7 +197,6 @@ define(
                             component: 'pagedPanel',
                             className: 'panel-detail',
                             insertionPoint: '.panel-content-details',
-//                            header: 'Asset details',
                             ID: 'panel-detail',
                             allwaysVisible: [0],
                             items: compList
@@ -287,8 +281,6 @@ define(
             $('.overview-count').html('3');
             
             // JSON service data read
-//            var url = 'http://nitroic:5371/m2m/v2/services/TrafficLightsDE/assets';
-//            var secureURL = 'http://nitroic:5371/secure/m2m/v2/services/TrafficLightsDE/assets';
 
 //            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
             var assetsURL = 'http://localhost:5371/m2m/v2/services/TrafficLightsDE/assets';
@@ -321,7 +313,6 @@ define(
                                     $.each(sensorData, function (index, value) {
                                         console.log ('INDEX::'+index);
                                         if ('ms' in value) {
-//                                            console.log ("PH : " + value.ms.p + " ::= " + value.ms.v);
                                             // Evaluate error conditions
                                             if (value.ms.p === 'voltage' && parseInt(value.ms.v) < 10) {
                                                 errors += 'Voltage < 10V</br>';
@@ -357,8 +348,6 @@ define(
                                     var clone;
                                     if ($('.panel-content-list').attr('search') !== '') {
                                         console.log('I need to add ' + $('.panel-content-list').attr('search'));
-//                                        clone = $($('.panel-content-list .overview-subpanel')[0]).clone(true);
-//                                        clone.appendTo('.panel-content-list');
                                         $($('.panel-content-list .overview-subpanel')[0]).clone(true).appendTo('.panel-content-list');
                                         $('.panel-content-list .overview-subpanel .text').last().html(assetName);
                                         $('.panel-content-list .overview-subpanel .caption').last().html(errors);

@@ -69,7 +69,7 @@
  *
  * ==> To sent an event (example):
  *
- * $('.mapbox').trigger('update-marker',{title: 'Marker 1'});update-marker-features
+ * $('.mapbox').trigger('update-marker',{title: 'Marker 1'});
  */
 
 define(
@@ -135,9 +135,7 @@ define(
                     this.mapC.addLayer(this.markerLayer);
                     // ==> Remove hovering tooltips?
                     interaction.showOnHover(this.attr.hoveringTooltip);
-//            if (this.attr.hoveringTooltip == false) {
-//                interaction.showOnHover(false);
-//            } 
+
                     if (self.attr.debug) {
                         // ==> Event suscriptions and handlers
                         console.log('Created click event debug handler');
@@ -205,31 +203,9 @@ define(
                         );
 
                         var interactionLayer = mapbox.markers.interaction(self.markerLayer);
-                        /*
-                        interactionLayer.formatter(function(feature) {
-                            var o = '<a target="_blank">' +
-                                    '<img src="http://maps.google.com/mapfiles/ms/micons/blue.png">' +
-                                    '<h2>' + feature.properties.title + '</h2>' +
-                                    '</a>';
-                            return o;
-                        });
-                        */
                     };
 
-                    /*
-                     this.announce = function (locator, trigger_name) {
-                     var list = [];
-                     // I want to include the devic name
-                     for (var i = 0; i < self.attr.features.length; i++) {
-                     self.attr.features[i].properties['img']
-                     
-                     }
-                     
-                     };
-                     */
-
                     // ==> Create features
-                    //self.setFeatures(self.attr.features, self.attr.center, self.attr.zoomInitial);
                     self.setFeatures();
 
                     // =========================== \\
@@ -246,11 +222,11 @@ define(
                         this.attr.features.push(feature);
                         this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
                     });
-                    
+
                     // ================ \\
                     // >> Center map << \\
                     // ================ \\
-                    this.on('center-map', function (event, latitude, longitude) {
+                    this.on('center-map', function(event, latitude, longitude) {
                         this.mapC.center({lat: latitude, lon: longitude});
                     });
 
@@ -268,13 +244,9 @@ define(
                             return null;
                         }
                         // => Update unselected marker
-                        //self.attr.features[sel].properties['marker-symbol'] = self.attr.unselectedSymbol;
-                        //self.attr.features[sel].properties['marker-color'] = self.attr.unselectedColor;
                         self.attr.features[sel].properties['marker-size'] = 'medium';
 
                         // => Update selected marker
-                        //self.attr.features[i].properties['marker-symbol'] = self.attr.selectedSymbol;
-                        //self.attr.features[i].properties['marker-color'] = self.attr.selectedColor;
                         self.attr.features[i].properties['marker-size'] = 'large';
 
                         // => Reload features

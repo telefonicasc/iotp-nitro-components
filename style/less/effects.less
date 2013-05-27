@@ -85,3 +85,15 @@
     }
   }
 }
+
+/* For IE. Fix for CSS3PIE */
+.no-boxshadow.no-csstransforms .flippable{
+  .back {
+    top: -10000px;
+  }
+  &.flip {
+    .back {
+      top: 0px;
+    }
+  }
+}

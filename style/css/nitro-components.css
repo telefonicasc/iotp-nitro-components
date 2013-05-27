@@ -573,6 +573,7 @@ select {
 .card .back {
   width: 160px;
   height: 195px;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
@@ -624,6 +625,15 @@ select {
 }
 .card.preview {
   -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  transform: scale(0.5);
+}
+.card.preview .front,
+.card.preview .back {
+  filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
+  z-index: 1;
 }
 .m2m-card-action.flip .front,
 .m2m-card-action.flip .back {
@@ -680,7 +690,23 @@ select {
 }
 .m2m-card-action .front {
   background: #2d3539;
-  border-radius: 13px;
+  behavior: url(../../style/css3pie/PIE.htc);
+  -webkit-border-top-right-radius: 13px;
+  -webkit-border-bottom-right-radius: 13px;
+  -webkit-border-bottom-left-radius: 13px;
+  -webkit-border-top-left-radius: 13px;
+  -moz-border-radius-topright: 13px;
+  -moz-border-radius-bottomright: 13px;
+  -moz-border-radius-bottomleft: 13px;
+  -moz-border-radius-topleft: 13px;
+  border-radius: 13px 13px 13px 13px;
+  border-top-right-radius: 13px;
+  border-bottom-right-radius: 13px;
+  border-bottom-left-radius: 13px;
+  border-top-left-radius: 13px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
 .m2m-card-action .front .header h1 {
   color: white;
@@ -858,7 +884,23 @@ select {
   width: 84px;
   background-color: #77868E;
   border: 8px solid white;
-  border-radius: 85px;
+  -webkit-border-top-right-radius: 85px;
+  -webkit-border-bottom-right-radius: 85px;
+  -webkit-border-bottom-left-radius: 85px;
+  -webkit-border-top-left-radius: 85px;
+  -moz-border-radius-topright: 85px;
+  -moz-border-radius-bottomright: 85px;
+  -moz-border-radius-bottomleft: 85px;
+  -moz-border-radius-topleft: 85px;
+  border-radius: 85px 85px 85px 85px;
+  border-top-right-radius: 85px;
+  border-bottom-right-radius: 85px;
+  border-bottom-left-radius: 85px;
+  border-top-left-radius: 85px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
@@ -871,13 +913,30 @@ select {
   height: 134px;
   margin-left: -87px;
   margin-top: -67px;
-  border-radius: 13px;
+  behavior: url(../../style/css3pie/PIE.htc);
+  -webkit-border-top-right-radius: 13px;
+  -webkit-border-bottom-right-radius: 13px;
+  -webkit-border-bottom-left-radius: 13px;
+  -webkit-border-top-left-radius: 13px;
+  -moz-border-radius-topright: 13px;
+  -moz-border-radius-bottomright: 13px;
+  -moz-border-radius-bottomleft: 13px;
+  -moz-border-radius-topleft: 13px;
+  border-radius: 13px 13px 13px 13px;
+  border-top-right-radius: 13px;
+  border-bottom-right-radius: 13px;
+  border-bottom-left-radius: 13px;
+  border-top-left-radius: 13px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
 .card-toolbox {
   width: 240px;
   background-color: #6d8189;
   border-right: 1px solid #2b3236;
   overflow: hidden;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
   box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.1);
@@ -975,7 +1034,6 @@ select {
   margin-top: 14px;
   margin-bottom: 3px;
   padding: 0px;
-  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-border-top-right-radius: 4px;
   -webkit-border-bottom-right-radius: 4px;
   -webkit-border-bottom-left-radius: 4px;
@@ -993,6 +1051,7 @@ select {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
   border: 1px solid #5e777f;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
@@ -1035,6 +1094,7 @@ select {
   border-top: 1px solid #c6d6db;
   border-bottom: 1px solid #546166;
   cursor: pointer;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
@@ -1147,7 +1207,6 @@ li.delimiter-value {
   margin-left: -62px;
   width: 124px;
   height: 20px;
-  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-border-top-right-radius: 12px;
   -webkit-border-bottom-right-radius: 12px;
   -webkit-border-bottom-left-radius: 12px;
@@ -1168,6 +1227,7 @@ li.delimiter-value {
   font-weight: bold;
   border: 2px solid #ffffff;
   background-color: #4c9bd8;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
@@ -1415,6 +1475,13 @@ li.delimiter-value {
   -ms-transform: perspective(300px) rotateY(0deg);
   transform: perspective(300px) rotateY(0deg);
 }
+/* For IE. Fix for CSS3PIE */
+.no-boxshadow.no-csstransforms .flippable .back {
+  top: -10000px;
+}
+.no-boxshadow.no-csstransforms .flippable.flip .back {
+  top: 0px;
+}
 .m2m-btn {
   background: #cccccc;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #cccccc), color-stop(1, #eeeeee));
@@ -1499,6 +1566,7 @@ li.delimiter-value {
 .application-content {
   background-color: white;
   left: 55px;
+  behavior: url(../../style/css3pie/PIE.htc);
   -webkit-box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
   box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);

@@ -58,30 +58,32 @@ define(
                     var lastLeft;
 
                     if (e.target.parentNode === e.delegateTarget) {
-                        $(e.target).data({ left: o.left, top: o.top });
+                        if (o && o.left && o.top) {
+                            $(e.target).data({ left: o.left, top: o.top });
 
-                        if (!o.animated) {
-                            $(e.target).css(o);
-                            $(e.target).trigger('moved', o);
-                        } else {
-                            $(e.target).animate(o, {
-                                step: function(now, tween) {
-                                    if (tween.prop === 'left') {
-                                        lastLeft = now;
-                                    } else if (tween.prop === 'top') {
-                                        $(e.target).trigger('moved', {
-                                            left: lastLeft,
-                                            top: now
-                                        });
-                                        
+                            if (!o.animated) {
+                                $(e.target).css(o);
+                                $(e.target).trigger('moved', o);
+                            } else {
+                                $(e.target).animate(o, {
+                                    step: function(now, tween) {
+                                        if (tween.prop === 'left') {
+                                            lastLeft = now;
+                                        } else if (tween.prop === 'top') {
+                                            $(e.target).trigger('moved', {
+                                                left: lastLeft,
+                                                top: now
+                                            });
+                                            
+                                        }
+                                    }, 
+                                    complete: function() {
+                                        $(e.target).trigger('moved', o);
                                     }
-                                }, 
-                                complete: function() {
-                                    $(e.target).trigger('moved', o);
-                                }
-                            });
+                                });
+                            }
                         }
-                      }
+                    }
                 }, this));
 
                 this.$nodes.on('moved', '*', $.proxy(function(e) {
@@ -196,8 +198,8 @@ define(
 
             this.getPathArray = function(start, end) {
                 var pathArray = [],
-                    startPosition = start.data(),
-                    endPosition = end.data(),
+                    startPosition = start.data() || {},
+                    endPosition = end.data() || {},
                     diffX = endPosition.left - startPosition.left,
                     diffY = endPosition.top - startPosition.top;
 

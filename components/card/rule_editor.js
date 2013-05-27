@@ -112,7 +112,7 @@ define(
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
-                this.$graphEditor.on('click', function(){
+                $('body').on('click', function(){
                     $(this).find('.card.flip').each(function() {
                         $(this).removeClass('flip');
                         $(this).trigger('flipped');
@@ -239,6 +239,10 @@ define(
                         }
                         this.disableChangeEvent = false;
                     }
+                });
+
+                this.on('relayoutCards', function() {
+                    this.relayoutCards();
                 });
 
                 this.trigger('newRule');

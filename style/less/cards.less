@@ -505,7 +505,7 @@
 .m2m-card-delimiter {
     position: absolute;
     margin-top: 85px;
-    z-index: 2000;
+    z-index: 950;
 }
 
 li.delimiter-value {
@@ -668,15 +668,11 @@ li.delimiter-value {
         }
 
         input {
-            padding: 8px;
-            color: rgb(89, 108, 115);
             font-family: 'American Typewriter', 'Courier New', Courier, monospace;
             font-size: 16px;
+            color: rgb(89, 108, 115);
             width: 100%;
-            border: 1px solid rgb(188, 192, 193);
-            .border-radius(4px, 4px, 4px, 4px);
             margin-left: -5px;
-            padding: 4px;
         }
     }
 
@@ -685,4 +681,11 @@ li.delimiter-value {
         margin-left: 5%;
     }
 
+}
+
+.borderradius .m2m-card-text input {
+    padding: 8px;
+    border: 1px solid rgb(188, 192, 193);
+    .border-radius(4px, 4px, 4px, 4px);
+    padding: 4px;
 }

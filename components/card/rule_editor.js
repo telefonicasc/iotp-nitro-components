@@ -474,7 +474,7 @@ define(
                         if(cardConfig){
                             cardConfig.connectedTo = this.getConnectedToId(card);
                             cardConfig.id = elementId;
-                            if(conditionList){
+                            if( $.isArray(conditionList) ){
                                 cardConfig.conditionList = conditionList;
                             }
                             cardsData.push(cardConfig);

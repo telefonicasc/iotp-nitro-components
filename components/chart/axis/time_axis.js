@@ -52,6 +52,10 @@ define(
                             }
                             i++;
                         }
+                        if (attribs.stepType === 'day'){
+                            ticks.pop();
+                        }
+                        
                         return ticks;
                     })
                     .tickSize(1,1,1)
@@ -76,7 +80,7 @@ define(
                     this.height = chartSize.height;
 
                     if (this.attr.orientation === 'bottom') {
-                        this.scale.range([0+this.attr.paddingTick, this.width]);
+                        this.scale.range([0, this.width]);
                     } else {
                         this.scale.range([this.height, 0]);
                     }

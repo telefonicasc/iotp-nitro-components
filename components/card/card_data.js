@@ -50,10 +50,10 @@ function() {
                     component: 'Dropdown',
                     defaultValue: 'false',
                     options: [{
-                        label: 'True', 
+                        label: 'True',
                         value: 'true'
                     }, {
-                        label: 'False', 
+                        label: 'False',
                         value: 'false'
                     }]
                 }]
@@ -96,6 +96,7 @@ function() {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = 'Send Email';
             card.component = component.SEND_EMAIL;
+            card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;
         }
     };
@@ -113,7 +114,7 @@ function() {
 
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
-                card.header = card.sensorData.measureName;            
+                card.header = card.sensorData.measureName;
             }
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];

@@ -11,9 +11,11 @@ define(
     'components/chart/column_chart',
     'components/chart/radar_chart',
     'components/chart/range_selection_chart',
+    'components/chart/carousel_barchart',
     'components/dashboard/dashboard_main_panel',
     'components/dashboard/overview_subpanel',
-    'components/dashboard/cell_barchart_subpanel'
+    'components/dashboard/cell_barchart_subpanel',
+    'components/dashboard/carousel_panel'
   ],
   
   function() {

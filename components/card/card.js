@@ -129,12 +129,14 @@ define(
                 var cl = [];
                 var operator;
                 for(operator in objConditionList){
-                    cl.push({
-                        'scope': 'OBSERVATION',
-                        'parameterValue': objConditionList[operator],
-                        'not': false,
-                        'operator': operator
-                    });
+                    if(objConditionList[operator]){
+                        cl.push({
+                            'scope': 'OBSERVATION',
+                            'parameterValue': objConditionList[operator],
+                            'not': false,
+                            'operator': operator
+                        });
+                    }
                 }
                 return cl;
             }

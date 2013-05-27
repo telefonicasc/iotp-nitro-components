@@ -7,8 +7,7 @@ define(
         'components/mixin/watch_resize',
         'libs/guid',
         'components/chart/axis/time_axis',
-        'components/chart/axis/axis',
-        'components/chart/axis/axis_labels'
+        'components/chart/axis/axis'
     ],
 
     function(ComponentManager, Grid, RangeSelection, DataBinding,
@@ -56,7 +55,7 @@ define(
                         .attr('id', clipId)
                     .append('rect');
 
-                border = svg.append('rect').attr('class', 'border');
+                //border = svg.append('rect').attr('class', 'border');
 
                 if (this.attr.charts) {
                     $.each(this.attr.charts, $.proxy(function(i, chart) {
@@ -77,6 +76,7 @@ define(
 
                 if (this.attr.axisy) {
                     var axisy = svg.append('g').attr('class', 'y axis');
+                    //axisy.append('rect').attr('class','axis-labels').attr('width', 70).attr('height', this.height);
                     ComponentManager.get('axis').attachTo(axisy.node());
                 }
 
@@ -93,18 +93,18 @@ define(
                         height: this.height - this.attr.marginBottom
                     };
                     svg.attr('width', this.width).attr('height', this.height);
-                    border.attr('width', chartSize.width)
-                        .attr('height', chartSize.height);
+                    //border.attr('width', this.width).attr('height', chartSize.height);
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
                     this.$node.find('g.chart, g.grid, g.brush, g.axis')
                         .trigger('resize', chartSize);
                     if (this.attr.axisx) {
-                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 20);
+                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 35);
                         axisx.attr('transform', 'translate(0,' +
                             (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }
                     if (this.attr.axisy) {
+                        axisy.select('.axis-labels').attr('height', chartSize.height).attr('width', 70);
                         axisy.attr('transform', 'translate(' +
                             (chartSize.width) + ',0)');
                         this.$node.find('g.axis.y').trigger('resize', {

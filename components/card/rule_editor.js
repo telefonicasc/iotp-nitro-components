@@ -454,19 +454,21 @@ define(
                     var cardValue;
                     var elementId;
                     var delimiter;
+                    var conditionList;
                     if (!$(card).hasClass('start-card')) {
                         cardConfig = $(card).data('cardConfig');
                         cardValue = $(card).data('cardValue');
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
+                        conditionList = $(card).data('conditionList');
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
                             cardConfig.connectedTo = this.getConnectedToId(card);
                             cardConfig.id = elementId;
-                            if(delimiter){
-                                cardConfig.conditionList = this.getConditionList(card, delimiter);
+                            if(conditionList){
+                                cardConfig.conditionList = conditionList;
                             }
                             cardsData.push(cardConfig);
                         }else{
@@ -547,18 +549,6 @@ define(
                 cardToolbox.trigger('collapse');
 
                 return cardToolbox;
-            };
-
-            this.getConditionList = function(card, delimiter){
-                var operator = delimiter.data('operator');
-                var parameterValue = $(card).data('cardValue') || '';
-                var condition = {
-                    'scope': 'OBSERVATION',
-                    'parameterValue': parameterValue,
-                    'not': false,
-                    'operator': operator
-                };
-                return [condition];
             };
         }
     }

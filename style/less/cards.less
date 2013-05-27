@@ -68,20 +68,12 @@
     resize: none;
   }
 
-  &.flippable {
-    -webkit-transition: margin-left 0.5s, margin-top 0.5s;
-    .front, .back {
-      -webkit-transition: -webkit-transform 0.5s, width 0.5s, height 0.5s;
-    }
-  }
-
   &.flip {
 
     .front, .back {
       width: round(@card-width*@card-flip-factor);
       height: round(@card-height*@card-flip-factor);
     }
-
   }
 
   &.preview {

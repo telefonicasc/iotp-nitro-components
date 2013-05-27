@@ -28,7 +28,7 @@
                         {
                             "parameterValue": "10",
                             "not": false,
-                            "operator": "GREATER_THAN"
+                            "operator": "MINOR_THAN"
                         },
                         {
                             "parameterValue": "16",

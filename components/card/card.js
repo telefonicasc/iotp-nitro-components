@@ -29,7 +29,8 @@ define(
                 },
                 back: {
                 },
-                cssClass:'m2m-card-condition'
+                cssClass:'m2m-card-condition',
+                conditionList : false
             });
 
             this.after('initialize', function() {
@@ -85,10 +86,63 @@ define(
                     this.$node.data('cardValue', o.value);
                 });
 
+                if(_isSensorCard(this)){
+                    var conditionList = this.attr.conditionList;
+                    var objConditionList = _conditionListToObj(conditionList);
+                    var currentConditionOperator = null;
+
+                    this.on('conditionOperatorChange', function(e,o){
+                        var operator = o.operator;
+                        var parameterValue = null;
+
+                        currentConditionOperator = operator;
+
+                        if( operator in objConditionList ){
+                            parameterValue = objConditionList[operator];
+                        }
+                        this.$node.find('.body > *' ).trigger('valueChange', {value:parameterValue});
+                    });
+                    this.on('valueChange', function(e, o) {
+                        objConditionList[currentConditionOperator] = o.value;
+                        conditionList = _objToConditionList(objConditionList);
+                        this.$node.data('conditionList', conditionList);
+                    });
+
+                    this.$node.data('conditionList', conditionList);
+                }
+
             });
 
             function _stopPropagation(e){
                 e.stopPropagation();
+            }
+
+            function _conditionListToObj(cl){
+                var obj ={};
+                $.each(cl, function(i,c){
+                    obj[c.operator] = c.parameterValue;
+                });
+                return obj;
+            }
+
+            function _objToConditionList(objConditionList){
+                var cl = [];
+                var operator;
+                for(operator in objConditionList){
+                    cl.push({
+                        'scope': 'OBSERVATION',
+                        'parameterValue': objConditionList[operator],
+                        'not': false,
+                        'operator': operator
+                    });
+                }
+                return cl;
+            }
+
+            //@TODO cambiar por algo más fiable
+            // presupongo que todas las SensorCard tienen 'conditionList'
+            function _isSensorCard(instance){
+                return instance.attr.conditionList !== false;
             }
         }
     }

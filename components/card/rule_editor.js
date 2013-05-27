@@ -144,7 +144,7 @@ define(
                         delimiter.on('valueChange', $.proxy(function(){
                             this.updateValue();
                         }, this));
-                        Delimiter.attachTo(delimiter);
+                        Delimiter.attachTo(delimiter, o);
                     }
 
                     node.data('delimiter', delimiter);
@@ -200,14 +200,18 @@ define(
                     this.attr.cards.actions);
 
                 this.on('optionsChange', function(e, o) {
+                    var defaultConditionList = [];
+                    var cards;
                     if (e.target === this.node) {
+                        cards = o.cards.conditions.cards || [];
                         if (o.cards.conditions) {
-                            this.loadToolboxCards(this.$conditionsToolbox,
-                                o.cards.conditions.cards || []);
+                            $.each(cards, function(i,o){
+                                o['conditionList']=defaultConditionList;
+                            });
+                            this.loadToolboxCards(this.$conditionsToolbox, cards);
                         }
                         if (o.cards.actions) {
-                            this.loadToolboxCards(this.$actionsToolbox,
-                                o.cards.actions.cards || []);
+                            this.loadToolboxCards(this.$actionsToolbox, cards);
                         }
                     }
                 });
@@ -411,13 +415,14 @@ define(
                 this._rawData = $.extend({}, data);
                 // Add cards
                 $.each(data.cards, $.proxy(function(i, card) {
-                    var cardEl = $('<div>')
-                        .data('cardConfig', $.extend({}, card) );
+                    var cardConfig = $.extend({}, card);
+                    var cardEl = $('<div>').data('cardConfig', cardConfig );
                     var data = CardData.encode(card);
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
                     var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
-                        'node': cardEl
+                        'node': cardEl,
+                        'cardConfig': cardConfig
                     };
                     cardCmp.attachTo(cardEl, data);
                     this.$graphEditor.trigger('addNode', node);

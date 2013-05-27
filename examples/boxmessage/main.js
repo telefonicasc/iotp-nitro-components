@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/',
+  baseUrl: '../../',
   nitroComponents: [
   ]
 });
@@ -26,6 +26,11 @@ define(
       .controller('main', ['$scope', 'BoxMessage', function($scope, BM){
         $scope.test = function(){
           BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte?', confirmModal:true, okCallback:function(){
+            BM.close();
+          }});
+        };
+        $scope.test_2 = function(){
+          BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte?', okCallback:function(){
             BM.close();
           }});
         };

@@ -9,7 +9,7 @@ var DashCE_users = DashCE_users || {};
       mainContent: [
       {
         component: 'dashboardMainPanel',
-        title: 'Online users',
+        title: 'Users online',
         className: 'online-users',
         contextMenu: {
           onSelect: function(item) {
@@ -58,12 +58,15 @@ var DashCE_users = DashCE_users || {};
           valueField: 'total_users',
           className: 'chart top',
           marginRight: 45,
-          marginBottom: 20,
+          marginBottom: 35,
           axisy: true,
           axisx: true,
           timeAxis: { className: 'timeaxis_bg', tickFormat: '%e', margin: 0, stepType: 'day', paddingTick: 0, stepTick: 1 },
-          grid: false,
           charts: [{
+            type: 'columnChart',
+            model: 'gainsLosses',
+            rangeField: 'selectedRange'
+          },{
             type: 'areaChart',
             tooltip: true,
             model: 'total_users',
@@ -92,11 +95,6 @@ var DashCE_users = DashCE_users || {};
             model: 'consumers',
             rangeField: 'selectedRange',
             cssClass: 'purple'
-          },
-          {
-            type: 'columnChart',
-            model: 'gainsLosses',
-            rangeField: 'selectedRange'
           }]
         },
         {
@@ -107,27 +105,17 @@ var DashCE_users = DashCE_users || {};
           marginRight: 45,
           marginBottom: 10,
           axisy: false,
-          axisx: false,
-          grid: false,
           charts: [
           {
             type: 'columnChart',
-            model: 'total_users',
+            model: 'gainsLosses',
             rangeField: 'selectedRange',
             fixHeight: 170,
             items: [{
-              component: 'cellBarchartSubpanel',
-              text: {
-                  title: { value: '' , caption: '' },
-                  content: { value: '' , caption: 'unique users online' },
-              },
-              chart: {        //(optional)
-                  conf: {
-                    maxHeight: 70,
-                    width: 60,
-                    barPadding: 4
-                  },
-                  data: []    //values from 0 - 100 
+              component: 'carouselPanel',
+              text: { title: {caption: 'sfdasdf'} },
+              chart: {
+                conf: {maxHeight: 50, width: 60, barPadding: 5}
               }
             }]
           }]
@@ -135,7 +123,7 @@ var DashCE_users = DashCE_users || {};
       },
       {
         component: 'dashboardMainPanel',
-        title: 'Total Users',
+        title: 'Time period',
         className: 'timeline',
         contextMenu: {
             text: 'Set view size',

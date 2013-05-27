@@ -1,20 +1,18 @@
 .dashboard {
   position: absolute;
   top: 0px;
-  bottom: 0px;
   left: 0px;
   right: 0px;
 }
 
 .dashboard .main-content {
   margin: 0px;
-  background-color:#efeeeb;
-  overflow: auto;
+  background-color:#f2f1ef;
 }
 
 .dashboard .main-content .dashboard-main-panel .dashboard-main-panel-content {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 30px;
+  margin-right: 40px;
 }
 
 .dashboard .main-content .dashboard-main-panel div h1 {
@@ -33,20 +31,22 @@
     text-align: center;
 }
 
-.chart {
+.chart,
+.carousel {
   position: relative;
-  top: 0px;
-  bottom: 0px;
+  top: 10px;
   left: 0px;
   right: 0px;
 }
 
 .top {
   height: 68%;
+  border-left: 1px solid #b4b8b9;
 }
 
 .bottom {
-  height: 32%;
+  height: 170px;
+  border-left: 1px solid #b4b8b9;
 }
 
 .chart path.area {
@@ -125,8 +125,9 @@
 }
 
 .timeline {
-  height: 15%;
+  height: 100%;
   background-color: #e2e0d8;
+  border: 1px solid #d0d2d3;
 }
 
 .chart.green path.line {
@@ -134,9 +135,10 @@
 }
 
 .range-selection-chart {
+  max-height: 60px;
   position: absolute;
-  background-color: #efeeeb;
-  margin: 10px;
+  background-color: #f2f1ef;
+  margin: 0px;
   border: 0.5px solid #b5c9cd;
 }
 
@@ -230,4 +232,14 @@
   background-color: #525f65;
   min-width: 27px;
   height: 50px;
+}
+
+.cell-barchart-subpanel svg text {
+  font-size: 16px;
+}
+.title{
+  padding: 10px 10px;
+}
+rect.axis-labels {
+  fill: #f2f1ef;
 }

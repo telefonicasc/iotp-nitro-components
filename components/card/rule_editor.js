@@ -203,14 +203,15 @@ define(
                     var defaultConditionList = [];
                     var cards;
                     if (e.target === this.node) {
-                        cards = o.cards.conditions.cards || [];
                         if (o.cards.conditions) {
+                            cards = o.cards.conditions.cards || [];
                             $.each(cards, function(i,o){
                                 o['conditionList']=defaultConditionList;
                             });
                             this.loadToolboxCards(this.$conditionsToolbox, cards);
                         }
                         if (o.cards.actions) {
+                            cards = o.cards.actions.cards || [];
                             this.loadToolboxCards(this.$actionsToolbox, cards);
                         }
                     }

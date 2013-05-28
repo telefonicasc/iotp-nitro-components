@@ -92,6 +92,7 @@ define(
                 var token = $(this).text().replace(TOKEN_SYMBOL,'');
                 var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
                 _insertAt(element.back.message[0], value);
+                element.back.message.change();
             });
         }
         function _stopPropagation(e){

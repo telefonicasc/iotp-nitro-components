@@ -8,6 +8,7 @@ define(
     'components/dashboard/dashboard',
     'components/chart/bar_chart',
     'components/chart/area_chart',
+    'components/chart/area_stacked_chart',
     'components/chart/column_chart',
     'components/chart/radar_chart',
     'components/chart/range_selection_chart',

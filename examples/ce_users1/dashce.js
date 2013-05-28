@@ -67,26 +67,24 @@ var DashCE_users = DashCE_users || {};
             model: 'gainsLosses',
             rangeField: 'selectedRange'
           },{
-            type: 'areaChart',
-            tooltip: true,
-            model: 'total_users',
-            rangeField: 'selectedRange',
-            cssClass: 'green'
-          },
-          {
-            type: 'areaChart',
-            tooltip: true,
-            model: 'deactivations',
-            rangeField: 'selectedRange',
-            cssClass: 'brown'
-          },
-          {
-            type: 'areaChart',
-            tooltip: true,
-            area: true,
+            type: 'areaStackedChart',
             model: 'newly_registers_acc',
             rangeField: 'selectedRange',
-            cssClass: 'yellow'
+            colorPattern: 'yellow',
+            colorLine: '#cfceb8'
+          },{
+            type: 'areaStackedChart',
+            model: 'total_users',
+            rangeField: 'selectedRange',
+            colorPattern: 'green',
+            colorLine: '#a9beb7'
+          },
+          {
+            type: 'areaStackedChart',
+            model: 'deactivations',
+            rangeField: 'selectedRange',
+            colorPattern: 'brown',
+            colorLine: '#bab6a6'
           },
           {
             type: 'areaChart',

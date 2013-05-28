@@ -48,7 +48,6 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = this.attr.header;
-                    this.attr.back.editableHeader = true;
                 }
 
                 CardSide.attachTo(this.$front, this.attr.front);

@@ -2,11 +2,11 @@ define(
     [
         'components/component_manager',
         'components/mixin/template',
-        'libs/jqueryui/jquery.ui.core.js',
-        'libs/jqueryui/jquery.ui.widget.js',
-        'libs/jqueryui/jquery.ui.mouse.js',  
-        'libs/jqueryui/jquery.ui.draggable.js',
-        'libs/jqueryui/jquery.ui.droppable.js'
+        'libs/jqueryui/jquery.ui.core',
+        'libs/jqueryui/jquery.ui.widget',
+        'libs/jqueryui/jquery.ui.mouse',  
+        'libs/jqueryui/jquery.ui.draggable',
+        'libs/jqueryui/jquery.ui.droppable'
     ],
 
     function(ComponentManager, Template) {

@@ -200,14 +200,10 @@ define(
                     this.attr.cards.actions);
 
                 this.on('optionsChange', function(e, o) {
-                    var defaultConditionList = [];
                     var cards;
                     if (e.target === this.node) {
                         if (o.cards.conditions) {
                             cards = o.cards.conditions.cards || [];
-                            $.each(cards, function(i,o){
-                                o['conditionList']=defaultConditionList;
-                            });
                             this.loadToolboxCards(this.$conditionsToolbox, cards);
                         }
                         if (o.cards.actions) {

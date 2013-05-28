@@ -269,12 +269,25 @@ define(
                         //self.announce(locator, trigger_name);
                         var tn = trigger_name == null ? markerAnnounceTrigger : trigger_name;
                         if (locator == null) {
-                            self.trigger(tn, self.attr.features);
+                            this.trigger(tn, [this.attr.features, this.mapC.getExtent(), this.mapC.getCenter()]);
                         }
                         else {
-                            $(locator).trigger(tn, [self.attr.features]);
+                            $(locator).trigger(tn, [this.attr.features, this.mapC.getExtent(), this.mapC.getCenter()]);
                         }
                     });
+                    
+                    var self = this;
+                    this.mapC.addCallback('zoomed', function () {
+                        $(self.node).trigger('mapbox-zoomed');
+                    });
+                    
+                    this.mapC.addCallback('panned', function () {
+                        $(self.node).trigger('mapbox-panned');
+                    });
+                    
+                    
+                    
+                        
 
                     // ======================================== \\
                     // >> Finds a marker given it's id/class << \\

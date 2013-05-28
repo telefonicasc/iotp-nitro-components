@@ -105,6 +105,7 @@
     margin: 0 auto -100px; /*Allow for footer height*/
     vertical-align:bottom;
     background-color: #AECACE;
+    margin-left: -12px;
 }
 
 
@@ -137,6 +138,19 @@
 }
 
 .paged-panel {
+}
+
+.overview-header .overview-title {
+    color: #A5ADB3;
+}
+
+.overview-header :hover {
+    cursor: pointer;
+    color: white;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body {
+    max-width: 80%;
 }
 
 .dashboard .overview-header .overview-count {
@@ -191,6 +205,52 @@
     font-size: 28px;
     margin-left: 20px;
 }
+
+.battery-widget {
+/*    width: 50%;*/
+    display : inline-block;
+    position: relative;
+}
+
+.battery-graph {
+/*    position: relative;*/
+    float:left;
+    max-width: 20%;
+}
+
+.battery-chart {
+/*    position: relative;*/
+    float:left;
+    max-width: 50%;
+}
+
+.battery-label {
+/*    position: relative;*/
+    float:left;
+    max-width: 25%;
+    margin-top: 5%;
+    font-weight: bold;
+    color: #6F8388;
+    font-size: 28px;
+}
+
+.battery-legend {
+/*    position: relative;*/
+    float:left;
+    min-width: 30%;
+    max-width: 50%;
+    font-size: 12px;
+    position: relative;
+    margin-left: 20%;
+    margin-top: -12%;
+    color: #ADC0C4;
+}
+
+/*
+.battey-level {
+    position: relative;
+}
+
 .battery-chart {
     width: 50%;
     display : inline-block;
@@ -211,6 +271,7 @@
     color: #6F8388;
     font-size: 28px;
 }
+*/
 
 .lights-widget {
     width: 320px;
@@ -228,10 +289,6 @@
     margin-left: 18px;
 }
 
-.overview-header :hover {
-    cursor: pointer;
-    color: white;
-}
 
 .detail-element-header {
     background: #aecace;
@@ -286,3 +343,100 @@
 }
 
 
+.marker-red {
+    width: 32px !important;
+    height: 45px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 15px;
+    background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');
+}
+
+.warning-item:hover{
+    background-color: #D5E0E2;
+    
+}
+
+
+.overview-subpanel-body .text {
+    position: relative;
+    top: -20px;
+}
+
+.overview-subpanel-body .caption {
+    position: relative;
+    top: -20px;
+}
+
+
+/* Offscreen indicators */
+
+.offscreen-indicator {
+  position: absolute;
+  width: 71px;
+  height: 60px;
+  display: none;
+  background-repeat: no-repeat;
+  padding-top: 28px;
+  padding-left: 0px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #908F8F;
+  opacity: 0.3;
+  filter:alpha(opacity=30);
+  text-indent: -9999px;
+  cursor: pointer;
+}
+
+.offscreen-indicator:hover {
+  opacity: 1;
+  filter:alpha(opacity=100);
+  text-indent: 0px;
+} 
+
+.nwmarkers {
+  top: 37px;
+  left: 37px;
+  background-image: url('res/images/NW.png');
+} 
+.nmarkers {
+  top: 8px;
+  left: 50%;
+  margin-left: -30px;
+  background-image: url('res/images/N.png');
+} 
+.nemarkers {
+  top: 37px;
+  right: 37px;
+  background-image: url('res/images/NE.png');
+} 
+.emarkers {
+  top: 50%;
+  right: 8px;
+  margin-top: -30px;
+  background-image: url('res/images/E.png');
+}
+.semarkers {
+  bottom: 25px;
+  right: 37px;
+  background-image: url('res/images/SE.png');
+}
+
+.smarkers {
+  bottom: 0px;
+  left: 50%;
+  margin-left: -30px;
+  background-image: url('res/images/S.png');
+}
+.swmarkers {
+  bottom: 25px;
+  left: 37px;
+  background-image: url('res/images/SW.png');
+}
+.wmarkers {
+  left: 8px;
+  top: 50%;
+  margin-top: -30px;
+  background-image: url('res/images/W.png');
+}

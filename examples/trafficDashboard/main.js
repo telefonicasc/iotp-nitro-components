@@ -70,23 +70,33 @@ define(
         var warnings_germany = [
             {
                 component: 'OverviewSubpanel',
-                iconClass: 'dot red',
+                className: 'warning-item',
+                iconClass: 'marker-red',
                 text: 'AssetSemaphore2',
                 caption: 'Inclination change: +10'
             },
             {
                 component: 'OverviewSubpanel',
-                iconClass: 'dot red',
+                className: 'warning-item',
+                iconClass: 'marker-red',
                 text: 'AssetSemaphore3',
                 caption: 'Voltage < 10V'
             },
             {
                 component: 'OverviewSubpanel',
-                iconClass: 'dot red',
+                className: 'warning-item',
+                iconClass: 'marker-red',
                 text: 'AssetSemaphore4',
                 caption: 'No red light for +5 min'
             }
         ];
+        
+        var emptyComponent = {
+                component: 'OverviewSubpanel',
+                iconClass: 'marker-red',
+                text: 'hide-me',
+                caption: ''
+            };
         
         var center_germany = { lat: 50.1, lon: 8.625 };
         var zoom_germany = 13;
@@ -110,7 +120,7 @@ define(
             {
                 component: 'OverviewSubpanel',
                 className: 'detail-element-header',
-                iconClass: 'dot red',
+                iconClass: 'marker-red',
                 text: 'AssetSemaphore2',
                 caption: 'Inclination change +10'
             },
@@ -140,7 +150,7 @@ define(
                     }    
                 ]
             },
-            /*{
+            {
                 component: 'detailPanel',
                 header: 'Battery Level',
                 id: 'battery-level',
@@ -150,7 +160,7 @@ define(
                         className: 'battery-widget'
                     }    
                 ]
-            },*/
+            },
             {
                 component: 'detailPanel',
                 header: 'Last Location',
@@ -267,25 +277,52 @@ define(
             $('.temperature-widget').trigger('drawTemperature');
             $('.pitch-widget').trigger('drawPitch');
             $('.lights-widget').trigger('drawLights');
-            //$('.battery-widget').trigger('drawBattery');
+            $('.battery-widget').trigger('drawBattery');
 
             var swapPanels = function (locator) {
                 console.log("Swap locator is: " + locator);
                 $('.panel-list').slideToggle();
                 $('.panel-detail').slideToggle();
             };
+            
+            
+            // Add navigation buttons to map
+            var template_offscreen = 
+                '<div class="offscreen-indicator nwmarkers">0</div>' +
+                '<div class="offscreen-indicator nmarkers">0</div>' +
+                '<div class="offscreen-indicator nemarkers">0</div>' +
+                '<div class="offscreen-indicator emarkers">0</div>' +
+                '<div class="offscreen-indicator semarkers">0</div>' +
+                '<div class="offscreen-indicator smarkers">0</div>' +
+                '<div class="offscreen-indicator swmarkers">0</div>' +
+                '<div class="offscreen-indicator wmarkers">0</div>';
+        
+            $('.fit').append(template_offscreen);
+            
+            $('.offscreen-indicator').on('click', function (event) {
+                var last = $(event.target).attr('last');
+                var data = {
+                    properties: {
+                        title: last,
+                        caption: ''
+                    }
+                };
+                $('.dashboard').trigger('updateMinimap', data);
+            });
 
             // MOCK ============================================================
             
             // Fix count 
-            $('.overview-count').html('3');
-            
+            $('.overview-count').html('4');
+            // Hide first component
+//            $('.overview-subpanel .text :eq(0)').parent().parent().hide();
             // JSON service data read
 
-//            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
-            var assetsURL = 'http://localhost:5371/m2m/v2/services/TrafficLightsDE/assets';
-            
-            /* Updates sidebar asset list */
+            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+//            var assetsURL = 'http://nitroic:5371/m2m/v2/services/TrafficLightsDE/assets';
+//            var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
+                        
+            /* Updates sidebar asset list (change this to use Kermit API at install.js) */
             var updateAssets = function () {
                 $.ajax({
                     url: assetsURL,
@@ -311,7 +348,6 @@ define(
                                     
                                     // Add sidebar element
                                     $.each(sensorData, function (index, value) {
-                                        console.log ('INDEX::'+index);
                                         if ('ms' in value) {
                                             // Evaluate error conditions
                                             if (value.ms.p === 'voltage' && parseInt(value.ms.v) < 10) {
@@ -343,12 +379,12 @@ define(
                                             $(this).attr('search','');
                                         }
                                     });
-
                                     // Create element if not there
                                     var clone;
                                     if ($('.panel-content-list').attr('search') !== '') {
                                         console.log('I need to add ' + $('.panel-content-list').attr('search'));
-                                        $($('.panel-content-list .overview-subpanel')[0]).clone(true).appendTo('.panel-content-list');
+                                        var clone = $($('.panel-content-list .overview-subpanel')[0]).clone(true);
+                                        clone.appendTo('.panel-content-list');
                                         $('.panel-content-list .overview-subpanel .text').last().html(assetName);
                                         $('.panel-content-list .overview-subpanel .caption').last().html(errors);
                                     }
@@ -365,10 +401,9 @@ define(
                                             'title': value.asset.name
                                         }
                                     };
-                                    
+                                    debugger
                                     $('.mapbox').trigger('add-marker-feature', marker);
-                                    
-                                   
+                                    debugger
                                     // Add marker to map
                                     var marker = {
                                         geometry : {
@@ -383,55 +418,61 @@ define(
                                     
                                     $('.mapbox').trigger('add-marker-feature', marker);
                                     
+                                    // Update offscreen indicators
+                                    $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
+                                    
                                 },
-                                error: function() {
-                                    alert('boo!');
-                                },
-                                beforeSend: function(xhr) {
-                                    xhr.setRequestHeader('Authorization', 'M2MUser test2%3Atest2');
+                                error: function(request, error, errorThrown) {
+                                    console.error('Error accessing URL: ' + assetInfoURL + ". " + error + ":" + errorThrown);
                                 }
                             });
                         });
                     },
-                    error: function() {
-                        alert('boo!');
-                    },
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'M2MUser test2%3Atest2');
+                    error: function(request, error, errorThrown) {
+                        console.error('Error accessing URL: ' + assetsURL + ". " + error + ":" + errorThrown);
                     }
                 });
-                
             };
             
             var mockDeviceInfo = function (callingElement) {
                 console.log("Mocking data for : " + callingElement);
                 if (callingElement === 'AssetSemaphore1') {
                     $('.temperature-widget').trigger('drawTemperature',15.3);
-                    $('.pitch-widget').trigger('drawPitch',90);                    
+                    $('.pitch-widget').trigger('drawPitch',90);            
+                    $('.battery-widget').trigger('drawBattery-voltage', '12');
+                    $('.battery-widget').trigger('drawBattery-level', 'full');
                     $('.detail-element-header .text').html(callingElement);
                     $('.detail-element-header .caption').html('No problems detected');
                 }
                 else if (callingElement === 'AssetSemaphore2') {
                     $('.temperature-widget').trigger('drawTemperature',15.1);
                     $('.pitch-widget').trigger('drawPitch',75);
+                    $('.battery-widget').trigger('drawBattery-voltage', '13');
+                    $('.battery-widget').trigger('drawBattery-level', 'full');
                     $('.detail-element-header .text').html(callingElement);
                     $('.detail-element-header .caption').html('Inclination change +10');
                 }
                 else if (callingElement === 'AssetSemaphore3') {
                     $('.temperature-widget').trigger('drawTemperature',15.7);
                     $('.pitch-widget').trigger('drawPitch', 23);
+                    $('.battery-widget').trigger('drawBattery-voltage', '7');
+                    $('.battery-widget').trigger('drawBattery-level', 'low');
                     $('.detail-element-header .text').html(callingElement);
                     $('.detail-element-header .caption').html('Voltage < 10V<br/>Inclination change +10');
                 }
                 else if (callingElement === 'AssetSemaphore4') {
                     $('.temperature-widget').trigger('drawTemperature',14.8 );
                     $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.battery-widget').trigger('drawBattery-voltage', '14');
+                    $('.battery-widget').trigger('drawBattery-level', 'full');
                     $('.detail-element-header .text').html(callingElement);
                     $('.detail-element-header .caption').html('No red light for +5m');
                 }
                 else if (callingElement === 'AssetSemaphore5') {
                     $('.temperature-widget').trigger('drawTemperature',14.8);
                     $('.pitch-widget').trigger('drawPitch', 90);
+                    $('.battery-widget').trigger('drawBattery-voltage', '14');
+                    $('.battery-widget').trigger('drawBattery-level', 'full');
                     $('.detail-element-header .text').html(callingElement);
                     $('.detail-element-header .caption').html('No problems detected');
                 }
@@ -469,9 +510,17 @@ define(
                                 else if (value.ms.p === 'pitch') {
                                     $('.pitch-widget').trigger('drawPitch', parseInt(value.ms.v));
                                 }
+                                else if (value.ms.p === 'voltage') {
+                                    $('.battery-widget').trigger('drawBattery-voltage', parseFloat(value.ms.v));
+                                }
+                                else if (value.ms.p === 'batteryStatus') {
+                                    $('.battery-widget').trigger('drawBattery-level', value.ms.v);
+                                }
                             }
-                            else console.log("Element without measure info");
+                            else console.log("Element without measure info");                            
                         });
+                        // After the query, update offscreen markers
+                        $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
                     },
                     error: function() {
                         console.error('Cant find asset info. (Requesting mock)');
@@ -481,6 +530,7 @@ define(
                         xhr.setRequestHeader('Authorization', 'M2MUser test2%3Atest2');
                     }
                 });
+                
             };
             
             
@@ -497,9 +547,59 @@ define(
                 $('.detail-element-header .text').html(callingElement);
                 $('.detail-element-header .caption').html(callingElementCaption);
                 updateAssetInfo(callingElement);
+//                $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
             });
             
+            
+            $('.dashboard').on('mapbox-zoomed', function () {
+                $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
+            });
+            $('.dashboard').on('mapbox-panned', function () {
+                $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
+            });
+            
+            // TO_TEST: $('.mapbox').trigger('announce-markers', ['.dashboard', 'updateOffscreenMarkers'])
+            $('.dashboard').on('updateOffscreenMarkers', function (event, data, extent, center) {
+                // Receives in data an array of mapbox features
+                console.log("Updating offscreen indicators");
+                // reset marker status
+                $.each ($('.offscreen-indicator'), function (key,value) {
+                    $(value).hide();
+                    $(value).html('0');
+                    $(value).attr('title');
+                });
+                
+                for (x in data) {
+                    
+                    var el = data[x];
+                    var lat = el.geometry.coordinates[1];
+                    var lon = el.geometry.coordinates[0];
+                    var locator = '.';
+                    
+                    if (lat > extent.north) locator += 'n';
+                    else if (lat < extent.south) locator += 's';
+                    
+                    if (lon > extent.east) locator += 'e';
+                    else if (lon < extent.west) locator += 'w';
+                    
+                    locator += 'markers';
+                    
+                    if (locator !== '.markers') {
+                        console.log('LOC: ' + locator + " for: " + el.properties.title);
+                        var count = parseInt($(locator).html()) + 1;
+                        $(locator).html(count);
+                        $(locator).show();
+                        $(locator).attr('last', el.properties.title);
+                    }
+                };
+            });
+            
+            
+            
+            
             updateAssets();
+            
+            
             
             /* Uncomment this line for device data polling */
             // window.setInterval(function () { updateAssets(); }, 5000);

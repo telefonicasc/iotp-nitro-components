@@ -124,20 +124,6 @@ define(
                         placeholder,
                         delimiter;
 
-                    if (o.addPlaceholder !== false &&
-                        node.hasClass('start-card') &&
-                        !this.getConnectedTo(node).length) {
-                        placeholder = $('<div>');
-                        placeholder.addClass('card-placeholder action-card');
-                        this.$graphEditor.trigger('addNode', {
-                            node: placeholder
-                        });
-                        this.$graphEditor.trigger('addConnection', {
-                            start: node,
-                            end: placeholder
-                        });
-                    }
-
                     if (node.hasClass('m2m-card-condition')) {
                         delimiter = $('<div>').appendTo(
                             this.$graphEditor.find('.node-container'));
@@ -357,7 +343,6 @@ define(
                     start: start,
                     end: end
                 });
-
             };
 
             // TODO: This only work for one parent one child
@@ -376,6 +361,8 @@ define(
 
                 if (to) {
                     this.removeConnection(card, to);
+                }else{
+                    this.addPlaceholderToCard( $(from) );
                 }
                 this.disableRelayout = false;
                 this.relayoutCards();
@@ -503,6 +490,7 @@ define(
                     node: this.$startCard,
                     draggable: false
                 });
+                this.addPlaceholderToCard(this.$startCard);
                 this.relayoutCards();
             };
 
@@ -549,6 +537,23 @@ define(
 
                 return cardToolbox;
             };
+
+            this.addPlaceholderToCard = function(card){
+                var placeHolderelement = _newPlaceholderElement();
+                this.$graphEditor.trigger('addNode', {
+                    node: placeHolderelement
+                });
+                this.$graphEditor.trigger('addConnection', {
+                    start: card,
+                    end: placeHolderelement
+                });
+            };
+        }
+
+        function _newPlaceholderElement(){
+            var placeholder = $('<div>').
+                addClass('card-placeholder action-card');
+            return placeholder;
         }
     }
 );

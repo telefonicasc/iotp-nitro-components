@@ -21,7 +21,7 @@ define(
                     this.$header = $('<div>').addClass('header').appendTo(this.$node);
                     if (this.attr.editableHeader) {
                         $('<div>').addClass('card-title-label')
-                                .html('Card title').appendTo(this.$header);     
+                                .html('Card title').appendTo(this.$header);
                         this.$headerText  = $('<textarea>').appendTo(this.$header);
                         this.$headerText.val(this.attr.header);
                     } else {
@@ -29,7 +29,7 @@ define(
                             $('<h1>').html(this.attr.header).appendTo(this.$header);
                         }
                     }
-                } 
+                }
                 this.$body = $('<div>').addClass('body').appendTo(this.$node);
                 Container.attachTo(this.$body, this.attr);
             });

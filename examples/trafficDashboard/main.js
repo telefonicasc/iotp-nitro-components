@@ -401,9 +401,7 @@ define(
                                             'title': value.asset.name
                                         }
                                     };
-                                    debugger
-                                    $('.mapbox').trigger('add-marker-feature', marker);
-                                    debugger
+//                                    $('.mapbox').trigger('add-marker-feature', marker);
                                     // Add marker to map
                                     var marker = {
                                         geometry : {
@@ -585,7 +583,6 @@ define(
                     locator += 'markers';
                     
                     if (locator !== '.markers') {
-                        console.log('LOC: ' + locator + " for: " + el.properties.title);
                         var count = parseInt($(locator).html()) + 1;
                         $(locator).html(count);
                         $(locator).show();

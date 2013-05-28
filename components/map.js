@@ -219,6 +219,8 @@ define(
                     // >> Handles model partial updates << \\
                     // =================================== \\
                     this.on('add-marker-feature', function(event, feature) {
+                        console.error('Adding new marker');
+                        event.stopPropagation();
                         this.attr.features.push(feature);
                         this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
                     });

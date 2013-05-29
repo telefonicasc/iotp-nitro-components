@@ -58,6 +58,13 @@ function() {
                     }]
                 }]
             };
+            card.delimiterList = [{
+                    label: 'IS',
+                    operator: 'EQUAL_TO'
+                }, {
+                    label: 'IS NOT',
+                    operator: 'DIFFERENT_TO'
+                }];
             return card;
         },
         'text': function(card) {

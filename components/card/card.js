@@ -36,7 +36,9 @@ define(
                     'parameterValue': null,
                     'not': false,
                     'operator': null
-                }
+                },
+                delimiterList:false
+
             });
 
             this.after('initialize', function() {
@@ -115,6 +117,7 @@ define(
                     }else{
                         this.$node.data('conditionList', []);
                     }
+                    this.$node.data('delimiterList', this.attr.delimiterList);
                 }
             });
 

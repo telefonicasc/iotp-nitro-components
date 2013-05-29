@@ -74,7 +74,8 @@
 
 define(
         [
-            'components/component_manager'
+            'components/component_manager',
+            'libs/mapbox'
         ],
         function(ComponentManager) {
 

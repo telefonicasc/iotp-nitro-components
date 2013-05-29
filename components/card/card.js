@@ -30,7 +30,13 @@ define(
                 back: {
                 },
                 cssClass:'m2m-card-condition',
-                conditionList : false
+                conditionList : [],
+                defaultCondition : {
+                    'scope': 'OBSERVATION',
+                    'parameterValue': null,
+                    'not': false,
+                    'operator': null
+                }
             });
 
             this.after('initialize', function() {
@@ -48,7 +54,6 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = this.attr.header;
-                    this.attr.back.editableHeader = true;
                 }
 
                 CardSide.attachTo(this.$front, this.attr.front);
@@ -87,58 +92,34 @@ define(
                 });
 
                 if(_isSensorCard(this)){
-                    var conditionList = this.attr.conditionList;
-                    var objConditionList = _conditionListToObj(conditionList);
-                    var currentConditionOperator = null;
+                    var condition;
+                    if(this.attr.conditionList.length){
+                        condition = this.attr.conditionList[0];
+                    }else{
+                        condition = this.attr.defaultCondition;
+                    }
 
                     this.on('conditionOperatorChange', function(e,o){
-                        var operator = o.operator;
-                        var parameterValue = null;
-
-                        currentConditionOperator = operator;
-
-                        if( operator in objConditionList ){
-                            parameterValue = objConditionList[operator];
+                        condition.operator = o.operator;
+                        if(condition.parameterValue !== null){
+                            this.$node.data('conditionList', [condition]);
                         }
-                        this.$node.find('.body > *' ).trigger('valueChange', {value:parameterValue});
                     });
                     this.on('valueChange', function(e, o) {
-                        objConditionList[currentConditionOperator] = o.value;
-                        conditionList = _objToConditionList(objConditionList);
-                        this.$node.data('conditionList', conditionList);
+                        condition.parameterValue = o.value;
+                        this.$node.data('conditionList', [condition]);
                     });
-
-                    this.$node.data('conditionList', conditionList);
+                    if(condition.parameterValue !== null && condition.operator !== null){
+                        this.$node.data('conditionList', [condition]);
+                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
+                    }else{
+                        this.$node.data('conditionList', []);
+                    }
                 }
-
             });
 
             function _stopPropagation(e){
                 e.stopPropagation();
-            }
-
-            function _conditionListToObj(cl){
-                var obj ={};
-                $.each(cl, function(i,c){
-                    obj[c.operator] = c.parameterValue;
-                });
-                return obj;
-            }
-
-            function _objToConditionList(objConditionList){
-                var cl = [];
-                var operator;
-                for(operator in objConditionList){
-                    if(objConditionList[operator]){
-                        cl.push({
-                            'scope': 'OBSERVATION',
-                            'parameterValue': objConditionList[operator],
-                            'not': false,
-                            'operator': operator
-                        });
-                    }
-                }
-                return cl;
             }
 
             //@TODO cambiar por algo más fiable

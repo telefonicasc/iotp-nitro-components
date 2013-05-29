@@ -1,5 +1,11 @@
 define(
-  [],
+  [
+        'libs/jqueryui/jquery.ui.core',
+        'libs/jqueryui/jquery.ui.widget',
+        'libs/jqueryui/jquery.ui.mouse',  
+        'libs/jqueryui/jquery.ui.draggable',
+        'libs/jqueryui/jquery.ui.droppable'
+  ],
   function() {
 
     return DraggableMixin;

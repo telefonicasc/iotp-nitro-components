@@ -122,10 +122,8 @@ define(
                 e.stopPropagation();
             }
 
-            //@TODO cambiar por algo más fiable
-            // presupongo que todas las SensorCard tienen 'conditionList'
             function _isSensorCard(instance){
-                return instance.attr.conditionList !== false;
+                return instance.attr.actionCard !== true;
             }
         }
     }

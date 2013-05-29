@@ -259,6 +259,42 @@ select {
   height: 43px;
   display: inline-block;
 }
+.dashboard .overview-subpanel .icon.purple {
+  border-color: #8e44ad;
+}
+.dashboard .overview-subpanel .icon.blue {
+  border-color: #2980b9;
+}
+.dashboard .overview-subpanel .icon.green {
+  border-color: #27ae60;
+}
+.dashboard .overview-subpanel .icon.red {
+  border-color: #c0392b;
+}
+.dashboard .overview-subpanel .icon.orange {
+  border-color: #f39c12;
+}
+.dashboard .overview-subpanel .icon.cyan {
+  border-color: #afc6d8;
+}
+.dashboard .overview-subpanel .icon.purple {
+  background-color: rgba(142, 68, 173, 0.5);
+}
+.dashboard .overview-subpanel .icon.blue {
+  background-color: rgba(41, 128, 185, 0.5);
+}
+.dashboard .overview-subpanel .icon.green {
+  background-color: rgba(39, 174, 96, 0.5);
+}
+.dashboard .overview-subpanel .icon.red {
+  background-color: rgba(192, 57, 43, 0.5);
+}
+.dashboard .overview-subpanel .icon.orange {
+  background-color: rgba(243, 156, 18, 0.5);
+}
+.dashboard .overview-subpanel .icon.cyan {
+  background-color: rgba(175, 198, 216, 0.5);
+}
 .dashboard .overview-subpanel .icon.dot {
   width: 18px;
   height: 18px;
@@ -268,42 +304,6 @@ select {
   margin-left: 12px;
   margin-right: 12px;
   margin-top: 15px;
-}
-.dashboard .overview-subpanel .icon.dot.purple {
-  border-color: #8e44ad;
-}
-.dashboard .overview-subpanel .icon.dot.blue {
-  border-color: #2980b9;
-}
-.dashboard .overview-subpanel .icon.dot.green {
-  border-color: #27ae60;
-}
-.dashboard .overview-subpanel .icon.dot.red {
-  border-color: #c0392b;
-}
-.dashboard .overview-subpanel .icon.dot.orange {
-  border-color: #f39c12;
-}
-.dashboard .overview-subpanel .icon.dot.cyan {
-  border-color: #afc6d8;
-}
-.dashboard .overview-subpanel .icon.dot.purple {
-  background-color: rgba(142, 68, 173, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot.blue {
-  background-color: rgba(41, 128, 185, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot.green {
-  background-color: rgba(39, 174, 96, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot.red {
-  background-color: rgba(192, 57, 43, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot.orange {
-  background-color: rgba(243, 156, 18, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot.cyan {
-  background-color: rgba(175, 198, 216, 0.5);
 }
 .dashboard .overview-subpanel .icon.arrow-down {
   background: url("../../img/nitro-components/arrow-down.png") no-repeat center center;
@@ -505,7 +505,8 @@ select {
   fill: #64737b;
 }
 .cell-barchart-subpanel {
-  width: 95%;
+  width: 100%;
+  height: 100%;
   background-color: #bfcecf;
   color: #617789;
   text-align: center;
@@ -517,7 +518,7 @@ select {
 }
 .cell-barchart-subpanel svg rect {
   fill: #d6dddc;
-  stroke: #acbec5;
+  stroke: #71859c;
   stroke-width: 0.5px;
 }
 .cell-barchart-subpanel svg rect.color1 {
@@ -531,13 +532,18 @@ select {
   background-color: #64737b;
   color: #efeeeb;
   border-bottom: 1px solid white;
+  height: 15%;
 }
 .cell-barchart-subpanel .title .caption {
   font-size: 10px;
   color: #adbabc;
 }
+.cell-barchart-subpanel .chart-carousel {
+  height: 45%;
+}
 .cell-barchart-subpanel .content {
   padding: 10px;
+  height: 15%;
   text-align: center;
 }
 .cell-barchart-subpanel .content .value {
@@ -610,12 +616,21 @@ select {
   right: 0px;
   bottom: 0px;
 }
+.card .back h1 {
+  font-size: 17.5px;
+  padding-top: 16.25px;
+  color: #64737b;
+  text-align: center;
+}
 .card textarea {
   -webkit-appearance: none;
   appearance: none;
   outline: none;
   border: none;
   resize: none;
+}
+.card.flippable {
+  -webkit-transition: margin-left 0.5s, margin-top 0.5s;
 }
 .card.flippable .front,
 .card.flippable .back {
@@ -894,6 +909,9 @@ select {
   width: 87px;
   height: 67px;
 }
+.m2m-rule-editor {
+  overflow: hidden;
+}
 .rule-editor-main {
   bottom: 47px;
   top: 41px;
@@ -1093,6 +1111,10 @@ select {
   margin-left: -80px;
   margin-top: -98px;
 }
+.node-container .card.flip {
+  margin-left: -100px;
+  margin-top: -122px;
+}
 .node-container .card.m2m-card-action {
   margin-left: -87px;
   margin-top: -67px;
@@ -1125,7 +1147,6 @@ li.delimiter-value {
   cursor: pointer;
   z-index: 2;
   font-family: Helvetica, Arial, sans-serif;
-  background-color: #7f919e;
   margin-left: -62px;
   width: 124px;
   height: 20px;
@@ -1146,9 +1167,14 @@ li.delimiter-value {
   background-clip: padding-box;
   text-align: center;
   font-weight: bold;
+  border: 2px solid #ffffff;
+  background-color: #4c9bd8;
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 .delimiter-value span {
-  color: #e9ecee;
+  color: #FFFFFF;
   text-align: center;
   font-weight: bold;
   font-size: 12px;
@@ -1195,6 +1221,35 @@ li.delimiter-value {
 .front .m2m-card-text-value::after {
   content: '\201D';
   margin-left: 6px;
+}
+.front .m2m-card-quantity {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  right: 10px;
+  bottom: 0px;
+}
+.front .m2m-card-quantity::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.front .m2m-card-quantity-container {
+  vertical-align: middle;
+  display: inline-block;
+  width: 100%;
+}
+.front .m2m-card-quantity-value {
+  color: #596c73;
+  font-size: 40px;
+  text-align: center;
+}
+.front .m2m-card-quantity-units {
+  color: #596c73;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
 }
 .front .m2m-card-binary {
   position: absolute;
@@ -1255,6 +1310,15 @@ li.delimiter-value {
 }
 .back .m2m-card-text {
   margin: 10px;
+}
+.back .m2m-card-text label {
+  padding: 8px;
+  color: #B3B8BE;
+  font-weight: bold;
+  margin-bottom: -3px;
+  font-size: 12px;
+  display: block;
+  margin-left: -10px;
 }
 .back .m2m-card-text input {
   padding: 8px;

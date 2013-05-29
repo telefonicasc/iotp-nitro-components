@@ -104,9 +104,9 @@ define(
             var markerColorOk = '#5E91A0';
         
             /* Testing URL */
-            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+//            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
             /* Deploy URL */
-            //var assetsURL = 'http://nitroic:8080/secure/m2m/v2/services/TrafficLightsDE/assets';
+            var assetsURL = 'http://nitroic:8080/secure/m2m/v2/services/TrafficLightsDE/assets';
 
             $('.dashboard').m2mdashboard({
                 mainContent: [

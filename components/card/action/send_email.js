@@ -12,7 +12,8 @@ define(
             subject:'',
             emailAddress:'',
             message:'',
-            tokens: []
+            tokens: [],
+            actionCard: true
         };
         var BACK_TPL = ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',

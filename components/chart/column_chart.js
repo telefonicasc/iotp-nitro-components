@@ -11,8 +11,8 @@ define(
         function ColumnChart() {
 
             this.defaultAttrs({
-                step: 7,
-                opacity: 0.04
+                opacity: 0.02,
+                paddingColumn: 3
             });
 
             this.after('initialize', function() {
@@ -20,58 +20,69 @@ define(
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     data = this.$node.data('value') || this.attr.value || [],
-                    context = d3.select(this.node);
+                    columns = 0,
+                    columnsData = [],
+                    context = d3.select(this.node).append('svg');
 
                 context.attr('class', 'chart ' + this.attr.cssClass);
                 var subPanelgroup = context.append('g');
                 var carousel = [];
-                var setting = fakeData();
 
                 this.updateChart = function() {
-                    var _width = this.width,
-                        _height = this.height,
+
+                    var columnWidth = this.width/(columns)-this.attr.paddingColumn,
                         _attr = this.attr;
+
+                    context.attr('width', this.width);
+
                     carousel.length = 0;
-
                     subPanelgroup.remove();
-
 
                     this.bars = context.selectAll('.bar_column').data(data);
                     this.bars.enter().append('rect').attr('class', 'bar_column');
-                    this.bars.attr('x', function(date) {
-                        return x(date);
+                    this.bars.attr('x', function(d) {
+                        return x(d.date);
                     })
                     .style('opacity', function(d, i){
-                        return (i%2 !== 0)? _attr.opacity: 0;
+                        return (i%2 === 0)? _attr.opacity: 0;
                     })
-                    .attr('width', _width/(this.attr.step-2))
-                    .attr('height', _height);
+                    .attr('width', columnWidth)
+                    .attr('height', this.height);
 
                     this.bars.exit().remove();
                     var _items = this.attr.items;
                     if (_items && _items.length > 0){
 
-                        subPanelgroup = context.append('g');
+                        subPanelgroup = context.append('g').attr('width', this.width);
                         subPanelgroup.attr('transform', 'translate(0, 0)');
                         subPanelgroup.selectAll('.foreignObject')
                         .data(data)
                         .enter().append('foreignObject')
-                        .attr('class', function(date, i){
-                            var component = ComponentManager.get(_items[0].component).attachTo(this, setting[i]);
-                            carousel.push({component: component, date: date});
-                            return 'cell-barchart-subpanel';
+                        .attr('class', 'cell-barchart-subpanel')
+                        .attr('x', function(d) {
+                            return x(d.date);
                         })
-                        .attr('x', function(date) {
-                            return x(date);
-                        })
-                        .attr('width', _width/(this.attr.step-2)+3)
-                        .attr('height', _height);
+                        .attr('width', columnWidth)
+                        .attr('height', this.height);
                     }
+
+                    if (_attr.items){
+                        $('.cell-barchart-subpanel').each(function(i, panel){
+                            var attr = $.extend({}, _attr.items[0].text, _attr.items[0].chart);
+                            ComponentManager.get(_attr.items[0].component).attachTo(panel, attr);
+                            $(panel).trigger('valueChange',
+                                { text1:data[i].text1, text2:data[i].text2, values: data[i].values } );
+                        });
+                    }
+
                 };
 
                 this.on('resize', function(e, chartSize) {
                     this.width = chartSize.width;
                     this.height = chartSize.height;
+                    $('.cell-barchart-subpanel').each(function(i, panel){
+                            $(panel).trigger('resize' );
+                    });
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
                     this.updateChart();
@@ -79,53 +90,56 @@ define(
                 });
 
                 this.on('valueChange', function(e, options) {
-                    var valueField = this.attr.model;
-                    this.attr.value = $.map(options.value[valueField], function(val, i) {
-                        if (val.date > options.range[0] &&
-                            val.date <= options.range[1]) {
-                            val.date = d3.time.day.round(new Date(val.date));
-                            return val;
-                        }
-                    });         
+                    e.stopPropagation();
 
-                    if (!this.res){
-                        var step = this.attr.step;                        
-                        this.res = $.map(this.attr.value, function(val, i) {
-                            if (i % step === 0) {
-                                return val.date;
-                            }
-                        });            
-                        this.res.pop();
+                    if (!options.value.fixRange){ return; }
+
+                    var valueField = this.attr.model;
+                    this.attr.value = options.value[valueField];
+
+                    var daysTick = (options.value.fixRange === 35) ? 7 : 1;
+
+                    if (columns !== options.value.fixRange/daysTick){
+                        columnsData = getData(this.attr.value, daysTick);
                     }
 
-                    data = this.res;
-
+                    columns = options.value.fixRange/daysTick;
+                    data = [];
+                    $.each(this.attr.value, function(i, val){
+                        if (i % daysTick === 0) {
+                            data.push({date:val.date,
+                                values: columnsData[i/daysTick]['values'],
+                                text1: columnsData[i/daysTick]['text1'],
+                                text2: columnsData[i/daysTick]['text2']
+                            });
+                        }
+                    });
                     x.domain(options.range);
-                    y.domain(options.valueRange);
                     this.updateChart();
-                    e.stopPropagation();
+
                 });
 
-            });        
-        }
-
-        function fakeData(){
-            var fake = [];
-            for (var i = 30 - 1; i >= 0; i--) {
-                var setting = { 
-                        text: {
-                          title: { value: Math.floor(Math.random()*(91)+1)+'%', caption: '' },
-                          content: { value: Math.floor(Math.random()*(1230)+100) , caption: 'unique users online' },
-                        },
-                        chart: {       
-                            conf: { maxHeight: 70, width: 55, barPadding: 4 },
-                        data: [{ gains: Math.floor(Math.random()*(70)+1) },
-                               { losses: Math.floor(Math.random()*(70)+1) }]
+                function getData(values, daysTick){
+                    var list = [],
+                        val1 = 0,
+                        val2 = 0;
+                    $.each(values, function(i, item){
+                        val1 += item.value;
+                        val2 += item.value2;
+                        if (i % daysTick === 0) {
+                            var data = { values:[], text1: Math.floor(Math.random()*(91)+1)+'%', text2:  Math.floor(Math.random()*(1001)+1) };
+                            data['values'].push({ name:'+', value: val1  });
+                            data['values'].push({ name:'-', value: val2 });
+                            list.push(data);
+                            val1 = 0;
+                            val2 = 0;
                         }
-                };
-                fake.push(setting);
-            };
-            return fake;
+
+                    });
+                    return list;
+                }
+
+            });
         }
     }
 );

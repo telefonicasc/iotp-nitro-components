@@ -12,7 +12,8 @@ define(
             subject:'',
             emailAddress:'',
             message:'',
-            tokens: []
+            tokens: [],
+            actionCard: true
         };
         var BACK_TPL = ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',
@@ -29,6 +30,8 @@ define(
             '<p class="email-message"></p>'].join('') ;
         var TOKEN_TPL = '<div class="token"></div>';
         var TOKEN_SYMBOL = '+';
+        var TOKEN_VALUE_TPL_START = '${';
+        var TOKEN_VALUE_TPL_END = '}';
 
         function SendEmail() {
             // this == scope of component
@@ -85,6 +88,13 @@ define(
             $(node.parent() ).on('click', function(){
                 node.removeClass('flip');
             });
+
+            $(element.back.token).find('.token').on('click', function(){
+                var token = $(this).text().replace(TOKEN_SYMBOL,'');
+                var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
+                _insertAt(element.back.message[0], value);
+                element.back.message.change();
+            });
         }
         function _stopPropagation(e){
             e.stopPropagation();
@@ -122,6 +132,26 @@ define(
                 };
                 ele.trigger('valueChange', data);
             };
+        }
+
+        function _insertAt(element, value) {
+            var sel, startPos, endPos, newPos;
+            //IE support
+            if (document.selection) {
+                element.focus();
+                sel = document.selection.createRange();
+                sel.text = value;
+            }
+            //MOZILLA and others
+            else if (element.selectionStart || element.selectionStart === '0') {
+                startPos = element.selectionStart;
+                endPos = element.selectionEnd;
+                newPos = (startPos + value.length);
+                element.value = [element.value.slice(0, startPos), value, element.value.slice(endPos)].join('');
+                element.selectionStart = element.selectionEnd = newPos;
+            } else {
+                element.value += value;
+            }
         }
 
         return ComponentManager.extend(Card, 'SendEmail', SendEmail, DataBinding);

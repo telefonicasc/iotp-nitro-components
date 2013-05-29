@@ -124,20 +124,6 @@ define(
                         placeholder,
                         delimiter;
 
-                    if (o.addPlaceholder !== false &&
-                        node.hasClass('start-card') &&
-                        !this.getConnectedTo(node).length) {
-                        placeholder = $('<div>');
-                        placeholder.addClass('card-placeholder action-card');
-                        this.$graphEditor.trigger('addNode', {
-                            node: placeholder
-                        });
-                        this.$graphEditor.trigger('addConnection', {
-                            start: node,
-                            end: placeholder
-                        });
-                    }
-
                     if (node.hasClass('m2m-card-condition')) {
                         delimiter = $('<div>').appendTo(
                             this.$graphEditor.find('.node-container'));
@@ -200,17 +186,14 @@ define(
                     this.attr.cards.actions);
 
                 this.on('optionsChange', function(e, o) {
-                    var defaultConditionList = [];
                     var cards;
                     if (e.target === this.node) {
-                        cards = o.cards.conditions.cards || [];
                         if (o.cards.conditions) {
-                            $.each(cards, function(i,o){
-                                o['conditionList']=defaultConditionList;
-                            });
+                            cards = o.cards.conditions.cards || [];
                             this.loadToolboxCards(this.$conditionsToolbox, cards);
                         }
                         if (o.cards.actions) {
+                            cards = o.cards.actions.cards || [];
                             this.loadToolboxCards(this.$actionsToolbox, cards);
                         }
                     }
@@ -364,7 +347,6 @@ define(
                     start: start,
                     end: end
                 });
-
             };
 
             // TODO: This only work for one parent one child
@@ -383,6 +365,8 @@ define(
 
                 if (to) {
                     this.removeConnection(card, to);
+                }else{
+                    this.addPlaceholderToCard( $(from) );
                 }
                 this.disableRelayout = false;
                 this.relayoutCards();
@@ -460,19 +444,21 @@ define(
                     var cardValue;
                     var elementId;
                     var delimiter;
+                    var conditionList;
                     if (!$(card).hasClass('start-card')) {
                         cardConfig = $(card).data('cardConfig');
                         cardValue = $(card).data('cardValue');
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
+                        conditionList = $(card).data('conditionList');
                         if(cardConfig && cardValue){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
                             cardConfig.connectedTo = this.getConnectedToId(card);
                             cardConfig.id = elementId;
-                            if(delimiter){
-                                cardConfig.conditionList = this.getConditionList(card, delimiter);
+                            if( $.isArray(conditionList) ){
+                                cardConfig.conditionList = conditionList;
                             }
                             cardsData.push(cardConfig);
                         }else{
@@ -508,6 +494,7 @@ define(
                     node: this.$startCard,
                     draggable: false
                 });
+                this.addPlaceholderToCard(this.$startCard);
                 this.relayoutCards();
             };
 
@@ -555,17 +542,22 @@ define(
                 return cardToolbox;
             };
 
-            this.getConditionList = function(card, delimiter){
-                var operator = delimiter.data('operator');
-                var parameterValue = $(card).data('cardValue') || '';
-                var condition = {
-                    'scope': 'OBSERVATION',
-                    'parameterValue': parameterValue,
-                    'not': false,
-                    'operator': operator
-                };
-                return [condition];
+            this.addPlaceholderToCard = function(card){
+                var placeHolderelement = _newPlaceholderElement();
+                this.$graphEditor.trigger('addNode', {
+                    node: placeHolderelement
+                });
+                this.$graphEditor.trigger('addConnection', {
+                    start: card,
+                    end: placeHolderelement
+                });
             };
+        }
+
+        function _newPlaceholderElement(){
+            var placeholder = $('<div>').
+                addClass('card-placeholder action-card');
+            return placeholder;
         }
     }
 );

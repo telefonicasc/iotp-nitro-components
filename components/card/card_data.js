@@ -106,7 +106,7 @@ function() {
     var decodeSensor = {};
     var decodeAction = {
         'SendEmailAction':function(cardConfig, cardData){
-            cardConfig.actionData = $.extend(cardConfig.actionData, cardData);
+            cardConfig.actionData.userParams = $.extend({}, cardData.userParams);
             return cardConfig;
         }
     };

@@ -14,24 +14,45 @@ function (ComponentManager) {
             batteryGraph: '.battery-graph',
             batteryChart: '.battery-chart',
             batteryLabel: '.battery-label',
+            batteryLegend: '.battery-legend',
             fillColor: '#6F8388',
             borderColor: '#6F8388',
             baseColor: '#E9EFF0',
             id: 'battery-widget',
-            value: 12
+            value: 0
         });
                                                                                         
         this.after('initialize', function () {
+            
+            // Set attributes for use with raphael
+            this.attr.batteryLabelID = this.attr.batteryLabel.substring(1);
+            
             this.$node.attr('id', this.attr.id);
-            this.$nodeMap = $('<div>').addClass('battery-label').appendTo(this.$node);
+            
             this.$nodeMap = $('<div>').addClass('battery-graph')
                 .attr('id','battery-graph').appendTo(this.$node);
-
-            this.on('drawBattery', function () {
+            this.$nodeMap = $('<div>').addClass('battery-chart')
+                .attr('id','battery-chart').appendTo(this.$node);
+            this.$nodeMap = $('<div>').addClass('battery-label').appendTo(this.$node);
+            this.$nodeMap = $('<div>').addClass('battery-legend').appendTo(this.$node);
+       
+            this.select('batteryLegend').html('<pre>09:00   17:00   01:00</pre>');
+            this.on('drawBattery', function (event, batteryLevel, voltage) {
                 console.log('Drawing battery widget');
                 this.attr.widgetGraph = this.createBatteryGraph(); 
-                this.attr.widgetChart = this.createBatteryChart(); 
-                $(this.attr.batteryLabel).html(this.attr.value + 'V');
+                this.attr.widgetChart = this.createBatteryChart();
+                this.drawBatteryGraph(this.attr.widgetGraph, batteryLevel, voltage);
+
+                this.drawBatteryVoltage(voltage);
+                this.drawBatteryVoltage(batteryLevel);
+            });
+            
+            this.on('drawBattery-voltage', function (event, voltage) {
+                this.drawBatteryVoltage(voltage);
+            });
+            
+            this.on('drawBattery-level', function (event, batteryLevel) {
+                this.drawBatteryLevel(batteryLevel);
             });
 
             Raphael.fn.drawGrid = function (x, y, w, h, wv, hv, color) {
@@ -83,6 +104,65 @@ function (ComponentManager) {
 
         }); // </after>
 
+
+        this.drawBatteryVoltage = function (voltage) {
+            if (voltage == null) {
+                $(this.select('batteryLabel')).html('Error');
+            }
+            else {
+                $(this.select('batteryLabel')).html((Math.round(parseFloat(voltage) * 10) / 10) + 'V');
+            }
+        };
+        
+        this.drawBatteryLevel = function (batteryLevel) {
+            if (batteryLevel == null) {
+                console.log('Battery Status Level is: NULL');
+            }
+            else {
+                var batteryStatus;
+                switch (batteryLevel) {
+                    case "full":
+                        batteryStatus = 16.8;
+                        break;
+                    case "low":
+                        batteryStatus = 16.8*0.3;
+                        break;
+                    case "empty":
+                        batteryStatus = 0;
+                        break;
+                    default:
+                        batteryStatus = 0;
+                }
+                
+                this.attr.widgetGraph.fill.animate({
+                    height: batteryStatus,
+                    y: 48 - batteryStatus
+                }, 300);
+//                this.attr.widgetGraph.fill.animate({
+//                    height: Math.min(parseFloat(batteryStatus), 14) * 1.2,
+//                    y: 48 - Math.min(parseFloat(batteryStatus), 14) * 1.2
+//                }, 300);
+                this.attr.widgetGraph.fill.show();
+            }
+        };
+
+        this.drawBatteryGraph = function(batteryGraph, batteryLevel, voltage) {
+            // Set voltage level
+            if (voltage == null) {
+                $(this.select('batteryLabel')).html('Error');
+//                this.ui.batteryLabel.html("Error");
+            }
+            else {
+                $(this.select('batteryLabel')).html((Math.round(parseFloat(voltage) * 10) / 10) + 'V');
+//                this.batteryGraph.fill.animate({
+//                    height: Math.min(parseFloat(voltage), 14) * 1.2,
+//                    y: 48 - Math.min(parseFloat(voltage), 14) * 1.2
+//                }, 300);
+//                this.batteryGraph.fill.show();
+            }
+            
+            // Fill the battey graphic
+        };
         
         this.createBatteryGraph = function() {
             var paper = Raphael('battery-graph', 320, 100),
@@ -107,7 +187,7 @@ function (ComponentManager) {
         
 
         this.createBatteryChart = function(options) {
-            var paper = Raphael(this.attr.id, 300, 100),
+            var paper = Raphael('battery-chart', 300, 100),
                         lineChart; 
             
             var maxY = 14,
@@ -147,12 +227,12 @@ function (ComponentManager) {
                ]
             };
             // TODO: Fix this
-            //lineChart = paper.linechart(0, 0, width, height + topgutter,[],
-            //  [[],[100, 0]], options);
+//            lineChart = paper.linechart(0, 0, width, height + topgutter,[],
+//              [[],[100, 0]], options);
             
             return {
                 paper: paper,
-                //lineChart: lineChart,
+//                lineChart: lineChart,
                 xlabels: xlabels
                 //  ylabels: ylabels
             };

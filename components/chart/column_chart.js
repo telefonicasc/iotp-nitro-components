@@ -68,7 +68,7 @@ define(
 
                     if (_attr.items){
                         $('.cell-barchart-subpanel').each(function(i, panel){
-                            var attr = $.extend({}, _attr.items[0].text, _attr.items[0].chart);
+                            var attr = $.extend(_attr.items[0].text, _attr.items[0].chart);
                             ComponentManager.get(_attr.items[0].component).attachTo(panel, attr);
                             $(panel).trigger('valueChange',
                                 { text1:data[i].text1, text2:data[i].text2, values: data[i].values } );

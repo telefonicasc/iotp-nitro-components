@@ -70,20 +70,20 @@ var DashCE_users = DashCE_users || {};
             type: 'areaStackedChart',
             model: 'newly_registers_acc',
             rangeField: 'selectedRange',
-            colorPattern: 'yellow',
+            colorPattern: './img/pattern_yellow.png',
             colorLine: '#cfceb8'
           },{
             type: 'areaStackedChart',
             model: 'total_users',
             rangeField: 'selectedRange',
-            colorPattern: 'green',
+            colorPattern: './img/pattern_green.png',
             colorLine: '#a9beb7'
           },
           {
             type: 'areaStackedChart',
             model: 'deactivations',
             rangeField: 'selectedRange',
-            colorPattern: 'brown',
+            colorPattern: './img/pattern_brown.png',
             colorLine: '#bab6a6'
           },
           {

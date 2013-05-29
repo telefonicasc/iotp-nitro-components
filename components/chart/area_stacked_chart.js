@@ -53,7 +53,7 @@ define(
                         .attr('width', '20')
                         .attr('height', '20')
                         .append('svg:image')
-                        .attr('xlink:href', './img/pattern_'+this.attr.colorPattern+'.png')
+                        .attr('xlink:href', this.attr.colorPattern)
                         .attr('x', 0)
                         .attr('y', 0)
                         .attr('width', 20)

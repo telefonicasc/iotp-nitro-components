@@ -164,7 +164,7 @@
     background: #9EB9BF;
     position: absolute;
     bottom: 0;
-    width: 100%;
+    width: 103%;
 }
 
 .paged-header {
@@ -343,30 +343,46 @@
   cursor: pointer;
 }
 
+.detail-element-header .caption {
+    color: white !important;
+}
+
+
 
 .marker-red {
-    width: 32px !important;
-    height: 45px;
-    margin-left: 12px;
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
     margin-right: 12px;
-    margin-top: 15px;
-    background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');*/
+    background-image:url('res/images/rojo-on-1.png');
+}
+
+.marker-blue {
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
+    margin-right: 12px;
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+5E91A0.png');*/
+    background-image:url('res/images/azul-on-1.png');
 }
 
 .warning-item:hover{
     background-color: #D5E0E2;
-    
 }
-
 
 .overview-subpanel-body .text {
     position: relative;
-    top: -20px;
+    top: -10px;
 }
 
 .overview-subpanel-body .caption {
     position: relative;
-    top: -20px;
+    top: -10px;
 }
 
 

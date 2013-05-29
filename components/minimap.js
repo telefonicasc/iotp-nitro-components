@@ -46,7 +46,7 @@ define(
                 this.markerLayer = mapbox.markers.layer();
                 this.mapM.addLayer(this.markerLayer);
                 // Add marker
-                if (markerModel != null) {
+                if (this.attr.markerModel != null) {
                     this.markerLayer.features([this.attr.markerModel]);
                 }
                 // => Disable tooltips

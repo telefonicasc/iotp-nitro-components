@@ -100,6 +100,8 @@ define(
                 + '</div></div>';
         
             var pollInterval = 5000;
+            var markerColorWarn = '#CB3337';
+            var markerColorOk = '#5E91A0';
         
             /* Testing URL */
             var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
@@ -110,7 +112,6 @@ define(
                 mainContent: [
                     {
                         component: 'map',
-                        center: { lat: 50.456729, lon: 7.489134 },
                         zoomInitial: 13,
                         zoomMin: 5,
                         zoomMax: 20,
@@ -146,7 +147,7 @@ define(
                 }
             });
 
-            // Initial events ======================================================
+            // Initial events ==================================================
 
             // Hide details on load
             $('.panel-detail').hide();
@@ -205,7 +206,8 @@ define(
                 $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
             };
             
-            var createNewMarker = function (name, lat, lon) {
+            var createNewMarker = function (name, lat, lon, color) {
+                color = (typeof color === 'undefined') ? markerColorOk : color;
                 console.log('Creating marker for ' + name);
                 // Add marker to map
                 var marker = {
@@ -213,7 +215,7 @@ define(
                         coordinates : [ parseFloat(lon), parseFloat(lat) ]
                     },
                     properties : {
-                        'marker-color': '#DF0101',
+                        'marker-color': color,
                         'marker-symbol': 'circle',
                         'title': name
                     }
@@ -227,7 +229,6 @@ define(
             
             var generateErrorText = function (sensorData) {
                 var errors = '';
-//                var errors = 'DEMO';
                 $.each(sensorData, function (index, value) {
                     if ('ms' in value) {
                         // Evaluate error conditions
@@ -293,6 +294,10 @@ define(
                 $('.overview-count').html(count);
             };
             
+            var centerMap = function (lat,lon) {
+                $('.mapbox').trigger('center-map', [lat,lon]);
+            };
+            
             var updateAssets = function () {
                 $.ajax({
                     url: assetsURL,
@@ -313,7 +318,9 @@ define(
                                     var lon = response.data.asset.location.longitude;
                                     var errors = generateErrorText(response.data.sensorData);
                                     updateWarningList(value.asset.name, errors);
-                                    createNewMarker(value.asset.name,lat,lon);
+                                    var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
+                                    createNewMarker(value.asset.name,lat,lon,markerColor);
+                                    centerMap(lat,lon);
                                 },
                                 error: function(request, error, errorThrown) {
                                     console.error('Error accessing URL: ' + assetInfoURL + ". " + error + ":" + errorThrown);
@@ -340,7 +347,26 @@ define(
                         var lon = response.data.asset.location.longitude;
                         console.log("Asset: " + response.data.asset.name + " [" + lat + ":" + lon + "]");
                         $('.mapbox').trigger('center-map', [lat, lon]);
+                        // Update selected element name
+                        $('.panel-content-details .text').html(assetName);
 
+                        // Get asset errors, if any
+                        if (parseInt($('.warning-item .text:contains("'+assetName+'")').length) !== 0) {
+                            $('.panel-content-details .icon').removeClass('marker-blue');
+                            $('.panel-content-details .icon').addClass('marker-red');
+                            
+                        }
+                        else {
+                            $('.panel-content-details .icon').removeClass('marker-red');
+                            $('.panel-content-details .icon').addClass('marker-blue');
+                        }
+                        var last_update = 'Last update: ';
+                        if (response.data.sensorData.length > 0)
+                            last_update += response.data.sensorData[0].st;
+                        else
+                            last_update += 'unknown';
+                        $('.panel-content-details .caption').html(last_update);
+                        
                         // Get asset data
                         $.each(response.data.sensorData, function (index, value) {
                             if ('ms' in value) {
@@ -372,13 +398,8 @@ define(
                 $('.panel-list').slideUp();
                 $('.panel-detail').slideDown();
                 $('.paged-panel').trigger('update-view');
-                
-                var callingElement = data.properties.title;
-                var callingElementCaption = data.properties.caption;
-                console.log('Received element name: ' + callingElement);
-                $('.detail-element-header .text').html(callingElement);
-                $('.detail-element-header .caption').html(callingElementCaption);
-                updateAssetInfo(callingElement);
+                console.log('Selected asset: ' + data.properties.title);
+                updateAssetInfo(data.properties.title);
             });
             
             $('.dashboard').on('mapbox-zoomed', function () {

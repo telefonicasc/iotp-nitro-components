@@ -24,6 +24,7 @@ function() {
                     component: component.SLIDER
                 }]
             };
+            card.defaultValue = '0';
             return card;
         },
         'battery': function(card){
@@ -37,6 +38,7 @@ function() {
                     component: component.SLIDER
                 }]
             };
+            card.defaultValue = '0';
             return card;
         },
         'binary': function(card) {
@@ -65,6 +67,7 @@ function() {
                     label: 'IS NOT',
                     operator: 'DIFFERENT_TO'
                 }];
+            card.defaultValue = 'false';
             return card;
         },
         'text': function(card) {

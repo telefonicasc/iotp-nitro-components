@@ -37,12 +37,11 @@ define(
                     'not': false,
                     'operator': null
                 },
-                delimiterList:false
-
+                delimiterList:false,
+                defaultValue : ''
             });
 
             this.after('initialize', function() {
-
                 var elementId = this.attr.id || _getNexId(),
                     dragCheck = false, clickCheck = false;
 
@@ -57,7 +56,6 @@ define(
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = this.attr.header;
                 }
-
                 CardSide.attachTo(this.$front, this.attr.front);
                 CardSide.attachTo(this.$back, this.attr.back);
 
@@ -98,7 +96,7 @@ define(
                     if(this.attr.conditionList.length){
                         condition = this.attr.conditionList[0];
                     }else{
-                        condition = this.attr.defaultCondition;
+                        condition = $.extend({}, this.attr.defaultCondition);
                     }
 
                     this.on('conditionOperatorChange', function(e,o){
@@ -111,12 +109,13 @@ define(
                         condition.parameterValue = o.value;
                         this.$node.data('conditionList', [condition]);
                     });
-                    if(condition.parameterValue !== null && condition.operator !== null){
-                        this.$node.data('conditionList', [condition]);
+
+                    if(condition.parameterValue !== null ){
                         this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
                     }else{
-                        this.$node.data('conditionList', []);
+                        condition.parameterValue = this.attr.defaultValue;
                     }
+                    this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
                 }
             });

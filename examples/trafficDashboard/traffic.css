@@ -123,6 +123,7 @@
     border:1px solid #C0C0C0;
     vertical-align:middle;
     top: 20px;
+    z-index: 100;
 }
 
 .zoomer:hover {

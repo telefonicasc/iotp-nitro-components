@@ -84,8 +84,6 @@ define(
 
                 /* === Mapbox map component instance === */
                 var mapC = null;
-                /* === Self pointer to call from functions === */
-                var self = null;
 
                 /* === Component default attributes === */
                 this.defaultAttrs({
@@ -94,14 +92,14 @@ define(
                     zoomInitial: 15,
                     zoomMin: 15,
                     zoomMax: 20,
-                    showZoomButtons: false,
+                    showZoomButtons: true,
                     features: [],
                     markers: [],
                     markerAnnounceTrigger: 'announce-trigger',
                     markerClickEventTarget: '',
                     markerClickEvent: 'marker-clicked',
                     hoveringTooltip: true,
-                    centerOnClick: false,
+                    centerOnClick: true,
                     unselectedSymbol: 'circle-stroked',
                     unselectedColor: '#0000FF',
                     selectedSymbol: 'circle',
@@ -219,7 +217,6 @@ define(
                     // >> Handles model partial updates << \\
                     // =================================== \\
                     this.on('add-marker-feature', function(event, feature) {
-                        console.error('Adding new marker');
                         event.stopPropagation();
                         this.attr.features.push(feature);
                         this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
@@ -286,10 +283,6 @@ define(
                     this.mapC.addCallback('panned', function () {
                         $(self.node).trigger('mapbox-panned');
                     });
-                    
-                    
-                    
-                        
 
                     // ======================================== \\
                     // >> Finds a marker given it's id/class << \\

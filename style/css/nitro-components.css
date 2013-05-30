@@ -969,6 +969,9 @@ select {
   width: 87px;
   height: 67px;
 }
+.card-toolbox-section {
+  position: relative;
+}
 .m2m-rule-editor {
   overflow: hidden;
 }

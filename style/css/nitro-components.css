@@ -642,8 +642,8 @@ select {
   -ms-transform: scale(0.5);
   transform: scale(0.5);
 }
-.card.preview .front,
-.card.preview .back {
+.no-csstransforms .card.preview .front,
+.no-csstransforms .card.preview .back {
   filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
   z-index: 1;
 }

@@ -119,7 +119,7 @@ define(
                     this.trigger('nodeAdded', o);
                 });
 
-                this.on('removeNode', function(e, o) {
+                this.on('removeGraphNode', function(e, o) {
                     var node = o.node;
                     node.remove();
                     this.trigger('nodeRemoved', { node: node });

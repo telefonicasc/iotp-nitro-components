@@ -29,7 +29,12 @@ define(
             this.after('initialize', function() {
                 var cardElement = this.attr.node;
                 var cardConfig = this.attr.cardConfig;
+                var delimiterList = cardElement.data('delimiterList');
                 var delimiterValue;
+
+                if(!$.isArray(delimiterList)){
+                    delimiterList = this.attr.delimiterList;
+                }
 
                 this.$node.addClass('m2m-card-delimiter');
 
@@ -43,7 +48,7 @@ define(
                 this.$delimiterList = $('<ul>')
                         .appendTo(this.$node);
 
-                $.each(this.attr.delimiterList, $.proxy(function(i, del) {
+                $.each(delimiterList, $.proxy(function(i, del) {
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
                             .data('value', del)

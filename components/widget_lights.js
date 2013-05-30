@@ -42,7 +42,7 @@ function (ComponentManager) {
             arrow.attr({
                 'stroke-width': 0,
                 fill: 'url(res/images/arrow.png)'
-            })
+            });
             
             var style = {
                 'stroke-width': 0,
@@ -64,7 +64,7 @@ function (ComponentManager) {
                 bars: bars,
                 arrow: arrow
             };
-        }
+        };
         
 
     } // </LightsWidget>

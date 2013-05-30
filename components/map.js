@@ -85,8 +85,6 @@ define(
 
                 /* === Mapbox map component instance === */
                 var mapC = null;
-                /* === Self pointer to call from functions === */
-                var self = null;
 
                 /* === Component default attributes === */
                 this.defaultAttrs({
@@ -95,14 +93,14 @@ define(
                     zoomInitial: 15,
                     zoomMin: 15,
                     zoomMax: 20,
-                    showZoomButtons: false,
+                    showZoomButtons: true,
                     features: [],
                     markers: [],
                     markerAnnounceTrigger: 'announce-trigger',
                     markerClickEventTarget: '',
                     markerClickEvent: 'marker-clicked',
                     hoveringTooltip: true,
-                    centerOnClick: false,
+                    centerOnClick: true,
                     unselectedSymbol: 'circle-stroked',
                     unselectedColor: '#0000FF',
                     selectedSymbol: 'circle',
@@ -130,8 +128,6 @@ define(
 
                     // ==> Create marker layer
                     this.markerLayer = mapbox.markers.layer();
-                    //.features(this.attr.features)
-                    //.key(function (f) { return f.properties.title });
                     var interaction = mapbox.markers.interaction(this.markerLayer);
                     this.mapC.addLayer(this.markerLayer);
                     // ==> Remove hovering tooltips?
@@ -152,11 +148,11 @@ define(
                     // ============================= \\
                     this.setFeatures = function(features, center, zoom) {
                         console.log('Setting map features');
-                        if (zoom != null)
+                        if (typeof zoom !== 'undefined' && zoom != null)
                             self.attr.zoomInitial = zoom;
-                        if (center != null)
+                        if (typeof center !== 'undefined' && center != null)
                             self.attr.center = center;
-                        if (features != null)
+                        if (typeof features !== 'undefined' && features != null)
                             self.attr.features = features;
 
                         console.log('Updating map marker features');
@@ -208,6 +204,18 @@ define(
 
                     // ==> Create features
                     self.setFeatures();
+                    
+                    this.on('update-marker-color', function (event, featureName, color) {
+                        var callback = function (key, value) {
+                            console.log(featureName + '>' + value.properties.title + ':' + color);
+                            if (value.properties.title === featureName) {
+                                value.properties['marker-color'] = color;
+                            }
+                        };
+                        $.each(this.attr.features, callback);
+                        // update data
+                        this.setFeatures(this.attr.features);
+                    });
 
                     // =========================== \\
                     // >> Handles model updates << \\
@@ -220,8 +228,19 @@ define(
                     // >> Handles model partial updates << \\
                     // =================================== \\
                     this.on('add-marker-feature', function(event, feature) {
-                        this.attr.features.push(feature);
-                        this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
+                        var exists = false;
+                        var callback = function (key, value) {
+                            if (value.properties.title === feature.properties.title) {
+                                exists = true;
+                            }
+                        };
+                        
+                        $.each(this.attr.features, callback);
+                        
+                        if (!exists) {
+                            this.attr.features.push(feature);
+                            this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
+                        }
                     });
 
                     // ================ \\
@@ -270,11 +289,20 @@ define(
                         //self.announce(locator, trigger_name);
                         var tn = trigger_name == null ? markerAnnounceTrigger : trigger_name;
                         if (locator == null) {
-                            self.trigger(tn, self.attr.features);
+                            this.trigger(tn, [this.attr.features, this.mapC.getExtent(), this.mapC.getCenter()]);
                         }
                         else {
-                            $(locator).trigger(tn, [self.attr.features]);
+                            $(locator).trigger(tn, [this.attr.features, this.mapC.getExtent(), this.mapC.getCenter()]);
                         }
+                    });
+                    
+                    var self = this;
+                    this.mapC.addCallback('zoomed', function () {
+                        $(self.node).trigger('mapbox-zoomed');
+                    });
+                    
+                    this.mapC.addCallback('panned', function () {
+                        $(self.node).trigger('mapbox-panned');
                     });
 
                     // ======================================== \\

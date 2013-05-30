@@ -24,6 +24,7 @@ function() {
                     component: component.SLIDER
                 }]
             };
+            card.defaultValue = '0';
             return card;
         },
         'battery': function(card){
@@ -37,6 +38,7 @@ function() {
                     component: component.SLIDER
                 }]
             };
+            card.defaultValue = '0';
             return card;
         },
         'binary': function(card) {
@@ -58,6 +60,7 @@ function() {
                     }]
                 }]
             };
+            card.defaultValue = 'false';
             return card;
         },
         'text': function(card) {
@@ -103,7 +106,7 @@ function() {
     var decodeSensor = {};
     var decodeAction = {
         'SendEmailAction':function(cardConfig, cardData){
-            cardConfig.actionData = $.extend(cardConfig.actionData, cardData);
+            cardConfig.actionData.userParams = $.extend({}, cardData.userParams);
             return cardConfig;
         }
     };

@@ -60,6 +60,11 @@
   stroke: #788d9a;
 }
 
+.chart.purple path.line {
+  stroke: #7d728f;
+  stroke-width: 4px;
+}
+
 .chart rect.bar {
   fill-opacity: 0.5;
   fill: #a7bbc3;
@@ -177,27 +182,20 @@
 }
 
 .green {
-  background-color: #c4d79d;
+  background: url(./img/pattern_green.png);
 }
 .yellow {
-  background-color: #f4f3a5;
-}
-
-.yellow2 {
-  background-color: #dbc177;
+  background: url(./img/pattern_yellow.png);
 }
 
 .brown {
-  background-color: #9b393b;
+  background: url(./img/pattern_brown.png);
 }
 .dashboard .overview-subpanel .icon.green {
   background-color: #bcce96;
 }
 .purble-line {
-  background: #9355ab;
-  max-height: 3px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  background: url(./img/purple_line_icon.png);
 }
 
 .dashboard .overview-header {

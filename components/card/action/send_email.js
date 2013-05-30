@@ -132,12 +132,14 @@ define(
                 userParamsObject['mail.subject'] = element.back.subject.val();
                 userParamsObject['mail.to'] = element.back.emailAddress.val();
                 userParamsObject['mail.message'] = element.back.message.val();
+                var isValid = _isValid(userParamsObject);
                 var value = {
                     'userParams' : _userParamsObjectToArray(userParamsObject)
                 };
                 var data = {
                     'value': value
                 };
+                card.$node.data('isValid', isValid);
                 card.trigger('valueChange', data);
             };
         }
@@ -179,6 +181,14 @@ define(
                 });
             }
             return arr;
+        }
+
+        function _isValid(userParam){
+            var a = (userParam['mail.subject'].length > 0 );
+            var b = (userParam['mail.to'].length > 0 );
+            var c = (userParam['mail.message'].length > 0 );
+
+            return (a && b && c);
         }
 
 

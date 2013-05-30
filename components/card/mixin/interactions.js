@@ -138,7 +138,7 @@ define(
 
                 if (activeArea) {
                     $.each(tempRemovedCards, $.proxy(function(i, card) {
-                        this.$graphEditor.trigger('removeNode', { node: card });
+                        this.$graphEditor.trigger('removeGraphNode', { node: card });
                     }, this));
                 } else {
                     this.undoTempRemoved();
@@ -149,7 +149,7 @@ define(
                     if (delimiter) {
                         delimiter.remove();
                     }
-                    this.$graphEditor.trigger('removeNode', { node: card });
+                    this.$graphEditor.trigger('removeGraphNode', { node: card });
                 }
             };
         }

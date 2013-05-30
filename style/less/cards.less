@@ -87,10 +87,13 @@
 
   &.preview {
     .scale(@card-preview-factor);
-    .front, .back {
-        filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
-        z-index: 1;
-    }
+  }
+}
+
+.no-csstransforms .card.preview {
+  .front, .back {
+    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
+    z-index: 1;
   }
 }
 

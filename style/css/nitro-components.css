@@ -1207,7 +1207,7 @@ select {
 .m2m-card-delimiter {
   position: absolute;
   margin-top: 85px;
-  z-index: 2000;
+  z-index: 950;
 }
 li.delimiter-value {
   margin-top: 8px;
@@ -1396,11 +1396,18 @@ li.delimiter-value {
   margin-left: -10px;
 }
 .back .m2m-card-text input {
-  padding: 8px;
-  color: #596c73;
   font-family: 'American Typewriter', 'Courier New', Courier, monospace;
   font-size: 16px;
+  color: #596c73;
   width: 100%;
+  margin-left: -5px;
+}
+.back select {
+  width: 90%;
+  margin-left: 5%;
+}
+.borderradius .m2m-card-text input {
+  padding: 8px;
   border: 1px solid #bcc0c1;
   behavior: url(../../style/css3pie/PIE.htc);
   -webkit-border-top-right-radius: 4px;
@@ -1419,12 +1426,7 @@ li.delimiter-value {
   -moz-background-clip: padding-box;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-  margin-left: -5px;
   padding: 4px;
-}
-.back select {
-  width: 90%;
-  margin-left: 5%;
 }
 .csstransforms3d .flippable .back {
   visibility: visible;

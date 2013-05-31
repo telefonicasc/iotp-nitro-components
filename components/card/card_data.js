@@ -60,6 +60,13 @@ function() {
                     }]
                 }]
             };
+            card.delimiterList = [{
+                    label: 'IS',
+                    operator: 'EQUAL_TO'
+                }, {
+                    label: 'IS NOT',
+                    operator: 'DIFFERENT_TO'
+                }];
             card.defaultValue = 'false';
             return card;
         },
@@ -69,6 +76,13 @@ function() {
                     component: 'CardFrontText'
                 }]
             };
+            card.delimiterList = [{
+                    label: 'IS',
+                    operator: 'EQUAL_TO'
+                }, {
+                    label: 'IS NOT',
+                    operator: 'DIFFERENT_TO'
+                }];
             card.back = {
                 items: [{
                     component: 'CardBackText',
@@ -106,7 +120,7 @@ function() {
     var decodeSensor = {};
     var decodeAction = {
         'SendEmailAction':function(cardConfig, cardData){
-            cardConfig.actionData = $.extend(cardConfig.actionData, cardData);
+            cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }
     };

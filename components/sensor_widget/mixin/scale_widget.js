@@ -47,10 +47,10 @@ define(
 
             this.updateScale = function() {
                 var height = this.value * this.height / this.attr.maxValue;
-                this.scaleRect.attr({
+                this.scaleRect.attr($.extend({
                     height: height,
                     y: this.height - height
-                });
+                }, this.attr.scaleRectStyle));
             };
             
         }

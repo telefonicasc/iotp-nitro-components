@@ -46,7 +46,7 @@
   border-bottom: solid 1px @bottom-color;
 }
 .drop-shadow(@x-axis: 0, @y-axis: 1px, @blur: 2px, @alpha: 0.1) {
-  behavior: url(../../style/css3pie/PIE.htc);
+  behavior: url(@css3pie-path);
   -webkit-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
   -moz-box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
   box-shadow: @x-axis @y-axis @blur rgba(0, 0, 0, @alpha);
@@ -57,7 +57,7 @@
   border-radius: @radius;
 }
 .border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
-  behavior: url(../../style/css3pie/PIE.htc);
+  behavior: url(@css3pie-path);
   -webkit-border-top-right-radius: @topright;
   -webkit-border-bottom-right-radius: @bottomright;
   -webkit-border-bottom-left-radius: @bottomleft;

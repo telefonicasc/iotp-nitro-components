@@ -13,7 +13,12 @@ define(
             emailAddress:'',
             message:'',
             tokens: [],
-            actionCard: true
+            actionCard: true,
+            actionData: {
+                name:'',
+                description:'',
+                userParams:[]
+            }
         };
         var BACK_TPL = ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',
@@ -35,8 +40,15 @@ define(
 
         function SendEmail() {
             // this == scope of component
-            this.defaultAttrs(defaultAttrs);
+            this.defaultAttrs( $.extend({},defaultAttrs) );
             this.after('initialize', _install);
+
+            this._userParamsObject = {};
+
+            this.validate = function(){
+                var isValid = _isValid(this._userParamsObject);
+                this.$node.data('isValid', isValid);
+            };
         }
 
         function _install(){
@@ -59,6 +71,8 @@ define(
                 }
             };
 
+            var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
+
             this.$element = element;
 
             this.$back.on('click', _stopPropagation);
@@ -72,29 +86,32 @@ define(
             element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
             element.back.message.on('change', _updateElementOnChange(element.front.message) );
 
-            element.back.emailAddress.on('change', _triggerUpdateOnChange(element, this) );
-            element.back.subject.on('change', _triggerUpdateOnChange(element, this) );
-            element.back.message.on('change', _triggerUpdateOnChange(element, this) );
+            var triggerUpdateOnChange = _triggerUpdateOnChange(element, userParamsObject, this);
+            element.back.emailAddress.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
+            element.back.subject.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
+            element.back.message.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
 
             //set values
-            element.back.subject.val(this.attr.subject);
-            element.back.emailAddress.val(this.attr.emailAddress);
-            element.back.message.val(this.attr.message);
+            element.back.subject.val(userParamsObject['mail.subject']);
+            element.back.emailAddress.val(userParamsObject['mail.to']);
+            element.back.message.val(userParamsObject['mail.message']);
 
-            element.front.subject.text(this.attr.subject);
-            element.front.message.text(this.attr.message);
+            element.front.subject.text(userParamsObject['mail.subject']);
+            element.front.message.text(userParamsObject['mail.message']);
 
             var node = this.$node;
             $(node.parent() ).on('click', function(){
                 node.removeClass('flip');
             });
 
-            $(element.back.token).find('.token').on('click', function(){
+            $(element.back.token).on('click', '.token', function(){
                 var token = $(this).text().replace(TOKEN_SYMBOL,'');
                 var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
                 _insertAt(element.back.message[0], value);
                 element.back.message.change();
             });
+
+            this.validate();
         }
         function _stopPropagation(e){
             e.stopPropagation();
@@ -120,17 +137,19 @@ define(
             return callbackToEvent;
         }
 
-        function _triggerUpdateOnChange(element, ele){
+        function _triggerUpdateOnChange(element, userParamsObject, card){
             return function(){
+                userParamsObject['mail.subject'] = element.back.subject.val();
+                userParamsObject['mail.to'] = element.back.emailAddress.val();
+                userParamsObject['mail.message'] = element.back.message.val();
                 var value = {
-                    'emailAddress' : element.back.emailAddress.val(),
-                    'subject' : element.back.subject.val(),
-                    'message' : element.back.message.val()
+                    'userParams' : _userParamsObjectToArray(userParamsObject)
                 };
                 var data = {
                     'value': value
                 };
-                ele.trigger('valueChange', data);
+                card.validate();
+                card.trigger('valueChange', data);
             };
         }
 
@@ -153,6 +172,35 @@ define(
                 element.value += value;
             }
         }
+
+        function _userParamsToObject(params){
+            var obj = {};
+            $.each(params, function(i,o){
+                obj[o.name] = o.value;
+            });
+            return obj;
+        }
+
+        function _userParamsObjectToArray(obj){
+            var name, arr=[];
+            for(name in obj){
+                arr.push({
+                    'name': name,
+                    'value':obj[name]
+                });
+            }
+            return arr;
+        }
+
+        function _isValid(userParam){
+            var a = (userParam['mail.subject'].length > 0 );
+            var b = (userParam['mail.to'].length > 0 );
+            var c = (userParam['mail.message'].length > 0 );
+
+            return (a && b && c);
+        }
+
+
 
         return ComponentManager.extend(Card, 'SendEmail', SendEmail, DataBinding);
     }

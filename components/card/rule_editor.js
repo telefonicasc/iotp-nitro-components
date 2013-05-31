@@ -24,7 +24,12 @@ define(
 
             this.defaultAttrs({
                 cards: {},
-                value: { cards: [] },
+                value: {
+                    rule:{
+                        cards: []
+                    },
+                    isValid:true
+                },
                 cardDefaults: {
                     component: 'Card'
                 }
@@ -393,12 +398,13 @@ define(
 
             this.loadRuleData = function(data) {
                 var nodes = [];
+                var rule = data.rule;
 
                 this.emptyRule();
 
-                this._rawData = $.extend({}, data);
+                this._rawData = $.extend({}, rule);
                 // Add cards
-                $.each(data.cards, $.proxy(function(i, card) {
+                $.each(rule.cards, $.proxy(function(i, card) {
                     var cardConfig = $.extend({}, card);
                     var cardEl = $('<div>').data('cardConfig', cardConfig );
                     var data = CardData.encode(card);
@@ -413,7 +419,7 @@ define(
                 }, this));
 
                 // Add connections
-                $.each(data.cards, $.proxy(function(i, card) {
+                $.each(rule.cards, $.proxy(function(i, card) {
                     $.each(card.connectedTo, $.proxy(function(i, otherID) {
                         var cardEl = this.getCard(card.id),
                             otherEl = this.getCard(otherID);
@@ -475,9 +481,14 @@ define(
             };
 
             this.updateValue = function() {
+                var isValid;
                 if (!this.disableChangeEvent) {
+                    isValid = this.isValidCards();
                     this.trigger('valueChange', {
-                        value: this.getRuleData(),
+                        value: {
+                            'rule': this.getRuleData(),
+                            'isValid': isValid
+                        },
                         ruleEngineUpdate: true
                     });
                 }
@@ -509,7 +520,7 @@ define(
                 this.connections = [];
 
                 cards.each($.proxy(function(i, el) {
-                    this.$graphEditor.trigger('removeNode', { node: $(el) });
+                    this.$graphEditor.trigger('removeGraphNode', { node: $(el) });
                 }, this));
             };
 
@@ -551,6 +562,19 @@ define(
                     start: card,
                     end: placeHolderelement
                 });
+            };
+
+            this.isValidCards = function(){
+                var cards = this.$graphEditor.find('.card');
+                var values = [];
+                for(var i = cards.length; i--;){
+                    var isValid = $(cards[i]).data('isValid');
+                    if(isValid === undefined){
+                        isValid = true;
+                    }
+                    values.push(isValid ? '':'0');
+                }
+                return (values.join('').length === 0);
             };
         }
 

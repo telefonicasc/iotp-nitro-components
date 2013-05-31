@@ -44,11 +44,27 @@
                         "header": "SendMail"
                     },
                     "actionData": {
+                        "name": "email",
                         "type": "SendEmailAction",
-                        "emailAddress": "lucas@tid.es",
-                        "subject": "Test Rule",
-                        "message": "Test Rule",
-                        "tokens": ["device_latitude", "device_longitude", "measure.value", "device.asset.name"]
+                        "description": "Description",
+                        "userParams": [
+                            {
+                                "name": "mail.from",
+                                "value": "dca_support@tid.es"
+                            },
+                            {
+                                "name": "mail.to",
+                                "value": "testmailcep@gmail.com"
+                            },
+                            {
+                                "name": "mail.subject",
+                                "value": "Pitch GREATER_THAN 10"
+                            },
+                            {
+                                "name": "mail.message",
+                                "value": "Pitch GREATER_THAN 10"
+                            }
+                        ]
                     },
                     "connectedTo": []
                 }
@@ -91,11 +107,27 @@
                     "id": "idCardByVGR1",
                     "type": "ActionCard",
                     "actionData": {
+                        "name": "email",
                         "type": "SendEmailAction",
-                        "emailAddress": "lucas@tid.es",
-                        "subject": "Test Rule",
-                        "message": "Test Rule",
-                        "tokens": ["device_latitude", "device_longitude", "measure.value", "device.asset.name"]
+                        "description": "Description",
+                        "userParams": [
+                            {
+                                "name": "mail.from",
+                                "value": "dca_support@tid.es"
+                            },
+                            {
+                                "name": "mail.to",
+                                "value": "testmailcep@gmail.com"
+                            },
+                            {
+                                "name": "mail.subject",
+                                "value": "Pitch GREATER_THAN 10"
+                            },
+                            {
+                                "name": "mail.message",
+                                "value": "Pitch GREATER_THAN 10"
+                            }
+                        ]
                     },
                     "connectedTo": []
                 }

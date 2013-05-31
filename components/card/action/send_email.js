@@ -91,6 +91,8 @@ define(
             element.front.subject.text(userParamsObject['mail.subject']);
             element.front.message.text(userParamsObject['mail.subject']);
 
+            this.$node.data('isValid', _isValid(userParamsObject) );
+
             var node = this.$node;
             $(node.parent() ).on('click', function(){
                 node.removeClass('flip');

@@ -24,6 +24,7 @@ define(
             mapId: 'keithtid.map-z1eeg2ge',        
             zoomValue: 16,
             movable: true,
+            listenTo: 'asset-selected',
             markerModel: {
                 geometry: { coordinates: [ 8.61, 50.111 ] },
                 properties: {
@@ -104,9 +105,66 @@ define(
             var markerColorOk = '#5E91A0';
         
             /* Testing URL */
-//            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
             /* Deploy URL */
-            var assetsURL = 'http://nitroic:8080/secure/m2m/v2/services/TrafficLightsDE/assets';
+//            var assetsURL = 'http://nitroic:8080/secure/m2m/v2/services/TrafficLightsDE/assets';
+
+            var ajaxDefaultErrorHandler = function (request, errorText, errorThrown) {
+                console.log('GET Error: ' + errorText + '. Thrown: ' + errorThrown);
+            };
+
+            var getAssetList = function () {
+            
+                var list = [];
+                
+                var populateAssetList = function (response) {
+                    $.each(response.data, function (k,v) {
+                        list.push(v.asset.name);
+                    });
+                };
+                
+                $.ajax({
+                    url: assetsURL,
+                      type: 'GET',
+                      dataType: 'json',
+                      async: false,
+                      success: populateAssetList,
+                      error: ajaxDefaultErrorHandler
+                });
+                
+                return list;
+            };
+            
+            var getAssetData = function (assetName) {
+                var assetInfoURL = assetsURL + "/" + assetName;
+
+                var data;
+                
+                var setDataValue = function (response) {
+                    data = response.data;
+                };
+                
+                $.ajax({
+                    url: assetInfoURL,
+                    type: 'GET',
+                    dataType: 'json',
+                    async: false,
+                    success: setDataValue,
+                    error: ajaxDefaultErrorHandler
+                });
+                return data;
+            };
+            
+            var assetList = getAssetList();
+            var data;
+            var initialCenter = {lat: 40.414431, lon: -3.703696 };
+            if (assetList.length !== 0) {
+                data = getAssetData(assetList[0]);
+                initialCenter = { 
+                    lat: data.asset.location.latitude,
+                    lon: data.asset.location.longitude
+                };
+            }
 
             $('.dashboard').m2mdashboard({
                 mainContent: [
@@ -114,6 +172,7 @@ define(
                         component: 'map',
                         zoomInitial: 13,
                         zoomMin: 5,
+                        center: initialCenter,
                         zoomMax: 20,
                         markerClickEventTarget: '.mapbox-mini',
                         markerClickEvent: 'asset-selected',
@@ -127,7 +186,6 @@ define(
                         {
                             component: 'pagedPanel',
                             className: 'panel-list',
-                            insertionPoint: '.panel-content-list',
                             header: '',
                             ID: 'panel-list',
                             items: []
@@ -135,9 +193,8 @@ define(
                         {
                             component: 'pagedPanel',
                             className: 'panel-detail',
-                            insertionPoint: '.panel-content-details',
-                            ID: 'panel-detail',
-                            allwaysVisible: [0],
+                            extraHeaderGap: 50,
+                            alwaysVisible: [0,1],
                             items: compList
                         }
                     ]
@@ -146,8 +203,31 @@ define(
 
                 }
             });
-
-            // Initial events ==================================================
+            
+            // =================================================================
+            // Complete DOM with indicators
+            // =================================================================
+            
+            // Add offscreen navigation buttons to map
+            var template_offscreen = 
+                '<div class="offscreen-indicator nwmarkers">0</div>' +
+                '<div class="offscreen-indicator nmarkers">0</div>' +
+                '<div class="offscreen-indicator nemarkers">0</div>' +
+                '<div class="offscreen-indicator emarkers">0</div>' +
+                '<div class="offscreen-indicator semarkers">0</div>' +
+                '<div class="offscreen-indicator smarkers">0</div>' +
+                '<div class="offscreen-indicator swmarkers">0</div>' +
+                '<div class="offscreen-indicator wmarkers">0</div>';
+        
+            $('.fit .mapbox').append(template_offscreen);
+            
+            // Add error panel to details
+            var template_error_details = '<div class="detail-errors"></div>';
+            $('.detail-element-header').after(template_error_details);
+            
+            // =================================================================
+            // Set up
+            // =================================================================
 
             // Hide details on load
             $('.panel-detail').hide();
@@ -161,46 +241,15 @@ define(
                 $('.panel-detail').trigger('update-view');    
             }); 
             
-            // Click on sidebar title 
-            $('.overview-header').on('click', function () {
-                $('.panel-list').slideDown();
-                $('.panel-detail').slideUp();
-            });
-            
             // Update widgets
             $('.temperature-widget').trigger('drawTemperature');
             $('.pitch-widget').trigger('drawPitch');
             $('.lights-widget').trigger('drawLights');
             $('.battery-widget').trigger('drawBattery');
-
-            var swapPanels = function (locator) {
-                console.log("Swap locator is: " + locator);
-                $('.panel-list').slideToggle();
-                $('.panel-detail').slideToggle();
-            };
             
-            // Add navigation buttons to map
-            var template_offscreen = 
-                '<div class="offscreen-indicator nwmarkers">0</div>' +
-                '<div class="offscreen-indicator nmarkers">0</div>' +
-                '<div class="offscreen-indicator nemarkers">0</div>' +
-                '<div class="offscreen-indicator emarkers">0</div>' +
-                '<div class="offscreen-indicator semarkers">0</div>' +
-                '<div class="offscreen-indicator smarkers">0</div>' +
-                '<div class="offscreen-indicator swmarkers">0</div>' +
-                '<div class="offscreen-indicator wmarkers">0</div>';
-        
-            $('.fit').append(template_offscreen);
-            
-            $('.offscreen-indicator').on('click', function (event) {
-                var data = {
-                    properties: {
-                        title: $(event.target).attr('last'),
-                        caption: ''
-                    }
-                };
-                $('.dashboard').trigger('asset-selected', data);
-            });
+            // =================================================================
+            // Functions
+            // =================================================================
             
             var updateOffscreenIndicators = function () {
                 $('.mapbox').trigger('announce-markers', ['.dashboard','updateOffscreenMarkers']);
@@ -208,7 +257,6 @@ define(
             
             var createNewMarker = function (name, lat, lon, color) {
                 color = (typeof color === 'undefined') ? markerColorOk : color;
-                console.log('Creating marker for ' + name);
                 // Add marker to map
                 var marker = {
                     geometry : {
@@ -257,7 +305,6 @@ define(
             
             var updateWarningPanelTrigger = function () {
                 $('.overview-subpanel .text').on('click',function () {
-                    console.log("Element: " + $(this).attr('class'));
                     var data = {
                         properties: {
                             title: $(this).html(),
@@ -269,14 +316,14 @@ define(
             };
            
             var updateWarningList = function (assetName, warnings) {
-                var matches = $('.panel-content-list .overview-subpanel .text:contains(\"' + assetName + '\")');
+                var matches = $('.panel-list .overview-subpanel .text:contains(\"' + assetName + '\")');
                 
                 if (matches.length === 0 && warnings !== '') {
                     // append another subpanel
-                    $('.panel-content-list').append(warning_subpanel_html);
+                    $('.panel-list').append(warning_subpanel_html);
                     
-                    $('.panel-content-list .overview-subpanel .text').last().html(assetName);
-                    $('.panel-content-list .overview-subpanel .caption').last().html(warnings);
+                    $('.panel-list .overview-subpanel .text').last().html(assetName);
+                    $('.panel-list .overview-subpanel .caption').last().html(warnings);
                     
                     updateWarningPanelTrigger();
                 }
@@ -290,7 +337,7 @@ define(
                 }
                 
                 // update warning counter
-                var count = $('.panel-content-list .overview-subpanel').length;
+                var count = $('.panel-list .overview-subpanel').length;
                 $('.overview-count').html(count);
             };
             
@@ -320,7 +367,6 @@ define(
                                     updateWarningList(value.asset.name, errors);
                                     var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
                                     createNewMarker(value.asset.name,lat,lon,markerColor);
-                                    centerMap(lat,lon);
                                 },
                                 error: function(request, error, errorThrown) {
                                     console.error('Error accessing URL: ' + assetInfoURL + ". " + error + ":" + errorThrown);
@@ -348,24 +394,26 @@ define(
                         console.log("Asset: " + response.data.asset.name + " [" + lat + ":" + lon + "]");
                         $('.mapbox').trigger('center-map', [lat, lon]);
                         // Update selected element name
-                        $('.panel-content-details .text').html(assetName);
+                        $('.panel-detail .detail-element-header .text').html(assetName);
 
                         // Get asset errors, if any
                         if (parseInt($('.warning-item .text:contains("'+assetName+'")').length) !== 0) {
                             $('.panel-content-details .icon').removeClass('marker-blue');
                             $('.panel-content-details .icon').addClass('marker-red');
-                            
+                            var errors = $('.warning-item .text:contains("'+assetName+'")').siblings('.caption').html();
+                            $('.detail-errors').html(errors);
                         }
                         else {
                             $('.panel-content-details .icon').removeClass('marker-red');
                             $('.panel-content-details .icon').addClass('marker-blue');
+                            $('.detail-errors').html('No problems detected');
                         }
                         var last_update = 'Last update: ';
                         if (response.data.sensorData.length > 0)
                             last_update += response.data.sensorData[0].st;
                         else
                             last_update += 'unknown';
-                        $('.panel-content-details .caption').html(last_update);
+                        $('.panel-detail .detail-element-header .caption').html(last_update);
                         
                         // Get asset data
                         $.each(response.data.sensorData, function (index, value) {
@@ -382,8 +430,7 @@ define(
                                 else if (value.ms.p === 'batteryStatus') {
                                     $('.battery-widget').trigger('drawBattery-level', value.ms.v);
                                 }
-                            }
-                            else console.log("Element without measure info");                            
+                            }                            
                         });
                         updateOffscreenIndicators();
                     },
@@ -393,25 +440,36 @@ define(
                 });
             };
             
-            $('.dashboard').on('asset-selected', function (event, data) {
-                // Make sure correct panel is displayed
-                $('.panel-list').slideUp();
-                $('.panel-detail').slideDown();
-                $('.paged-panel').trigger('update-view');
-                console.log('Selected asset: ' + data.properties.title);
+            var showDetails = function (event, data) {
+//                $('.panel-detail').slideDown();
+//                $('.panel-list').slideUp();
+                $('.panel-detail').show();
+                $('.panel-list').hide();
+                $('.panel-detail').trigger('update-view');
                 updateAssetInfo(data.properties.title);
-            });
+            };
             
-            $('.dashboard').on('mapbox-zoomed', function () {
-                updateOffscreenIndicators();
-            });
-            $('.dashboard').on('mapbox-panned', function () {
-                updateOffscreenIndicators();
-            });
+            var hideDetails = function () {
+//                $('.panel-list').slideDown();
+//                $('.panel-detail').slideUp();
+                $('.panel-list').show();
+                $('.panel-detail').hide();
+            };
+            
+            // =================================================================
+            // Trigger listeners
+            // =================================================================
+            
+            $('.dashboard').on('asset-selected', showDetails);
+            
+            $('.overview-header').on('click', hideDetails);
+            
+            $('.dashboard').on('mapbox-zoomed', updateOffscreenIndicators);
+            
+            $('.dashboard').on('mapbox-panned', updateOffscreenIndicators);
             
             $('.dashboard').on('updateOffscreenMarkers', function (event, data, extent, center) {
-                // Receives in data an array of mapbox features
-
+                // Receives data as an array of mapbox features
                 // reset marker status
                 $.each ($('.offscreen-indicator'), function (key,value) {
                     $(value).hide();
@@ -443,7 +501,17 @@ define(
                 };
             });
             
-            // Load first data
+            $('.offscreen-indicator').on('click', function (event) {
+                var data = {
+                    properties: {
+                        title: $(event.target).attr('last'),
+                        caption: ''
+                    }
+                };
+                $('.dashboard').trigger('asset-selected', data);
+            });
+            
+            // Load initial data
             updateAssets();
             
             /* Uncomment this line for device data polling */

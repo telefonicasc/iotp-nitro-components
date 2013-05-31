@@ -75,18 +75,18 @@ define(
                             (Math.sin(value*Math.PI / 180) * angleHeight);
 
                 if (this.width > 0 && this.height > 0) {
-                    this.arc.attr({
+                    this.arc.attr($.extend({
                         path: ['M', this.width - attr.marginRight-5, 
                                     this.height - attr.marginBottom - 5,
                                'A', floorWidth, floorWidth, 0, 0, 0, arcx, arcy]
-                    });
+                    }, this.attr.arcStyle));
 
-                    this.bar.attr({
+                    this.bar.attr($.extend({
                         height: angleHeight + 4
-                    });
-                    this.floor.attr({
+                    }, this.attr.barStyle));
+                    this.floor.attr($.extend({
                         y: angleHeight + attr.marginTop, width: floorWidth
-                    });
+                    }, this.attr.floorStyle));
                     this.bar.transform(['r', 90-value, attr.marginLeft+7,
                             attr.marginTop+angleHeight+2]);
                 }

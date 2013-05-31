@@ -1,8 +1,7 @@
 define(
-    [
-        'components/component_manager',
-        'components/dashboard/cell_barchart_subpanel'
-    ],
+[
+    'components/component_manager'
+],
 
     function(ComponentManager, CellBarchartSubpanel) {
 
@@ -14,7 +13,6 @@ define(
             this.defaultAttrs({
                 grid: true,
                 data: {},
-                maxNumBars: 7,
                 incremental: true,
                 colors: ['#000000']
             });
@@ -40,15 +38,15 @@ define(
 
                 this.value = this.attr.data,
                 this.keys = getObjKeys(this.value);
+                this.maxValue = 100;
 
                 var barGroups = context.selectAll('.barGroup').data(this.keys),
-                backgroundGroups = context.append('g'),
-                subPanelgroup = context.append('g');
+                backgroundGroups = context.append('svg'),
+                subPanelgroup = context.append('svg');
 
-
-                this.tooltip = $('<div>').addClass('tooltip')
-                    .appendTo($('body'));
-
+                if (this.attr.tooltip){
+                    this.tooltip = $('<div>').addClass('tooltip').appendTo($('body'));
+                }
 
                 this.updateChart = function() {
 
@@ -77,11 +75,13 @@ define(
                         return key;
                     }));
                     x1.domain(barIndexList).rangeRoundBands([0, x0.rangeBand()]);
-                    y.domain([0, d3.max(values, function(d) {
+                    /*y.domain([0, d3.max(values, function(d) {
                         return d3.max(d, function(d) {
                             return d.value;
                         });
-                    })]);
+                    
+                    })]);*/
+                    y.domain([0, this.maxValue]); 
                     if (axisX && axisY) {
                         axisX.attr('transform', 'translate(0, '+this.height+')').call(xAxis);
                         axisY.attr('transform', 'translate('+this.width+', 0)').call(yAxis);
@@ -101,7 +101,6 @@ define(
                     .attr('width', this.width/this.keys.length )
                     .attr('height', this.height);
 
-                    /* TODO: this is just for Demo, it won't be here finally */
                     var keys = this.keys;
                     subPanelgroup = context.append('g');
                     subPanelgroup.attr('transform', 'translate(0, '+(this.height+30)+')');
@@ -109,12 +108,6 @@ define(
                     .data(this.keys)
                     .enter().append('foreignObject')
                     .attr('class', function(key, i){
-                        CellBarchartSubpanel.attachTo(this,{
-                            text: {
-                                title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of sessions' },
-                                content: { value: Math.floor(Math.random()*(1230)+100), caption: 'Packages consumed' }
-                            }
-                        });
                         return 'cell-barchart-subpanel';
                     })
                     .attr('x', function(key) {
@@ -122,7 +115,13 @@ define(
                     })
                     .attr('width', this.width/keys.length-6 )
                     .attr('height', 100);
-                    /*------------------------------------*/
+
+                    $('.cell-barchart-subpanel').each(function(i, panel){
+                        ComponentManager.get('carouselPanel').attachTo(panel,{
+                            title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of sessions' },
+                            content: { value: Math.floor(Math.random()*(1230)+100), caption: 'Packages consumed' }
+                        });
+                    });
 
                     //Bar groups
                     barGroups = context.selectAll('.group').data(values);
@@ -143,7 +142,7 @@ define(
                     });
                     bars.enter().append('rect')
                     .attr('class', 'chartbar')
-                    .attr('width', x1.rangeBand()-2)
+                    .attr('width', x1.rangeBand()-1)
                     .attr('x', function(d,i) {
                         return x1(d.index);
                     })
@@ -152,13 +151,20 @@ define(
                     })
                     .attr('height', function(d) {
                         return self.height - y(d.value);
-                    })
-                    .on('mouseover', function(d) {
-                        self.showTooltip(this, d);
-                    })
-                    .on('mouseout', function(d) {
-                        self.hideTooltip();
                     });
+
+                    if (this.attr.tooltip){
+                        bars = barGroups.selectAll('.chartbar')
+                        .data(function(d) {
+                            return d;
+                        });
+                        bars.on('mouseover', function(d) {
+                            self.showTooltip(this, d);
+                        })
+                        .on('mouseout', function(d) {
+                            self.hideTooltip();
+                        });
+                    }
                 };
 
                 this.showTooltip = function(rect, d) {
@@ -175,40 +181,6 @@ define(
 					this.tooltip.hide();
 				};
 
-				this.prepareChartData = function(dataIn, daysPeriod){
-					if (daysPeriod > this.attr.maxNumBars && checkPrimo(daysPeriod)){
-						daysPeriod++;
-					}
-					var num = numBars(daysPeriod, this.attr.maxNumBars),
-                        dataOut = {data:{}, daysBar: daysPeriod/num },
-                        keys = null;
-
-					$.each(dataIn, function(i, val){
-						if (!keys){
-							keys = getObjKeys(val.value);
-							$.each(keys, function(j, key){
-								dataOut.data[key] = zeros(num);
-							});
-						}
-						var x = i%num;
-						$.each(keys, function(j, key){
-							dataOut.data[key][x] = dataOut.data[key][x] + val.value[key];
-						});
-					});
-
-                    if (this.attr.incremental){
-                        $.each(keys, function(j, key){
-                            $.each(dataOut.data[key], function(i, val){
-                                if (i > 0) {
-                                    dataOut.data[key][i] += dataOut.data[key][i-1];
-                                }
-                            });
-                        });
-                    }
-					return dataOut;
-				};
-
-
 				this.on('resize', function(e, chartSize) {
 					this.width = chartSize.width;
 					this.height = chartSize.height;
@@ -219,47 +191,19 @@ define(
 				});
 
 				this.on('valueChange', function(e, options) {
-                        var valueField = this.attr.model;
-                        var rawData = $.map(options.value[valueField], function(val, i) {
-                            if (val.date >= options.range[0] && val.date <= options.range[1]) {
-                                return val;
-                            }
-                        });
-                        var daysRange = (options.range[1] - options.range[0])/(1000*60*60*24) + 1;
-                        var d = this.prepareChartData(rawData, daysRange);
-                        this.value = d.data;
-                        this.attr.daysBar = d.daysBar;
-                        this.updateChart();
-                        e.stopPropagation();
-                    });
+                    e.stopPropagation();
+
+                    var fixRange = options.value.fixRange;
+                    var modelData = options.value[this.attr.model][fixRange];
+                    
+                    this.maxValue = modelData.maxValue;
+                    this.attr.daysBar = fixRange/7;
+                    var roundDate = d3.time.day.round(options.range[0]).getTime();
+                    this.value = modelData.values[roundDate];
+                    this.updateChart();
+                    
+                });
             });
-
-			function checkPrimo(number){
-				var primo=0;
-				for(var i=0; i<=number; i++){
-					if(number%i === 0 ){
-						primo++;
-					}
-					if(primo>2){ break; }
-				}
-				return (primo===2)? true: false;
-			}
-
-			function numBars(days, maxbars){
-				if (days <= maxbars){ return days; }
-				for (var i = maxbars ; i >= 2; i--) {
-					if ((days%i) === 0 && (days/i) <= maxbars ) {
-						return days/i;
-					}
-				}
-				return days;
-			}
-
-			function zeros(length){
-				var vector = [];
-				for (var i = 0; i < length; i++){ vector[i] = 0; }
-				return vector;
-			}
 
 			function getObjKeys(obj){
                 var keys = [];

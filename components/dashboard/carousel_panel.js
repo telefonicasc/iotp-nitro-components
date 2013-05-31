@@ -42,17 +42,18 @@ define(
 
             this.$chartNode = $('<div>').addClass('chart-carousel');
 
+            //Add nodes to component
             this.$bottomNode.appendTo(this.$node);
-            this.$chartNode.appendTo(this.$node);
-            this.$topNode.appendTo(this.$node);
-
-            var chart = ComponentManager.get('carouselBarchart').attachTo(this.$chartNode, this.attr);
+            if (this.attr.conf){
+              this.$chartNode.appendTo(this.$node);
+              var chart = ComponentManager.get('carouselBarchart').attachTo(this.$chartNode, this.attr);
+            }               
+            this.$topNode.appendTo(this.$node); 
 
             this.on('valueChange', function(e, data) {
                 
                 this.$topValueNode.html( (data.text1)?data.text1: '');
-                this.$bottomValueNode.html( (data.text2)?data.text2: '');
-                
+                this.$bottomValueNode.html( (data.text2)?data.text2: ''); 
                 this.$chartNode.trigger('valueChange', {values: data.values} );
 
                 e.stopPropagation();

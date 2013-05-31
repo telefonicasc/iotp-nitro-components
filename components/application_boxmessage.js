@@ -29,16 +29,19 @@ define(
       },
 
       open: function(opt) {
-         if(opt.confirmModal){
+	 var focusEl = null;
+         if (opt.confirmModal) {
             btnOk.text(opt.buttonTextOk || BUTTON_TEXT_OK);
             btnCancel.text(opt.buttonTextCancel || BUTTON_TEXT_CANCEL);
             el.btnsdiv.show();
             el.btndiv.hide();
             btnOk.on('click', opt.okCallback);
-        }else{
+	    focusEl = btnOk;
+        } else {
             btnClose.text(opt.buttonText || BUTTON_TEXT_CLOSE);
             el.btnsdiv.hide();
             el.btndiv.show();
+	    focusEl = btnClose;
         }
 
         if (opt.title) {
@@ -50,6 +53,7 @@ define(
           el.message.html(opt.message);
           el.box.show();
           el.bg.show();
+	  focusEl.focus();
         }
 
       }

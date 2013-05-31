@@ -69,13 +69,12 @@ function (ComponentManager) {
             temperatureChart.thermoBar.show();
             temperatureChart.thermoBorder.show();
             temperatureChart.thermoCircle.show();
-        }
+        };
   
         // ==========================
         // [CREATE] Temperature Chart 
         // ==========================    
         this.createTemperatureChart = function(options) {
-            //var paper = Raphael(this.attr.temperatureChart.get(0),100,60)
             var paper = Raphael(this.attr.id,100,60)
               , thermoBar; 
 
@@ -96,7 +95,7 @@ function (ComponentManager) {
             });
             cover.attr({
               'stroke-width':0
-            })
+            });
 
             var mercury = paper.set();
             mercury.push(

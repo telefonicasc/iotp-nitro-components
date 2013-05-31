@@ -120,7 +120,7 @@ function() {
     var decodeSensor = {};
     var decodeAction = {
         'SendEmailAction':function(cardConfig, cardData){
-            cardConfig.actionData.userParams = $.extend({}, cardData.userParams);
+            cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }
     };

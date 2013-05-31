@@ -1381,6 +1381,8 @@ li.delimiter-value {
   margin-top: 6px;
 }
 .front .m2m-card-binary .binary-button.selected {
+  position: relative;
+  z-index: 20;
   background-color: #9ed76f;
   font-weight: bold;
   font-size: 22px;
@@ -2081,7 +2083,6 @@ li.delimiter-value {
   background-color: white;
   width: 34%;
   height: 5px;
-  border-top-left-radius: 6px;
   border: 2px solid #D5DEE1;
   position: relative;
   left: 50%;
@@ -2090,7 +2091,23 @@ li.delimiter-value {
   margin-bottom: -2px;
   z-index: 1;
   border-bottom: 0px;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 6px;
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-topleft: 6px;
+  border-radius: 6px 0px 0px 6px;
   border-top-right-radius: 6px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 6px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
 }
 .battery-widget .battery-body {
   width: 100%;
@@ -2098,7 +2115,23 @@ li.delimiter-value {
   background-color: white;
   position: relative;
   margin-top: 0%;
-  border-radius: 10px;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-topleft: 10px;
+  border-radius: 10px 10px 10px 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
   border: 2px solid #D5DEE1;
 }
 .battery-widget .scale-widget {

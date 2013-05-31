@@ -42,6 +42,13 @@ define(
             // this == scope of component
             this.defaultAttrs( $.extend({},defaultAttrs) );
             this.after('initialize', _install);
+
+            this._userParamsObject = {};
+
+            this.validate = function(){
+                var isValid = _isValid(this._userParamsObject);
+                this.$node.data('isValid', isValid);
+            };
         }
 
         function _install(){
@@ -64,7 +71,7 @@ define(
                 }
             };
 
-            var userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
+            var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
 
             this.$element = element;
 
@@ -79,9 +86,10 @@ define(
             element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
             element.back.message.on('change', _updateElementOnChange(element.front.message) );
 
-            element.back.emailAddress.on('change', _triggerUpdateOnChange(element, userParamsObject, this) );
-            element.back.subject.on('change', _triggerUpdateOnChange(element, userParamsObject, this) );
-            element.back.message.on('change', _triggerUpdateOnChange(element, userParamsObject, this) );
+            var triggerUpdateOnChange = _triggerUpdateOnChange(element, userParamsObject, this);
+            element.back.emailAddress.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
+            element.back.subject.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
+            element.back.message.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
 
             //set values
             element.back.subject.val(userParamsObject['mail.subject']);
@@ -89,21 +97,21 @@ define(
             element.back.message.val(userParamsObject['mail.message']);
 
             element.front.subject.text(userParamsObject['mail.subject']);
-            element.front.message.text(userParamsObject['mail.subject']);
-
-            this.$node.data('isValid', _isValid(userParamsObject) );
+            element.front.message.text(userParamsObject['mail.message']);
 
             var node = this.$node;
             $(node.parent() ).on('click', function(){
                 node.removeClass('flip');
             });
 
-            $(element.back.token).find('.token').on('click', function(){
+            $(element.back.token).on('click', '.token', function(){
                 var token = $(this).text().replace(TOKEN_SYMBOL,'');
                 var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
                 _insertAt(element.back.message[0], value);
                 element.back.message.change();
             });
+
+            this.validate();
         }
         function _stopPropagation(e){
             e.stopPropagation();
@@ -134,14 +142,13 @@ define(
                 userParamsObject['mail.subject'] = element.back.subject.val();
                 userParamsObject['mail.to'] = element.back.emailAddress.val();
                 userParamsObject['mail.message'] = element.back.message.val();
-                var isValid = _isValid(userParamsObject);
                 var value = {
                     'userParams' : _userParamsObjectToArray(userParamsObject)
                 };
                 var data = {
                     'value': value
                 };
-                card.$node.data('isValid', isValid);
+                card.validate();
                 card.trigger('valueChange', data);
             };
         }

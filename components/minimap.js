@@ -62,7 +62,7 @@ define(
                     var center = {
                         lat: markerModel.geometry.coordinates[1],
                         lon: markerModel.geometry.coordinates[0]
-                    }
+                    };
                     this.mapM.centerzoom(center, this.attr.zoomValue);
                 });
 

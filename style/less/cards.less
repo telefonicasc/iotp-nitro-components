@@ -87,10 +87,13 @@
 
   &.preview {
     .scale(@card-preview-factor);
-    .front, .back {
-        filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
-        z-index: 1;
-    }
+  }
+}
+
+.no-csstransforms .card.preview {
+  .front, .back {
+    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.5, M12=0, M21=0, M22=0.5);
+    z-index: 1;
   }
 }
 
@@ -327,6 +330,10 @@
   }
 }
 
+.card-toolbox-section {
+  position: relative;
+}
+
 .graph-editor {
 }
 
@@ -514,7 +521,7 @@
 .m2m-card-delimiter {
     position: absolute;
     margin-top: 85px;
-    z-index: 2000;
+    z-index: 950;
 }
 
 li.delimiter-value {
@@ -651,6 +658,8 @@ li.delimiter-value {
             }
 
             &.selected {
+                position: relative;
+                z-index: 20;
                 background-color: rgb(158, 215, 111);
                 font-weight: bold;
                 font-size: 22px;
@@ -677,15 +686,11 @@ li.delimiter-value {
         }
 
         input {
-            padding: 8px;
-            color: rgb(89, 108, 115);
             font-family: 'American Typewriter', 'Courier New', Courier, monospace;
             font-size: 16px;
+            color: rgb(89, 108, 115);
             width: 100%;
-            border: 1px solid rgb(188, 192, 193);
-            .border-radius(4px, 4px, 4px, 4px);
             margin-left: -5px;
-            padding: 4px;
         }
     }
 
@@ -694,4 +699,11 @@ li.delimiter-value {
         margin-left: 5%;
     }
 
+}
+
+.borderradius .m2m-card-text input {
+    padding: 8px;
+    border: 1px solid rgb(188, 192, 193);
+    .border-radius(4px, 4px, 4px, 4px);
+    padding: 4px;
 }

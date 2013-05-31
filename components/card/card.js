@@ -37,6 +37,7 @@ define(
                     'not': false,
                     'operator': null
                 },
+                delimiterList:false,
                 defaultValue : ''
             });
 
@@ -115,7 +116,7 @@ define(
                         condition.parameterValue = this.attr.defaultValue;
                     }
                     this.$node.data('conditionList', [condition]);
-
+                    this.$node.data('delimiterList', this.attr.delimiterList);
                 }
             });
 

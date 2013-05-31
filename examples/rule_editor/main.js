@@ -50,7 +50,7 @@ define(
                     $scope.ruleData = {
                         rule:data.data[0],
                         isValid:true
-                    }
+                    };
                 });
 
 

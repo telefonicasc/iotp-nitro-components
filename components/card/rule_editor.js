@@ -520,7 +520,7 @@ define(
                 this.connections = [];
 
                 cards.each($.proxy(function(i, el) {
-                    this.$graphEditor.trigger('removeNode', { node: $(el) });
+                    this.$graphEditor.trigger('removeGraphNode', { node: $(el) });
                 }, this));
             };
 

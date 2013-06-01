@@ -20,6 +20,10 @@ module.exports = function(grunt) {
       css:{
         files: 'style/less/*.less',
         tasks: ['styleguide', 'less']
+      },
+      test:{
+        files: ['test/**/*.js', 'components/**/*.js'],
+        tasks:['jasmine:components']
       }
     },
 

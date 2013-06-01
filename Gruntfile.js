@@ -17,12 +17,14 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: 'style/less/*.less',
-      tasks: ['styleguide', 'less']
+      css:{
+        files: 'style/less/*.less',
+        tasks: ['styleguide', 'less']
+      }
     },
 
     styleguide: {
-      
+
       options: {
         framework: {
           name: 'kss'
@@ -60,7 +62,7 @@ module.exports = function(grunt) {
           templateOptions: {
             requireConfig: {
               paths: {
-                flight: 'libs/test/flight_test'            
+                flight: 'libs/test/flight_test'
               }
             }
           }
@@ -93,7 +95,7 @@ module.exports = function(grunt) {
     },
 
     closureLint: {
-      app: { 
+      app: {
         closureLinterPath: '/usr/bin/',
         src: ['components/**'],
         options: {

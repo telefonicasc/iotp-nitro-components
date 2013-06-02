@@ -46,9 +46,11 @@ define(
                 $http.get('cards.json').success(function(data) {
                     $scope.cards.conditions.cards = data.data;
                 });
-
                 $http.get('rule.json').success(function(data) {
-                    $scope.ruleData = { rule: data.data[0] };
+                    $scope.ruleData = {
+                        rule:data.data[0],
+                        isValid:true
+                    };
                 });
 
 

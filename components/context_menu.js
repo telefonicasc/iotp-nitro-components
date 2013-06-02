@@ -67,6 +67,7 @@ define(
             this.pushPanel(item);
           } else if (this.attr.onSelect) {
             this.attr.onSelect(item);
+            this.$node.hide();
           }
         });
 

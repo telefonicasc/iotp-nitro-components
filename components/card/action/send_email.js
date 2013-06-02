@@ -57,7 +57,7 @@ define(
             // this == scope of element in component
             this.$front.find('.body').append(frontTpl);
             this.$back.find('.body').append(backTpl);
-            var element = {
+            var element = this.$element = {
                 back : {
                     subject : $(backTpl).find('input.email-subject'),
                     emailAddress : $(backTpl).find('input.email-address'),
@@ -72,8 +72,6 @@ define(
             };
 
             var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
-
-            this.$element = element;
 
             this.$back.on('click', _stopPropagation);
 
@@ -193,9 +191,9 @@ define(
         }
 
         function _isValid(userParam){
-            var a = (userParam['mail.subject'].length > 0 );
-            var b = (userParam['mail.to'].length > 0 );
-            var c = (userParam['mail.message'].length > 0 );
+            var a = (userParam['mail.subject'] && userParam['mail.subject'].length > 0 );
+            var b = (userParam['mail.to'] && userParam['mail.to'].length > 0 );
+            var c = (userParam['mail.message'] && userParam['mail.message'].length > 0 );
 
             return (a && b && c);
         }

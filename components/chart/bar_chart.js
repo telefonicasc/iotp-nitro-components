@@ -47,8 +47,7 @@ define(
                         return Math.abs(y(0) - y(d.value));
                     })
                     .on('mouseover', function(d) {
-                        self.showTooltip(this, d.value);
-                        this.attr('fill', 'red');
+                        self.showTooltip(this, d.value, barWidth);
                     })
                     .on('mouseout', function(d) {
                         self.hideTooltip();
@@ -82,12 +81,12 @@ define(
                     e.stopPropagation();
                 });
 
-                this.showTooltip = function(rect, d) {
+                this.showTooltip = function(rect, d, barWidth) {
                     var pos = $(rect).offset();
-                    this.tooltip.html('<div>'+d+' €</div>');
+                    this.tooltip.html('<div>'+d+' €</div><div>'+this.attr.tooltip.caption+'</div>');
                     this.tooltip.css({
                         top: pos.top,
-                        left: pos.left
+                        left: pos.left + barWidth/2
                     });
                     this.tooltip.show();
                 };

@@ -47,7 +47,7 @@ define(
                 if (this.attr.grid) {
                     grid = svg.append('g').attr('class', 'grid');
                     Grid.attachTo(grid.node(), $.extend({
-                        clipId: clipId
+                        clipId: clipId, classGrid: this.attr.classGrid
                     }, this.attr.grid));
                 }
 

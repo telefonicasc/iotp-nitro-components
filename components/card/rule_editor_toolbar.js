@@ -45,6 +45,10 @@ define(
                     sliderMinLabel: '-',
                     sliderMaxLabel: '+'   
                 });  
+
+                // TODO: Temporaly removed because this is not 
+                // supported yet
+                this.$zoom.hide();
         
                 this.$zoomSlider.on('valueChange', $.proxy(function(e, o) {
                     this.trigger('zoomChange', { zoomLevel: o.value });

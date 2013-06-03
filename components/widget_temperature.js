@@ -99,7 +99,7 @@ function (ComponentManager) {
 
             var mercury = paper.set();
             mercury.push(
-              thermoBar = paper.rect(22,55, 4, 0),
+              thermoBar =  paper.rect(22,48, 4, 0),
               thermoCircle = paper.circle(24,45,4)
             );
 

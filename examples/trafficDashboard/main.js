@@ -64,7 +64,9 @@ define(
                     items: [
                         {
                             component: 'lightsWidget',
-                            className: 'lights-widget'
+                            className: 'lights-widget',
+                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
+                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
                         }
                     ]
                 },
@@ -102,11 +104,12 @@ define(
                 var pollInterval = 5000;
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
+                var useKermit = false;
 
                 /* Testing URL */
-//            var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+                var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
                 /* Deploy URL */
-                var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
+//                var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
 
                 var ajaxDefaultErrorHandler = function(request, errorText, errorThrown) {
                     console.log('GET Error: ' + errorText + '. Thrown: ' + errorThrown);
@@ -350,32 +353,41 @@ define(
                     $('.mapbox').trigger('center-map', [lat, lon]);
                 };
 
+                var updateAssets = function (response) {
+                    if (useKermit) updateAssetsKermit();
+                    else updateAssetsAjax();
+                };
+                
+                var updateAssetInfo = function (assetName) {
+                    if (useKermit) updateAssetInfoKermit(assetName);
+                    else updateAssetInfoAjax(assetName);
+                };
 
                 var updateAssetsKermit = function() {
                     API.http.request({method: 'GET', url: assetsURL})
-                            .success(function(response, status, headers, config) {
-                        $.each(response.data, function(index, value) {
-                            var assetInfoURL = assetsURL + '/' + value.asset.name;
-                            API.http.request({method: 'GET', url: assetInfoURL})
-                                    .success(function(response, status, headers, config) {
-                                var lat = response.data.asset.location.latitude;
-                                var lon = response.data.asset.location.longitude;
-                                var errors = generateErrorText(response.data.sensorData);
-                                updateWarningList(value.asset.name, errors);
-                                var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
-                                createNewMarker(value.asset.name, lat, lon, markerColor);
-                            })
-                                    .error(function(response, status, headers, config) {
-                                console.error("Can't access to API REST. " + response);
+                        .success(function(response, status, headers, config) {
+                            $.each(response.data, function(index, value) {
+                                var assetInfoURL = assetsURL + '/' + value.asset.name;
+                                API.http.request({method: 'GET', url: assetInfoURL})
+                                        .success(function(response, status, headers, config) {
+                                    var lat = response.data.asset.location.latitude;
+                                    var lon = response.data.asset.location.longitude;
+                                    var errors = generateErrorText(response.data.sensorData);
+                                    updateWarningList(value.asset.name, errors);
+                                    var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
+                                    createNewMarker(value.asset.name, lat, lon, markerColor);
+                                })
+                                        .error(function(response, status, headers, config) {
+                                    console.error("Can't access to API REST. " + response);
+                                });
                             });
+                        })
+                        .error(function(data, status, headers, config) {
+                            console.error("Can't access to API REST. " + response);
                         });
-                    })
-                            .error(function(data, status, headers, config) {
-                        console.error("Can't access to API REST. " + response);
-                    });
                 };
 
-                var updateAssets = function() {
+                var updateAssetsAjax = function() {
                     $.ajax({
                         url: assetsURL,
                         type: 'GET',
@@ -466,7 +478,7 @@ define(
                 };
 
                 /* When an element is clicked, update sidebar info with the latest */
-                var updateAssetInfo = function(assetName) {
+                var updateAssetInfoAjax = function(assetName) {
                     var assetInfoURL = assetsURL + "/" + assetName;
                     console.log('Updating asset info: ' + assetInfoURL);
                     $.ajax({

@@ -16,7 +16,9 @@ function (ComponentManager) {
             fillColor: '#6F8388',
             borderColor: '#6F8388',
             baseColor: '#E9EFF0',
-            id: 'lights-widget'
+            id: 'lights-widget',
+            arrowURL: 'url(res/images/arrow.png)',
+            greyLightURL: 'url(res/images/greyLight.png)'
         });
                                                                                         
         this.after('initialize', function () {
@@ -41,12 +43,12 @@ function (ComponentManager) {
             arrow = paper.rect(-50, 75, 12, 10);
             arrow.attr({
                 'stroke-width': 0,
-                fill: 'url(/res/images/arrow.png)'
+                fill: this.attr.arrowURL
             });
             
             var style = {
                 'stroke-width': 0,
-                fill: 'url(/res/images/greyLight.png)'
+                fill: this.attr.greyLightURL
             };
             
             for (var i=0; i<20; i++) {

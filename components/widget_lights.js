@@ -41,12 +41,12 @@ function (ComponentManager) {
             arrow = paper.rect(-50, 75, 12, 10);
             arrow.attr({
                 'stroke-width': 0,
-                fill: 'url(res/images/arrow.png)'
+                fill: 'url(/res/images/arrow.png)'
             });
             
             var style = {
                 'stroke-width': 0,
-                fill: 'url(res/images/greyLight.png)'
+                fill: 'url(/res/images/greyLight.png)'
             };
             
             for (var i=0; i<20; i++) {

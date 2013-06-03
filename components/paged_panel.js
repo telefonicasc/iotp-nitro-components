@@ -83,7 +83,7 @@ define(
                 // how many pages have content?
                 var pagesWithContent = this.getPageCount();
                 // Hide the pager if pagesWithContent = 0
-                if (pagesWithContent === 0) {
+                if (pagesWithContent <= 1) {
                     this.select('selectNavigation').hide();
                 }
                 else {

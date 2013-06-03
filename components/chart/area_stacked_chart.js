@@ -149,6 +149,10 @@ define(
 
                 this.showTooltip = function(circle, d) {
                     var pos = $(circle).offset();
+                    
+                    if (!d.value2) d.value2 = d.value;
+                    if (!this.attr.tooltip.caption) this.attr.tooltip.caption = "";
+
                     this.tooltip.html('<div>'+d.value2+'</div><div class="caption">'+this.attr.tooltip.caption+'</div>');
                     this.tooltip.css({
                         top: pos.top,

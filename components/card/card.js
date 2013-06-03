@@ -4,7 +4,8 @@ define(
         'components/mixin/template',
         'components/flippable',
         'components/card/card_side',
-        'components/mixin/data_binding'
+        'components/mixin/data_binding',
+        'components/card/card_data'
     ],
     function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
         var ELEMENT_ID_PREFIX = 'card_';
@@ -46,6 +47,10 @@ define(
                     dragCheck = false, clickCheck = false;
 
                 this.attr.updateOnValueChange = false;
+
+                if (this.attr.rawCard) {
+                    $.extend(this.attr, CardData.encode(this.attr.rawCard));  
+                }
 
                 this.$node.on('click',_stopPropagation);
                 this.$node.addClass('card');

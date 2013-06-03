@@ -507,7 +507,6 @@ select {
 .cell-barchart-subpanel {
   width: 100%;
   height: 100%;
-  background-color: #bfcecf;
   color: #617789;
   text-align: center;
 }
@@ -532,18 +531,17 @@ select {
   background-color: #64737b;
   color: #efeeeb;
   border-bottom: 1px solid white;
-  height: 15%;
 }
 .cell-barchart-subpanel .title .caption {
   font-size: 10px;
   color: #adbabc;
 }
 .cell-barchart-subpanel .chart-carousel {
-  height: 45%;
+  background-color: #bfcecf;
 }
 .cell-barchart-subpanel .content {
+  background-color: #bfcecf;
   padding: 10px;
-  height: 15%;
   text-align: center;
 }
 .cell-barchart-subpanel .content .value {
@@ -608,8 +606,10 @@ select {
 .card .front .header h1 {
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 16px;
 }
 .card .front .body {
+  overflow: hidden;
   margin: 7px;
   position: absolute;
   top: 40px;
@@ -1318,12 +1318,16 @@ li.delimiter-value {
   color: #596c73;
   font-size: 40px;
   text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .front .m2m-card-quantity-units {
   color: #596c73;
   font-weight: bold;
   font-size: 14px;
   text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .front .m2m-card-binary {
   position: absolute;

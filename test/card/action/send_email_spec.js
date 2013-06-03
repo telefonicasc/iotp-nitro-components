@@ -74,4 +74,88 @@ describeComponent('components/card/action/send_email.js', function () {
             expect(spyValueChange).toHaveBeenCalled();
         });
     });
+
+    describe('Method', function(){
+        beforeEach(function(){
+            setupComponent(data);
+        });
+        it('validate()', function(){
+            var $node = this.component.$node;
+            var $element = this.component.$element;
+
+            expect( this.component.validate ).toBeDefined();
+
+            $element.back.emailAddress.val('').change();
+            $element.back.subject.val('').change();
+            $element.back.message.val('').change();
+            $.removeData($node, 'isValid');
+
+            this.component.validate();
+
+            expect(this.component.$node).toHaveData('isValid');
+        });
+
+        it('isValid', function(){
+            var $back = this.component.$element.back;
+
+            expect( this.component.isValid ).toBeDefined();
+
+            $back.emailAddress.val('test').change();
+            $back.subject.val('').change();
+            $back.message.val('').change();
+
+            expect( this.component.isValid() ).toEqual(false);
+
+            $back.emailAddress.val('').change();
+            $back.subject.val('test').change();
+            $back.message.val('').change();
+
+            expect( this.component.isValid() ).toEqual(false);
+
+            $back.emailAddress.val('').change();
+            $back.subject.val('').change();
+            $back.message.val('test').change();
+
+            expect( this.component.isValid() ).toEqual(false);
+
+            $back.emailAddress.val('tes').change();
+            $back.subject.val('test').change();
+            $back.message.val('test').change();
+
+            expect( this.component.isValid() ).toEqual(true);
+        });
+
+        it('getValue', function(){
+            var values = {
+                'mail.to':'test.mail.to',
+                'mail.subject':'test.mail.subject',
+                'mail.message':'test.mail.message'
+            };
+            var $back = this.component.$element.back;
+            var value;
+
+            expect(this.component.getValue).toBeDefined();
+
+            $back.emailAddress.val(values['mail.to']).change();
+            $back.subject.val(values['mail.subject']).change();
+            $back.message.val(values['mail.message']).change();
+
+            value = this.component.getValue();
+
+            expect( value['value']['userParams'] ).toBeDefined();
+            for(var param, i=value.value.userParams.length;i--;){
+                param = value.value.userParams[i];
+                expect(param.value).toEqual(values[param.name]);
+            }
+        });
+
+        it('valueChange', function(){
+            var spyValueChange = jasmine.createSpy('valueChange');
+            this.component.$node.on('valueChange', spyValueChange);
+
+            expect( this.component.valueChange ).toBeDefined();
+            this.component.valueChange();
+            expect(spyValueChange).toHaveBeenCalled();
+        });
+    });
 });

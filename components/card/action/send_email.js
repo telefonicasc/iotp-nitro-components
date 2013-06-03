@@ -44,10 +44,42 @@ define(
             this.after('initialize', _install);
 
             this._userParamsObject = {};
+            this.$element = null;
 
             this.validate = function(){
-                var isValid = _isValid(this._userParamsObject);
+                var isValid = this.isValid();
                 this.$node.data('isValid', isValid);
+            };
+
+            this.getValue = function(){
+                this._userParamsObject['mail.subject'] = this.$element.back.subject.val();
+                this._userParamsObject['mail.to'] = this.$element.back.emailAddress.val();
+                this._userParamsObject['mail.message'] = this.$element.back.message.val();
+                var value = {
+                    'userParams' : _userParamsObjectToArray(this._userParamsObject)
+                };
+                var data = {
+                    'value': value
+                };
+                return data;
+            };
+
+            this.valueChange = function(){
+                this.trigger('valueChange', this.getValue());
+            };
+
+            this.isValid = function(){
+                var userParam = this._userParamsObject;
+                var a = false;
+                var b = false;
+                var c = false;
+                if(userParam['mail.subject'] && userParam['mail.to'] && userParam['mail.message']){
+                    a = (userParam['mail.subject'].length > 0 );
+                    b = (userParam['mail.to'].length > 0 );
+                    c = (userParam['mail.message'].length > 0 );
+                }
+
+                return (a && b && c);
             };
         }
 
@@ -84,7 +116,7 @@ define(
             element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
             element.back.message.on('change', _updateElementOnChange(element.front.message) );
 
-            var triggerUpdateOnChange = _triggerUpdateOnChange(element, userParamsObject, this);
+            var triggerUpdateOnChange = _triggerUpdateOnChange(this);
             element.back.emailAddress.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
             element.back.subject.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
             element.back.message.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
@@ -135,19 +167,10 @@ define(
             return callbackToEvent;
         }
 
-        function _triggerUpdateOnChange(element, userParamsObject, card){
+        function _triggerUpdateOnChange(card){
             return function(){
-                userParamsObject['mail.subject'] = element.back.subject.val();
-                userParamsObject['mail.to'] = element.back.emailAddress.val();
-                userParamsObject['mail.message'] = element.back.message.val();
-                var value = {
-                    'userParams' : _userParamsObjectToArray(userParamsObject)
-                };
-                var data = {
-                    'value': value
-                };
                 card.validate();
-                card.trigger('valueChange', data);
+                card.valueChange();
             };
         }
 
@@ -189,16 +212,6 @@ define(
             }
             return arr;
         }
-
-        function _isValid(userParam){
-            var a = (userParam['mail.subject'] && userParam['mail.subject'].length > 0 );
-            var b = (userParam['mail.to'] && userParam['mail.to'].length > 0 );
-            var c = (userParam['mail.message'] && userParam['mail.message'].length > 0 );
-
-            return (a && b && c);
-        }
-
-
 
         return ComponentManager.extend(Card, 'SendEmail', SendEmail, DataBinding);
     }

@@ -59,7 +59,10 @@ define(
 
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
-                    this.attr.back.header = this.attr.header;
+                    this.attr.back.header = {
+                      label: 'Sensor name',
+                      value: this.attr.header
+                    };
                 }
                 CardSide.attachTo(this.$front, this.attr.front);
                 CardSide.attachTo(this.$back, this.attr.back);

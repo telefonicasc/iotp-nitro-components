@@ -27,6 +27,13 @@ define(
                     } else {
                         if (typeof this.attr.header === 'string') {
                             $('<h1>').html(this.attr.header).appendTo(this.$header);
+                        } else {
+                            $('<span>').addClass('card-header-label')
+                              .html(this.attr.header.label)
+                              .appendTo(this.$header);
+                            $('<h1>').html(this.attr.header.value)
+                              .appendTo(this.$header);
+
                         }
                     }
                 }

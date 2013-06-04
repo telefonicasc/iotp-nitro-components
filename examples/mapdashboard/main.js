@@ -60,7 +60,7 @@ define(
                             'status': 'error'
                         }
                     }
-                ],
+                ]
             }],
                 overviewPanel: {},
                 data: function() {}
@@ -90,5 +90,48 @@ define(
                 console.log('Main.js :: trigger["echo-test"]');
             }
         );
+            
+            
+        var featureList = [
+            {
+                geometry: { coordinates: [ -3.670, 40.515] },
+                properties: {
+                    'marker-color':'#F4FA58',
+                    'marker-symbol':'circle',
+                    'title': 'New Marker 2'
+                }
+            },
+            {
+                geometry: { coordinates: [ -3.675, 40.515] },
+                properties: {
+                    'marker-color':'#F4FA58',
+                    'marker-symbol':'triangle',
+                    'title':'New Marker 3'
+                }
+            }
+        ];   
+        
+        
+        var marker =  {   
+            geometry: { coordinates: [ -3.665, 40.515] },
+            properties: {
+                'id': 1,
+                'marker-color':'#000',
+                'marker-symbol':'police',
+                'title': 'Marker 1',
+                'status': 'ok'
+
+            }                        
+        };
+            
+        $(this).on('change-markers', function () {
+            $('.mapbox').trigger('update-marker-features', [featureList]);
+        });
+        
+        $(this).on('add-marker', function () {
+            $('.mapbox').trigger('add-marker-feature', [marker]);
+        });
+            
+            
     }
 );

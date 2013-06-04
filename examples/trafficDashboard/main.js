@@ -116,7 +116,9 @@ define(
 //                var assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
 //                var assetsDetailedURL = assetsURL + '?detailed=1';
 
-                var initialCenter = {lat: 50.456729, lon: 7.485};
+                /* Gallus, germany */
+                var initialCenter = {lat: 50.103749, lon: 8.641774};
+//                var initialCenter = {lat: 50.456729, lon: 7.485};
                 
                 var requestApiData = function (url, callback) {
                     if (useKermit) {

@@ -192,6 +192,8 @@ define(
 
 				this.on('valueChange', function(e, options) {
                     e.stopPropagation();
+                    
+                    this.options = options;
 
                     var fixRange = options.value.fixRange;
                     var modelData = options.value[this.attr.model][fixRange];
@@ -202,6 +204,12 @@ define(
                     this.value = modelData.values[roundDate];
                     this.updateChart();
                     
+                });
+
+                this.on('actionSelected', function(e, value){
+                    e.stopPropagation();
+                    this.attr.model = value.newModel;
+                    this.trigger('valueChange', this.options);
                 });
             });
 

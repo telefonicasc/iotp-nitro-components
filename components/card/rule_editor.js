@@ -32,6 +32,14 @@ define(
                 },
                 cardDefaults: {
                     component: 'Card'
+                },
+                actionsLabel: 'Actions',
+                conditionsLabel: 'Conditions',
+                delimiterLabels: {
+                    'EQUAL_TO': 'IS',
+                    'DIFFERENT_TO': 'IS NOT',
+                    'MINOR_THAN': 'BELOW',
+                    'GREATHER_THAN': 'ABOVE'
                 }
             });
 
@@ -83,7 +91,10 @@ define(
                 this.$bottomToolbar = $('<div>')
                         .appendTo(this.$node);
 
-                RuleEditorToolbar.attachTo(this.$bottomToolbar);
+                RuleEditorToolbar.attachTo(this.$bottomToolbar, {
+                    actionsLabel: this.attr.actionsLabel,
+                    conditionsLabel: this.attr.conditionsLabel 
+                });
 
                 this.$bottomToolbar.on('zoomChange', $.proxy(function(e, o) {
                     var zoomLevel = o.zoomLevel;
@@ -135,7 +146,9 @@ define(
                         delimiter.on('valueChange', $.proxy(function(){
                             this.updateValue();
                         }, this));
-                        Delimiter.attachTo(delimiter, o);
+                        Delimiter.attachTo(delimiter, $.extend({
+                            delimiterLabels: this.attr.delimiterLabels
+                        }, o));
                     }
 
                     node.data('delimiter', delimiter);

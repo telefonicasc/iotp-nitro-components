@@ -28,23 +28,30 @@ define(
         angular.module('testApp').controller(
             'ruleController',
             function($scope, $http) {
-                $scope.cards = {
-                    conditions: {
-                        label: 'Conditions',
-                        cards: []
+                $scope.ruleoptions = {
+                    cards: { 
+                        actions: {
+                            cards: []  
+                        }, 
+                        conditions: {
+                            cards: []
+                        } 
                     },
-                    actions: {
-                        label: 'Actions',
-                        cards: []
+                    actionsLabel: 'Acciones',
+                    conditionsLabel: 'Condiciones',
+                    delimiterLabels: {
+                        'EQUAL_TO': 'IGUAL',
+                        'DIFFERENT_TO': 'DIFERENTE',
+                        'MINOR_THAN': 'MENOR',
+                        'GREATHER_THAN': 'MAYOR'
                     }
                 };
-
                 $http.get('actions.json').success(function(data) {
-                    $scope.cards.actions.cards = data.data;
+                    $scope.ruleoptions.cards.actions.cards = data.data;
                 });
 
                 $http.get('cards.json').success(function(data) {
-                    $scope.cards.conditions.cards = data.data;
+                    $scope.ruleoptions.cards.conditions.cards = data.data;
                 });
                 $http.get('rule.json').success(function(data) {
                     $scope.ruleData = {

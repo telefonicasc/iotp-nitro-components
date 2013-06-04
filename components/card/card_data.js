@@ -60,13 +60,7 @@ function() {
                     }]
                 }]
             };
-            card.delimiterList = [{
-                    label: 'IS',
-                    operator: 'EQUAL_TO'
-                }, {
-                    label: 'IS NOT',
-                    operator: 'DIFFERENT_TO'
-                }];
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
             card.defaultValue = 'false';
             return card;
         },
@@ -76,13 +70,7 @@ function() {
                     component: 'CardFrontText'
                 }]
             };
-            card.delimiterList = [{
-                    label: 'IS',
-                    operator: 'EQUAL_TO'
-                }, {
-                    label: 'IS NOT',
-                    operator: 'DIFFERENT_TO'
-                }];
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
             card.back = {
                 items: [{
                     component: 'CardBackText',

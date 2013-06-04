@@ -596,6 +596,7 @@ li.delimiter-value {
         display: inline-block;
         width: 100%;
         min-height: 30px;
+        quotes: '\201C' '\201D';
 
         &::before, &::after {
             position: absolute;
@@ -616,6 +617,17 @@ li.delimiter-value {
             content: '\201D';
             margin-left: 6px;
         }
+        &:before, &:after{
+          color:#adbbc4;
+          font-size: 50px;
+          line-height: 0;
+        }
+        &:before{
+          content:open-quote;
+        };
+        &:after{
+          content:close-quote;
+        };
     }
 
     .m2m-card-quantity {

@@ -1311,6 +1311,7 @@ li.delimiter-value {
   display: inline-block;
   width: 100%;
   min-height: 30px;
+  quotes: '\201C' '\201D';
 }
 .front .m2m-card-text-value::before,
 .front .m2m-card-text-value::after {
@@ -1329,6 +1330,18 @@ li.delimiter-value {
 .front .m2m-card-text-value::after {
   content: '\201D';
   margin-left: 6px;
+}
+.front .m2m-card-text-value:before,
+.front .m2m-card-text-value:after {
+  color: #adbbc4;
+  font-size: 50px;
+  line-height: 0;
+}
+.front .m2m-card-text-value:before {
+  content: open-quote;
+}
+.front .m2m-card-text-value:after {
+  content: close-quote;
 }
 .front .m2m-card-quantity {
   height: 135px;

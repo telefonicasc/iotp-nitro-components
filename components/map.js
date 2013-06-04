@@ -104,8 +104,7 @@ define(
                     unselectedColor: '#0000FF',
                     selectedSymbol: 'circle',
                     selectedColor: '#00FF00',
-                    selected: 0,
-                    debug: false
+                    selected: 0
                 });
 
                 /* === Component intializer (after) === */
@@ -132,21 +131,10 @@ define(
                     // ==> Remove hovering tooltips?
                     interaction.showOnHover(this.attr.hoveringTooltip);
 
-                    if (self.attr.debug) {
-                        // ==> Event suscriptions and handlers
-                        console.log('Created click event debug handler');
-                        // TEST
-                        this.on(this.attr.markerClickEvent, function(event, payload) {
-                            console.log('Map.js  :: trigger["' +
-                                    this.attr.markerClickEvent + '"] Target class name: ' + event.currentTarget.className);
-                        });
-                    }
-
                     // ============================= \\
                     // >> Set map marker features << \\
                     // ============================= \\
                     this.setFeatures = function(features, center, zoom) {
-                        console.log('Setting map features');
                         if (typeof zoom !== 'undefined' && zoom != null)
                             self.attr.zoomInitial = zoom;
                         if (typeof center !== 'undefined' && center != null)
@@ -154,7 +142,7 @@ define(
                         if (typeof features !== 'undefined' && features != null)
                             self.attr.features = features;
 
-                        console.log('Updating map marker features');
+
                         // Set feature id/props
                         for (var i = 0; i < self.attr.features.length; i++) {
                             // AUTO ID
@@ -171,31 +159,31 @@ define(
                         self.mapC.addLayer(self.markerLayer);
                         self.mapC.centerzoom(center, zoom);
                         this.markerLayer.factory(
-                                function(model) {
-                                    var elem = mapbox.markers.simplestyle_factory(model);
-                                    // Adds the id to the class, to be able to recover it later
-                                    $(elem).addClass(model.properties['_marker_id']);
-                                    MM.addEvent(elem, 'click',
-                                            function(mouseEvent) {
-                                                // Update markers
-                                                self.trigger('update-marker-views', {id: $(elem).attr('class')});
-                                                // Trigger the event specified
-                                                // Get marker model
-                                                var modelIndex = self.findMarker($(elem).attr('class'));
-                                                var model = self.attr.features[modelIndex];
-                                                // Model includes img src
-                                                model.properties['img'] = elem.src;
-                                                if (self.attr.markerClickEventTarget != '') {
-                                                    $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
-                                                }
-                                                else {
-                                                    self.trigger(self.attr.markerClickEvent, model);
-                                                }
-                                            }
-                                    );
-                                    // Elem se ha actualizado, por lo que este nodo ya no existe!!
-                                    return elem;
-                                }
+                            function(model) {
+                                var elem = mapbox.markers.simplestyle_factory(model);
+                                // Adds the id to the class, to be able to recover it later
+                                $(elem).addClass(model.properties['_marker_id']);
+                                MM.addEvent(elem, 'click',
+                                    function(mouseEvent) {
+                                        // Update markers
+                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
+                                        // Trigger the event specified
+                                        // Get marker model
+                                        var modelIndex = self.findMarker($(elem).attr('class'));
+                                        var model = self.attr.features[modelIndex];
+                                        // Model includes img src
+                                        model.properties['img'] = elem.src;
+                                        if (self.attr.markerClickEventTarget != '') {
+                                            $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
+                                        }
+                                        else {
+                                            self.trigger(self.attr.markerClickEvent, model);
+                                        }
+                                    }
+                                );
+                                // Elem se ha actualizado, por lo que este nodo ya no existe!!
+                                return elem;
+                            }
                         );
 
                         var interactionLayer = mapbox.markers.interaction(self.markerLayer);
@@ -254,13 +242,10 @@ define(
                     // >> Marker update on click << \\
                     // ============================ \\
                     this.on('update-marker-views', function(event, payload) {
-                        if (self.attr.debug)
-                            console.log('Map.js [trigger] updating markers');
                         var sel = self.attr.selected;
                         i = self.findMarker(payload.id);
                         if (i < 0) {
-                            if (self.attr.debug)
-                                console.log('marker not found!!');
+                            console.error('marker not found!!');
                             return null;
                         }
                         // => Update unselected marker
@@ -324,7 +309,7 @@ define(
                             return -1;
                         else
                             return i;
-                    }
+                    };
 
                 }); // </this.after(...,function)>
 

@@ -61,7 +61,6 @@ define(
             };
             
             this.movePage = function (displacement) {
-                console.log('Moving: ' + displacement);
                 var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
                 var pageCount = this.getPageCount();
                 if (currentPage + displacement < 0) return;

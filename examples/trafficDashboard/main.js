@@ -106,6 +106,7 @@ define(
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
                 var useKermit = false;
+                var centerOnLoad = false;
 
                 /* Testing URL */
                 var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
@@ -144,15 +145,6 @@ define(
                         });
                     }
                 };
-                
-                /* // Sample use 
-                var print = function (jsondata) {
-                    console.log(JSON.stringify(jsondata));
-                };
-                
-                requestApiData(assetsDetailedURL, print);
-                
-                */
 
                 $('.dashboard').m2mdashboard({
                     mainContent: [
@@ -194,7 +186,7 @@ define(
                 
                 var updateCenter = function () {
                     var url = assetsURL + '?detailed=1';
-                    var fn = function (response) {debugger
+                    var fn = function (response) {
                         if (response.count != 0) {
                             var lat = response.data[0].asset.location.latitude;
                             var lon = response.data[0].asset.location.longitude;
@@ -205,28 +197,9 @@ define(
                         }
                     };
                     
-                    if (useKermit) {
-                        API.http.request({method:'GET', url:url})
-                            .success(function (data,status,headers,config) {
-                                fn(data);
-                            })
-                            .error(function (data,status,headers,config) {
-                                console.error("Can't access to API REST.");
-                            });
-                    }
-                    else {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(response) {
-                                fn(response);
-                            },
-                            error: function (request, errorText, errorThrown) {
-                                console.log('error: ' + errorThrown);
-                            }
-                        });
-                    }
+                    requestApiData(url,fn);
+
+                    updateOffscreenIndicators();
                 };
 
                 // =================================================================
@@ -380,6 +353,7 @@ define(
                         var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
                         createNewMarker(v.asset.name, lat, lon, markerColor);
                     });
+                    if (centerOnLoad) updateCenter();
                 };
                 
                 var updateAssets = function () {
@@ -429,6 +403,15 @@ define(
                             }
                         }
                     });
+                    
+                    // Update lights
+                    var urlList = [];
+                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
+                    
+                    $('.lights-widget').trigger('updateLights', [urlList]);
+                    
                     updateOffscreenIndicators();
                 };
                 
@@ -441,9 +424,9 @@ define(
 //                $('.panel-detail').slideDown();
 //                $('.panel-list').slideUp();
                     $('.panel-detail').show();
-                    $('.panel-list').hide();
-                    $('.panel-detail').trigger('update-view');
+                    $('.panel-list').hide();                    
                     updateAssetInfo(data.properties.title);
+                    $('.panel-detail').trigger('update-view');
                 };
 
                 var hideDetails = function() {
@@ -509,13 +492,13 @@ define(
                             caption: ''
                         }
                     };
+                    
                     $('.dashboard').trigger('asset-selected', data);
                 });
-
                 // Load initial data
                 
                 updateAssets();
-                updateCenter();
+                
                 /* Uncomment this line for device data polling */
                 // window.setInterval(function () { updateAssets(); }, pollInterval);
 

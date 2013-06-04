@@ -17,8 +17,10 @@ function (ComponentManager) {
             borderColor: '#6F8388',
             baseColor: '#E9EFF0',
             id: 'lights-widget',
+            useKermit: false,
             arrowURL: 'url(res/images/arrow.png)',
-            greyLightURL: 'url(res/images/greyLight.png)'
+            greyLightURL: 'url(res/images/greyLight.png)',
+            imageBaseURL: 'url(res/images/'
         });
                                                                                         
         this.after('initialize', function () {
@@ -34,6 +36,10 @@ function (ComponentManager) {
                 $(this.attr.lightsLabel).html(
                     "On (30 seconds) &nbsp &nbsp &nbsp&nbspError&nbsp &nbsp  "
                 );
+            });
+            
+            this.on('updateLights', function (event, data) {
+                this.drawLights(data);
             });
         });
         
@@ -75,7 +81,7 @@ function (ComponentManager) {
 
             if (result.length > 20) {
                 result = result.slice(result.length - 20);
-                this.lightsChartWidget.arrow.animate({
+                this.attr.lightsChartWidget.arrow.animate({
                     x: 14 * (result.length - 1)
                 }, 300);
             }
@@ -83,7 +89,7 @@ function (ComponentManager) {
             for (var i = 0; i < 20; i++) {
                 var value = 70;
                 var style = {
-                    fill: greyLightURL
+                    fill: this.attr.greyLightURL
                 };
 
                 if (result[i] != null) {
@@ -93,28 +99,57 @@ function (ComponentManager) {
                     }
 
                     style = {
-                        fill: 'url(res/images/' + result[i].type + '.png)'
+                        fill: this.attr.imageBaseURL + result[i].type + '.png)'
                     };
-
                 }
 
-                this.lightsChartWidget.bars[i].attr({
+                this.attr.lightsChartWidget.bars[i].attr({
                     height: value,
                     y: 70 - value
                 });
 
-                this.lightsChartWidget.bars[i].attr(style);
+                this.attr.lightsChartWidget.bars[i].attr(style);
             }
             this.updating = false;
         };
         
-        
-        
-        this.getLightData = function (url, red, yellow, green) {
-            
+        this.requestApiData = function (url, callback, useKermit) {
+            if (useKermit) {
+                API.http.request({method:'GET', url:url})
+                    .success(function (data,status,headers,config) {
+                        callback(data);
+                    })
+                    .error(function (data,status,headers,config) {
+                        console.error("Can't access to API REST.");
+                    });
+            }
+            else {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        callback(response);
+                    },
+                    error: function (request, errorText, errorThrown) {
+                        console.log('error: ' + errorThrown);
+                    }
+                });
+            }
         };
         
-        this.drawLights = function (url) {
+        this.drawLights = function (urls) {
+            // Get lights data
+            var self = this;
+            var data = [];
+            var fn = function (response) {
+                data.push(response);
+                if (data.length === 3) self.requestDataCallback(data[0],data[1],data[2]);
+            };
+            
+            $.each(urls, function (k,v) {
+                self.requestApiData(v,fn,self.attr.useKermit);
+            });
             
         };
 

@@ -29,6 +29,7 @@ define(
                 selectedColor: '#DC1010',
                 centerOnClick: true,
                 features: [
+                    /*
                     {   
                         geometry: { coordinates: [ -3.665, 40.515] },
                         properties: {
@@ -59,7 +60,7 @@ define(
                             'title':'Marker 3',
                             'status': 'error'
                         }
-                    }
+                    }*/
                 ]
             }],
                 overviewPanel: {},

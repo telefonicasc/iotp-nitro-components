@@ -21,7 +21,11 @@ define(
                     $.proxy(function(i, toolbox) {
                         toolbox.on('dragstart',
                             '.card', $.proxy(function(e, ui) {
-                            this.onDragStart($(ui.helper));
+                            if (this.editable !== false) {
+                                this.onDragStart($(ui.helper));
+                            } else {
+                                return false;
+                            }
                         }, this));
 
                         toolbox.on('drag', '.card', $.proxy(function(e, ui) {
@@ -36,10 +40,14 @@ define(
                 var startLeft, startTop, detached;
 
                 this.$graphEditor.on('dragstart', '.card', $.proxy(function(e, ui) {
-                    var position = $(e.target).position();
-                    detached = false;
-                    startLeft = position.left;
-                    startTop = position.top;
+                    if (this.editable !== false) {
+                      var position = $(e.target).position();
+                      detached = false;
+                      startLeft = position.left;
+                      startTop = position.top;
+                    } else {
+                      return false;
+                    }
                 }, this));
 
                 this.$graphEditor.on('drag', '.card', $.proxy(function(e, ui) {

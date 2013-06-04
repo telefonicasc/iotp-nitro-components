@@ -247,6 +247,7 @@ define(
                     // >> Center map << \\
                     // ================ \\
                     this.on('center-map', function(event, latitude, longitude) {
+                        console.log('Centering map');
                         this.mapC.center({lat: latitude, lon: longitude});
                     });
 

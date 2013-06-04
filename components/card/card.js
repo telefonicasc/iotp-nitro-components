@@ -4,7 +4,8 @@ define(
         'components/mixin/template',
         'components/flippable',
         'components/card/card_side',
-        'components/mixin/data_binding'
+        'components/mixin/data_binding',
+        'components/card/card_data'
     ],
     function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
         var ELEMENT_ID_PREFIX = 'card_';
@@ -47,6 +48,10 @@ define(
 
                 this.attr.updateOnValueChange = false;
 
+                if (this.attr.rawCard) {
+                    $.extend(this.attr, CardData.encode(this.attr.rawCard));  
+                }
+
                 this.$node.on('click',_stopPropagation);
                 this.$node.addClass('card');
                 this.$node.addClass(this.attr.cssClass);
@@ -54,7 +59,10 @@ define(
 
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
-                    this.attr.back.header = this.attr.header;
+                    this.attr.back.header = {
+                      label: 'Sensor name',
+                      value: this.attr.header
+                    };
                 }
                 CardSide.attachTo(this.$front, this.attr.front);
                 CardSide.attachTo(this.$back, this.attr.back);

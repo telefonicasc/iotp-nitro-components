@@ -27,13 +27,33 @@ define(
         $scope.test = function(){
           BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte?', confirmModal:true, okCallback:function(){
             BM.close();
+            console.log('test normal');
           }});
         };
+
         $scope.test_2 = function(){
-          BM.open({title:'Por favor, confirma', message:'¿Estás seguro de que quieres desconectarte?', okCallback:function(){
-            BM.close();
-          }});
+          BM.open({
+            title:'Por favor, confirma',
+            message:'¿Estás seguro de que quieres desconectarte?',
+            okCallback:function(){
+              BM.close();
+              console.log('test confirm');
+            }
+          });
+        }
+
+        $scope.test_3 = function(){
+          BM.open({
+            title:'Por favor, confirma',
+            message:'¿Estás seguro de que quieres desconectarte?',
+            confirmModal:true,
+            button:{
+              accept:{label:'rename-accept', callback:function(){BM.close();}},
+              cancel:{label:'rename-cancel'}
+            }
+          });
         };
+
       }]);
 
     angular.bootstrap(document, ['testApp']);

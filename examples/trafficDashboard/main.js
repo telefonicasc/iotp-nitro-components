@@ -64,9 +64,11 @@ define(
                     items: [
                         {
                             component: 'lightsWidget',
-                            className: 'lights-widget',
-                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
-                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
+                            className: 'lights-widget'
+                            // Only when moved to install.js
+//                            ,
+//                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
+//                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
                         }
                     ]
                 },
@@ -87,7 +89,6 @@ define(
                     id: 'last-location',
                     items: [minimap]
                 }
-
             ];
 
             // LOADER ==========================================
@@ -107,72 +108,49 @@ define(
                 var useKermit = false;
 
                 /* Testing URL */
-//                var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+                var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+                var assetsDetailedURL = 'http://localhost:8080/MockApi/mock/assets?detailed=1';
                 /* Deploy URL */
-                var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
+//                var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
+//                var service = Kermit.$injector.get('$user').credential.serviceName;
+//                var assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
+//                var assetsDetailedURL = assetsURL + '?detailed=1';
 
-                var ajaxDefaultErrorHandler = function(request, errorText, errorThrown) {
-                    console.log('GET Error: ' + errorText + '. Thrown: ' + errorThrown);
-                };
-
-                var getAssetList = function() {
-
-                    var list = [];
-
-                    var populateAssetList = function(response) {
-                        $.each(response.data, function(k, v) {
-                            list.push(v.asset.name);
+                var initialCenter = {lat: 50.456729, lon: 7.485};
+                
+                var requestApiData = function (url, callback) {
+                    if (useKermit) {
+                        API.http.request({method:'GET', url:url})
+                            .success(function (data,status,headers,config) {
+                                callback(data);
+                            })
+                            .error(function (data,status,headers,config) {
+                                console.error("Can't access to API REST.");
+                            });
+                    }
+                    else {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                callback(response);
+                            },
+                            error: function (request, errorText, errorThrown) {
+                                console.log('error: ' + errorThrown);
+                            }
                         });
-                    };
-
-                    $.ajax({
-                        url: assetsURL,
-                        type: 'GET',
-                        dataType: 'json',
-                        async: false,
-                        success: populateAssetList,
-                        error: ajaxDefaultErrorHandler,
-                        beforeSend: function(hdr) {
-                            hdr.setRequestHeader('Authorization', 'M2MUser test2%3Atest2');
-                        }
-                    });
-
-                    return list;
+                    }
                 };
-
-                var getAssetData = function(assetName) {
-                    var assetInfoURL = assetsURL + "/" + assetName;
-
-                    var data;
-
-                    var setDataValue = function(response) {
-                        data = response.data;
-                    };
-
-                    $.ajax({
-                        url: assetInfoURL,
-                        type: 'GET',
-                        dataType: 'json',
-                        async: false,
-                        success: setDataValue,
-                        error: ajaxDefaultErrorHandler,
-                        beforeSend: function(hdr) {
-                            hdr.setRequestHeader('Authorization', 'M2MUser test2%3Atest2');
-                        }
-                    });
-                    return data;
+                
+                /* // Sample use 
+                var print = function (jsondata) {
+                    console.log(JSON.stringify(jsondata));
                 };
-
-                var assetList = getAssetList();
-                var data;
-                var initialCenter = {lat: 40.414431, lon: -3.703696};
-                if (assetList.length !== 0) {
-                    data = getAssetData(assetList[0]);
-                    initialCenter = {
-                        lat: data.asset.location.latitude,
-                        lon: data.asset.location.longitude
-                    };
-                }
+                
+                requestApiData(assetsDetailedURL, print);
+                
+                */
 
                 $('.dashboard').m2mdashboard({
                     mainContent: [
@@ -211,6 +189,43 @@ define(
 
                     }
                 });
+                
+                var updateCenter = function () {
+                    var url = assetsURL + '?detailed=1';
+                    var fn = function (response) {debugger
+                        if (response.count != 0) {
+                            var lat = response.data[0].asset.location.latitude;
+                            var lon = response.data[0].asset.location.longitude;
+                            $('.mapbox').trigger('center-map', [lat,lon]);
+                        }
+                        else {
+                            console.log('No data found!');
+                        }
+                    };
+                    
+                    if (useKermit) {
+                        API.http.request({method:'GET', url:url})
+                            .success(function (data,status,headers,config) {
+                                fn(data);
+                            })
+                            .error(function (data,status,headers,config) {
+                                console.error("Can't access to API REST.");
+                            });
+                    }
+                    else {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                fn(response);
+                            },
+                            error: function (request, errorText, errorThrown) {
+                                console.log('error: ' + errorThrown);
+                            }
+                        });
+                    }
+                };
 
                 // =================================================================
                 // Complete DOM with indicators
@@ -352,189 +367,72 @@ define(
                 var centerMap = function(lat, lon) {
                     $('.mapbox').trigger('center-map', [lat, lon]);
                 };
+                
+                var updateAssetsFn = function (response) {
+                    $.each(response.data, function (k,v) {
+                        console.error('Updating asset ' + v.asset.name);
+                        var lat = v.asset.location.latitude;
+                        var lon = v.asset.location.longitude;
+                        var errors = generateErrorText(v.sensorData);
+                        updateWarningList(v.asset.name, errors);
+                        var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
+                        createNewMarker(v.asset.name, lat, lon, markerColor);
+                    });
+                };
+                
+                var updateAssets = function () {
+                    requestApiData(assetsDetailedURL, updateAssetsFn);
+                };
 
-                var updateAssets = function (response) {
-                    if (useKermit) updateAssetsKermit();
-                    else updateAssetsAjax();
+                var updateAssetInfoFn = function (response) {
+                    var assetName = response.data.asset.name;
+                    var lat = response.data.asset.location.latitude;
+                    var lon = response.data.asset.location.longitude;
+                    console.log("Asset: " + response.data.asset.name + " [" + lat + ":" + lon + "]");
+                    $('.mapbox').trigger('center-map', [lat, lon]);
+                    // Update selected element name
+                    $('.panel-detail .detail-element-header .text').html(assetName);
+                    // Get asset errors, if any
+                    if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
+                        $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
+                        $('.panel-detail .detail-element-header .icon').addClass('marker-red');
+                        var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
+                        $('.panel-detail .detail-errors').html(errors);
+                    }
+                    else {
+                        $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
+                        $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
+                        $('.panel-detail .detail-errors').html('No problems detected');
+                    }
+                    var last_update = 'Last update: ';
+                    if (response.data.sensorData.length > 0)
+                        last_update += response.data.sensorData[0].st;
+                    else
+                        last_update += 'unknown';
+                    $('.panel-detail .detail-element-header .caption').html(last_update);
+                    // Get asset data
+                    $.each(response.data.sensorData, function(index, value) {
+                        if ('ms' in value) {
+                            if (value.ms.p === 'temperature') {
+                                $('.temperature-widget').trigger('drawTemperature', parseFloat(value.ms.v));
+                            }
+                            else if (value.ms.p === 'pitch') {
+                                $('.pitch-widget').trigger('drawPitch', parseInt(value.ms.v));
+                            }
+                            else if (value.ms.p === 'voltage') {
+                                $('.battery-widget').trigger('drawBattery-voltage', parseFloat(value.ms.v));
+                            }
+                            else if (value.ms.p === 'batteryStatus') {
+                                $('.battery-widget').trigger('drawBattery-level', value.ms.v);
+                            }
+                        }
+                    });
+                    updateOffscreenIndicators();
                 };
                 
                 var updateAssetInfo = function (assetName) {
-                    if (useKermit) updateAssetInfoKermit(assetName);
-                    else updateAssetInfoAjax(assetName);
-                };
-
-                var updateAssetsKermit = function() {
-                    API.http.request({method: 'GET', url: assetsURL})
-                        .success(function(response, status, headers, config) {
-                            $.each(response.data, function(index, value) {
-                                var assetInfoURL = assetsURL + '/' + value.asset.name;
-                                API.http.request({method: 'GET', url: assetInfoURL})
-                                        .success(function(response, status, headers, config) {
-                                    var lat = response.data.asset.location.latitude;
-                                    var lon = response.data.asset.location.longitude;
-                                    var errors = generateErrorText(response.data.sensorData);
-                                    updateWarningList(value.asset.name, errors);
-                                    var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
-                                    createNewMarker(value.asset.name, lat, lon, markerColor);
-                                })
-                                        .error(function(response, status, headers, config) {
-                                    console.error("Can't access to API REST. " + response);
-                                });
-                            });
-                        })
-                        .error(function(data, status, headers, config) {
-                            console.error("Can't access to API REST. " + response);
-                        });
-                };
-
-                var updateAssetsAjax = function() {
-                    $.ajax({
-                        url: assetsURL,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            // get every asset name
-                            $.each(response.data, function(index, value) {
-                                var assetInfoURL = assetsURL + '/' + value.asset.name;
-                                // Get asset info
-                                $.ajax({
-                                    url: assetInfoURL,
-                                    type: 'GET',
-                                    dataType: 'json',
-                                    success: function(response) {
-                                        // Get asset lat/lon
-                                        var lat = response.data.asset.location.latitude;
-                                        var lon = response.data.asset.location.longitude;
-                                        var errors = generateErrorText(response.data.sensorData);
-                                        updateWarningList(value.asset.name, errors);
-                                        var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
-                                        createNewMarker(value.asset.name, lat, lon, markerColor);
-                                    },
-                                    error: function(request, error, errorThrown) {
-                                        console.error('Error accessing URL: ' + assetInfoURL + ". " + error + ":" + errorThrown);
-                                    }
-                                });
-                            });
-                        },
-                        error: function(request, error, errorThrown) {
-                            console.error('Error accessing URL: ' + assetsURL + ". " + error + ":" + errorThrown);
-                        }
-                    });
-                };
-
-                var updateAssetInfoKermit = function(assetName) {
-                    var assetInfoURL = assetsURL + "/" + assetName;
-                    console.log('Updating asset info: ' + assetInfoURL);
-                    API.http.request({method: 'GET', url: assetInfoURL})
-                            .success(function(response, status, headers, config) {
-                        var lat = response.data.asset.location.latitude;
-                        var lon = response.data.asset.location.longitude;
-                        console.log("Asset: " + response.data.asset.name + " [" + lat + ":" + lon + "]");
-                        $('.mapbox').trigger('center-map', [lat, lon]);
-                        // Update selected element name
-                        $('.panel-detail .detail-element-header .text').html(assetName);
-
-                        // Get asset errors, if any
-                        if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                            $('.panel-content-details .icon').removeClass('marker-blue');
-                            $('.panel-content-details .icon').addClass('marker-red');
-                            var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                            $('.detail-errors').html(errors);
-                        }
-                        else {
-                            $('.panel-content-details .icon').removeClass('marker-red');
-                            $('.panel-content-details .icon').addClass('marker-blue');
-                            $('.detail-errors').html('No problems detected');
-                        }
-                        var last_update = 'Last update: ';
-                        if (response.data.sensorData.length > 0)
-                            last_update += response.data.sensorData[0].st;
-                        else
-                            last_update += 'unknown';
-                        $('.panel-detail .detail-element-header .caption').html(last_update);
-
-                        // Get asset data
-                        $.each(response.data.sensorData, function(index, value) {
-                            if ('ms' in value) {
-                                if (value.ms.p === 'temperature') {
-                                    $('.temperature-widget').trigger('drawTemperature', parseFloat(value.ms.v));
-                                }
-                                else if (value.ms.p === 'pitch') {
-                                    $('.pitch-widget').trigger('drawPitch', parseInt(value.ms.v));
-                                }
-                                else if (value.ms.p === 'voltage') {
-                                    $('.battery-widget').trigger('drawBattery-voltage', parseFloat(value.ms.v));
-                                }
-                                else if (value.ms.p === 'batteryStatus') {
-                                    $('.battery-widget').trigger('drawBattery-level', value.ms.v);
-                                }
-                            }
-                        });
-                        updateOffscreenIndicators();
-                    })
-                            .error(function(response, status, headers, config) {
-                        console.error("Can't access to API REST. " + response);
-                    });
-                };
-
-                /* When an element is clicked, update sidebar info with the latest */
-                var updateAssetInfoAjax = function(assetName) {
-                    var assetInfoURL = assetsURL + "/" + assetName;
-                    console.log('Updating asset info: ' + assetInfoURL);
-                    $.ajax({
-                        url: assetInfoURL,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            var lat = response.data.asset.location.latitude;
-                            var lon = response.data.asset.location.longitude;
-                            console.log("Asset: " + response.data.asset.name + " [" + lat + ":" + lon + "]");
-                            $('.mapbox').trigger('center-map', [lat, lon]);
-                            // Update selected element name
-                            $('.panel-detail .detail-element-header .text').html(assetName);
-
-                            // Get asset errors, if any
-                            if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                                $('.panel-content-details .icon').removeClass('marker-blue');
-                                $('.panel-content-details .icon').addClass('marker-red');
-                                var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                                $('.detail-errors').html(errors);
-                            }
-                            else {
-                                $('.panel-content-details .icon').removeClass('marker-red');
-                                $('.panel-content-details .icon').addClass('marker-blue');
-                                $('.detail-errors').html('No problems detected');
-                            }
-                            var last_update = 'Last update: ';
-                            if (response.data.sensorData.length > 0)
-                                last_update += response.data.sensorData[0].st;
-                            else
-                                last_update += 'unknown';
-                            $('.panel-detail .detail-element-header .caption').html(last_update);
-
-                            // Get asset data
-                            $.each(response.data.sensorData, function(index, value) {
-                                if ('ms' in value) {
-                                    if (value.ms.p === 'temperature') {
-                                        $('.temperature-widget').trigger('drawTemperature', parseFloat(value.ms.v));
-                                    }
-                                    else if (value.ms.p === 'pitch') {
-                                        $('.pitch-widget').trigger('drawPitch', parseInt(value.ms.v));
-                                    }
-                                    else if (value.ms.p === 'voltage') {
-                                        $('.battery-widget').trigger('drawBattery-voltage', parseFloat(value.ms.v));
-                                    }
-                                    else if (value.ms.p === 'batteryStatus') {
-                                        $('.battery-widget').trigger('drawBattery-level', value.ms.v);
-                                    }
-                                }
-                            });
-                            updateOffscreenIndicators();
-                        },
-                        error: function() {
-                            console.error('Cant find asset info. (Requesting mock)');
-                        }
-                    });
+                    var url = assetsURL + '/' + assetName;
+                    requestApiData(url, updateAssetInfoFn);
                 };
 
                 var showDetails = function(event, data) {
@@ -599,8 +497,7 @@ define(
                             $(locator).show();
                             $(locator).attr('last', el.properties.title);
                         }
-                    }
-                    ;
+                    }                    
                 });
 
                 $('.offscreen-indicator').on('click', function(event) {
@@ -614,8 +511,9 @@ define(
                 });
 
                 // Load initial data
+                
                 updateAssets();
-
+                updateCenter();
                 /* Uncomment this line for device data polling */
                 // window.setInterval(function () { updateAssets(); }, pollInterval);
 

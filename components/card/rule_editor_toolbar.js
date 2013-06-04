@@ -12,7 +12,8 @@ define(
         function RuleEditorToolbar() {
 
             this.defaultAttrs({
-
+                actionsLabel: 'Actions',
+                conditionsLabel: 'Conditions'                
             });
 
             this.after('initialize', function() {
@@ -26,12 +27,12 @@ define(
 
                 this.$conditionsButton = $('<div>')
                         .addClass('conditions-button')
-                        .html('Conditions')
+                        .html(this.attr.conditionsLabel)
                         .appendTo(this.$cardButtons);
 
                 this.$actionsButton = $('<div>')
                         .addClass('actions-button')
-                        .html('Actions')
+                        .html(this.attr.actionsLabel)
                         .appendTo(this.$cardButtons);
 
                 this.$zoom = $('<div>')

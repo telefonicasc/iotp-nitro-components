@@ -108,7 +108,7 @@ define(
                     }
 
                     this.on('conditionOperatorChange', function(e,o){
-                        condition.operator = o.operator;
+                        condition.operator = o;
                         if(condition.parameterValue !== null){
                             this.$node.data('conditionList', [condition]);
                         }

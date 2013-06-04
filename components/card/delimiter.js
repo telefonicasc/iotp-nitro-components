@@ -10,19 +10,18 @@ define(
         function CardDelimiter() {
 
             this.defaultAttrs({
-                delimiterList: [{
-                    label: 'IS',
-                    operator: 'EQUAL_TO'
-                }, {
-                    label: 'IS NOT',
-                    operator: 'DIFFERENT_TO'
-                }, {
-                    label: 'BELOW',
-                    operator: 'MINOR_THAN'
-                }, {
-                    label: 'ABOVE',
-                    operator: 'GREATER_THAN'
-                }],
+                delimiterList: [
+                    'EQUAL_TO',
+                    'DIFFERENT_TO',
+                    'MINOR_THAN',
+                    'GREATHER_THAN'
+                ],
+                delimiterLabels: {
+                    'EQUAL_TO': 'IS',
+                    'DIFFERENT_TO': 'IS NOT',
+                    'MINOR_THAN': 'BELOW',
+                    'GREATHER_THAN': 'ABOVE'
+                },
                 cardConfig : {'conditionList':[]}
             });
 
@@ -52,7 +51,8 @@ define(
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
                             .data('value', del)
-                            .append($('<span>').html(del.label));
+                            .append($('<span>')
+                              .html(this.getDelimiterLabel(del)));
                 }, this));
 
                 this.$delimiterValue.on('click', $.proxy(function() {
@@ -65,13 +65,14 @@ define(
                 }, this));
 
                 this.on('valueChange', function(e, o) {
-                    this.$delimiterValueSpan.html(o.value.label);
+                    this.$delimiterValueSpan
+                      .html(this.getDelimiterLabel(o.value));
                     cardElement.trigger('conditionOperatorChange', o.value);
                 });
 
                 this.$delimiterList.find('li').slideToggle(0);
                 if(cardConfig.conditionList.length){
-                    delimiterValue = _getDelimiterFromCondition(this.attr.delimiterList, cardConfig.conditionList[0]);
+                    delimiterValue = cardConfig.conditionList[0].operator;
                 }else{
                     delimiterValue = this.attr.delimiterList[0];
                 }
@@ -80,23 +81,16 @@ define(
 
             });
 
+            this.getDelimiterLabel = function(del) {
+                return this.attr.delimiterLabels[del] || del;
+            };
+
             this.setDelimiterValue = function(del) {
-                this.$delimiterValueSpan.html(del.label);
+                this.$delimiterValueSpan.html(this.getDelimiterLabel(del));
                 this.delimiterValue = del;
-                this.$node.data('operator', del.operator);
+                this.$node.data('operator', del);
                 this.trigger('valueChange', { value: del });
             };
-        }
-
-        function _getDelimiterFromCondition(delimiterList, condition){
-            var delimiter;
-            $.each(delimiterList, function(i,del){
-                if( del.operator === condition.operator){
-                    delimiter = del;
-                }
-            });
-            return delimiter;
-
         }
     }
 );

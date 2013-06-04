@@ -45,7 +45,7 @@ define(
                 this.on('expand', function(e, o) {
                     if (!this.expanded) {
                         this.toggle(o && o.duration, o && o.complete);
-                    }else{
+                    }else if( o && $.isFunction(o.complete) ){
                         o.complete();
                     }
                 });
@@ -53,7 +53,7 @@ define(
                 this.on('collapse', function(e, o) {
                     if (this.expanded) {
                         this.toggle(o && o.duration, o && o.complete);
-                    }else{
+                    }else if( o && $.isFunction(o.complete) ){
                         o.complete();
                     }
                 });

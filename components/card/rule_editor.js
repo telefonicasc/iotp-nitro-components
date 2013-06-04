@@ -95,21 +95,33 @@ define(
 
                 this.$bottomToolbar.on('conditionsSelected',
                     $.proxy(function(e, o) {
-                        this.$actionsToolbox.trigger('collapse', {
-                            complete: $.proxy(function() {
-                                this.$conditionsToolbox.trigger('expand');
-                                $(window).trigger('resize');
-                            }, this)
-                        });
+                        var isVisible = this.$conditionsToolbox.is(':visible');
+                        if(isVisible){
+                            this.$conditionsToolbox.trigger('collapse');
+                        }else{
+                            this.$actionsToolbox.trigger('collapse', {
+                                complete: $.proxy(function() {
+                                    this.$conditionsToolbox.trigger('expand');
+                                    $(window).trigger('resize');
+                                }, this)
+                            });
+                        }
+
+
                     }, this));
 
                 this.$bottomToolbar.on('actionsSelected',
                     $.proxy(function(e, o) {
-                        this.$conditionsToolbox.trigger('collapse', {
-                            complete: $.proxy(function() {
-                                this.$actionsToolbox.trigger('expand');
-                            }, this)
-                        });
+                        var isVisible = this.$actionsToolbox.is(':visible');
+                        if(isVisible){
+                            this.$actionsToolbox.trigger('collapse');
+                        }else{
+                            this.$conditionsToolbox.trigger('collapse', {
+                                complete: $.proxy(function() {
+                                    this.$actionsToolbox.trigger('expand');
+                                }, this)
+                            });
+                        }
                     }, this));
 
                 this.$graphEditor = $('<div>').addClass('fit')

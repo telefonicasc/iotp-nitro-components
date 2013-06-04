@@ -21,6 +21,9 @@ define(
             message:'',
             confirmModal:false,
             okCallback:false,
+            //buttonTextOk:null, //@deprecate
+            //buttonTextCancel:null, //@deprecate
+            //buttonText:null, //@deprecate
             button:{
                 'accept':{label:'Accept', callback:function(){}},
                 'cancel':{label:'Cancel', callback:function(){}},
@@ -38,8 +41,8 @@ define(
                 var option = $.extend(true, {}, defaultOption, opt);
                 var focusEl = null;
                 if (option.confirmModal) {
-                    btnOk.text(option.button.accept.label);
-                    btnCancel.text(option.button.cancel.label);
+                    btnOk.text(option.buttonTextOk || option.button.accept.label);
+                    btnCancel.text(option.buttonTextCancel || option.button.cancel.label);
                     el.btnsdiv.show();
                     el.btndiv.hide();
                     btnOk.on('click', option.okCallback || option.button.accept.callback);
@@ -47,7 +50,7 @@ define(
                     focusEl = btnOk;
                 } else {
                     btnClose.on('click', option.button.close.callback);
-                    btnClose.text(option.button.close.label);
+                    btnClose.text(option.buttonText || option.button.close.label);
                     el.btnsdiv.hide();
                     el.btndiv.show();
                     focusEl = btnClose;

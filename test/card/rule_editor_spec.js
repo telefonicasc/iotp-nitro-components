@@ -59,44 +59,57 @@ describeComponent('components/card/rule_editor.js', function () {
         this.component.trigger('optionsChange', $.extend(true, {}, mock));
     });
 
-    describe('Toolbar', function(){
-
-        it('Draw elements section', function(){
-            var sections = this.component.$node.find('.card-toolbox-section');
-            expect(sections.length).toEqual(2);
+    describe('Toolbox Condition', function(){
+        var toolBox;
+        beforeEach(function(){
+            toolBox = this.component.$conditionsToolbox;
         });
 
-        it('Draw actions', function(){
-            var sections = this.component.$node.find('.card-toolbox-section');
-            var cards = sections.find('.m2m-card-action');
-
-            expect(cards.length).toEqual(mock.cards.actions.cards.length);
-        });
-        it('Toggle actions', function(){
-            var btn = $('.conditions-button');
-            var cards;
-            btn.trigger('click');
-            cards = this.component.$node.find('.card-toolbox-section:visible .m2m-card-action');
-            expect(cards.length).toEqual(mock.cards.actions.cards.length);
-            btn.click();
-            expect(cards.length).toEqual(0);
-        });
-
-        it('Draw conditions', function(){
-            var sections = this.component.$node.find('.card-toolbox-section');
-            var cards = sections.find('.m2m-card-condition');
-
+        it('Draw Toolbox', function(){
+            expect(toolBox).toBeDefined();
+            var cards = toolBox.find('.m2m-card-condition');
             expect(cards.length).toEqual(mock.cards.conditions.cards.length);
         });
 
-        it('Toggle conditions', function(){
-            var btn = $('.actions-button');
-            var cards;
+        it('Toggle', function(){
+            var spyCollapse = jasmine.createSpy('collapse');
+            var spyExpand = jasmine.createSpy('expand');
+            var btn = $('.conditions-button');
+
+            toolBox.on('collapse',spyCollapse);
+            toolBox.on('expand',spyExpand);
+
             btn.click();
-            cards = this.component.$node.find('.card-toolbox-section:visible .m2m-card-condition');
+
+            expect(spyCollapse).toHaveBeenCalled();
+            expect(spyExpand).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Toolbox Action', function(){
+        var toolBox;
+        beforeEach(function(){
+            toolBox = this.component.$actionsToolbox;
+        });
+
+        it('Draw Toolbox', function(){
+            expect(toolBox).toBeDefined();
+            var cards = toolBox.find('.m2m-card-action');
             expect(cards.length).toEqual(mock.cards.actions.cards.length);
+        });
+
+        it('Toggle', function(){
+            var spyCollapse = jasmine.createSpy('collapse');
+            var spyExpand = jasmine.createSpy('expand');
+            var btn = $('.actions-button');
+
+            toolBox.on('collapse',spyCollapse);
+            toolBox.on('expand',spyExpand);
+
             btn.click();
-            expect(cards.length).toEqual(0);
+
+            expect(spyCollapse).toHaveBeenCalled();
+            expect(spyExpand).not.toHaveBeenCalled();
         });
     });
 

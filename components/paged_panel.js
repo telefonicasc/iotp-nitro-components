@@ -37,6 +37,29 @@ define(
                 return pagesWithContent;
             };
             
+            this.selectPage = function (pageNumber) {
+                var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
+                // next page is there?
+                var pageSelect = 'selectPage' + (pageNumber);
+                // get the page
+                var page = this.select(pageSelect);
+                // is it there?
+                if (typeof page !== 'undefined') {
+                    if (page.children().length !== 0) {
+                        // update page marker
+                        this.setPageMarker(pageNumber);
+                        // hide current page
+                        this.hidePage(currentPage);
+                        // show page
+                        this.showPage(pageNumber);
+                    }
+                }
+                // update page marker
+                this.select('selectNavigation').attr('page-marker',pageNumber);
+                // update pager
+                this.updatePager();
+            };
+            
             this.movePage = function (displacement) {
                 console.log('Moving: ' + displacement);
                 var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
@@ -67,12 +90,12 @@ define(
             
             this.hidePage = function (pageNumber) {
                 var pageSelector = 'selectPage' + pageNumber;
-                this.select(pageSelector).hide();
+                this.select(pageSelector).slideUp();  
             };
             
             this.showPage = function (pageNumber) {
                 var pageSelector = 'selectPage' + pageNumber;
-                this.select(pageSelector).show();
+                this.select(pageSelector).slideDown();
             };
 
             this.updatePager = function () {
@@ -89,9 +112,17 @@ define(
                 else {
                     if (currentPage === 0) currentPage = 1;
                     var text = currentPage + '/' + pagesWithContent;
-                    this.select('selectNavigation').children('.navigation-display').html(text);
+//                    this.select('selectNavigation').children('.navigation-display').html(text);
                     this.select('selectNavigation').show();
+                    this.select('selectNavigation').children('.page-chooser').each( function (k,v) {
+                        if ($(v).html() == currentPage) $(v).addClass('selected');
+                        else $(v).removeClass('selected');
+                        if (parseInt(k) >= pagesWithContent) $(v).hide();
+                        else $(v).show();
+                    });
                 }
+                // Mark current page
+                
             };
 
             // Careful, seems to load things wrong when there is another paged-panel
@@ -189,6 +220,7 @@ define(
                 
                 this.$nodeMap = $(template).appendTo(this.$node);
                 
+                var self = this;
                 var left = $('<div>').addClass('page-left');
                 var right = $('<div>').addClass('page-right');
 
@@ -196,11 +228,21 @@ define(
                 var nav = this.select('selectNavigation');
 
                 nav.append(left);
-                nav.append('<div class="navigation-display" style="display:inline"></div>');
+                for (var i = 0; i <= pagesToCreate; i++) {
+                    var pageChooser = $('<div>').addClass('page-chooser').html(i+1);
+                    var fn = function () {
+                        self.selectPage(parseInt($(this).html())-1);
+                    };
+                    
+                    pageChooser.on('click', fn);
+                    nav.append(pageChooser);
+                }
+                
+                nav.append('</div>');
+                
                 nav.append(right);
                 
                 // add click triggers
-                var self = this;
                 this.select('selectPageLeft').on('click', function () { self.movePage(-1); });
                 this.select('selectPageRight').on('click', function () { self.movePage(+1); });
                 

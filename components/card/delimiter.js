@@ -56,7 +56,10 @@ define(
                 }, this));
 
                 this.$delimiterValue.on('click', $.proxy(function() {
-                    this.$delimiterList.find('li').slideToggle(150);
+                    var isEditable = this.$node.data('editable') !== false;
+                    if (isEditable) {
+                      this.$delimiterList.find('li').slideToggle(150);
+                    }
                 }, this));
 
                 this.$delimiterList.on('click', 'li', $.proxy(function(e) {

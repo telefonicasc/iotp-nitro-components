@@ -40,12 +40,14 @@ define(
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
                     'GREATHER_THAN': 'ABOVE'
-                }
+                },
+                editable: true
             });
 
             this.after('initialize', function() {
                 this.connections = [];
                 this.value = this.attr.value;
+                this.editable = this.attr.editable;
 
                 this.$node.addClass('m2m-rule-editor');
 
@@ -218,13 +220,21 @@ define(
                 this.on('optionsChange', function(e, o) {
                     var cards;
                     if (e.target === this.node) {
-                        if (o.cards.conditions) {
-                            cards = o.cards.conditions.cards || [];
-                            this.loadToolboxCards(this.$conditionsToolbox, cards);
+                        if (o.cards) {
+                            if (o.cards.conditions) {
+                                cards = o.cards.conditions.cards || [];
+                                this.loadToolboxCards(this.$conditionsToolbox, cards);
+                            }
+                            if (o.cards.actions) {
+                                cards = o.cards.actions.cards || [];
+                                this.loadToolboxCards(this.$actionsToolbox, cards);
+                            }
                         }
-                        if (o.cards.actions) {
-                            cards = o.cards.actions.cards || [];
-                            this.loadToolboxCards(this.$actionsToolbox, cards);
+                        if (o.editable !== undefined) {
+                            this.editable = o.editable;
+                            this.getAllCards().data('editable', o.editable);
+                            $('.m2m-card-delimiter', this.$graphEditor)
+                                .data('editable', o.editable);
                         }
                     }
                 });

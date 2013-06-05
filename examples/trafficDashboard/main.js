@@ -343,25 +343,6 @@ define(
                     $('.mapbox').trigger('center-map', [lat, lon]);
                 };
                 
-                var updateLightsWidget = function (assetName) {
-                    // Get lights data
-                    var urlList = [];
-                    var baseURL = assetsURL + '/' + assetName;
-                    urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
-                    
-                    $q.all([
-                        API.http.get(urlList[0]),
-                        API.http.get(urlList[1]),
-                        API.http.get(urlList[2])
-                    ])
-                    .then(function(results) {
-                        console.log('Got results');
-                        $('.lights-widget').trigger('paintLights', [results]);
-                    });
-                };
-                
                 var updateAssetsFn = function (response) {
                     $.each(response.data, function (k,v) {
                         console.error('Updating asset ' + v.asset.name);

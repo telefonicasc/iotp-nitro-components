@@ -41,6 +41,7 @@ define(
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE'
                 },
+                locales: {},
                 editable: true
             });
 
@@ -450,6 +451,9 @@ define(
                         'node': cardEl,
                         'cardConfig': cardConfig
                     };
+                    if (this.attr.locales[attrCard.component]) {
+                        data.locales = this.attr.locales[attrCard.component];
+                    }
                     cardCmp.attachTo(cardEl, data);
                     cardEl.data('editable', this.editable);
                     this.$graphEditor.trigger('addNode', node);
@@ -569,7 +573,8 @@ define(
                     cardSections: {
                         cards: cards
                     },
-                    pushPanel: this.$graphEditor
+                    pushPanel: this.$graphEditor,
+                    locales: this.attr.locales
                 });
 
                 cardToolbox.on('drag', '.card', $.proxy(function(e, ui) {

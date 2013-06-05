@@ -19,7 +19,8 @@ define(
                 cardDefaults: {
                     flippable: false,
                     component: 'Card'
-                }
+                },
+                locales: {}
             });
 
             this.after('initialize', function() {
@@ -53,7 +54,8 @@ define(
                                         .appendTo(section.el),
                             attrCard = $.extend({},
                                         this.attr.cardDefaults, card),
-                            cardCmp = ComponentManager.get(attrCard.component);
+                            cardCmp = ComponentManager.get(attrCard.component),
+                            locales = this.attr.locales;
 
                         cardCmp.attachTo(cardEl, $.extend({},
                             this.attr.cardDefaults, card));
@@ -63,6 +65,9 @@ define(
                             helper: function() {
                                 var newCardEl = $('<div>');
                                 var data = $.extend({}, card, {id:null});
+                                if (locales[attrCard.component]) {
+                                    data.locales = locales[attrCard.component];
+                                }
                                 cardCmp.attachTo(newCardEl, data);
                                 newCardEl.data('cardConfig', card['__cardConfig']);//===========
                                 return newCardEl;

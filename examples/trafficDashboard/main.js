@@ -118,8 +118,8 @@ define(
 //                var assetsDetailedURL = assetsURL + '?detailed=1';
 
                 /* Gallus, germany */
-                var initialCenter = {lat: 50.103749, lon: 8.641774};
-//                var initialCenter = {lat: 50.456729, lon: 7.485};
+//                var initialCenter = {lat: 50.103749, lon: 8.641774};
+                var initialCenter = {lat: 50.456729, lon: 7.485};
                 
                 var requestApiData = function (url, callback) {
                     if (useKermit) {
@@ -345,7 +345,6 @@ define(
                 
                 var updateAssetsFn = function (response) {
                     $.each(response.data, function (k,v) {
-                        console.error('Updating asset ' + v.asset.name);
                         var lat = v.asset.location.latitude;
                         var lon = v.asset.location.longitude;
                         var errors = generateErrorText(v.sensorData);

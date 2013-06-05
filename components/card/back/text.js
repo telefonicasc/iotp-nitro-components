@@ -9,6 +9,10 @@ define(
             'TEXT':'Text',
             'QUANTITY':'Quantity'
         };
+        var REGEXP_QANTITY = /^\d+(\.\d*)*?$/;
+        var isIE8 = (function() {
+            return !!( (/msie 8./i).test(navigator.appVersion) && !(/opera/i).test(navigator.userAgent) && window.ActiveXObject && XDomainRequest && !window.msPerformance );
+        })();
 
         return ComponentManager.create('CardBackText', DataBinding,
             CardBackText);
@@ -33,9 +37,17 @@ define(
 
 
                 this.$input.on('keyup', $.proxy(function(e) {
-                    this.trigger('valueChange', {
-                        value: this.$input.val()
-                    });
+                    var value = this.$input.val();
+                    if(isIE8){
+                        if(this.isValid(this.attr.dataType, value)){
+                            this.trigger('valueChange', { value: value });
+                        }else{
+                            this.$input.val('');
+                        }
+                    }else{
+                        this.trigger('valueChange', { value: value });
+                    }
+
                 }, this));
 
                 this.on('valueChange', function(e,o) {
@@ -44,11 +56,20 @@ define(
             });
 
             this.makeInput = function(type){
-                var ele = $('<input type="text">');
-                if(type === dataType.QUANTITY){
+                var ele = $('<input type="text" />');
+                if(!isIE8 && type === dataType.QUANTITY){
                     ele.attr('type', 'number');
                 }
                 return ele;
+            };
+            this.isValid = function(type, value){
+                var isValid;
+                if(value !== '' && type === dataType.QUANTITY){
+                    isValid = REGEXP_QANTITY.test(value);
+                }else{
+                    isValid = true;
+                }
+                return isValid;
             };
         }
 

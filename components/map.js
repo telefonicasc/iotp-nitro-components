@@ -107,7 +107,6 @@ define(
                     selected: 0
                 });
 
-
                 /* Groups markers in groups if necessary */
                 this.processFeatures = function(map, features) {
                     var currentGroup = 0;
@@ -190,7 +189,7 @@ define(
                                     },
                                     properties: {
                                         'marker-color': '#CB3337',
-                                        'marker-symbol': 'circle',
+                                        'marker-symbol': markerGroup.length,
                                         title: 'Group ' + currentGroup,
                                         groupID: currentGroup,
                                         isGroup: true

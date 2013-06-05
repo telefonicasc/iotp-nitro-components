@@ -6,8 +6,8 @@ define(
 
     function(ComponentManager, DataBinding, Template) {
         var dataType = {
-            TEXT:'Text',
-            QUANTITY:'Quantity'
+            'TEXT':'Text',
+            'QUANTITY':'Quantity'
         };
 
         return ComponentManager.create('CardBackText', DataBinding,
@@ -16,7 +16,7 @@ define(
         function CardBackText() {
 
             this.defaultAttrs({
-                dataType: dataType.TEXT //Quantity
+                'dataType': dataType.TEXT
             });
 
             this.after('initialize', function() {
@@ -43,13 +43,13 @@ define(
                 });
             });
 
-            this.makeInput(type){
+            this.makeInput = function(type){
                 var ele = $('<input type="text">');
                 if(type === dataType.QUANTITY){
                     ele.attr('type', 'number');
                 }
                 return ele;
-            }
+            };
         }
 
     }

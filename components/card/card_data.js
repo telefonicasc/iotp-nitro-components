@@ -89,7 +89,8 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: 'Value'
+                    label: 'Value',
+                    dataType:card.sensorData.dataType
                 }]
             };
             return card;

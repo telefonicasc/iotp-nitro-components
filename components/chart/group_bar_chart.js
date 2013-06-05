@@ -81,7 +81,7 @@ define(
                         });
                     
                     })]);*/
-                    y.domain([0, this.maxValue]); 
+                    y.domain([0, this.maxValue]);
                     if (axisX && axisY) {
                         axisX.attr('transform', 'translate(0, '+this.height+')').call(xAxis);
                         axisY.attr('transform', 'translate('+this.width+', 0)').call(yAxis);
@@ -116,11 +116,9 @@ define(
                     .attr('width', this.width/keys.length-6 )
                     .attr('height', 100);
 
+                    //Attach subpanels
                     $('.cell-barchart-subpanel').each(function(i, panel){
-                        ComponentManager.get('carouselPanel').attachTo(panel,{
-                            title: { value: Math.floor(Math.random()*(91)+10) +'%', caption: 'of sessions' },
-                            content: { value: Math.floor(Math.random()*(1230)+100), caption: 'Packages consumed' }
-                        });
+                        ComponentManager.get('carouselPanel').attachTo(panel);
                     });
 
                     //Bar groups
@@ -167,9 +165,28 @@ define(
                     }
                 };
 
+                this.updateSubpanel = function(){
+                    var keys = getObjKeys(this.value);
+                    var self = this;
+                    
+                    //Propagate valueChange to each subpanel
+                    $('.cell-barchart-subpanel').each(function(i, panel){
+                        var count = d3.max(self.value[keys[i]]).toString();
+                        console.log('count', count);
+                        var val = {
+                            text1:  Math.round((count/self.totalCount)*100)+' %',
+                            caption1: self.modelData.caption1,
+                            text2: count,
+                            caption2: self.modelData.caption2
+                        };
+                        $(panel).trigger('valueChange', val);
+                    });
+
+                };
+
                 this.showTooltip = function(rect, d) {
                     var pos = $(rect).offset();
-                    this.tooltip.html('<div>'+d.value+'</div><div>('+this.attr.daysBar+' d/b)</div>');
+                    this.tooltip.html('<div>'+d.value+'</div><div>('+this.attr.daysBar+' days/bar)</div>');
                     this.tooltip.css({
                         top: pos.top,
                         left: pos.left + x1.rangeBand()/3
@@ -182,28 +199,33 @@ define(
 				};
 
 				this.on('resize', function(e, chartSize) {
+                    e.stopPropagation();
+                    
 					this.width = chartSize.width;
 					this.height = chartSize.height;
 					x0.rangeRoundBands([0, this.width], 0.1);
 					y.range([this.height, 0]);
 					this.updateChart();
-					e.stopPropagation();
+                    this.updateSubpanel();
+					
 				});
 
 				this.on('valueChange', function(e, options) {
                     e.stopPropagation();
-                    
-                    this.options = options;
 
                     var fixRange = options.value.fixRange;
-                    var modelData = options.value[this.attr.model][fixRange];
-                    
-                    this.maxValue = modelData.maxValue;
-                    this.attr.daysBar = fixRange/7;
                     var roundDate = d3.time.day.round(options.range[0]).getTime();
-                    this.value = modelData.values[roundDate];
-                    this.updateChart();
                     
+                    this.modelData = options.value[this.attr.model][fixRange];
+                    this.maxValue = this.modelData.maxValue;
+                    this.attr.daysBar = (fixRange === 7)? 1 : 7;   
+                    this.value = this.modelData.values[roundDate];
+                    this.totalCount = this.modelData.totalCount[roundDate]
+                    this.options = options;
+
+                    this.updateChart();
+                    this.updateSubpanel();
+
                 });
 
                 this.on('actionSelected', function(e, value){
@@ -211,6 +233,7 @@ define(
                     this.attr.model = value.newModel;
                     this.trigger('valueChange', this.options);
                 });
+
             });
 
 			function getObjKeys(obj){

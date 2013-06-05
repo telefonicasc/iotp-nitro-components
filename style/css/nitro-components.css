@@ -1296,12 +1296,6 @@ li.delimiter-value {
   display: table-cell;
   vertical-align: middle;
 }
-.front .m2m-card-text::before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
 .front .m2m-card-text-value {
   color: #596c73;
   font-size: 30px;
@@ -1349,23 +1343,14 @@ li.delimiter-value {
   display: table-cell;
   vertical-align: middle;
 }
-.front .m2m-card-quantity::before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
-.front .m2m-card-quantity-container {
-  vertical-align: middle;
-  display: inline-block;
-  width: 100%;
-}
 .front .m2m-card-quantity-value {
   color: #596c73;
   font-size: 40px;
   text-align: center;
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
+  width: 145px;
 }
 .front .m2m-card-quantity-units {
   color: #596c73;

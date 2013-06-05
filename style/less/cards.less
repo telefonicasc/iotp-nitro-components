@@ -578,13 +578,6 @@ li.delimiter-value {
         width: @card-front-body-width;
         display:table-cell;
         vertical-align:middle;
-
-        &::before {
-            content: '';
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-        }
     }
 
     .m2m-card-text-value {
@@ -635,19 +628,6 @@ li.delimiter-value {
         width: @card-front-body-width;
         display:table-cell;
         vertical-align:middle;
-
-        &::before {
-            content: '';
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-        }
-    }
-
-    .m2m-card-quantity-container {
-        vertical-align: middle;
-        display: inline-block;
-        width: 100%;
     }
 
     .m2m-card-quantity-value {
@@ -656,6 +636,8 @@ li.delimiter-value {
         text-align: center;
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space:nowrap;
+        width: @card-front-body-width;
     }
     .m2m-card-quantity-units {
         color: rgb(89, 108, 115);

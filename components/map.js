@@ -108,6 +108,120 @@ define(
                     selected: 0
                 });
 
+                /* Groups markers in groups if necessary */
+                this.processFeatures = function(map, features) {
+                    var currentGroup = 0;
+                    var markerGroup = [];
+                    var markers = [];
+                    var hasGroups = false;
+
+                    console.log('Processing features -----------------------');
+                    
+                    // set all groups to -1
+                    $.each(features, function (k,v){
+                        v.properties.group = -1;                        
+                    });
+
+                    $.each(features, function(k, current) {
+                        if (current.properties.group < 0) {
+                            var marker = {
+                                name: current.properties.title,
+                                lat: current.geometry.coordinates[0],
+                                lon: current.geometry.coordinates[1],
+                                group: current.properties.group,
+                                point: map.locationPoint({
+                                    lat: current.geometry.coordinates[0],
+                                    lon: current.geometry.coordinates[1]
+                                })
+                            };
+
+                            var compare = function(marker, candidate) {
+                                if (typeof candidate.properties.group === 'undefined') {
+                                    candidate.properties.group = -1;
+                                }
+
+                                var otherMarker = {
+                                    name: candidate.properties.title,
+                                    lat: candidate.geometry.coordinates[0],
+                                    lon: candidate.geometry.coordinates[1],
+                                    group: candidate.properties.group,
+                                    point: map.locationPoint({
+                                        lat: candidate.geometry.coordinates[0],
+                                        lon: candidate.geometry.coordinates[1]
+                                    })
+                                };
+
+                                var diffX = otherMarker.point.x - marker.point.x;
+                                var diffY = otherMarker.point.y - marker.point.y;
+                                var distance = diffX * diffX + diffY * diffY;
+                                if (distance > 0 && distance < 500 && otherMarker.group < 0) {
+                                    if (current.properties.group < 0) {
+                                        current.properties.group = currentGroup;
+                                        markerGroup.push(current);
+                                    }
+                                    candidate.properties.group = currentGroup;
+                                    markerGroup.push(candidate);
+                                }
+                            };
+                            // Compare with others
+                            $.each(features, function(k, v) {
+                                if (v.properties.group < 0) {
+                                    compare(marker, v);                                    
+                                }
+                            });
+                            
+                            if (markerGroup.length > 0) {
+                                // calculate group center
+                                var lat = 0;
+                                var lon = 0;
+                                var inc = function(v) {
+                                    lat += v.geometry.coordinates[1];
+                                    lon += v.geometry.coordinates[0];
+                                };
+                                $.each(markerGroup, function(k, v) {
+                                    inc(v);
+                                });
+
+                                var center = {lat: lat / markerGroup.length, lon: lon / markerGroup.length};
+                                // create marker to push
+                                var groupMarker = {
+                                    geometry: {
+                                        coordinates: [center.lon, center.lat]
+                                    },
+                                    properties: {
+                                        'marker-color': '#CB3337',
+                                        'marker-symbol': markerGroup.length,
+                                        title: 'Group ' + currentGroup,
+                                        groupID: currentGroup,
+                                        isGroup: true
+                                    }
+                                };
+                                markers.push(groupMarker);
+                                hasGroups = true;
+                            }
+                            
+                            else {
+                                current.properties.isGroup = false;
+                                current.properties.group = currentGroup;
+                                markers.push(current);
+                            }
+                            markerGroup = [];
+                            currentGroup += 1;
+                        }
+                    });
+                    if (hasGroups) {
+                        // setFeatures modifies the attr, and we need it intact!
+                        var currentFeatures = features;
+                        this.setFeatures(markers);
+                        this.attr.features = currentFeatures;
+                        console.log('Set markers: ');
+                        $.each(markers, function (k,v) {console.log(JSON.stringify(v)); });
+                    }
+                    else {
+                        this.setFeatures(features);
+                    }
+                };
+
                 /* === Component intializer (after) === */
                 this.after('initialize', function() {
 
@@ -143,7 +257,6 @@ define(
                         if (typeof features !== 'undefined' && features != null)
                             self.attr.features = features;
 
-
                         // Set feature id/props
                         for (var i = 0; i < self.attr.features.length; i++) {
                             // AUTO ID
@@ -157,28 +270,35 @@ define(
                         }
                         self.mapC.removeLayer('markers');
                         self.markerLayer = mapbox.markers.layer().features(self.attr.features);
-                        self.mapC.addLayer(self.markerLayer);
-                        self.mapC.centerzoom(center, zoom);
+
                         this.markerLayer.factory(
                             function(model) {
                                 var elem = mapbox.markers.simplestyle_factory(model);
                                 // Adds the id to the class, to be able to recover it later
+                                if (model.properties.isGroup === true) {
+                                    $(elem).addClass('marker-group');
+                                }
                                 $(elem).addClass(model.properties['_marker_id']);
-                                MM.addEvent(elem, 'click',
-                                    function(mouseEvent) {
-                                        // Update markers
-                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
-                                        // Trigger the event specified
+                                MM.addEvent(elem, 'click', function(mouseEvent) 
+                                    {
                                         // Get marker model
                                         var modelIndex = self.findMarker($(elem).attr('class'));
                                         var model = self.attr.features[modelIndex];
+
+                                        // Update markers
+                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
+
                                         // Model includes img src
                                         model.properties['img'] = elem.src;
+                                        // Trigger the event specified
                                         if (self.attr.markerClickEventTarget != '') {
                                             $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
                                         }
                                         else {
                                             self.trigger(self.attr.markerClickEvent, model);
+                                        }
+                                        if ($(elem).attr('class').indexOf('marker-group') >= 0) {
+                                            self.mapC.zoom(15);
                                         }
                                     }
                                 );
@@ -186,15 +306,16 @@ define(
                                 return elem;
                             }
                         );
-
+                        self.mapC.addLayer(self.markerLayer);
+                        self.mapC.centerzoom(center, zoom);
                         var interactionLayer = mapbox.markers.interaction(self.markerLayer);
                     };
 
                     // ==> Create features
                     self.setFeatures();
-                    
-                    this.on('update-marker-color', function (event, featureName, color) {
-                        var callback = function (key, value) {
+
+                    this.on('update-marker-color', function(event, featureName, color) {
+                        var callback = function(key, value) {
                             console.log(featureName + '>' + value.properties.title + ':' + color);
                             if (value.properties.title === featureName) {
                                 value.properties['marker-color'] = color;
@@ -217,14 +338,14 @@ define(
                     // =================================== \\
                     this.on('add-marker-feature', function(event, feature) {
                         var exists = false;
-                        var callback = function (key, value) {
+                        var callback = function(key, value) {
                             if (value.properties.title === feature.properties.title) {
                                 exists = true;
                             }
                         };
-                        
+
                         $.each(this.attr.features, callback);
-                        
+
                         if (!exists) {
                             this.attr.features.push(feature);
                             this.setFeatures(this.attr.features, this.attr.center, this.attr.zoomInitial);
@@ -281,13 +402,14 @@ define(
                             $(locator).trigger(tn, [this.attr.features, this.mapC.getExtent(), this.mapC.getCenter()]);
                         }
                     });
-                    
+
                     var self = this;
-                    this.mapC.addCallback('zoomed', function () {
+                    this.mapC.addCallback('zoomed', function() {
                         $(self.node).trigger('mapbox-zoomed');
+                        self.processFeatures(self.mapC, self.attr.features);
                     });
-                    
-                    this.mapC.addCallback('panned', function () {
+
+                    this.mapC.addCallback('panned', function() {
                         $(self.node).trigger('mapbox-panned');
                     });
 

@@ -58,13 +58,24 @@ define(
                 this.$delimiterValue.on('click', $.proxy(function() {
                     var isEditable = this.$node.data('editable') !== false;
                     if (isEditable) {
-                      this.$delimiterList.find('li').slideToggle(150);
+                        this.$delimiterList.find('li').slideToggle(150);
+                        this.expanded = true;
                     }
                 }, this));
 
                 this.$delimiterList.on('click', 'li', $.proxy(function(e) {
                     this.setDelimiterValue($(e.currentTarget).data('value'));
                     this.$delimiterList.find('li').slideToggle(200);
+                    this.expanded = false;
+                }, this));
+
+                $('body').on('click', $.proxy(function(e) {
+                    if (this.expanded && 
+                        e.target !== this.$delimiterValueSpan[0] &&
+                        e.target !== this.$delimiterValue[0]) {
+                        this.$delimiterList.find('li').slideToggle(200);
+                        this.expanded = false;
+                    }
                 }, this));
 
                 this.on('valueChange', function(e, o) {

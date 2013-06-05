@@ -163,6 +163,7 @@ define(
                         Delimiter.attachTo(delimiter, $.extend({
                             delimiterLabels: this.attr.delimiterLabels
                         }, o));
+                        delimiter.data('editable', this.editable);
                     }
 
                     node.data('delimiter', delimiter);
@@ -450,6 +451,7 @@ define(
                         'cardConfig': cardConfig
                     };
                     cardCmp.attachTo(cardEl, data);
+                    cardEl.data('editable', this.editable);
                     this.$graphEditor.trigger('addNode', node);
                 }, this));
 
@@ -547,7 +549,8 @@ define(
             this.emptyRule = function() {
                 var cards = this.$graphEditor.find('.node-container > *');
 
-                $.each(this.connections, $.proxy(function(i, connection) {
+                $.each($.extend([], this.connections), 
+                    $.proxy(function(i, connection) {
                     if (connection) {
                         this.$graphEditor.trigger('removeConnection', connection);
                     }

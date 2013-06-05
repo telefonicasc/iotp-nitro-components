@@ -316,17 +316,9 @@ select {
 }
 .dashboard .overview-subpanel .overview-subpanel-body .text {
   display: block;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  color: #313a3f;
-  display: inline-block;
-}
-.dashboard .overview-subpanel .overview-subpanel-body .text1 {
-  padding-left: 20px;
-  display: block;
-  font-size: 18px;
-  color: #768e99;
-  display: inline-block;
+  color: #61777F;
 }
 .dashboard .overview-subpanel .overview-subpanel-body .caption {
   margin: 0px;
@@ -577,20 +569,6 @@ select {
 .group-barchart .axis_y text {
   fill: #7F8C8D;
   font-size: 12px;
-}
-.grid line.x {
-  stroke: #e2e2e0;
-  stroke-width: 1px;
-}
-.grid line.y {
-  stroke: #e2e2e0;
-  stroke-width: 1px;
-}
-.grid rect.bg_grid.even {
-  fill: #ecebe7;
-}
-.grid rect.bg_grid.odd {
-  fill: #efeeeb;
 }
 .card {
   font-family: Helvetica, Arial, sans-serif;
@@ -1291,10 +1269,11 @@ li.delimiter-value {
   display: block;
 }
 .front .m2m-card-text {
-  height: 135px;
-  width: 145px;
-  display: table-cell;
-  vertical-align: middle;
+  position: absolute;
+  top: 0px;
+  left: 32px;
+  right: 32px;
+  bottom: 0px;
 }
 .front .m2m-card-text::before {
   content: '';
@@ -1311,7 +1290,6 @@ li.delimiter-value {
   display: inline-block;
   width: 100%;
   min-height: 30px;
-  quotes: '\201C' '\201D';
 }
 .front .m2m-card-text-value::before,
 .front .m2m-card-text-value::after {
@@ -1331,23 +1309,12 @@ li.delimiter-value {
   content: '\201D';
   margin-left: 6px;
 }
-.front .m2m-card-text-value:before,
-.front .m2m-card-text-value:after {
-  color: #adbbc4;
-  font-size: 50px;
-  line-height: 0;
-}
-.front .m2m-card-text-value:before {
-  content: open-quote;
-}
-.front .m2m-card-text-value:after {
-  content: close-quote;
-}
 .front .m2m-card-quantity {
-  height: 135px;
-  width: 145px;
-  display: table-cell;
-  vertical-align: middle;
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  right: 10px;
+  bottom: 0px;
 }
 .front .m2m-card-quantity::before {
   content: '';
@@ -1657,33 +1624,21 @@ li.delimiter-value {
   box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
 }
 .tooltip {
+  display: none;
   font-family: Helvetica, Arial;
+  background-color: #34485F;
   position: absolute;
-  width: 100px;
-  margin-left: -50px;
-  min-height: 20px;
-  margin-top: -60px;
-  font-size: 14px;
+  margin-top: -35px;
+  color: white;
+  margin-left: -25px;
+  width: 50px;
+  padding: 6px;
   text-align: center;
-  color: #525f65;
-  background: #ffffff;
-  border: 4px solid #ffffff;
-  border-radius: 5px;
-  text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;
-  box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;
+  font-weight: bold;
+  font-size: 13px;
+  height: 20px;
+  border-radius: 3px;
   z-index: 99;
-  padding: 4px;
-}
-.tooltip:after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-width: 10px;
-  border-style: solid;
-  border-color: #FFFFFF transparent transparent transparent;
-  top: 100%;
-  left: 40%;
 }
 .context-menu {
   font-family: Helvetica, Arial, sans-serif;

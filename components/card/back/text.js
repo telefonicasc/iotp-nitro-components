@@ -5,16 +5,22 @@ define(
     ],
 
     function(ComponentManager, DataBinding, Template) {
+        var dataType = {
+            TEXT:'Text',
+            QUANTITY:'Quantity'
+        };
+
         return ComponentManager.create('CardBackText', DataBinding,
             CardBackText);
 
         function CardBackText() {
-            
+
             this.defaultAttrs({
+                dataType: dataType.TEXT //Quantity
             });
 
             this.after('initialize', function() {
-                
+
                 this.$node.addClass('m2m-card-text');
 
                 if (this.attr.label) {
@@ -23,10 +29,11 @@ define(
                         .appendTo(this.$node);
                 }
 
-                this.$input = $('<input>').appendTo(this.$node);
+                this.$input = this.makeInput(this.attr.dataType).appendTo(this.$node);
+
 
                 this.$input.on('keyup', $.proxy(function(e) {
-                    this.trigger('valueChange', { 
+                    this.trigger('valueChange', {
                         value: this.$input.val()
                     });
                 }, this));
@@ -35,6 +42,14 @@ define(
                     this.$input.val(o.value);
                 });
             });
+
+            this.makeInput(type){
+                var ele = $('<input type="text">');
+                if(type === dataType.QUANTITY){
+                    ele.attr('type', 'number');
+                }
+                return ele;
+            }
         }
 
     }

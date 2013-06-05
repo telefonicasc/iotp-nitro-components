@@ -578,49 +578,37 @@ li.delimiter-value {
         width: @card-front-body-width;
         display:table-cell;
         vertical-align:middle;
+        text-align: center;
     }
 
     .m2m-card-text-value {
         color: rgb(89, 108, 115);
         font-size: 30px;
         word-wrap: break-word;
-        text-align: center;
-        vertical-align: middle;
-        display: inline-block;
-        width: 100%;
         min-height: 30px;
         quotes: '\201C' '\201D';
+        width: 80px;
+        margin: 0 auto;
 
-        &::before, &::after {
-            position: absolute;
+        &:before, &:after {
             color: rgb(124, 145, 158);
             font-family: Times, 'Times New Roman', Georgia, serif;
             opacity: 0.5;
             font-size: 50px;
             font-weight: bold;
+            position: absolute;
             margin-top: -6px;
         }
 
-        &::before {
-            content: '\201C';
+        &:before {
+            content:open-quote;
             margin-left: -30px;
         }
 
-        &::after {
-            content: '\201D';
+        &:after {
+            content:close-quote;
             margin-left: 6px;
         }
-        &:before, &:after{
-          color:#adbbc4;
-          font-size: 50px;
-          line-height: 0;
-        }
-        &:before{
-          content:open-quote;
-        };
-        &:after{
-          content:close-quote;
-        };
     }
 
     .m2m-card-quantity {

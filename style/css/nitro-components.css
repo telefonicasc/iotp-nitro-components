@@ -1295,47 +1295,34 @@ li.delimiter-value {
   width: 145px;
   display: table-cell;
   vertical-align: middle;
+  text-align: center;
 }
 .front .m2m-card-text-value {
   color: #596c73;
   font-size: 30px;
   word-wrap: break-word;
-  text-align: center;
-  vertical-align: middle;
-  display: inline-block;
-  width: 100%;
   min-height: 30px;
   quotes: '\201C' '\201D';
+  width: 80px;
+  margin: 0 auto;
 }
-.front .m2m-card-text-value::before,
-.front .m2m-card-text-value::after {
-  position: absolute;
+.front .m2m-card-text-value:before,
+.front .m2m-card-text-value:after {
   color: #7c919e;
   font-family: Times, 'Times New Roman', Georgia, serif;
   opacity: 0.5;
   font-size: 50px;
   font-weight: bold;
+  position: absolute;
   margin-top: -6px;
-}
-.front .m2m-card-text-value::before {
-  content: '\201C';
-  margin-left: -30px;
-}
-.front .m2m-card-text-value::after {
-  content: '\201D';
-  margin-left: 6px;
-}
-.front .m2m-card-text-value:before,
-.front .m2m-card-text-value:after {
-  color: #adbbc4;
-  font-size: 50px;
-  line-height: 0;
 }
 .front .m2m-card-text-value:before {
   content: open-quote;
+  margin-left: -30px;
 }
 .front .m2m-card-text-value:after {
   content: close-quote;
+  margin-left: 6px;
 }
 .front .m2m-card-quantity {
   height: 135px;

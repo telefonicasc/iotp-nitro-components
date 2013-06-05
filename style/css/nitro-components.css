@@ -1953,7 +1953,7 @@ li.delimiter-value {
 }
 .box-message-msg button {
   margin: 15px 10px;
-  min-width: 140px;
+  min-width: 135px;
   font-size: 14px;
 }
 .box-message-msg .box-message-title {

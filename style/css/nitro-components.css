@@ -316,9 +316,17 @@ select {
 }
 .dashboard .overview-subpanel .overview-subpanel-body .text {
   display: block;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  color: #61777F;
+  color: #313a3f;
+  display: inline-block;
+}
+.dashboard .overview-subpanel .overview-subpanel-body .text1 {
+  padding-left: 20px;
+  display: block;
+  font-size: 18px;
+  color: #768e99;
+  display: inline-block;
 }
 .dashboard .overview-subpanel .overview-subpanel-body .caption {
   margin: 0px;
@@ -570,6 +578,20 @@ select {
   fill: #7F8C8D;
   font-size: 12px;
 }
+.grid line.x {
+  stroke: #e2e2e0;
+  stroke-width: 1px;
+}
+.grid line.y {
+  stroke: #e2e2e0;
+  stroke-width: 1px;
+}
+.grid rect.bg_grid.even {
+  fill: #ecebe7;
+}
+.grid rect.bg_grid.odd {
+  fill: #efeeeb;
+}
 .card {
   font-family: Helvetica, Arial, sans-serif;
 }
@@ -607,6 +629,8 @@ select {
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .card .front .body {
   overflow: hidden;
@@ -1624,21 +1648,33 @@ li.delimiter-value {
   box-shadow: -6px 0 6px rgba(0, 0, 0, 0.3);
 }
 .tooltip {
-  display: none;
   font-family: Helvetica, Arial;
-  background-color: #34485F;
   position: absolute;
-  margin-top: -35px;
-  color: white;
-  margin-left: -25px;
-  width: 50px;
-  padding: 6px;
+  width: 100px;
+  margin-left: -50px;
+  min-height: 20px;
+  margin-top: -60px;
+  font-size: 14px;
   text-align: center;
-  font-weight: bold;
-  font-size: 13px;
-  height: 20px;
-  border-radius: 3px;
+  color: #525f65;
+  background: #ffffff;
+  border: 4px solid #ffffff;
+  border-radius: 5px;
+  text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;
+  box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;
   z-index: 99;
+  padding: 4px;
+}
+.tooltip:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #FFFFFF transparent transparent transparent;
+  top: 100%;
+  left: 40%;
 }
 .context-menu {
   font-family: Helvetica, Arial, sans-serif;

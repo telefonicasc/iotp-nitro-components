@@ -14,13 +14,13 @@ define(
                     'EQUAL_TO',
                     'DIFFERENT_TO',
                     'MINOR_THAN',
-                    'GREATHER_THAN'
+                    'GREATER_THAN'
                 ],
                 delimiterLabels: {
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
-                    'GREATHER_THAN': 'ABOVE'
+                    'GREATER_THAN': 'ABOVE'
                 },
                 cardConfig : {'conditionList':[]}
             });
@@ -56,12 +56,26 @@ define(
                 }, this));
 
                 this.$delimiterValue.on('click', $.proxy(function() {
-                    this.$delimiterList.find('li').slideToggle(150);
+                    var isEditable = this.$node.data('editable') !== false;
+                    if (isEditable) {
+                        this.$delimiterList.find('li').slideToggle(150);
+                        this.expanded = true;
+                    }
                 }, this));
 
                 this.$delimiterList.on('click', 'li', $.proxy(function(e) {
                     this.setDelimiterValue($(e.currentTarget).data('value'));
                     this.$delimiterList.find('li').slideToggle(200);
+                    this.expanded = false;
+                }, this));
+
+                $('body').on('click', $.proxy(function(e) {
+                    if (this.expanded && 
+                        e.target !== this.$delimiterValueSpan[0] &&
+                        e.target !== this.$delimiterValue[0]) {
+                        this.$delimiterList.find('li').slideToggle(200);
+                        this.expanded = false;
+                    }
                 }, this));
 
                 this.on('valueChange', function(e, o) {

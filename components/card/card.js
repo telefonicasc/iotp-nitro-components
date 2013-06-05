@@ -76,7 +76,8 @@ define(
                     });
 
                     this.$front.on('mouseup', $.proxy(function() {
-                        if (!dragCheck && clickCheck) {
+                        var isEditable = this.$node.data('editable') !== false;
+                        if (isEditable && !dragCheck && clickCheck) {
                             this.$node.addClass('flip');
                             this.$node.trigger('flipped');
                         }

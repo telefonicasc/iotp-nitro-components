@@ -405,12 +405,29 @@ define(
                     });
                     
                     // Update lights
-                    var urlList = [];
-                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(assetsURL + '/' + assetName + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
                     
-                    $('.lights-widget').trigger('updateLights', [urlList]);
+                    var urlList = [];
+                    var baseURL = assetsURL + '/' + assetName;
+                    urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
+                        
+                    if (useKermit) {
+                        var $q = Kermit.$injector.get('$q');
+
+                        var red = API.http.request({method:'GET', url:urlList[0]});
+                        var yellow = API.http.request({method:'GET', url:urlList[1]});
+                        var green = API.http.request({method:'GET', url:urlList[2]});
+
+                        $q.all([ red, yellow, green ])                   
+                        .then(function(results) {      
+                            console.log('Got results');
+                            $('.lights-widget').trigger('paintLights', [results[0].data, results[1].data, results[2].data]);
+                        });
+                    }
+                    else {
+                        $('.lights-widget').trigger('updateLights',[urlList]);
+                    }
                     
                     updateOffscreenIndicators();
                 };

@@ -38,8 +38,14 @@ function (ComponentManager) {
                 );
             });
             
+            /* To use in local mode */
             this.on('updateLights', function (event, data) {
                 this.drawLights(data);
+            });
+            
+            /* To use with kermit */
+            this.on('paintLights', function (event, red, yellow, green) {
+                this.requestDataCallback(red,yellow,green);
             });
         });
         
@@ -137,6 +143,8 @@ function (ComponentManager) {
                 });
             }
         };
+        
+        
         
         this.drawLights = function (urls) {
             // Get lights data

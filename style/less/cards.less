@@ -7,6 +7,9 @@
 @card-preview-factor: 0.5;
 @card-header-height: 40px;
 
+@card-front-body-height:135px;
+@card-front-body-width:145px;
+
 .card {
 
   font-family: Helvetica, Arial, sans-serif;
@@ -49,6 +52,8 @@
         text-align: center;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     .body {
@@ -69,7 +74,7 @@
         font-weight: bold;
         display: block;
         margin-left: 8px;
-        padding-top: 8px;        
+        padding-top: 8px;
     }
 
     h1{
@@ -571,70 +576,48 @@ li.delimiter-value {
 .front {
 
     .m2m-card-text {
-        position: absolute;
-        top: 0px;
-        left: 32px;
-        right: 32px;
-        bottom: 0px;
-
-        &::before {
-            content: '';
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-        }
+        height: @card-front-body-height;
+        width: @card-front-body-width;
+        display:table-cell;
+        vertical-align:middle;
+        text-align: center;
     }
 
     .m2m-card-text-value {
         color: rgb(89, 108, 115);
         font-size: 30px;
         word-wrap: break-word;
-        text-align: center;
-        vertical-align: middle;
-        display: inline-block;
-        width: 100%;
         min-height: 30px;
+        quotes: '\201C' '\201D';
+        width: 80px;
+        margin: 0 auto;
 
-        &::before, &::after {
-            position: absolute;
+        &:before, &:after {
             color: rgb(124, 145, 158);
             font-family: Times, 'Times New Roman', Georgia, serif;
             opacity: 0.5;
             font-size: 50px;
             font-weight: bold;
+            position: absolute;
             margin-top: -6px;
         }
 
-        &::before {
-            content: '\201C';
+        &:before {
+            content:open-quote;
             margin-left: -30px;
         }
 
-        &::after {
-            content: '\201D';
+        &:after {
+            content:close-quote;
             margin-left: 6px;
         }
     }
 
     .m2m-card-quantity {
-        position: absolute;
-        top: 0px;
-        left: 10px;
-        right: 10px;
-        bottom: 0px;
-
-        &::before {
-            content: '';
-            display: inline-block;
-            height: 100%;
-            vertical-align: middle;
-        }
-    }
-
-    .m2m-card-quantity-container {
-        vertical-align: middle;
-        display: inline-block;
-        width: 100%;
+        height: @card-front-body-height;
+        width: @card-front-body-width;
+        display:table-cell;
+        vertical-align:middle;
     }
 
     .m2m-card-quantity-value {
@@ -643,6 +626,8 @@ li.delimiter-value {
         text-align: center;
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space:nowrap;
+        width: @card-front-body-width;
     }
     .m2m-card-quantity-units {
         color: rgb(89, 108, 115);

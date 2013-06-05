@@ -113,7 +113,7 @@ define(
                     .attr('x', function(key) {
                         return  x0(key)-x0(0)/2+3;
                     })
-                    .attr('width', this.width/keys.length-6 )
+                    .attr('width', this.width/keys.length-6)
                     .attr('height', 100);
 
                     //Attach subpanels
@@ -171,12 +171,12 @@ define(
                     
                     //Propagate valueChange to each subpanel
                     $('.cell-barchart-subpanel').each(function(i, panel){
-                        var count = d3.max(self.value[keys[i]]).toString();
-                        console.log('count', count);
+                        var count = d3.max(self.value[keys[i]]);
+
                         var val = {
-                            text1:  Math.round((count/self.totalCount)*100)+' %',
+                            text1:  round(count/self.totalCount*100)+' %',
                             caption1: self.modelData.caption1,
-                            text2: count,
+                            text2: ((self.modelData.unit)? self.modelData.unit: '')+' '+round(count),
                             caption2: self.modelData.caption2
                         };
                         $(panel).trigger('valueChange', val);
@@ -186,7 +186,7 @@ define(
 
                 this.showTooltip = function(rect, d) {
                     var pos = $(rect).offset();
-                    this.tooltip.html('<div>'+d.value+'</div><div>('+this.attr.daysBar+' days/bar)</div>');
+                    this.tooltip.html('<div>'+((this.modelData.unit)? this.modelData.unit: '')+' '+round(d.value)+'</div><div>('+this.attr.daysBar+' days/bar)</div>');
                     this.tooltip.css({
                         top: pos.top,
                         left: pos.left + x1.rangeBand()/3
@@ -200,7 +200,7 @@ define(
 
 				this.on('resize', function(e, chartSize) {
                     e.stopPropagation();
-                    
+
 					this.width = chartSize.width;
 					this.height = chartSize.height;
 					x0.rangeRoundBands([0, this.width], 0.1);
@@ -213,11 +213,15 @@ define(
 				this.on('valueChange', function(e, options) {
                     e.stopPropagation();
 
+                    if (!this.attr.model){
+                        console.log('No model!');
+                        return;
+                    }
                     var fixRange = options.value.fixRange;
                     var roundDate = d3.time.day.round(options.range[0]).getTime();
                     
-                    this.modelData = options.value[this.attr.model][fixRange];
-                    this.maxValue = this.modelData.maxValue;
+                    this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
+                    this.maxValue = this.modelData.maxValue + 5;
                     this.attr.daysBar = (fixRange === 7)? 1 : 7;   
                     this.value = this.modelData.values[roundDate];
                     this.totalCount = this.modelData.totalCount[roundDate]
@@ -230,7 +234,12 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
-                    this.attr.model = value.newModel;
+                    if (value.newModel){
+                        this.attr.model = value.newModel;
+                    }
+                    if (value.aggregation){
+                        this.attr.aggregation = value.aggregation;
+                    }
                     this.trigger('valueChange', this.options);
                 });
 
@@ -240,6 +249,10 @@ define(
                 var keys = [];
                 for(var key in obj){ keys.push(key); }
                 return keys;
+            }
+
+            function round(val){
+                return Math.round(val*100)/100;
             }
 		}
 	}

@@ -52,7 +52,6 @@ define(
 
             this.on('valueChange', function(e, data) {
                 
-                console.log('valueChange', data);
                 this.$topValueNode.html( (data.text1 ) ? data.text1: '');
                 this.$bottomValueNode.html( (data.text2)?data.text2: ''); 
                 this.$topCaptionNode.html( (data.caption1)?data.caption1: '');

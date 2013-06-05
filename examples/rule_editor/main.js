@@ -37,6 +37,12 @@ define(
                             cards: []
                         } 
                     },
+                    locales: {
+                        'SendEmail': {
+                            subject: 'Asunto',
+                            to: 'Para'  
+                        }
+                    },
                     actionsLabel: 'Acciones',
                     conditionsLabel: 'Condiciones',
                     delimiterLabels: {

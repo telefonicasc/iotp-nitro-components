@@ -39,7 +39,7 @@ define(
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
-                    'GREATHER_THAN': 'ABOVE'
+                    'GREATER_THAN': 'ABOVE'
                 },
                 editable: true
             });

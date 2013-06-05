@@ -280,7 +280,7 @@ define(
                                 }
                                 $(elem).addClass(model.properties['_marker_id']);
                                 MM.addEvent(elem, 'click', function(mouseEvent) 
-                                    {debugger
+                                    {
                                         // Get marker model
                                         var modelIndex = self.findMarker($(elem).attr('class'));
                                         var model = self.attr.features[modelIndex];

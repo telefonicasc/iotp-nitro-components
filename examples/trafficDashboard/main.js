@@ -106,6 +106,7 @@ define(
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
                 var useKermit = false;
+                var centerOnLoad = false;
 
                 /* Testing URL */
                 var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
@@ -116,7 +117,9 @@ define(
 //                var assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
 //                var assetsDetailedURL = assetsURL + '?detailed=1';
 
-                var initialCenter = {lat: 50.456729, lon: 7.485};
+                /* Gallus, germany */
+                var initialCenter = {lat: 50.103749, lon: 8.641774};
+//                var initialCenter = {lat: 50.456729, lon: 7.485};
                 
                 var requestApiData = function (url, callback) {
                     if (useKermit) {
@@ -142,15 +145,6 @@ define(
                         });
                     }
                 };
-                
-                /* // Sample use 
-                var print = function (jsondata) {
-                    console.log(JSON.stringify(jsondata));
-                };
-                
-                requestApiData(assetsDetailedURL, print);
-                
-                */
 
                 $('.dashboard').m2mdashboard({
                     mainContent: [
@@ -192,7 +186,7 @@ define(
                 
                 var updateCenter = function () {
                     var url = assetsURL + '?detailed=1';
-                    var fn = function (response) {debugger
+                    var fn = function (response) {
                         if (response.count != 0) {
                             var lat = response.data[0].asset.location.latitude;
                             var lon = response.data[0].asset.location.longitude;
@@ -203,28 +197,9 @@ define(
                         }
                     };
                     
-                    if (useKermit) {
-                        API.http.request({method:'GET', url:url})
-                            .success(function (data,status,headers,config) {
-                                fn(data);
-                            })
-                            .error(function (data,status,headers,config) {
-                                console.error("Can't access to API REST.");
-                            });
-                    }
-                    else {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(response) {
-                                fn(response);
-                            },
-                            error: function (request, errorText, errorThrown) {
-                                console.log('error: ' + errorThrown);
-                            }
-                        });
-                    }
+                    requestApiData(url,fn);
+
+                    updateOffscreenIndicators();
                 };
 
                 // =================================================================
@@ -378,6 +353,7 @@ define(
                         var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
                         createNewMarker(v.asset.name, lat, lon, markerColor);
                     });
+                    if (centerOnLoad) updateCenter();
                 };
                 
                 var updateAssets = function () {
@@ -427,6 +403,32 @@ define(
                             }
                         }
                     });
+                    
+                    // Update lights
+                    
+                    var urlList = [];
+                    var baseURL = assetsURL + '/' + assetName;
+                    urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
+                    urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
+                        
+                    if (useKermit) {
+                        var $q = Kermit.$injector.get('$q');
+
+                        var red = API.http.request({method:'GET', url:urlList[0]});
+                        var yellow = API.http.request({method:'GET', url:urlList[1]});
+                        var green = API.http.request({method:'GET', url:urlList[2]});
+
+                        $q.all([ red, yellow, green ])                   
+                        .then(function(results) {      
+                            console.log('Got results');
+                            $('.lights-widget').trigger('paintLights', [results[0].data, results[1].data, results[2].data]);
+                        });
+                    }
+                    else {
+                        $('.lights-widget').trigger('updateLights',[urlList]);
+                    }
+                    
                     updateOffscreenIndicators();
                 };
                 
@@ -439,9 +441,9 @@ define(
 //                $('.panel-detail').slideDown();
 //                $('.panel-list').slideUp();
                     $('.panel-detail').show();
-                    $('.panel-list').hide();
-                    $('.panel-detail').trigger('update-view');
+                    $('.panel-list').hide();                    
                     updateAssetInfo(data.properties.title);
+                    $('.panel-detail').trigger('update-view');
                 };
 
                 var hideDetails = function() {
@@ -507,13 +509,13 @@ define(
                             caption: ''
                         }
                     };
+                    
                     $('.dashboard').trigger('asset-selected', data);
                 });
-
                 // Load initial data
                 
                 updateAssets();
-                updateCenter();
+                
                 /* Uncomment this line for device data polling */
                 // window.setInterval(function () { updateAssets(); }, pollInterval);
 

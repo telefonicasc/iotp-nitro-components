@@ -76,7 +76,8 @@ define(
                     });
 
                     this.$front.on('mouseup', $.proxy(function() {
-                        if (!dragCheck && clickCheck) {
+                        var isEditable = this.$node.data('editable') !== false;
+                        if (isEditable && !dragCheck && clickCheck) {
                             this.$node.addClass('flip');
                             this.$node.trigger('flipped');
                         }
@@ -108,7 +109,7 @@ define(
                     }
 
                     this.on('conditionOperatorChange', function(e,o){
-                        condition.operator = o.operator;
+                        condition.operator = o;
                         if(condition.parameterValue !== null){
                             this.$node.data('conditionList', [condition]);
                         }

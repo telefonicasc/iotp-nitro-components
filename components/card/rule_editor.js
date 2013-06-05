@@ -32,12 +32,22 @@ define(
                 },
                 cardDefaults: {
                     component: 'Card'
-                }
+                },
+                actionsLabel: 'Actions',
+                conditionsLabel: 'Conditions',
+                delimiterLabels: {
+                    'EQUAL_TO': 'IS',
+                    'DIFFERENT_TO': 'IS NOT',
+                    'MINOR_THAN': 'BELOW',
+                    'GREATER_THAN': 'ABOVE'
+                },
+                editable: true
             });
 
             this.after('initialize', function() {
                 this.connections = [];
                 this.value = this.attr.value;
+                this.editable = this.attr.editable;
 
                 this.$node.addClass('m2m-rule-editor');
 
@@ -83,7 +93,10 @@ define(
                 this.$bottomToolbar = $('<div>')
                         .appendTo(this.$node);
 
-                RuleEditorToolbar.attachTo(this.$bottomToolbar);
+                RuleEditorToolbar.attachTo(this.$bottomToolbar, {
+                    actionsLabel: this.attr.actionsLabel,
+                    conditionsLabel: this.attr.conditionsLabel 
+                });
 
                 this.$bottomToolbar.on('zoomChange', $.proxy(function(e, o) {
                     var zoomLevel = o.zoomLevel;
@@ -95,21 +108,33 @@ define(
 
                 this.$bottomToolbar.on('conditionsSelected',
                     $.proxy(function(e, o) {
-                        this.$actionsToolbox.trigger('collapse', {
-                            complete: $.proxy(function() {
-                                this.$conditionsToolbox.trigger('expand');
-                                $(window).trigger('resize');
-                            }, this)
-                        });
+                        var isVisible = this.$conditionsToolbox.is(':visible');
+                        if(isVisible){
+                            this.$conditionsToolbox.trigger('collapse');
+                        }else{
+                            this.$actionsToolbox.trigger('collapse', {
+                                complete: $.proxy(function() {
+                                    this.$conditionsToolbox.trigger('expand');
+                                    $(window).trigger('resize');
+                                }, this)
+                            });
+                        }
+
+
                     }, this));
 
                 this.$bottomToolbar.on('actionsSelected',
                     $.proxy(function(e, o) {
-                        this.$conditionsToolbox.trigger('collapse', {
-                            complete: $.proxy(function() {
-                                this.$actionsToolbox.trigger('expand');
-                            }, this)
-                        });
+                        var isVisible = this.$actionsToolbox.is(':visible');
+                        if(isVisible){
+                            this.$actionsToolbox.trigger('collapse');
+                        }else{
+                            this.$conditionsToolbox.trigger('collapse', {
+                                complete: $.proxy(function() {
+                                    this.$actionsToolbox.trigger('expand');
+                                }, this)
+                            });
+                        }
                     }, this));
 
                 this.$graphEditor = $('<div>').addClass('fit')
@@ -135,7 +160,10 @@ define(
                         delimiter.on('valueChange', $.proxy(function(){
                             this.updateValue();
                         }, this));
-                        Delimiter.attachTo(delimiter, o);
+                        Delimiter.attachTo(delimiter, $.extend({
+                            delimiterLabels: this.attr.delimiterLabels
+                        }, o));
+                        delimiter.data('editable', this.editable);
                     }
 
                     node.data('delimiter', delimiter);
@@ -193,13 +221,21 @@ define(
                 this.on('optionsChange', function(e, o) {
                     var cards;
                     if (e.target === this.node) {
-                        if (o.cards.conditions) {
-                            cards = o.cards.conditions.cards || [];
-                            this.loadToolboxCards(this.$conditionsToolbox, cards);
+                        if (o.cards) {
+                            if (o.cards.conditions) {
+                                cards = o.cards.conditions.cards || [];
+                                this.loadToolboxCards(this.$conditionsToolbox, cards);
+                            }
+                            if (o.cards.actions) {
+                                cards = o.cards.actions.cards || [];
+                                this.loadToolboxCards(this.$actionsToolbox, cards);
+                            }
                         }
-                        if (o.cards.actions) {
-                            cards = o.cards.actions.cards || [];
-                            this.loadToolboxCards(this.$actionsToolbox, cards);
+                        if (o.editable !== undefined) {
+                            this.editable = o.editable;
+                            this.getAllCards().data('editable', o.editable);
+                            $('.m2m-card-delimiter', this.$graphEditor)
+                                .data('editable', o.editable);
                         }
                     }
                 });
@@ -415,6 +451,7 @@ define(
                         'cardConfig': cardConfig
                     };
                     cardCmp.attachTo(cardEl, data);
+                    cardEl.data('editable', this.editable);
                     this.$graphEditor.trigger('addNode', node);
                 }, this));
 
@@ -512,7 +549,8 @@ define(
             this.emptyRule = function() {
                 var cards = this.$graphEditor.find('.node-container > *');
 
-                $.each(this.connections, $.proxy(function(i, connection) {
+                $.each($.extend([], this.connections), 
+                    $.proxy(function(i, connection) {
                     if (connection) {
                         this.$graphEditor.trigger('removeConnection', connection);
                     }

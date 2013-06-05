@@ -7,6 +7,9 @@
 @card-preview-factor: 0.5;
 @card-header-height: 40px;
 
+@card-front-body-height:135px;
+@card-front-body-width:145px;
+
 .card {
 
   font-family: Helvetica, Arial, sans-serif;
@@ -69,7 +72,7 @@
         font-weight: bold;
         display: block;
         margin-left: 8px;
-        padding-top: 8px;        
+        padding-top: 8px;
     }
 
     h1{
@@ -571,11 +574,10 @@ li.delimiter-value {
 .front {
 
     .m2m-card-text {
-        position: absolute;
-        top: 0px;
-        left: 32px;
-        right: 32px;
-        bottom: 0px;
+        height: @card-front-body-height;
+        width: @card-front-body-width;
+        display:table-cell;
+        vertical-align:middle;
 
         &::before {
             content: '';
@@ -594,6 +596,7 @@ li.delimiter-value {
         display: inline-block;
         width: 100%;
         min-height: 30px;
+        quotes: '\201C' '\201D';
 
         &::before, &::after {
             position: absolute;
@@ -614,14 +617,24 @@ li.delimiter-value {
             content: '\201D';
             margin-left: 6px;
         }
+        &:before, &:after{
+          color:#adbbc4;
+          font-size: 50px;
+          line-height: 0;
+        }
+        &:before{
+          content:open-quote;
+        };
+        &:after{
+          content:close-quote;
+        };
     }
 
     .m2m-card-quantity {
-        position: absolute;
-        top: 0px;
-        left: 10px;
-        right: 10px;
-        bottom: 0px;
+        height: @card-front-body-height;
+        width: @card-front-body-width;
+        display:table-cell;
+        vertical-align:middle;
 
         &::before {
             content: '';

@@ -10,7 +10,7 @@ describeComponent('components/chart/axis/time_axis', function () {
     it('given stepType is "day", number of ticks as many days within range', function(){
         setupComponent({stepType: 'day'});
         this.component.trigger('rangeChange', options);
-        expect($('.tick').length).toEqual(31+28+31);
+        expect($('.tick').length).toEqual(31+28+30);
     });
 
     it('given stepType is "month", number of ticks as many months within range', function(){
@@ -22,7 +22,7 @@ describeComponent('components/chart/axis/time_axis', function () {
     it('given stepType is "day" and "stepTick", number of ticks as many days within range', function(){
         setupComponent({stepType: 'day', stepTick: 3});
         this.component.trigger('rangeChange', options);
-        expect($('.tick').length).toEqual(Math.floor((31+28+31)/3));
+        expect($('.tick').length).toEqual(Math.floor((31+28+30)/3));
     });
 
     it('given tickFormat, ticks text format written', function(){

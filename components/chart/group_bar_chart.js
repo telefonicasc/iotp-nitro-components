@@ -218,7 +218,7 @@ define(
                         return;
                     }
                     var fixRange = options.value.fixRange;
-                    var roundDate = d3.time.day.round(options.range[0]).getTime();
+                    var roundDate = d3.time.day.round(new Date(options.range[0])).getTime();
                     
                     this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
                     this.maxValue = this.modelData.maxValue + 5;

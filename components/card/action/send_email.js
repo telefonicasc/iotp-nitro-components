@@ -18,6 +18,10 @@ define(
                 name:'',
                 description:'',
                 userParams:[]
+            },
+            locales: {
+                subject: 'Subject',
+                to: 'To'
             }
         };
         var BACK_TPL = ['<div class="card-header">',
@@ -128,6 +132,9 @@ define(
 
             element.front.subject.text(userParamsObject['mail.subject']);
             element.front.message.text(userParamsObject['mail.message']);
+
+            $('.email-subject-label', this.$node).html(this.attr.locales.subject);
+            $('.email-address-label', this.$node).html(this.attr.locales.to);
 
             var node = this.$node;
             $(node.parent() ).on('click', function(){

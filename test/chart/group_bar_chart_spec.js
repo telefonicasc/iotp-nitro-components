@@ -1,15 +1,27 @@
 describeComponent('components/chart/group_bar_chart', function () {
   
-  var test_data = {
-    'valueField':[ 
-                   { date: 2, value: {'group1': 1, 'group2': 2 } },
-                   { date: 3, value: {'group1': 6, 'group2': 7 } }     
-                  ]};
-  var options = { value: test_data, range: [1, 10], valueRange: [] };
+  var test_data = { 'categoryValueField':{
+    '35': {
+      'values':{
+        '1356566400000': { 'group1': [10, 30], 'group2': [5, 8] },
+        '1356652800000': {'group1': [3, 29], 'group2': [2, 11] }
+      },
+      'totalCount': {
+        '1356566400000': {'group1': 50, 'group2': 46},
+        '1356652800000': {'group1': 6, 'group2': 7}
+      },
+      'maxValue': 7,
+      'caption1': 'text',
+      'caption2': 'text'
+    } 
+  },
+  fixRange: 35};
+  
+  var options = { value: test_data, range: [1356566400000, 1358985600000], valueRange: [] };
 
   // initialize the component and attach it to the DOM
   beforeEach(function(){
-  	setupComponent( {grid: false, model: 'valueField', incremental: true} );
+  	setupComponent( {grid: false, model: 'ValueField', incremental: true, aggregation: 'category'} );
   });
 
   it('component has attributes defined', function(){
@@ -25,20 +37,7 @@ describeComponent('components/chart/group_bar_chart', function () {
   it('component values are incremental then trigger "valueChange", groups and bars are painted', function () {
     this.component.$node.trigger('valueChange', options); 	
     expect($('.group').length).toEqual(2); // 2 groups
-    expect($('rect.chartbar').length).toEqual(4); //4 bars in total
-  });
-
-
-  it('component preprocess data (incremental)', function () {
-    setupComponent( {grid: false, model: 'valueField', incremental: true} );
-    var out = this.component.prepareChartData(test_data['valueField'], 11);
-    expect(out.data).toEqual({ group1 : [ 1, 7 ], group2 : [ 2, 9 ] });
-  });
-
-  it('component preprocess data (NOT incremental)', function () {
-    setupComponent( {grid: false, model: 'valueField', incremental: false} );
-    var out = this.component.prepareChartData(test_data['valueField'], 11);
-    expect(out.data).toEqual({ group1 : [ 1, 6 ], group2 : [ 2, 7 ] });
+    //expect($('rect.chartbar').length).toEqual(4); //4 bars in total
   });
 
   it('When trigger "resize" then updateChart is called', function () {

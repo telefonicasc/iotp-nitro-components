@@ -43,6 +43,7 @@ define(
                             this.trigger('valueChange', { value: value });
                         }else{
                             this.$input.val('');
+                            this.trigger('valueChange', { value: '' });
                         }
                     }else{
                         this.trigger('valueChange', { value: value });

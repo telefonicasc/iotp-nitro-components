@@ -39,15 +39,13 @@ define(
                 this.$input.on('keyup', $.proxy(function(e) {
                     var value = this.$input.val();
                     if(isIE8){
-                        if(this.isValid(this.attr.dataType, value)){
-                            this.trigger('valueChange', { value: value });
-                        }else{
-                            this.$input.val('');
-                            this.trigger('valueChange', { value: '' });
+                        if(!this.isValid(this.attr.dataType, value)){
+                            value = '';
+                            this.$input.val(value);
                         }
-                    }else{
-                        this.trigger('valueChange', { value: value });
                     }
+
+                    this.trigger('valueChange', { value: value });
 
                 }, this));
 

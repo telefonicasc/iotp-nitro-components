@@ -21,7 +21,8 @@ function(gettext) {
             };
             card.back = {
                 items: [{
-                    component: component.SLIDER
+                    component: component.SLIDER,
+                    label: gettext('components.card.Value')
                 }]
             };
             card.defaultValue = '0';
@@ -35,7 +36,8 @@ function(gettext) {
             };
             card.back = {
                 items: [{
-                    component: component.SLIDER
+                    component: component.SLIDER,
+                    label: gettext('components.card.Value')
                 }]
             };
             card.defaultValue = '0';
@@ -44,7 +46,9 @@ function(gettext) {
         'binary': function(card) {
             card.front = {
                 items: [{
-                    component: 'CardFrontBinary'
+                    component: 'CardFrontBinary',
+                    trueLabel: gettext('components.card.True'),
+                    falseLabel: gettext('components.card.False')
                 }]
             };
             card.back = {

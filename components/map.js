@@ -278,36 +278,64 @@ define(
                                     $(elem).addClass('marker-group');
                                 }
                                 $(elem).addClass(model.properties['_marker_id']);
-                                MM.addEvent(elem, 'click', function(mouseEvent) 
-                                    {
-                                        // Get marker model
-                                        var modelIndex = self.findMarker($(elem).attr('class'));
-                                        var model = self.attr.features[modelIndex];
+                                
+                                var onClick = function(event) {
+//                                    debugger
+                                    var modelIndex = self.findMarker($(elem).attr('class'));
+                                    var model = self.attr.features[modelIndex];
+                                    // Update markers
+                                    self.trigger('update-marker-views', {id: $(elem).attr('class')});
 
-                                        // Update markers
-                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
-
-                                        // Model includes img src
-                                        model.properties['img'] = elem.src;
-                                        // Trigger the event specified
-                                        if (self.attr.markerClickEventTarget != '') {
-                                            $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
-                                        }
-                                        else {
-                                            self.trigger(self.attr.markerClickEvent, model);
-                                        }
-                                        if ($(elem).attr('class').indexOf('marker-group') >= 0) {
-                                            self.mapC.zoom(15);
-                                        }
+                                    // Model includes img src
+                                    model.properties['img'] = elem.src;
+                                    // Trigger the event specified
+                                    if (self.attr.markerClickEventTarget != '') {
+                                        $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
                                     }
-                                );
+                                    else {
+                                        self.trigger(self.attr.markerClickEvent, model);
+                                    }
+                                    if ($(elem).attr('class').indexOf('marker-group') >= 0) {
+                                        self.mapC.zoom(15);
+                                    }
+                                };
+                               
+                                MM.addEvent(elem, 'click', function (mouseEvent) {
+                                    onClick(mouseEvent, test);
+                                });
+                                
+//                                MM.addEvent(elem, 'click', function(mouseEvent) 
+//                                    {
+//                                        // Get marker model
+//                                        var modelIndex = self.findMarker($(elem).attr('class'));
+//                                        var model = self.attr.features[modelIndex];
+//                                        // Update markers
+//                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
+//
+//                                        // Model includes img src
+//                                        model.properties['img'] = elem.src;
+//                                        // Trigger the event specified
+//                                        if (self.attr.markerClickEventTarget != '') {
+//                                            $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
+//                                        }
+//                                        else {
+//                                            self.trigger(self.attr.markerClickEvent, model);
+//                                        }
+//                                        if ($(elem).attr('class').indexOf('marker-group') >= 0) {
+//                                            self.mapC.zoom(15);
+//                                        }
+//                                    }
+//                                );
                                 // Elem se ha actualizado, por lo que este nodo ya no existe!!
                                 return elem;
                             }
-                        );
+                        ); 
+                            
                         self.mapC.addLayer(self.markerLayer);
                         self.mapC.centerzoom(center, zoom);
                         var interactionLayer = mapbox.markers.interaction(self.markerLayer);
+                        
+                        
                     };
 
                     // ==> Create features

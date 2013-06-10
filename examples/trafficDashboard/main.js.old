@@ -11,7 +11,6 @@ define(
             'components/paged_detail',
             'components/detail_panel',
             'components/map',
-            'components/mapViewer',
             'components/widget_temperature',
             'components/widget_pitch',
             'components/widget_lights',
@@ -120,11 +119,6 @@ define(
 
                 /* Gallus, germany */
 //                var initialCenter = {lat: 50.103749, lon: 8.641774};
-
-                // =============================================================
-                // Functions
-                // =============================================================
-
                 var initialCenter = {lat: 50.456729, lon: 7.485};
                 
                 var requestApiData = function (url, callback) {
@@ -152,8 +146,111 @@ define(
                     }
                 };
 
+                $('.dashboard').m2mdashboard({
+                    mainContent: [
+                        {
+                            component: 'map',
+                            zoomInitial: 13,
+                            zoomMin: 5,
+                            center: initialCenter,
+                            zoomMax: 20,
+                            markerClickEventTarget: '.mapbox-mini',
+                            markerClickEvent: 'asset-selected',
+                            features: []
+                        }
+                    ],
+                    overviewPanel: {
+                        title: 'Lights with warnings',
+                        count: 0,
+                        items: [
+                            {
+                                component: 'pagedPanel',
+                                className: 'panel-list',
+                                header: '',
+                                ID: 'panel-list',
+                                items: []
+                            },
+                            {
+                                component: 'pagedPanel',
+                                className: 'panel-detail',
+                                extraHeaderGap: 50,
+                                alwaysVisible: [0, 1],
+                                items: compList
+                            }
+                        ]
+                    },
+                    data: function() {
+
+                    }
+                });
+                
+                var updateCenter = function () {
+                    var url = assetsURL + '?detailed=1';
+                    var fn = function (response) {
+                        if (response.count != 0) {
+                            var lat = response.data[0].asset.location.latitude;
+                            var lon = response.data[0].asset.location.longitude;
+                            $('.mapbox').trigger('center-map', [lat,lon]);
+                        }
+                        else {
+                            console.log('No data found!');
+                        }
+                    };
+                    
+                    requestApiData(url,fn);
+
+                    updateOffscreenIndicators();
+                };
+
+                // =================================================================
+                // Complete DOM with indicators
+                // =================================================================
+
+                // Add offscreen navigation buttons to map
+                var template_offscreen =
+                        '<div class="offscreen-indicator nwmarkers">0</div>' +
+                        '<div class="offscreen-indicator nmarkers">0</div>' +
+                        '<div class="offscreen-indicator nemarkers">0</div>' +
+                        '<div class="offscreen-indicator emarkers">0</div>' +
+                        '<div class="offscreen-indicator semarkers">0</div>' +
+                        '<div class="offscreen-indicator smarkers">0</div>' +
+                        '<div class="offscreen-indicator swmarkers">0</div>' +
+                        '<div class="offscreen-indicator wmarkers">0</div>';
+
+                $('.fit .mapbox').append(template_offscreen);
+
+                // Add error panel to details
+                var template_error_details = '<div class="detail-errors"></div>';
+                $('.detail-element-header').after(template_error_details);
+
+                // =================================================================
+                // Set up
+                // =================================================================
+
+                // Hide details on load
+                $('.panel-detail').hide();
+
+                // Update paged panel, to adjust components on load
+                $('.paged-panel').trigger('update-view');
+
+                // On resize, update panel views
+                $(window).bind('resize', function() {
+                    $('.panel-list').trigger('update-view');
+                    $('.panel-detail').trigger('update-view');
+                });
+
+                // Update widgets
+                $('.temperature-widget').trigger('drawTemperature');
+                $('.pitch-widget').trigger('drawPitch');
+                $('.lights-widget').trigger('drawLights');
+                $('.battery-widget').trigger('drawBattery');
+
+                // =================================================================
+                // Functions
+                // =================================================================
+
                 var updateOffscreenIndicators = function() {
-                    $('.mapbox').trigger('announce-features', '.dashboard');
+                    $('.mapbox').trigger('announce-markers', ['.dashboard', 'updateOffscreenMarkers']);
                 };
 
                 var createNewMarker = function(name, lat, lon, color) {
@@ -170,7 +267,7 @@ define(
                         }
                     };
 
-                    $('.mapbox').trigger('add-feature', marker);
+                    $('.mapbox').trigger('add-marker-feature', marker);
                     $('.mapbox-mini').trigger('updateMinimap', marker);
 
                     updateOffscreenIndicators();
@@ -354,286 +451,10 @@ define(
                     $('.panel-list').show();
                     $('.panel-detail').hide();
                 };
-                
-                var updateCenter = function () {
-                    var url = assetsURL + '?detailed=1';
-                    var fn = function (response) {
-                        if (response.count != 0) {
-                            var lat = response.data[0].asset.location.latitude;
-                            var lon = response.data[0].asset.location.longitude;
-                            $('.mapbox').trigger('center-map', [lat,lon]);
-                        }
-                        else {
-                            console.log('No data found!');
-                        }
-                    };
-                    
-                    requestApiData(url,fn);
 
-                    updateOffscreenIndicators();
-                };
-                
-                var processFeatures = function (inFeatures, map) {
-                    var marker;
-                    var markerList = [];
-                    var features = [];
-                    var groupID = 0;
-                    // Reset groups
-
-                    $.each(inFeatures, function (k,v) {
-                        if (typeof v.properties.isGroup !== 'undefined') {
-                            if (v.properties.submarkers.length === 0) {
-                                v.properties.isGroup = false;
-                                v.properties.submarkers = [];
-                                features.push(v);
-                            }
-                            else {
-                                $.each(v.properties.submarkers, function (i,m) {
-                                    m.properties.isGroup = false;
-                                    m.properties.submarkers = [];
-                                    features.push(m);
-                                });
-                            }
-                        }
-                        else {
-                            v.properties.isGroup = false;
-                            v.properties.submarkers = [];
-                            features.push(v);
-                        }
-                    });
-                    
-                    var areClose = function (feature1, feature2) {
-                        
-                        var point1 = map.locationPoint({
-                                        lat: feature1.geometry.coordinates[0],
-                                        lon: feature1.geometry.coordinates[1]
-                                    });
-                        var point2 = map.locationPoint({
-                                        lat: feature2.geometry.coordinates[0],
-                                        lon: feature2.geometry.coordinates[1]
-                                    });
-                        var diffX = point1.x - point2.x;
-                        var diffY = point1.y - point2.y;
-                        var distance = diffX * diffX + diffY * diffY;
-                        return distance <= 300;
-                    };
-                    
-                    var canJoin = function (a,b) {
-                        // Can't join to itself
-                        if (a === b) return false;
-                        // If isGroup value is there, I can't join (either is already in
-                        // a group, or is a group by itself)
-                        if (b.properties.isGroup !== false) return false;
-                        return areClose(a,b);
-                    };
-                    
-                    var doJoin = function (marker, submarker) {
-                        if (marker === null) {
-                            marker = {
-                                geometry: { coordinates: [ 0.0, 0.0 ] },
-                                properties: {
-                                    'marker-color':'#000',
-                                    'marker-symbol':'circle',
-                                    'marker-size':'medium',
-                                    title: 'group_' + groupID,
-                                    isGroup: true,
-                                    submarkers: [submarker]
-                                }
-                            };
-                            groupID += 1;
-                        }
-                        else {
-                            marker.properties.submarkers.push(submarker);
-                        }
-                        submarker.properties.isGroup = true;
-                        return marker;
-                    };
-                    
-                    var updateGroupMarkers = function (list) {
-                        $.each(list, function (k,v){
-                            if (v.properties.submarkers.length > 0) {
-                                v.properties['marker-symbol'] = v.properties.submarkers.length;
-                                var lat = 0;
-                                var lon = 0;
-                                var inc = function(v) {
-                                    lat += v.geometry.coordinates[0];
-                                    lon += v.geometry.coordinates[1];
-                                };
-                                $.each(v.properties.submarkers, function(k,v){inc(v)});
-                                var count = v.properties.submarkers.length;
-                                v.geometry.coordinates = [lat / count, lon / count];
-                            }
-                        });
-                    };
-
-                    $.each(features, function (index,a) {
-                        if (!a.properties.isGroup) {
-                            marker = null;
-                            $.each(features, function (k,b) {
-                                if (canJoin(a,b) === true) {
-                                    if (marker === null) marker = doJoin(marker,a);
-                                    marker = doJoin(marker,b);
-                                };
-                            });
-                            if (marker === null) {
-                                a.properties.isGroup = true;
-                                marker = a;
-                            }
-                            markerList.push(marker);
-                        }
-                    });
-                    updateGroupMarkers(markerList);
-                    return markerList;
-                };
-                
-                var createTooltip = function (feature, isSelected) {
-                    if (typeof feature.properties.submarkers !== 'undefined') {
-                        if (feature.properties.submarkers.length === 0) {
-                            return '<h2>' + feature.properties.title + '</h2>';
-                        }
-                        else {
-                            var submarkers = feature.properties.submarkers;
-                            // cool things go here
-                            if (!isSelected) {
-                                var html = '<h2>';
-                                var warns = 0;
-                                $.each(submarkers, function (k,v) {
-                                    if (v.properties['marker-color'] === markerColorWarn) warns += 1;
-                                });
-                                html += 'ok: ' + (submarkers.length - warns) + ' warn: ' + warns;
-                                html += '</h2>';
-                                return html;
-                            }
-                            else {
-                                return '<h2>TODO!</h2>';
-                            }
-                        }
-                    }
-                    else return '<h2>' + feature.properties.title + "</h2>";
-                };
-                
-                // =============================================================
-                // Prepare dashboard
-                // =============================================================
-                
-                $('.dashboard').m2mdashboard({
-                    mainContent: [
-                        {
-                            component: 'mapViewer',
-                            map: {
-                                id: 'keithtid.map-w594ylml',
-                                center: initialCenter,
-                                maxZoom: 20,
-                                minZoom: 5,
-                                initialZoom: 13,
-                                zoomButtons: true,
-                                showTooltip: true
-                            },
-                            markerClicked: {
-                                center: true,
-                                triggerFunction: function (f, dom, previous) {
-                                    // Change marker size
-                                    
-                                    if (f.properties['marker-size'] === 'large') {
-                                        f.properties['marker-size'] = 'medium';
-                                    }
-                                    else f.properties['marker-size'] = 'large';
-                                    if (previous !== null) {
-                                        previous.properties['marker-size'] = 'medium';
-                                    }
-                                    try {
-                                        if (f.properties.submarkers.length === 0) 
-                                            $('.dashboard').trigger('asset-selected', f);
-                                    }
-                                    catch (err) {
-                                        
-                                    }
-                                }
-                            },
-                            customTooltip: createTooltip,
-                            whenZoomed: function (f) {
-                                $('.mapbox').trigger('set-features', f);
-                                updateOffscreenIndicators();
-                            },
-                            whenPanned: function (f) {
-                                updateOffscreenIndicators();
-                            },
-                            featuresPreprocessor: processFeatures,
-                            features: []
-                        }
-                    ],
-                    overviewPanel: {
-                        title: 'Lights with warnings',
-                        count: 0,
-                        items: [
-                            {
-                                component: 'pagedPanel',
-                                className: 'panel-list',
-                                header: '',
-                                ID: 'panel-list',
-                                items: []
-                            },
-                            {
-                                component: 'pagedPanel',
-                                className: 'panel-detail',
-                                extraHeaderGap: 50,
-                                alwaysVisible: [0, 1],
-                                items: compList
-                            }
-                        ]
-                    },
-                    data: function() {
-
-                    }
-                });
-               
-
-                // =============================================================
-                // Complete DOM with indicators
-                // =============================================================
-
-                // Add offscreen navigation buttons to map
-                var template_offscreen =
-                        '<div class="offscreen-indicator nwmarkers">0</div>' +
-                        '<div class="offscreen-indicator nmarkers">0</div>' +
-                        '<div class="offscreen-indicator nemarkers">0</div>' +
-                        '<div class="offscreen-indicator emarkers">0</div>' +
-                        '<div class="offscreen-indicator semarkers">0</div>' +
-                        '<div class="offscreen-indicator smarkers">0</div>' +
-                        '<div class="offscreen-indicator swmarkers">0</div>' +
-                        '<div class="offscreen-indicator wmarkers">0</div>';
-
-                $('.fit .mapbox').append(template_offscreen);
-
-                // Add error panel to details
-                var template_error_details = '<div class="detail-errors"></div>';
-                $('.detail-element-header').after(template_error_details);
-
-                // =============================================================
-                // Set up
-                // =============================================================
-
-                // Hide details on load
-                $('.panel-detail').hide();
-
-                // Update paged panel, to adjust components on load
-                $('.paged-panel').trigger('update-view');
-
-                // On resize, update panel views
-                $(window).bind('resize', function() {
-                    $('.panel-list').trigger('update-view');
-                    $('.panel-detail').trigger('update-view');
-                });
-
-                // Update widgets
-                $('.temperature-widget').trigger('drawTemperature');
-                $('.pitch-widget').trigger('drawPitch');
-                $('.lights-widget').trigger('drawLights');
-                $('.battery-widget').trigger('drawBattery');
-
-                // =============================================================
+                // =================================================================
                 // Trigger listeners
-                // =============================================================
+                // =================================================================
 
                 $('.dashboard').on('asset-selected', showDetails);
 
@@ -643,7 +464,7 @@ define(
 
                 $('.dashboard').on('mapbox-panned', updateOffscreenIndicators);
 
-                $('.dashboard').on('feature-announcement', function(event, data, extent, center) {
+                $('.dashboard').on('updateOffscreenMarkers', function(event, data, extent, center) {
                     // Receives data as an array of mapbox features
                     // reset marker status
                     $.each($('.offscreen-indicator'), function(key, value) {
@@ -680,9 +501,15 @@ define(
                     }                    
                 });
 
-                $('.offscreen-indicator').on('click', function(event) {                    
-                    $('.mapbox').trigger('center-on-feature', $(event.target).attr('last'));
-                    updateOffscreenIndicators();
+                $('.offscreen-indicator').on('click', function(event) {
+                    var data = {
+                        properties: {
+                            title: $(event.target).attr('last'),
+                            caption: ''
+                        }
+                    };
+                    
+                    $('.dashboard').trigger('asset-selected', data);
                 });
                 // Load initial data
                 

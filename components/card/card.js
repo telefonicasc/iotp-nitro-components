@@ -5,9 +5,10 @@ define(
         'components/flippable',
         'components/card/card_side',
         'components/mixin/data_binding',
-        'components/card/card_data'
+        'components/card/card_data',
+        'components/gettext'
     ],
-    function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
+    function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData, gettext) {
         var ELEMENT_ID_PREFIX = 'card_';
         var id=0;
         var _getNexId = function(){
@@ -49,7 +50,7 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
-                    $.extend(this.attr, CardData.encode(this.attr.rawCard));  
+                    $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 
                 this.$node.on('click',_stopPropagation);
@@ -60,7 +61,7 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = {
-                      label: 'Sensor name',
+                      label: gettext('components.card.sensorName'),
                       value: this.attr.header
                     };
                 }

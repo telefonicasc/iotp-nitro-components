@@ -1,6 +1,6 @@
 define(
-[],
-function() {
+['components/gettext'],
+function(gettext) {
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
     var cardType = {
         'SENSOR_CARD':'SensorCard',
@@ -52,10 +52,10 @@ function() {
                     component: 'Dropdown',
                     defaultValue: 'false',
                     options: [{
-                        label: 'True',
+                        label: gettext('components.card.True'),
                         value: 'true'
                     }, {
-                        label: 'False',
+                        label: gettext('components.card.False'),
                         value: 'false'
                     }]
                 }]
@@ -74,7 +74,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: 'Value'
+                    label: gettext('components.card.Value')
                 }]
             };
             return card;
@@ -89,7 +89,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: 'Value',
+                    label: gettext('components.card.Value'),
                     dataType:card.sensorData.dataType
                 }]
             };

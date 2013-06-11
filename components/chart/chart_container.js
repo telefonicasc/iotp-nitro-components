@@ -28,7 +28,7 @@ define(
                 axisy:false,
                 timeAxis: {
                     margin: 0,
-                    height: 20  
+                    height: 20
                 }
             });
 
@@ -132,12 +132,25 @@ define(
                     x.domain(range);
 
                     $.each(this.attr.charts, function(i, chart) {
+                        var chartModel = chart.model;
+                        if (chart.subModels){
+                            $.each(chart.subModels, function(i, submodel) {
+                                chartModel = chart.model + submodel;
+                                setValueRange(model, chartModel, valueRange);
+                            });
+                        }else{
+                            setValueRange(model, chartModel, valueRange);
+                        }
+                    });
+
+                    function setValueRange(model, chartModel, valueRange){
                         var chartMin, chartMax;
-                        if (model[chart.model]) {
-                            chartMin = d3.min(model[chart.model], function(d) {
+
+                        if (model[chartModel]) {
+                            chartMin = d3.min(model[chartModel], function(d) {
                                 return d.value;
                             }) * 1.2;
-                            chartMax = d3.max(model[chart.model], function(d) {
+                            chartMax = d3.max(model[chartModel], function(d) {
                                 return d.value;
                             }) * 1.2;
                             if (!valueRange[0] || chartMin < valueRange[0]) {
@@ -147,7 +160,7 @@ define(
                                 valueRange[1] = chartMax;
                             }
                         }
-                    });
+                    }
 
                     valueRange[0] = Math.min(valueRange[0], 0);
                     y.domain(valueRange);

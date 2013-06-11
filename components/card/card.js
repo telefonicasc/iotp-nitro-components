@@ -5,10 +5,9 @@ define(
         'components/flippable',
         'components/card/card_side',
         'components/mixin/data_binding',
-        'components/card/card_data',
-        'components/gettext'
+        'components/card/card_data'
     ],
-    function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData, gettext) {
+    function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
         var ELEMENT_ID_PREFIX = 'card_';
         var id=0;
         var _getNexId = function(){
@@ -40,7 +39,12 @@ define(
                     'operator': null
                 },
                 delimiterList:false,
-                defaultValue : ''
+                defaultValue : '',
+                locales: {
+                    'subject': 'Subject',
+                    'to': 'To',
+                    'sensor_name':'Sensor Name'
+                }
             });
 
             this.after('initialize', function() {
@@ -61,8 +65,8 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = {
-                      label: gettext('components.card.sensorName'),
-                      value: this.attr.header
+                        label: this.attr.locales.sensor_name,
+                        value: this.attr.header
                     };
                 }
                 CardSide.attachTo(this.$front, this.attr.front);

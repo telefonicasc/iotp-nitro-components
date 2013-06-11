@@ -23,8 +23,9 @@ define(
                     columns = 0,
                     columnsData = [],
                     context = d3.select(this.node).append('svg');
-
-                context.attr('class', 'chart ' + this.attr.cssClass);
+                
+                d3.select(this.node).attr('class', 'chart columns ' + this.attr.cssClass);   
+                
                 var subPanelgroup = context.append('g');
                 var carousel = [];
 
@@ -78,15 +79,17 @@ define(
                 };
 
                 this.on('resize', function(e, chartSize) {
+                    e.stopPropagation();
+
                     this.width = chartSize.width;
                     this.height = chartSize.height;
                     $('.cell-barchart-subpanel').each(function(i, panel){
-                            $(panel).trigger('resize' );
+                            //$(panel).trigger('resize', chartSize);
                     });
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
                     this.updateChart();
-                    e.stopPropagation();
+                    
                 });
 
                 this.on('valueChange', function(e, options) {

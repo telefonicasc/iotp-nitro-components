@@ -21,7 +21,7 @@ define(
                     data = this.$node.data('value') || this.attr.value || [],
                     context = d3.select(this.node);
 
-                context.attr('class', 'chart ' + this.attr.cssClass);
+                context.attr('class', 'chart barchart ' + this.attr.cssClass);
 
                 if (this.attr.tooltip) {
                     this.tooltip = $('<div>').addClass('tooltip')
@@ -77,13 +77,24 @@ define(
                     data = this.attr.value;
                     x.domain(options.range);
                     y.domain(options.valueRange);
+                    this.options = options;
                     this.updateChart();
                     e.stopPropagation();
                 });
 
+                this.on('actionSelected', function(e, value){
+                    e.stopPropagation();
+                    console.log('barchart actionSelected', value);
+                    if (value.newModel){
+                        this.attr.model = value.newModel;
+                    }
+                    this.attr.tooltip.caption = (value.caption)? value.caption: '';
+                    this.trigger('valueChange', this.options);
+                });
+
                 this.showTooltip = function(rect, d, barWidth) {
                     var pos = $(rect).offset();
-                    this.tooltip.html('<div>'+d+' €</div><div>'+this.attr.tooltip.caption+'</div>');
+                    this.tooltip.html('<div class="value">'+d+' €</div><div class="caption">'+this.attr.tooltip.caption+'</div>');
                     this.tooltip.css({
                         top: pos.top,
                         left: pos.left + barWidth/2

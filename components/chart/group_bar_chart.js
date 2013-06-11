@@ -186,7 +186,7 @@ define(
 
                 this.showTooltip = function(rect, d) {
                     var pos = $(rect).offset();
-                    this.tooltip.html('<div>'+((this.modelData.unit)? this.modelData.unit: '')+' '+round(d.value)+'</div><div>('+this.attr.daysBar+' days/bar)</div>');
+                    this.tooltip.html('<div class="value">'+((this.modelData.unit)? this.modelData.unit: '')+' '+round(d.value)+'</div><div class="caption">('+this.attr.daysBar+' days/bar)</div>');
                     this.tooltip.css({
                         top: pos.top,
                         left: pos.left + x1.rangeBand()/3

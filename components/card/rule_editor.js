@@ -41,11 +41,24 @@ define(
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE'
                 },
-                locales: {},
+                locales: {
+                    Card:{
+                        'subject': 'Subject',
+                        'to': 'To',
+                        'sensor_name':'Sensor Name'
+                    },
+                    CardData:{
+                        'true':'True',
+                        'false':'False',
+                        'value':'Value'
+                    }
+                },
                 editable: true
             });
 
             this.after('initialize', function() {
+                CardData.addLocales(this.attr.locales.CardData);
+
                 this.connections = [];
                 this.value = this.attr.value;
                 this.editable = this.attr.editable;
@@ -96,7 +109,7 @@ define(
 
                 RuleEditorToolbar.attachTo(this.$bottomToolbar, {
                     actionsLabel: this.attr.actionsLabel,
-                    conditionsLabel: this.attr.conditionsLabel 
+                    conditionsLabel: this.attr.conditionsLabel
                 });
 
                 this.$bottomToolbar.on('zoomChange', $.proxy(function(e, o) {
@@ -451,9 +464,7 @@ define(
                         'node': cardEl,
                         'cardConfig': cardConfig
                     };
-                    if (this.attr.locales[attrCard.component]) {
-                        data.locales = this.attr.locales[attrCard.component];
-                    }
+                    data.locales = this.attr.locales.Card;
                     cardCmp.attachTo(cardEl, data);
                     cardEl.data('editable', this.editable);
                     this.$graphEditor.trigger('addNode', node);
@@ -553,7 +564,7 @@ define(
             this.emptyRule = function() {
                 var cards = this.$graphEditor.find('.node-container > *');
 
-                $.each($.extend([], this.connections), 
+                $.each($.extend([], this.connections),
                     $.proxy(function(i, connection) {
                     if (connection) {
                         this.$graphEditor.trigger('removeConnection', connection);

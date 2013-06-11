@@ -29,18 +29,24 @@ define(
             'ruleController',
             function($scope, $http) {
                 $scope.ruleoptions = {
-                    cards: { 
+                    cards: {
                         actions: {
-                            cards: []  
-                        }, 
+                            cards: []
+                        },
                         conditions: {
                             cards: []
-                        } 
+                        }
                     },
                     locales: {
-                        'SendEmail': {
+                        Card: {
                             subject: 'Asunto',
-                            to: 'Para'  
+                            to: 'Para',
+                            sensor_name: 'Nombre del sensor'
+                        },
+                        CardData:{
+                            'true':'Verdadero',
+                            'false':'Falso',
+                            'value':'Valor'
                         }
                     },
                     actionsLabel: 'Acciones',

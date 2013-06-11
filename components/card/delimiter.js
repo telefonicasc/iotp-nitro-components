@@ -70,7 +70,7 @@ define(
                 }, this));
 
                 $('body').on('click', $.proxy(function(e) {
-                    if (this.expanded && 
+                    if (this.expanded &&
                         e.target !== this.$delimiterValueSpan[0] &&
                         e.target !== this.$delimiterValue[0]) {
                         this.$delimiterList.find('li').slideToggle(200);

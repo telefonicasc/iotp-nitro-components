@@ -39,7 +39,12 @@ define(
                     'operator': null
                 },
                 delimiterList:false,
-                defaultValue : ''
+                defaultValue : '',
+                locales: {
+                    'subject': 'Subject',
+                    'to': 'To',
+                    'sensor_name':'Sensor Name'
+                }
             });
 
             this.after('initialize', function() {
@@ -49,7 +54,7 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
-                    $.extend(this.attr, CardData.encode(this.attr.rawCard));  
+                    $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 
                 this.$node.on('click',_stopPropagation);
@@ -60,8 +65,8 @@ define(
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = {
-                      label: 'Sensor name',
-                      value: this.attr.header
+                        label: this.attr.locales.sensor_name,
+                        value: this.attr.header
                     };
                 }
                 CardSide.attachTo(this.$front, this.attr.front);

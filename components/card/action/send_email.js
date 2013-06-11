@@ -18,11 +18,14 @@ define(
                 name:'',
                 description:'',
                 userParams:[]
-            },
-            locales: {
-                subject: 'Subject',
-                to: 'To'
             }
+
+            // Se definene en Card ya que éste componente extiende de Card y no puede heredar el atributo
+
+            // locales: {
+            //    subject: 'Subject',
+            //    to: 'To'
+            // }
         };
         var BACK_TPL = ['<div class="card-header">',
                 '<label class="email-subject-label">Subject</label>',

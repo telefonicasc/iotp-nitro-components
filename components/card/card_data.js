@@ -1,6 +1,12 @@
 define(
 [],
 function() {
+    var locales = {
+        'true':'True',
+        'false':'False',
+        'value':'Value'
+    };
+
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
     var cardType = {
         'SENSOR_CARD':'SensorCard',
@@ -21,7 +27,8 @@ function() {
             };
             card.back = {
                 items: [{
-                    component: component.SLIDER
+                    component: component.SLIDER,
+                    label: locales.value
                 }]
             };
             card.defaultValue = '0';
@@ -35,7 +42,8 @@ function() {
             };
             card.back = {
                 items: [{
-                    component: component.SLIDER
+                    component: component.SLIDER,
+                    label: locales.value
                 }]
             };
             card.defaultValue = '0';
@@ -44,7 +52,9 @@ function() {
         'binary': function(card) {
             card.front = {
                 items: [{
-                    component: 'CardFrontBinary'
+                    component: 'CardFrontBinary',
+                    trueLabel: locales['true'],
+                    falseLabel: locales['false']
                 }]
             };
             card.back = {
@@ -52,10 +62,10 @@ function() {
                     component: 'Dropdown',
                     defaultValue: 'false',
                     options: [{
-                        label: 'True',
+                        label: locales['true'],
                         value: 'true'
                     }, {
-                        label: 'False',
+                        label: locales['false'],
                         value: 'false'
                     }]
                 }]
@@ -74,7 +84,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: 'Value'
+                    label: locales['value']
                 }]
             };
             return card;
@@ -89,7 +99,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: 'Value',
+                    label: locales['value'],
                     dataType:card.sensorData.dataType
                 }]
             };
@@ -148,6 +158,9 @@ function() {
         }
         return cardConfig;
     };
+    var addLocales = function(newLocales){
+        $.extend(locales, newLocales);
+    };
 
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
@@ -172,6 +185,7 @@ function() {
     };
 
     return {
+        'addLocales':addLocales,
         'encode':encode,
         'decode':decode
     };

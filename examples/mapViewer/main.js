@@ -2,16 +2,18 @@
 
 /* Test.........................................................................
         
- $('.mapbox').trigger('add-feature', [{
-                        geometry: { coordinates: [ -3.675, 40.515] },
-                        properties: {
-                            'id':3,
-                            'marker-color':'#0040FF',
-                            'marker-symbol':'triangle',
-                            'title':'Marker 3',
-                            'status': 'error'
-                        }
-                    }]);
+$('.mapbox').trigger('add-feature', 
+    [{
+        geometry: { coordinates: [ -3.675, 40.515] },
+        properties: {
+            'id':3,
+            'marker-color':'#0040FF',
+            'marker-symbol':'triangle',
+            'title':'Marker 3',
+            'status': 'error'
+        }
+    }]
+);
 */
 
 requirejs.config({
@@ -42,7 +44,7 @@ define(
                 },
                 markerClicked: {
                     center: true,
-                    triggerFunction: function (f, dom, previous) {
+                    onClickFn: function (f, dom, previous) {
                         // Change marker size
                         if (f.properties['marker-size'] === 'large') {
                             f.properties['marker-size'] = 'medium';
@@ -51,11 +53,12 @@ define(
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
                         }
+                        console.log('Marker clicked: ' + f);
                     }
                 },
-//                customTooltip: '<h2>Echo</h2>',
                 customTooltip: function (feature) {
-                    return '<h2>' + feature.properties.title + "!!</h2>";
+                    return '<h2 style="color:red; background-color:black;">Custom: ' 
+                            + feature.properties.title + " !</h2>";
                 },
                 whenZoomed: function (f) {
                     console.log('zoomed!');
@@ -63,6 +66,11 @@ define(
                 whenPanned: function (f) {
                     console.log('panned!');
                 },
+                featuresPreprocessor: function (f,map) {
+                    console.log('Preprocessing features: ' + f);
+                    return f;
+                },
+                createOffscreenIndicators: true,
                 features: [
                     {   
                         geometry: { coordinates: [ -3.665, 40.515] },
@@ -87,7 +95,7 @@ define(
             });
             
             $('.dashboard').on('feature-announcement', function (event, features) {
-                debugger
+                console.log('Anounced features: ' + features);
             });  
             
         });

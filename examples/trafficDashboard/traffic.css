@@ -6,7 +6,7 @@
 .marker-popup {
     position:relative;
     left:-50%;
-    max-width:400px;
+    max-width:400px;    
     background:#e9eff0;
     border:2px solid #ccc;
     color:#60777e;  
@@ -19,7 +19,7 @@
     -webkit-box-shadow: 2px 2px 5px -2px #ccc;
     box-shadow: 2px 2px 5px -2px #ccc;
     -webkit-border-radius: 8px;
-    border-radius: 8px;
+    border-radius: 8px;    
 }
 .marker-popup:after,
 .marker-popup:before {
@@ -31,12 +31,11 @@
     width:0;
     left:50%;
     position:absolute;
-    pointer-events:none;
+    pointer-events:none;    
 }
 
 .marker-popup:after {
     border-top-color:#e9eff0;
-    /*border-bottom-color:#e9eff0;*/
     border-width:15px;
     margin-left:-15px;
 }
@@ -45,6 +44,43 @@
     border-top-color:#ccc;
     border-width:18px;
     margin-left:-18px;
+}
+
+.tooltip-unselected {
+    min-height: 20px;
+    background-size:contain ;
+    /*background-size:18px 18px;*/
+    background-repeat:no-repeat;
+    padding-left: 24px;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.tooltip-unselected-ok {
+    background-image:url('res/images/Markers_Blue_Sidebar.png');
+    margin-left: 15px;
+}
+
+.tooltip-unselected-errors {
+    background-image:url('res/images/Markers_Red_Sidebar.png');
+    color: red;
+}
+
+.tooltip-selector {
+    cursor: pointer;
+    /*background-size:12px 12px;*/
+    background-size: contain;
+    background-repeat:no-repeat;
+    padding-left: 15px;
+    margin-top: 3px;
+}
+
+.tooltip-selected-ok {
+    background-image:url('res/images/Markers_Blue_Sidebar.png');
+}
+
+.tooltip-selected-error {
+    background-image:url('res/images/Markers_Red_Sidebar.png');
 }
 
 .dashboard {

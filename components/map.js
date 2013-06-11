@@ -213,8 +213,6 @@ define(
                         var currentFeatures = features;
                         this.setFeatures(markers);
                         this.attr.features = currentFeatures;
-                        console.log('Set markers: ');
-                        $.each(markers, function (k,v) {console.log(JSON.stringify(v)); });
                     }
                     else {
                         this.setFeatures(features);
@@ -304,28 +302,6 @@ define(
                                     onClick(mouseEvent, test);
                                 });
                                 
-//                                MM.addEvent(elem, 'click', function(mouseEvent) 
-//                                    {
-//                                        // Get marker model
-//                                        var modelIndex = self.findMarker($(elem).attr('class'));
-//                                        var model = self.attr.features[modelIndex];
-//                                        // Update markers
-//                                        self.trigger('update-marker-views', {id: $(elem).attr('class')});
-//
-//                                        // Model includes img src
-//                                        model.properties['img'] = elem.src;
-//                                        // Trigger the event specified
-//                                        if (self.attr.markerClickEventTarget != '') {
-//                                            $(self.attr.markerClickEventTarget).trigger(self.attr.markerClickEvent, model);
-//                                        }
-//                                        else {
-//                                            self.trigger(self.attr.markerClickEvent, model);
-//                                        }
-//                                        if ($(elem).attr('class').indexOf('marker-group') >= 0) {
-//                                            self.mapC.zoom(15);
-//                                        }
-//                                    }
-//                                );
                                 // Elem se ha actualizado, por lo que este nodo ya no existe!!
                                 return elem;
                             }

@@ -30,7 +30,6 @@ function (ComponentManager) {
 
             //var obj = this.createTemperatureChart();
             this.on('drawTemperature', function (event, temp) {
-                console.log('Drawing temperature widget');
                 if (temp != null) this.attr.temp = temp;
                 this.$node.empty();
                 this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);

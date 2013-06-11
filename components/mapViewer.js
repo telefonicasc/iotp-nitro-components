@@ -7,50 +7,55 @@
  * Marker symbols: http://mapbox.com/maki/
  * Mapbox: www.mapbox.com
  *
- * ==> Configuration:
- * map: {
- *      id: <map key>
- *      center: {
- *              lat: <latitude>,
- *              lon: <longitude>
- *          },
- *      maxZoom: <maximum zoom permitted>,
- *      minZoom: <minimum zoom permitted>,
- *      initialZoom: <starting zoom value>
- * }
- * 
- * markerClicked: {
- *      triggerFunction: <function>
- * }
- * 
- * features: [],
- * filter: <function>
- * private: {
- *      map: <map object>
- *      markers: []
- *      selectedFeature: <selected feature>
- * }
+ * Configuration example
+ {
+    component: 'mapViewer',
+    map: {
+        id: 'keithtid.map-w594ylml',
+        center: initialCenter,
+        maxZoom: 20,
+        minZoom: 5,
+        initialZoom: 13,
+        zoomButtons: true,
+        showTooltip: true
+    },
+    markerClicked: {
+        center: centerOnClick,
+        onClickFn: function (f, dom, previous) {
+            // Change marker size
+
+            if (f.properties['marker-size'] === 'large') {
+                f.properties['marker-size'] = 'medium';
+            }
+            else f.properties['marker-size'] = 'large';
+            if (previous !== null) {
+                previous.properties['marker-size'] = 'medium';
+            }
+            try {
+                if (f.properties.submarkers.length === 0) {
+                    showDetails(null,f);
+                }
+            }
+            catch (err) {
+                // submarkers not defined
+                showDetails(null,f);
+            }
+        }
+    },
+    customTooltip: createTooltip,
+    createOffscreenIndicators: true,
+    whenZoomed: function (f) {
+        $('.mapbox').trigger('set-features', f);
+        updateOffscreenIndicators();
+    },
+    whenPanned: function (f) {
+        updateOffscreenIndicators();
+    },
+    featuresPreprocessor: processFeatures,
+    features: []
+}
  *
- * ==> Marker description (example):
- * {   
- *  geometry: { 
- *      coordinates: [ -3.665, 40.515] },
- *      properties: {
- *          'marker-color':'#000',
- *          'marker-symbol':'police',
- *          'marker-size': small,
- *          'title': 'Marker 1',
- *          'description': 'Marker 1 description',
- *          'isGroup': false,
- *          'submarkers': [],
- *          'custom-tooltip': function(){},
- *          'custom-marker': function(){}
- *      }                        
- * }
- * 
- * featuresPreprocessor: Updates all features before setting the map
- *
- * For available symbol descriptions, see: http://mapbox.com/maki
+ * For available simplestyle symbol descriptions, see: http://mapbox.com/maki
  * (Examples are: 'star', 'star-stroked', 'circle', 'circle-stroked'...)
  *
  */
@@ -69,7 +74,9 @@ function(ComponentManager) {
         // Configuration
         // =====================================================================
         this.defaultAttrs({
-            
+            // Do NOT modify these selectors!!
+            selectMapbox: '.mapbox',
+            selectOffscreenIndicator: '.offscreen-indicator',
             map: {
                 id: 'keithtid.map-w594ylml',
                 center: {lat: 40.414431, lon: -3.703696},
@@ -81,7 +88,7 @@ function(ComponentManager) {
             },
             markerClicked: {
                 center: true,
-                triggerFunction: function (f, dom) {console.log(dom);}
+                onClickFn: function (f, dom) {console.log(dom);}
             },
             private: {
                 map: null,
@@ -96,11 +103,23 @@ function(ComponentManager) {
                 announceTrigger: 'announce-features',
                 selected: null
             },
+            // featuresPreprocessor: null,
             customTooltip : '',
+            createOffscreenIndicators: false,
             features: [],
             whenZoomed: function () {},
             whenPanned: function () {}
         });
+        
+        this.offscreenIndicatorsHtml =
+            '<div class="offscreen-indicator nwmarkers">0</div>' +
+            '<div class="offscreen-indicator nmarkers">0</div>' +
+            '<div class="offscreen-indicator nemarkers">0</div>' +
+            '<div class="offscreen-indicator emarkers">0</div>' +
+            '<div class="offscreen-indicator semarkers">0</div>' +
+            '<div class="offscreen-indicator smarkers">0</div>' +
+            '<div class="offscreen-indicator swmarkers">0</div>' +
+            '<div class="offscreen-indicator wmarkers">0</div>';
         
         // =====================================================================
         // Functions
@@ -124,16 +143,29 @@ function(ComponentManager) {
         //    simplestyle factory
         //  * Custom tooltips for the markers can be provided too along the attr
         //    using the property 'customTooltip', as a string, or as a function.
-        this.setFeatures = function (features) {
+        this.setFeatures = function (features, skipPreprocessor) {
+            
+            if (!this.isValidObject(skipPreprocessor)) skipPreprocessor = false;
+            
             if (typeof features === 'undefined' || features === null) {
                 if (this.attr.private.markerLayer !== null) {
-                    features = this.attr.private.markerLayer.features();
+                    features = this.attr.private.markerLayer.features();                    
                 }
                 else features = this.attr.features;
             }
             
             if (typeof this.attr.featuresPreprocessor === 'function') {
-                features = this.attr.featuresPreprocessor (features, this.attr.private.map);
+                if (!skipPreprocessor) {
+                    try {
+                        features = this.attr.featuresPreprocessor (features, this.attr.private.map);
+                        if (typeof features === 'undefined') {
+                            console.warn('Attention: Preprocessor must return the feature list');
+                        }
+                    }
+                    catch (err) {
+                        console.log('Error on feature preprocessor: ' + err);
+                    }
+                }
             }
             
             // Create layer
@@ -195,7 +227,16 @@ function(ComponentManager) {
         // Returns: Nothing.
         // Does: Adds the feature to the default markerlayer.
         this.addFeature = function (event, feature) {
+            
+            if (typeof feature.properties.submarkers === 'undefined') {
+                feature.properties.submarkers = [];
+                feature.properties.isGroup = false;
+            }
+            
             this.attr.private.markerLayer.add_feature(feature);
+            if (this.attr.createOffscreenIndicators) {
+                this.updateOffscreenIndicators();
+            }
         };
         
         // Receives: Jquery locator to send the trigger to.
@@ -218,14 +259,13 @@ function(ComponentManager) {
             }
         };
         
-        // Receives: Dom node to find corresponding feature.
+        // Receives: Dom node to find corresponding feature or feature title.
         // Returns: GeoJson object of the feature if found, null otherwise.
         // Notes: Uses 'alt' attribute to query, corresponding to feature title.
         this.getFeatureByTitle = function (obj) {
 
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-//            var title = $(dom).attr('alt');
             var feature = null;
             var features = this.attr.private.markerLayer.features();
             $.each(features, function (k,v) {
@@ -269,16 +309,18 @@ function(ComponentManager) {
         // Receives: Event object and dom node clicked.
         // Returns: Nothing.
         // Does: If by config is requested to center map, does it on the marker,
-        //      also runs the triggerFunction, if declared (!== undefined).
+        //      also runs the onClickFn, if declared (!== undefined).
         // Notes:
         //  * This method passes the feature, the corresponding dom node and the 
-        //    previously selected feature to the triggerFunction, if any.
+        //    previously selected feature to the onClickFn, if any.
         this.markerClicked = function (event, dom) {
             var f = this.getFeatureByTitle(dom);
             if (f !== null) {
-                if (typeof this.attr.markerClicked.triggerFunction !== 'undefined') {
-                    this.attr.markerClicked.triggerFunction(f, dom, this.attr.private.selected);
-                    this.setFeatures(this.attr.private.markerLayer.features());
+                if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
+                    this.attr.markerClicked.onClickFn(f, dom, this.attr.private.selected);
+                    // Skips preprocessor, not to recalculate groups
+                    var skipPreprocessor = true;
+                    this.setFeatures(this.attr.private.markerLayer.features(), skipPreprocessor);
                 }
                 if (this.attr.markerClicked.center) {
                     // Feature coordinates are reversed!
@@ -312,14 +354,52 @@ function(ComponentManager) {
             
         };
         
+        // Receives: Nothing.
+        // Returns: Nothing.
+        // Does: Updates screen indicators, used when zoomed or panned
+        this.updateOffscreenIndicators = function () {
+            var data = this.attr.private.markerLayer.features();
+            var extent = this.attr.private.map.getExtent();
+            
+            $.each(this.select('selectOffscreenIndicator'), function(key, value) {
+                $(value).hide();
+                $(value).html('0');
+                $(value).attr('title');
+            });
+
+            for (x in data) {
+                var el = data[x];
+                var lat = el.geometry.coordinates[1];
+                var lon = el.geometry.coordinates[0];
+                var locator = '.';
+
+                if (lat > extent.north) locator += 'n';
+                else if (lat < extent.south) locator += 's';
+
+                if (lon > extent.east) locator += 'e';
+                else if (lon < extent.west) locator += 'w';
+
+                locator += 'markers';
+
+                if (locator !== '.markers') {
+                    this.attr.selectOffscreen = locator;
+                    this.select('selectOffscreen');
+                    var count = parseInt(this.select('selectOffscreen').html()) + 1;
+                    this.select('selectOffscreen').html(count);
+                    this.select('selectOffscreen').show();
+                    this.select('selectOffscreen').attr('last', el.properties.title);
+                }
+            }             
+        };
+        
         // =====================================================================
         // Component Initializer
         // =====================================================================
         
         this.after('initialize', function() {
-            // Prepare dom
+            // Prepare dom =====================================================
             this.$node.addClass('fit');
-            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);
+            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);           
             // Attach map
             this.attr.private.map = mapbox.map(this.$nodeMap[0]);
             // Load map id
@@ -328,26 +408,39 @@ function(ComponentManager) {
             this.attr.private.map.setZoomRange(this.attr.map.minZoom, this.attr.map.maxZoom);
             this.attr.private.map.centerzoom(this.attr.map.center, this.attr.map.initialZoom);
             // Show zoom buttons if required
-            if (this.attr.private.map.zoomButtons) this.attr.private.map.ui.zoomer.add();
+            this.attr.private.map.ui.zoomer.add(this.attr.map.zoomButtons);
             this.attr.private.map.centerzoom(
                     this.attr.map.center, 
                     this.attr.map.initialZoom);
             // If I already have markers, paint them.
             this.setFeatures();
             
-            // Map callbacks ===================================================
-            var features = this.attr.private.markerLayer.features();
             var self = this;
+            // If offscreen indicators are required, add them to the node and crete handler
+            if (this.attr.createOffscreenIndicators === true) {
+                this.$nodeMap = $(this.offscreenIndicatorsHtml).appendTo(this.$node);
+                
+                this.select('selectOffscreenIndicator').on('click', function(event) {
+                    self.select('selectMapbox').trigger('center-on-feature', $(event.target).attr('last'));
+                    self.updateOffscreenIndicators();
+                });
+            }
+            
+            // Map callbacks ===================================================
+            
+            var features = this.attr.private.markerLayer.features();
             this.attr.private.map.addCallback('zoomed', function () {
+                if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 self.attr.whenZoomed(features);
             });
             this.attr.private.map.addCallback('panned', function () {
+                if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 self.attr.whenPanned(features);
             });
             
             // Component API ===================================================
             
-            // Internal
+            // Internal (will bubble up!)
             this.on('marker-clicked',this.markerClicked);
             // Center map:  [lat, lon]
             this.on('center-map', function (e,lat,lon) {this.centerMap(lat,lon);});
@@ -357,10 +450,12 @@ function(ComponentManager) {
             this.on('set-features', function (e,f) {this.setFeatures(f);});
             // Announce features: (locator*)
             this.on('announce-features', this.announceFeatures);
+            // Zoom (zoomLevel)
             this.on('zoom-map', this.zoomMap);
             this.on('get-selected-feature', this.getSelectedFeature);
             // (markerTitle*, property, value)
             this.on('update-feature-property', this.updateFeatureProperty);
+            // (feature.properties.title)
             this.on('center-on-feature', function (event, title) {
                 var f = this.getFeatureByTitle(title).geometry.coordinates;
                 this.centerMap(f[1],f[0]);

@@ -153,6 +153,7 @@ define(
 
                 this.on('valueChange', function(e, options) {
                     e.stopPropagation();
+
                     var valueField = this.attr.model;
                     data = [];
 
@@ -182,7 +183,7 @@ define(
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }
-                    
+                    this.attr.tooltip.caption = value.caption;
                     this.trigger('valueChange', this.options);
                 });
 
@@ -191,7 +192,7 @@ define(
                     
                     if (!this.attr.tooltip.caption) this.attr.tooltip.caption = '';
 
-                    this.tooltip.html('<div>'+d.value+'</div><div class="caption">'+this.attr.tooltip.caption+'</div>');
+                    this.tooltip.html('<div class"value">'+d.value+'</div><div class="caption">'+this.attr.tooltip.caption+'</div>');
                     this.tooltip.css({
                         top: pos.top,
                         left: pos.left + $(circle).width() / 2

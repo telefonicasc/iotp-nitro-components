@@ -98,6 +98,7 @@ define(
                     y.range([this.height, 0]);
                     this.$node.find('g.chart, g.grid, g.brush, g.axis')
                         .trigger('resize', chartSize);
+
                     if (this.attr.axisx) {
                         axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 35);
                         axisx.attr('transform', 'translate(0,' +

@@ -142,17 +142,17 @@ define(
                 };
 
                 this.on('resize', function(e, chartSize) {
+                    e.stopPropagation();
+
                     this.width = chartSize.width;
                     this.height = chartSize.height;
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
                     this.updateChart();
-                    e.stopPropagation();
                 });
 
                 this.on('valueChange', function(e, options) {
                     e.stopPropagation();
-                    console.log('areaStacked',options);
                     var valueField = this.attr.model;
                     data = [];
 

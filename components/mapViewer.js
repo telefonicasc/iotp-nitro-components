@@ -491,9 +491,32 @@ function(ComponentManager, DataBinding) {
             });
 
             this.on('valueChange', function (e, o) {
-                this.setFeatures(o.value);
-            });
-            
+                var values = o.value;
+                if ($.isPlainObject(values)) {
+                    values = this.dataFormats[o.value.format](o.value.features);
+                }
+                this.setFeatures(values);
+            });                
+
+            this.dataFormats = {
+                asset: function (features) {
+                    return $.map(features, function(f) {
+                        var location = f.asset && f.asset.location;
+                        if (location) {
+                            return {
+                                geometry: { coordinates: 
+                                    [location.longitude, 
+                                     location.latitude]
+                                },
+                                properties: {
+                                    'marker-color': '#000',
+                                    'title': f.name
+                                }
+                            }
+                        }
+                    });
+                }
+            };
             //</editor-fold>
             
             // =================================================================

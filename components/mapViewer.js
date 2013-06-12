@@ -62,11 +62,12 @@
 
 define(
 [
-    'components/component_manager'
+    'components/component_manager',
+    'components/mixin/data_binding'
 ],
-function(ComponentManager) {
+function(ComponentManager, DataBinding) {
 
-    return ComponentManager.create('mapViewer', Component);
+    return ComponentManager.create('mapViewer', Component, DataBinding);
 
     function Component() {
 
@@ -487,6 +488,10 @@ function(ComponentManager) {
                         this.attr.private.triggers.selectedFeature, f
                     );
                 }
+            });
+
+            this.on('valueChange', function (e, o) {
+                this.setFeatures(o.value);
             });
             
             //</editor-fold>

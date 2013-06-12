@@ -38,7 +38,6 @@ function (ComponentManager) {
        
             this.select('batteryLegend').html('<pre>09:00   17:00   01:00</pre>');
             this.on('drawBattery', function (event, batteryLevel, voltage) {
-                console.log('Drawing battery widget');
                 this.attr.widgetGraph = this.createBatteryGraph(); 
                 this.attr.widgetChart = this.createBatteryChart();
                 this.drawBatteryGraph(this.attr.widgetGraph, batteryLevel, voltage);

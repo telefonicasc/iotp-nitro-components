@@ -2,13 +2,26 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="ce.css" />
         <link rel="stylesheet/less" href="../../style/less/nitro-components.less" />
-        <link rel="stylesheet" href="traffic.css" />
+        <!--
+        <style type="text/css">
+            .zoomer {
+                position:absolute;
+                left:10px;
+                top:50px;
+                background-color:#888;
+                z-index:5;
+            }
+        </style>
+        -->
     </head>
-    
-    <body>
-        <div class="dashboard"></div>
 
+    <body>
+	    <div id=buttonBoard>
+            <button type="button" id="testButton">Test Button</button>
+		</div>
+		<div id="dashmap" class="dashboard"></div>
         <script src="../../libs/jquery/jquery.js"></script>
         <script src="../../libs/jqueryui/jquery.ui.core.js"></script>
         <script src="../../libs/jqueryui/jquery.ui.widget.js"></script>
@@ -17,7 +30,9 @@
         <script src="../../libs/hogan/hogan.js"></script>
         <script src="../../libs/less/less.js"></script>
         <script src="../../libs/d3/d3.js"></script>
+        <script src="../../libs/mapbox-0.6.6.min.js"></script>
         <script data-main="main" src="../../libs/requirejs/require.js"></script>
 
-    </body>
+        </script>    
+  </body>
 </html>

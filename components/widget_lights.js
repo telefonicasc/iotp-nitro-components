@@ -28,9 +28,7 @@ function (ComponentManager) {
             
             this.$nodeMap = $('<div>').addClass('lights-label').appendTo(this.$node);
 
-            //var obj = this.createTemperatureChart();
             this.on('drawLights', function () {
-                console.log('Drawing lights widget');
                 this.attr.lightsChartWidget = this.createLightsChart(); 
                 //this.drawLights(this.attr.widget, this.attr.angle);
                 $(this.attr.lightsLabel).html(

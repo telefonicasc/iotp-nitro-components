@@ -27,7 +27,6 @@ function (ComponentManager) {
 
             //var obj = this.createTemperatureChart();
             this.on('drawPitch', function (event, angle) {
-                console.log('Drawing pitch widget');
                 if (angle != null) this.attr.angle = angle;
                 this.$node.empty();
                 this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);

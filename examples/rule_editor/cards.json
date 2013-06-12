@@ -2,6 +2,19 @@
     "count": 17,
     "data": [
         {
+            "id": "000",
+            "type": "SensorCard",
+            "model": "TimeElapsed",
+            "sensorData": {
+                "measureName": "TimeElapsed",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeElapsed",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeElapsed",
+                "dataType": "Quantity",
+                "uom": "sec"
+            },
+            "configData": {}
+        },
+        {
             "id": "1b4c0bd1-c868-40ee-96c7-015573da030a",
             "type": "SensorCard",
             "model": "SemaphoresModel",

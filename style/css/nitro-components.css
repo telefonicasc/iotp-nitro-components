@@ -1349,6 +1349,14 @@ li.delimiter-value {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.front .m2m-card-quantity-label {
+  color: #596c73;
+  font-weight: bold;
+  font-size: 21px;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .front .m2m-card-binary {
   position: absolute;
   top: 20%;
@@ -1409,7 +1417,7 @@ li.delimiter-value {
   z-index: 20;
   background-color: #9ed76f;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
   color: #FFFFFF;
 }
 .back .m2m-card-text {
@@ -1647,6 +1655,12 @@ li.delimiter-value {
   box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;
   z-index: 99;
   padding: 4px;
+}
+.tooltip .value {
+  font-weight: bold;
+}
+.tooltip .caption {
+  font-size: 11px;
 }
 .tooltip:after {
   content: "";

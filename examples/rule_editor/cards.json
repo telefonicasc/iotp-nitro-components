@@ -4,6 +4,19 @@
         {
             "id": "000",
             "type": "SensorCard",
+            "model": "TimeInterval",
+            "sensorData": {
+                "measureName": "TimeInterval",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeElapsed",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeInterval",
+                "dataType": "Quantity",
+                "uom": "hrs"
+            },
+            "configData": {}
+        },
+        {
+            "id": "000",
+            "type": "SensorCard",
             "model": "TimeElapsed",
             "sensorData": {
                 "measureName": "TimeElapsed",

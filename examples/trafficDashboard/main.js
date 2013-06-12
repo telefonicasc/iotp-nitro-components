@@ -1,3 +1,11 @@
+// =============================================================================
+// Telefonica I+D
+// -----------------------------------------------------------------------------
+// Notes: 
+//  * Change assetsURL if necessary to be able to access device data
+//  * When moved to kermit, 
+// =============================================================================
+
 requirejs.config({
     baseUrl: '/m2m-nitro-components'
 });
@@ -18,79 +26,6 @@ define(
             'components/widget_battery'
         ],
         function() {
-
-            var minimap = {
-                component: 'minimap',
-                mapId: 'keithtid.map-z1eeg2ge',
-                zoomValue: 16,
-                movable: true,
-                listenTo: 'asset-selected',
-                markerModel: {
-                    geometry: {coordinates: [8.61, 50.111]},
-                    properties: {
-                        'marker-color': '#FF0000',
-                        'marker-symbol': 'circle',
-                        'title': 'Empty'
-                    }
-                }
-            };
-
-            var compList = [
-                {
-                    component: 'OverviewSubpanel',
-                    className: 'detail-element-header',
-                    iconClass: 'marker-red',
-                    text: 'AssetSemaphore2',
-                    caption: 'Inclination change +10'
-                },
-                {
-                    component: 'detailPanel',
-                    header: 'Physical conditions',
-                    id: 'physical-conditions',
-                    items: [
-                        {
-                            component: 'temperatureWidget',
-                            className: 'temperature-widget'
-                        },
-                        {
-                            component: 'pitchWidget',
-                            className: 'pitch-widget'
-                        }
-                    ]
-                },
-                {
-                    component: 'detailPanel',
-                    header: 'Light color',
-                    id: 'light-color',
-                    items: [
-                        {
-                            component: 'lightsWidget',
-                            className: 'lights-widget'
-                            // Only when moved to install.js
-//                            ,
-//                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
-//                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
-                        }
-                    ]
-                },
-                {
-                    component: 'detailPanel',
-                    header: 'Battery Level',
-                    id: 'battery-level',
-                    items: [
-                        {
-                            component: 'batteryWidget',
-                            className: 'battery-widget'
-                        }
-                    ]
-                },
-                {
-                    component: 'detailPanel',
-                    header: 'Last Location',
-                    id: 'last-location',
-                    items: [minimap]
-                }
-            ];
             
             requirejs(['components/jquery_plugins'], function() {
 
@@ -109,13 +44,17 @@ define(
                 var centerOnClick = false;
 
                 /* Testing URL */
-                var assetsURL = 'http://localhost:8080/MockApi/mock/assets';
-                var assetsDetailedURL = 'http://localhost:8080/MockApi/mock/assets?detailed=1';
-                /* Deploy URL */
-                // var assetsURL = '/secure/m2m/v2/services/TrafficLightsDE/assets';
-                // var service = Kermit.$injector.get('$user').credential.serviceName;
-                // var assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
-                // var assetsDetailedURL = assetsURL + '?detailed=1';
+                var assetsURL;
+                var assetsDetailedURL;
+                if (!useKermit) {
+                    assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+                    assetsDetailedURL = 'http://localhost:8080/MockApi/mock/assets?detailed=1';
+                }
+                else {
+                    var service = Kermit.$injector.get('$user').credential.serviceName;
+                    assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
+                    assetsDetailedURL = assetsURL + '?detailed=1';
+                }
 
                 /* Gallus, germany */
                 // var initialCenter = {lat: 50.103749, lon: 8.641774};
@@ -197,18 +136,6 @@ define(
                         }
                     });
                     return errors;
-                };
-
-                var updateWarningPanelTrigger = function() {
-                    $('.overview-subpanel .text').on('click', function() {
-                        var data = {
-                            properties: {
-                                title: $(this).html(),
-                                caption: $(this.parentNode.childNodes[1]).html()
-                            }
-                        };
-                        $('.dashboard').trigger('asset-selected', data);
-                    });
                 };
 
                 var updateWarningList = function(assetName, warnings) {
@@ -373,8 +300,8 @@ define(
                     var markerList = [];
                     var features = [];
                     var groupID = 0;
+                    
                     // Reset groups
-
                     $.each(inFeatures, function (k,v) {
                         if (typeof v.properties.isGroup !== 'undefined') {
                             if (v.properties.submarkers.length === 0) {
@@ -537,9 +464,118 @@ define(
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
                 
+                var markerClicked = function (f, previous, dom) {
+                    // Change marker size
+                    if (f !== previous) {
+                        $('.mapbox-mini').trigger('asset-selected',f);
+                        f.properties['marker-size'] = 'large';
+                        if (previous !== null) {
+                            previous.properties['marker-size'] = 'medium';
+                        }
+                        try {
+                            if (f.properties.submarkers.length === 0) {
+                                showDetails(null,f);
+                            }
+                        }
+                        catch (err) {
+                            // submarkers not defined
+                            showDetails(null,f);
+                        }
+                    }
+                };
+                
+                var updateWarningPanelTrigger = function() {
+                    $('.overview-subpanel .text').on('click', function() {
+                        var data = {
+                            properties: {
+                                title: $(this).html(),
+                                caption: $(this.parentNode.childNodes[1]).html()
+                            }
+                        };
+                        var fn = function (sel, prev) {
+                            if (sel !== prev) {
+                                $('.mapbox-mini').trigger('asset-selected',sel);
+                                sel.properties['marker-size'] = 'large';
+                                if (prev !== null) {
+                                    prev.properties['marker-size'] = 'medium';
+                                }
+                            }
+                        };
+                        $('.mapbox').trigger('select-feature', [$(this).html(), fn]);
+                        $('.dashboard').trigger('asset-selected', data);
+                    });
+                };
+                
                 // =============================================================
                 // Prepare dashboard
                 // =============================================================
+                
+                //<editor-fold defaultstate="collapsed" desc="Component list">
+                var compList = [
+                    {
+                        component: 'OverviewSubpanel',
+                        className: 'detail-element-header',
+                        iconClass: 'marker-red',
+                        text: 'AssetSemaphore2',
+                        caption: 'Inclination change +10'
+                    },
+                    {
+                        component: 'detailPanel',
+                        header: 'Physical conditions',
+                        id: 'physical-conditions',
+                        items: [
+                            {
+                                component: 'temperatureWidget',
+                                className: 'temperature-widget'
+                            },
+                            {
+                                component: 'pitchWidget',
+                                className: 'pitch-widget'
+                            }
+                        ]
+                    },
+                    {
+                        component: 'detailPanel',
+                        header: 'Light color',
+                        id: 'light-color',
+                        items: [
+                            {
+                                component: 'lightsWidget',
+                                className: 'lights-widget'
+                                // Only when moved to install.js
+    //                            ,
+    //                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
+    //                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
+                            }
+                        ]
+                    },
+                    {
+                        component: 'detailPanel',
+                        header: 'Battery Level',
+                        id: 'battery-level',
+                        items: [
+                            {
+                                component: 'batteryWidget',
+                                className: 'battery-widget'
+                            }
+                        ]
+                    },
+                    {
+                        component: 'detailPanel',
+                        header: 'Last Location',
+                        id: 'last-location',
+                        items: [
+                            {
+                                component: 'minimap',
+                                mapId: 'keithtid.map-z1eeg2ge',
+                                zoomValue: 16,
+                                movable: true,
+                                listenTo: 'asset-selected'
+                            }
+                        ]
+                    }
+                ];
+                //</editor-fold>
                 
                 $('.dashboard').m2mdashboard({
                     mainContent: [
@@ -556,24 +592,7 @@ define(
                             },
                             markerClicked: {
                                 center: centerOnClick,
-                                onClickFn: function (f, dom, previous) {
-                                    // Change marker size
-                                    if (f !== previous) {
-                                        f.properties['marker-size'] = 'large';
-                                        if (previous !== null) {
-                                            previous.properties['marker-size'] = 'medium';
-                                        }
-                                        try {
-                                            if (f.properties.submarkers.length === 0) {
-                                                showDetails(null,f);
-                                            }
-                                        }
-                                        catch (err) {
-                                            // submarkers not defined
-                                            showDetails(null,f);
-                                        }
-                                    }
-                                }
+                                onClickFn: markerClicked
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
@@ -646,6 +665,12 @@ define(
                 // =============================================================
                 // Trigger listeners
                 // =============================================================
+
+                $('.fit-minimap').parent().siblings('.detail-panel-header').click(
+                    function () {
+                        $('.mapbox-mini').trigger('center');
+                    }
+                );
 
                 $('.dashboard').on('asset-selected', showDetails);
 

@@ -111,6 +111,8 @@ function(ComponentManager) {
             whenPanned: function () {}
         });
         
+        //<editor-fold defaultstate="collapsed" desc="Html templates">
+        
         this.offscreenIndicatorsHtml =
             '<div class="offscreen-indicator nwmarkers">0</div>' +
             '<div class="offscreen-indicator nmarkers">0</div>' +
@@ -121,9 +123,13 @@ function(ComponentManager) {
             '<div class="offscreen-indicator swmarkers">0</div>' +
             '<div class="offscreen-indicator wmarkers">0</div>';
         
+        //</editor-fold>
+        
         // =====================================================================
         // Functions
         // =====================================================================
+        
+        //<editor-fold defaultstate="collapsed" desc="Component methods">
         
         // Receives: An object to check.
         // Returns: true if not undefined or null, false otherwise.
@@ -317,7 +323,7 @@ function(ComponentManager) {
             var f = this.getFeatureByTitle(dom);
             if (f !== null) {
                 if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
-                    this.attr.markerClicked.onClickFn(f, dom, this.attr.private.selected);
+                    this.attr.markerClicked.onClickFn(f, this.attr.private.selected, dom);
                     // Skips preprocessor, not to recalculate groups
                     var skipPreprocessor = true;
                     this.setFeatures(this.attr.private.markerLayer.features(), skipPreprocessor);
@@ -392,6 +398,8 @@ function(ComponentManager) {
             }             
         };
         
+        //</editor-fold>
+        
         // =====================================================================
         // Component Initializer
         // =====================================================================
@@ -428,6 +436,8 @@ function(ComponentManager) {
             
             // Map callbacks ===================================================
             
+            //<editor-fold defaultstate="collapsed" desc="Callbacks">
+
             var features = this.attr.private.markerLayer.features();
             this.attr.private.map.addCallback('zoomed', function () {
                 if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
@@ -437,8 +447,11 @@ function(ComponentManager) {
                 if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 self.attr.whenPanned(features);
             });
+            //</editor-fold>
             
             // Component API ===================================================
+            
+            //<editor-fold defaultstate="collapsed" desc="API">
             
             // Internal (will bubble up!)
             this.on('marker-clicked',this.markerClicked);
@@ -460,7 +473,28 @@ function(ComponentManager) {
                 var f = this.getFeatureByTitle(title).geometry.coordinates;
                 this.centerMap(f[1],f[0]);
             });
+            this.on('reload-features', function () {
+                this.setFeatures(this.attr.private.markerLayer.features());
+            });
+            this.on('select-feature', function (event, featureTitle, callback) {
+                var f = this.getFeatureByTitle(featureTitle);
+                if (f !== null) {
+                    var previouslySelected = this.attr.private.selected;
+                    callback(f,previouslySelected);
+                    this.attr.private.selected = f;
+                    this.setFeatures(this.attr.private.markerLayer.features());
+                    this.select(this.attr.selectMapbox).trigger(
+                        this.attr.private.triggers.selectedFeature, f
+                    );
+                }
+            });
+            
+            //</editor-fold>
+            
+            // =================================================================
         });
+
+        // =====================================================================
 
     } // </function Component()>
     

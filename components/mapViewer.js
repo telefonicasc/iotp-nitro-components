@@ -150,7 +150,6 @@ function(ComponentManager) {
         //  * Custom tooltips for the markers can be provided too along the attr
         //    using the property 'customTooltip', as a string, or as a function.
         this.setFeatures = function (features, skipPreprocessor) {
-            
             if (!this.isValidObject(skipPreprocessor)) skipPreprocessor = false;
             
             if (typeof features === 'undefined' || features === null) {
@@ -350,7 +349,6 @@ function(ComponentManager) {
             var self = this;
             $.each(this.attr.private.markerLayer.features(), function (k,v) {
                 if (self.isValidObject(markerTitle)) {
-                    debugger
                     if (v.properties.title === markerTitle) fn(v);
                 }
                 else fn(v);
@@ -460,7 +458,9 @@ function(ComponentManager) {
             // Add feature: feature
             this.on('add-feature', this.addFeature);
             // Set features: [features]
-            this.on('set-features', function (e,f) {this.setFeatures(f);});
+            this.on('set-features', function (e,f,skip) {
+                this.setFeatures(f);
+            });
             // Announce features: (locator*)
             this.on('announce-features', this.announceFeatures);
             // Zoom (zoomLevel)

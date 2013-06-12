@@ -17,7 +17,7 @@ $('.mapbox').trigger('add-feature',
 */
 
 requirejs.config({
-    baseUrl: '/m2m-nitro-components'
+    baseUrl: '../../'
 });
 
 define(
@@ -44,7 +44,7 @@ define(
                 },
                 markerClicked: {
                     center: true,
-                    onClickFn: function (f, dom, previous) {
+                    onClickFn: function (f, previous, dom) {
                         // Change marker size
                         if (f.properties['marker-size'] === 'large') {
                             f.properties['marker-size'] = 'medium';

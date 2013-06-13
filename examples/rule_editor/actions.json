@@ -1,0 +1,31 @@
+{
+    "data": [
+        {
+            "type": "ActionCard",
+            "actionData": {
+                "userParams": [
+                    {
+                        "name": "mail.from",
+                        "value": "dca_support@tid.es"
+                    },
+                    {
+                        "name": "mail.to",
+                        "value": ""
+                    },
+                    {
+                        "name": "mail.subject",
+                        "value": ""
+                    },
+                    {
+                        "name": "mail.message",
+                        "value": ""
+                    }
+                ],
+                "name": "email",
+                "type": "SendEmailAction"
+            },
+            "id": "email"
+        }
+    ],
+    "count": 1
+}

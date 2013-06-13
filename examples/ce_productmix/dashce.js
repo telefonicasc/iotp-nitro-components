@@ -1,0 +1,1 @@
+../../../m2m-dashboard/dashboards/ce/productmix/dashce.js

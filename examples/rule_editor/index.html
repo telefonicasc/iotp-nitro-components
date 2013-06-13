@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <link rel="stylesheet/less" href="../../style/less/nitro-components.less" />
+  <link rel="stylesheet" href="../../style/css/nitro-components.css" />
   <style>
+    #application {
+    }
   </style>
+  <script src="../../libs/modernizr.js"></script>
 </head>
 <body class="fit">
   <div id="application" class="fit">
-    <div class="fit" 
+    <div class="fit"
         data-ng-controller="ruleController"
         data-nitro-component="m2mRuleEditor"
-        data-nitro-options="{ cards: cards }"
+        data-nitro-options="ruleoptions"
         data-nitro-value="ruleData">
   </div>
 
   <script src="../../libs/jquery/jquery.js"></script>
+  <script src="../../libs/es5-shim/es5-shim.js"></script>
+  <script src="../../libs/es5-shim/es5-sham.js"></script>
   <script src="../../libs/angular/angular.js"></script>
   <script src="../../libs/less/less.js"></script>
   <script src="../../libs/raphael/raphael.js"></script>

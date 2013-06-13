@@ -34,7 +34,7 @@
 
       .dashboard-main-panel-content {
         position: absolute;
-        top: 33px;
+        top: 35px;
         left: 0px;
         right: 0px;
         bottom: 0px;
@@ -108,6 +108,9 @@
       height: 43px;
       display: inline-block;
 
+      .withColors(border, ~"");
+      .withColors(background-light, ~""); 
+
       &.dot {
         width: 18px;
         height: 18px;
@@ -116,10 +119,7 @@
         border-radius: 13px;
         margin-left: 12px;
         margin-right: 12px;
-        margin-top : 15px;
-
-        .withColors(border, ~"");
-        .withColors(background-light, ~""); 
+        margin-top : 15px;   
       }
 
       &.arrow-down {
@@ -136,9 +136,18 @@
 
       .text {
         display: block;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
-        color: #61777F;
+        color: #313a3f;
+        display: inline-block;
+      }
+
+      .text1 {
+        padding-left: 20px;
+        display: block;
+        font-size: 18px;
+        color: #768e99;
+        display: inline-block;
       }
 
       .caption {
@@ -147,6 +156,7 @@
         font-size: 13px;
         font-weight: normal;
       }
+
     }
   }
 
@@ -322,10 +332,9 @@
 
 
 .cell-barchart-subpanel {
-  
-  width: 150px;
-  
-  background-color: #bfcecf;
+  width: 100%;
+  height: 100%;
+
   color: #617789;
   text-align: center;
   
@@ -337,8 +346,16 @@
     }
     rect {
       fill: #d6dddc;
-      stroke: #acbec5;
+      stroke: #71859c;
       stroke-width: 0.5px;
+    }
+
+    rect.color1 {
+      fill: #d6dddc;
+    }
+
+    rect.color2 {
+      fill: #cad7d8;
     }
   }
   .title {
@@ -350,8 +367,13 @@
       font-size: 10px;
       color: #adbabc;
     }
+   
+  }
+  .chart-carousel {
+    background-color: #bfcecf;
   }
   .content {
+    background-color: #bfcecf;
     padding: 10px;
     text-align: center;
     .value {
@@ -361,6 +383,49 @@
     .caption {
       font-size: 10px;
     }
+  }
+}
+
+
+.group-barchart {
+
+  fill: none;
+  .bg_group {
+    stroke-width: 1px;
+    stroke: #e2e2e0;
+    fill: #efeeeb;
+  }
+  .odd {
+    fill: #ecebe7;
+  }
+  .axis_x {
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    } 
+  }
+  .axis_y {
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+  }
+}
+
+.grid {
+  line.x {
+    stroke: #e2e2e0;
+    stroke-width: 1px;
+  }
+  line.y {
+    stroke: #e2e2e0;
+    stroke-width: 1px;
+  }
+  rect.bg_grid.even {
+    fill: #ecebe7;
+  }
+  rect.bg_grid.odd {
+    fill: #efeeeb;
   }
 }
 

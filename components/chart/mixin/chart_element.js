@@ -37,6 +37,8 @@ define(
                 this.value = this.$node.data('value') || this.attr.value || [];
                 this.context = d3.select(this.node);
 
+                this.context.append('g').attr('class', 'background_grid'); 
+
                 this.x = $.proxy(function(d) {
                     return this.scalex(d[this.attr.x.key]);
                 }, this);

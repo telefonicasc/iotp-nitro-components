@@ -8,8 +8,18 @@ define([], function() {
                     restrict: 'A',
                     link: function(scope, element, attr) {
                         var jqplugin = attr.nitroComponent,
-                            options = scope.$eval(attr.nitroOptions);
+                            options = angular.copy(
+                                scope.$eval(attr.nitroOptions), {});
                         $(element)[jqplugin](options);
+
+                        scope.$watch(function() {
+                            var newOptions = angular.copy(
+                                scope.$eval(attr.nitroOptions), {});
+                            if (!angular.equals(options, newOptions)) {
+                                options = angular.copy(newOptions);
+                                element.trigger('optionsChange', newOptions);
+                            }
+                        });
                     }
                 };
             })
@@ -20,19 +30,27 @@ define([], function() {
                     restrict: 'A',
                     link: function(scope, element, attr) {
                         var getValue = $parse(attr.nitroValue),
-                            setValue = getValue.assign;
+                            setValue = getValue.assign,
+                            currentValue;
 
                         scope.$watch(function() {
-                            element.trigger('valueChange', {
-                                value: getValue(scope),
-                                angularUpdate: false
-                            });
+                            var value = getValue(scope);
+                            if (!angular.equals(value, currentValue)) {
+                                currentValue = value;
+                                element.trigger('valueChange', {
+                                    value: value,
+                                    angularUpdate: false
+                                });
+                            }
                         });
+                        currentValue = getValue(scope);
                         element.trigger('valueChange', {
-                            value: getValue(scope)
+                            value: currentValue
                         });
                         element.on('valueChange', function(e, o) {
-                            if (o.angularUpdate !== false) {
+                            if (e.target === element[0] &&
+                                o.angularUpdate !== false) {
+                                currentValue = o.value;
                                 scope.$apply(function() {
                                     setValue(scope, o.value);
                                 });

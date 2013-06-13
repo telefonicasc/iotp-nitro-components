@@ -14,13 +14,21 @@ define(
             });
         }
 
-        function getAreas(cards) {
+        function getAreas(cards, draggingCard) {
             var areas = [];
-            cards.each($.proxy(function(i, el) {
-                var area = $(el).position();
-                area.card = $(el);
-                areas.push(area);
-            }, this));
+            if (draggingCard.hasClass('m2m-card-condition')) {
+                cards.each($.proxy(function(i, el) {
+                    if ($(el).hasClass('m2m-card-condition') ||
+                        $(el).hasClass('start-card')) {
+                        var area = $(el).position();
+                        area.left = area.left + 100;
+                        area.width = 200;
+                        area.height = 200;
+                        area.card = $(el);
+                        areas.push(area);
+                    }
+                }, this));
+            }
             return areas;
         }
 

@@ -9,23 +9,31 @@
     .gradient(@m2m-btn_bg-color, @m2m-btn_bg-color-start, @m2m-btn_bg-color-end);
     border: 1px solid @m2m-btn_bg-color;
     border-bottom: 1px solid #bbb;
-    border-radius: 3px;
+    .border-radius (3px, 3px, 3px, 3px);
     color: @m2m-btn_color;
+    font-family: @m2m-btn_font_family;
     font-weight: 800;
-    padding: 8px 5px;
+    padding: 5px;
     text-align: center;
-    text-shadow: 0 1px 0 @m2m-btn_bg-color-end;
 }
 .m2m-btn:hover {
     .gradient(@m2m-btn_hover_bg-color, @m2m-btn_hover_bg-color-start, @m2m-btn_hover_bg-color-end);
     border: 1px solid @m2m-btn_hover_bg-color;
     border-bottom: 1px solid #999;
     cursor: pointer;
-    text-shadow: 0 1px 0 @m2m-btn_hover_bg-color-end;
 }
 .m2m-btn:active {
     border: 1px solid #aaa;
     border-bottom: 1px solid #888;
     -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
     box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+}
+.m2m-btn.accept{
+    color:@m2m-btn_accept_color;
+    border-color:@m2m-btn_accept_bg-color;
+    .gradient(@m2m-btn_accept_bg-color, @m2m-btn_accept_bg-color-start, @m2m-btn_accept_bg-color-end);
+
+}
+.m2m-btn:hover.accept{
+    .gradient(@m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-start);
 }

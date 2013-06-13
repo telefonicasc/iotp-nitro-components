@@ -238,6 +238,7 @@ define(
                         if (o.cards) {
                             if (o.cards.conditions) {
                                 cards = o.cards.conditions.cards || [];
+                                cards.unshift( _makeCardNoSensorSignal(cards) );
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
                             }
                             if (o.cards.actions) {
@@ -636,6 +637,38 @@ define(
             var placeholder = $('<div>').
                 addClass('card-placeholder action-card');
             return placeholder;
+        }
+
+        function _makeCardNoSensorSignal(sensorCards){
+            var data = {
+                'id': '0',
+                'type': 'SensorCard',
+                'model': 'NoSensorSignal',
+                'sensorData':{
+                    'measureName': 'noSensorSignal',
+                    'phenomenonApp': 'urnx-ogc:def:phenomenon:semaphoresFrankfurt:1.0:noSensorSignal',
+                    'phenomenon':    'urn:x-ogc:def:phenomenon:IDAS:1.0:off',
+                    'dataType': 'Text',
+                    'uom': 'Unknown'
+                },
+                'configData': []
+            };
+
+            data.configData = _getPhenomenonList(sensorCards);
+            return data;
+        }
+
+        function _getPhenomenonList(cards){
+            var measureName;
+            var phenomenon;
+            var emptyPhenomenon = { label: '', value: '' };
+            var measureNames = [emptyPhenomenon];
+            for(var n = cards.length;n--;){
+                measureName = cards[n].sensorData.measureName;
+                phenomenon = cards[n].sensorData.phenomenon;
+                measureNames.push( { label: measureName, value: measureName } );
+            }
+            return measureNames;
         }
     }
 );

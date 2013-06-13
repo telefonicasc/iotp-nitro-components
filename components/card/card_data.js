@@ -140,6 +140,22 @@ function() {
                 }]
             };
             return card;
+        },
+        'noSensorSignal':function(card){
+            card.front = {
+                items: [{
+                    component: 'CardFrontOff'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'Dropdown',
+                    defaultValue: '',
+                    options: card.configData
+                }]
+            };
+            card.delimiterList = ['EQUAL_TO'];
+            return card;
         }
     };
 
@@ -205,7 +221,9 @@ function() {
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
 
             //@TODO este nombre de phenomenon es temporal
-            if (phenomenon ==='timeInterval'){
+            if (phenomenon ==='off'){
+                name = 'noSensorSignal';
+            } else if (phenomenon ==='timeInterval'){
                 name = 'timeInterval';
             }else if (phenomenon ==='timeElapsed'){
                 name = 'timeElapsed';

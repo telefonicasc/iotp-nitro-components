@@ -16,6 +16,7 @@ define(
     'components/card/back/text',
     'components/card/front/binary',
     'components/card/front/quantity_value',
+    'components/card/front/off',
     'components/form/dropdown'
   ],
 

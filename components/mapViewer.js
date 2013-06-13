@@ -62,11 +62,12 @@
 
 define(
 [
-    'components/component_manager'
+    'components/component_manager',
+    'components/mixin/data_binding'
 ],
-function(ComponentManager) {
+function(ComponentManager, DataBinding) {
 
-    return ComponentManager.create('mapViewer', Component);
+    return ComponentManager.create('mapViewer', Component, DataBinding);
 
     function Component() {
 
@@ -488,7 +489,34 @@ function(ComponentManager) {
                     );
                 }
             });
-            
+
+            this.on('valueChange', function (e, o) {
+                var values = o.value;
+                if ($.isPlainObject(values)) {
+                    values = this.dataFormats[o.value.format](o.value.features);
+                }
+                this.setFeatures(values);
+            });                
+
+            this.dataFormats = {
+                asset: function (features) {
+                    return $.map(features, function(f) {
+                        var location = f.asset && f.asset.location;
+                        if (location) {
+                            return {
+                                geometry: { coordinates: 
+                                    [location.longitude, 
+                                     location.latitude]
+                                },
+                                properties: {
+                                    'marker-color': '#000',
+                                    'title': f.name
+                                }
+                            }
+                        }
+                    });
+                }
+            };
             //</editor-fold>
             
             // =================================================================

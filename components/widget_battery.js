@@ -36,7 +36,6 @@ function (ComponentManager) {
             this.$nodeMap = $('<div>').addClass('battery-label').appendTo(this.$node);
             this.$nodeMap = $('<div>').addClass('battery-legend').appendTo(this.$node);
        
-            this.select('batteryLegend').html('<pre>09:00   17:00   01:00</pre>');
             this.on('drawBattery', function (event, batteryLevel, voltage) {
                 this.attr.widgetGraph = this.createBatteryGraph(); 
                 this.attr.widgetChart = this.createBatteryChart();

@@ -56,7 +56,8 @@ define(
                         'EQUAL_TO': 'IGUAL',
                         'DIFFERENT_TO': 'DIFERENTE',
                         'MINOR_THAN': 'MENOR',
-                        'GREATER_THAN': 'MAYOR'
+                        'GREATER_THAN': 'MAYOR',
+                        'IS_OFF':'APAGADO'
                     }
                 };
                 $http.get('actions.json').success(function(data) {

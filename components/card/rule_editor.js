@@ -39,7 +39,8 @@ define(
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
-                    'GREATER_THAN': 'ABOVE'
+                    'GREATER_THAN': 'ABOVE',
+                    'IS_OFF':'IS_OFF'
                 },
                 locales: {
                     Card:{

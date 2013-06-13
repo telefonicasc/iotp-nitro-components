@@ -154,7 +154,7 @@ function() {
                     options: card.configData
                 }]
             };
-            card.delimiterList = ['EQUAL_TO'];
+            card.delimiterList = ['IS_OFF'];
             return card;
         }
     };

@@ -175,12 +175,12 @@ Paged panel :: Navigation   |
     top:1px;
 }
 
-.detail-element-header {
-    /*background: #D1E2E4;*/
+/*.detail-element-header {
+    background: #D1E2E4;
     border-bottom: 0px !important;
-}
+}*/
 
-.detail-panel-header {
+.panel-detail .detail-panel-header {
     text-align: left;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -189,16 +189,10 @@ Paged panel :: Navigation   |
     background: #D1E2E4;
 }
 
-.detail-panel-content {
+.panel-detail  .detail-panel-content {
     background: #DDEAEC;
 }
 
-.detail-panel {
-    left: 8px;
-    right: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
 
 .panel-detail {
     min-height: 100%; 

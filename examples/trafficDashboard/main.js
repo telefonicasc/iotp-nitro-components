@@ -16,7 +16,7 @@ define(
             'components/minimap',
             'components/dashboard/overview_subpanel',
             'components/paged_panel',
-            'components/paged_detail',
+//            'components/paged_detail',
             'components/detail_panel',
             'components/map',
             'components/mapViewer',

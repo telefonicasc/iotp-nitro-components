@@ -496,7 +496,7 @@ function(ComponentManager, DataBinding) {
                     values = this.dataFormats[o.value.format](o.value.features);
                 }
                 this.setFeatures(values);
-            });                
+            });
 
             this.dataFormats = {
                 asset: function (features) {
@@ -512,7 +512,7 @@ function(ComponentManager, DataBinding) {
                                     'marker-color': '#000',
                                     'title': f.name
                                 }
-                            }
+                            };
                         }
                     });
                 }

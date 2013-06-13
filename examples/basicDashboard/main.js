@@ -1,5 +1,4 @@
 
-
 requirejs.config({
     baseUrl: '../../'
 });
@@ -14,12 +13,20 @@ function() {
 
     requirejs(['components/jquery_plugins'], function() {
             
+        // =====================================================================    
+        /* Generic config */
+        // =====================================================================
+            
+        //<editor-fold defaultstate="collapsed" desc="Generic">
+            
         var markerColors = {
             ok: '#000',
             err: '#F00'
         };
         var useKermit = false;
             
+        //</editor-fold>
+    
         // =====================================================================    
         /* Service URL setup */
         // =====================================================================
@@ -28,8 +35,9 @@ function() {
 
         var assetsURL;
         var assetsDetailedURL;
+        
         if (!useKermit) {
-            assetsURL = 'http://localhost:8080/MockApi/mock/assets';
+            assetsURL = '/m2m/v2/services/TrafficLightsDE/assets';
             assetsDetailedURL = assetsURL + '?detailed=1';
         }
         else {
@@ -137,6 +145,8 @@ function() {
         // Dashboard component load
         // =====================================================================
         
+        //<editor-fold defaultstate="collapsed" desc="Load dashboard">
+        
         $('.dashboard').m2mdashboard({
             mainContent: [{
                 component: 'mapViewer',
@@ -180,6 +190,8 @@ function() {
             overviewPanel: {},
             data: function() {}
         });
+        
+        //</editor-fold>
             
         // =================================================================
         // Startup

@@ -577,6 +577,8 @@ define(
                 ];
                 //</editor-fold>
                 
+                // For kermit install.js
+                //dashboard.m2mdashboard({
                 $('.dashboard').m2mdashboard({
                     mainContent: [
                         {

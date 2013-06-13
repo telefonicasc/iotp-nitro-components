@@ -300,7 +300,7 @@ define(
                                 };
                                
                                 MM.addEvent(elem, 'click', function (mouseEvent) {
-                                    onClick(mouseEvent, test);
+                                    onClick(mouseEvent);
                                 });
                                 
                                 // Elem se ha actualizado, por lo que este nodo ya no existe!!

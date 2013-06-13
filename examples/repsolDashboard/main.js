@@ -22,8 +22,8 @@ function() {
     requirejs(['components/jquery_plugins'], function() {
             
         var markerColors = {
-            ok: '#5E91A0',
-            err: '#F00'
+            ok: '#04B404',
+            err: '#DF0101'
         };
         var useKermit = false;
             
@@ -295,7 +295,8 @@ function() {
             mainContent: [{
                 component: 'mapViewer',
                 map: {
-                    id: 'keithtid.map-w594ylml',
+//                    id: 'keithtid.map-w594ylml',
+                    id: 'keithtid.map-z1eeg2ge',
                     center: {lat: 40.515, lon: -3.665 },
                     maxZoom: 18,
                     minZoom: 12,

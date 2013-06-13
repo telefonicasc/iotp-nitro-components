@@ -1,0 +1,256 @@
+
+.temperature-widget {
+    width: 50%;
+    display : inline-block;
+    position: relative;
+}
+
+.temperature-label {
+    position: absolute;
+    top: 18px;
+    left: 45px;
+    font-weight: bold;
+    color: #6F8388;
+    font-size: 28px;
+}
+
+.battery-widget {
+    /*    width: 50%;*/
+    display : inline-block;
+    position: relative;
+}
+
+.battery-graph {
+    /*    position: relative;*/
+    float:left;
+    max-width: 20%;
+}
+
+.battery-chart {
+    /*    position: relative;*/
+    float:left;
+    max-width: 50%;
+}
+
+.battery-label {
+    /*    position: relative;*/
+    float:left;
+    max-width: 25%;
+    margin-top: 5%;
+    font-weight: bold;
+    color: #6F8388;
+    font-size: 22px;
+}
+
+.battery-legend {
+    float:left;
+    min-width: 30%;
+    max-width: 50%;
+    font-size: 12px;
+    position: relative;
+    margin-left: 20%;
+    margin-top: -12%;
+    color: #ADC0C4;
+}
+
+/* Element showing selected asset info and last update */
+.detail-element-header {
+    background: #aecace;
+}
+
+.detail-panel-header {
+    font-size: 14px;
+    font-weight: normal;
+    color: #5D747C;
+    border-top: 1px solid #C6DADC;
+}
+
+
+
+
+/* ========================*\
+Paged panel :: Navigation   |
+===========================*/
+
+.navigation {
+    padding-top: 3px;
+    text-align: center;
+    background: #9EB9BF;
+    position: absolute;
+    bottom: 0;
+    margin-left: -12px;
+    width: 103%;
+}
+
+.navigation .page-left {
+    border-width: 5px 8px 5px 8px;
+    border-style: solid;
+    background: 0px;
+    height: 0px;
+    display: inline-block;
+    margin-right: 7px;
+    border-color: transparent #5A6568 transparent transparent;
+    cursor: pointer;
+}
+
+.navigation .page-right {
+    border-width: 5px 8px 5px 8px;
+    border-style: solid;
+    background: 0px;
+    height: 0px;
+    display: inline-block;
+    margin-left: 4px;
+    border-color: transparent transparent transparent #5A6568;
+    cursor: pointer;
+}
+
+.navigation .page-chooser {
+    
+    cursor: pointer;
+    background-color: #BDD0D5;
+    display: inline-block;
+    width: 21px;
+    height: 18px;
+    margin-top: 6px;
+    margin-right: 3px;
+    margin-bottom: 6px;
+    border: 1px solid #98AAB0;
+    font-size: 11px;
+    color: #64737B;
+    font-weight: bold;
+    padding-top: 3px;    
+}
+
+.navigation .selected {
+    background-color: #798b95;
+    border: 1px solid #758690;
+    color: #bdd0d5;
+}
+
+.detail-element-header .caption {
+    color: white !important;
+}
+
+.marker-red {
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
+    margin-right: 12px;
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');*/
+    background-image:url('res/images/rojo-on-1.png');
+}
+
+.marker-blue {
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
+    margin-right: 12px;
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+5E91A0.png');*/
+    background-image:url('res/images/azul-on-1.png');
+}
+
+.warning-item:hover{
+    background-color: #D5E0E2;
+}
+
+.overview-subpanel-body .text {
+    position: relative;
+    /*top: -10px;*/
+    padding-top: 10px;
+}
+
+.overview-subpanel-body .caption {
+    position: relative;
+    /*top: -10px;*/
+    padding-top: 10px;
+}
+
+.minimap {
+    height: 200px;
+    bottom: 20px;
+    top:1px;
+}
+
+.detail-element-header {
+    /*background: #D1E2E4;*/
+    border-bottom: 0px !important;
+}
+
+.detail-panel-header {
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right:5px;
+    background: #D1E2E4;
+}
+
+.detail-panel-content {
+    background: #DDEAEC;
+}
+
+.detail-panel {
+    left: 8px;
+    right: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.panel-detail {
+    min-height: 100%; 
+    height: auto !important; /*Cause footer to stick to bottom in IE 6*/
+    height: 100%; 
+    margin: 0 auto -100px; /*Allow for footer height*/
+    vertical-align:bottom;
+    background-color: #AECACE;
+    margin-left: -12px;
+    z-index: 5;
+}
+
+.panel-detail .fit {
+    padding-right: 12px;
+}
+
+.panel-list {
+    z-index: 4;
+}
+
+.detail-errors {
+    min-height: 60px;
+    border-style: solid;
+    border-width: 1px;
+    margin-left: 8px;
+    margin-right: 8px;
+    border-color: #A5B8BD;
+    -webkit-border-radius:5%;
+    border-radius:5%;
+    background-color: #BCCED2;
+    margin-top: 3px;
+    margin-bottom: 8px;
+    color: #6F8388;
+    padding-left: 10px;
+    padding-top: 15px;
+    font-size: small;
+}
+
+/* Details overview header */
+.overview-header .overview-title {
+    color: #A5ADB3;
+}
+
+.overview-header :hover {
+    cursor: pointer;
+    color: white;
+}
+
+.overview-content {
+    background: #E9EFF0;
+}
+
+.overview-count {
+    background-color: #DF0101;
+}

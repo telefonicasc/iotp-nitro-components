@@ -47,7 +47,10 @@ define(
                         CardData:{
                             'true':'Verdadero',
                             'false':'Falso',
-                            'value':'Valor'
+                            'value':'Valor',
+                            'after': 'Después de',
+                            'every': 'Repite cada'
+
                         }
                     },
                     actionsLabel: 'Acciones',

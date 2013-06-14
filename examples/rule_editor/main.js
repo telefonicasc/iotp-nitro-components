@@ -16,6 +16,7 @@ define(
     'components/card/back/text',
     'components/card/front/binary',
     'components/card/front/quantity_value',
+    'components/card/front/off',
     'components/form/dropdown'
   ],
 
@@ -46,7 +47,10 @@ define(
                         CardData:{
                             'true':'Verdadero',
                             'false':'Falso',
-                            'value':'Valor'
+                            'value':'Valor',
+                            'after': 'Después de',
+                            'every': 'Repite cada'
+
                         }
                     },
                     actionsLabel: 'Acciones',
@@ -55,7 +59,8 @@ define(
                         'EQUAL_TO': 'IGUAL',
                         'DIFFERENT_TO': 'DIFERENTE',
                         'MINOR_THAN': 'MENOR',
-                        'GREATER_THAN': 'MAYOR'
+                        'GREATER_THAN': 'MAYOR',
+                        'IS_OFF':'APAGADO'
                     }
                 };
                 $http.get('actions.json').success(function(data) {

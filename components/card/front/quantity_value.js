@@ -4,7 +4,7 @@ define(
         'components/mixin/data_binding',
         'components/mixin/template'
     ],
- 
+
     function(ComponentManager, DataBinding, Template) {
 
         return ComponentManager.create('CardFrontQuantityValue', DataBinding,
@@ -14,6 +14,7 @@ define(
 
             this.defaultAttrs({
                 tpl: '<div class="m2m-card-quantity-container">' +
+                        '<div class="m2m-card-quantity-label">{{label}}</div>' +
                         '<div class="m2m-card-quantity-value">{{value}}</div>' +
                         '<div class="m2m-card-quantity-units">{{units}}</div>' +
                      '</div>'

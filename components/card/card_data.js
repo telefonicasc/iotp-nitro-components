@@ -4,7 +4,9 @@ function() {
     var locales = {
         'true':'True',
         'false':'False',
-        'value':'Value'
+        'value':'Value',
+        'after': 'After',
+        'every': 'Every'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -104,6 +106,56 @@ function() {
                 }]
             };
             return card;
+        },
+        'timeElapsed': function(card){
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['after'],
+                    units: card.sensorData.uom
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value'],
+                    dataType:card.sensorData.dataType
+                }]
+            };
+            return card;
+        },
+        'timeInterval': function(card){
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['every'],
+                    units: card.sensorData.uom
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value'],
+                    dataType:card.sensorData.dataType
+                }]
+            };
+            return card;
+        },
+        'noSensorSignal':function(card){
+            card.front = {
+                items: [{
+                    component: 'CardFrontOff'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'Dropdown',
+                    defaultValue: '',
+                    options: card.configData
+                }]
+            };
+            card.delimiterList = ['IS_OFF'];
+            return card;
         }
     };
 
@@ -167,7 +219,15 @@ function() {
             name, phenomenon;
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
-            if (phenomenon === 'angle') {
+
+            //@TODO este nombre de phenomenon es temporal
+            if (phenomenon ==='off'){
+                name = 'noSensorSignal';
+            } else if (phenomenon ==='timeInterval'){
+                name = 'timeInterval';
+            }else if (phenomenon ==='timeElapsed'){
+                name = 'timeElapsed';
+            } else if (phenomenon === 'angle') {
                 name = 'angle';
             } else if (phenomenon === 'electricPotential') {
                 name = 'battery';

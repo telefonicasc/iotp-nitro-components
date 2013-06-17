@@ -65,11 +65,11 @@ describeComponent('components/card/rule_editor.js', function () {
             toolBox = this.component.$conditionsToolbox;
         });
 
-        /*it('Draw Toolbox', function(){
+        it('Draw Toolbox', function(){
             expect(toolBox).toBeDefined();
             var cards = toolBox.find('.m2m-card-condition');
             expect(cards.length).toEqual(mock.cards.conditions.cards.length);
-        });*/
+        });
 
         it('Toggle', function(){
             var spyCollapse = jasmine.createSpy('collapse');

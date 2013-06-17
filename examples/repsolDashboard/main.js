@@ -221,17 +221,17 @@ function() {
                    submarkers: []
                 }
             };
-            $('.minimap').trigger('minimap-update', feature);
             
             // Show info panel
             $('.dashboard').trigger('show-details');
-            
+            $('.panel-detail').trigger('update');
+            $('.minimap').trigger('minimap-update', feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
             var assetName = feature.properties.title;
             var assetInfoURL = assetsURL + '/' + assetName;
-            requestApiData(assetInfoURL,updateAssetView);
+            requestApiData(assetInfoURL,updateAssetView);            
         };
         
         
@@ -300,7 +300,7 @@ function() {
 //                    id: 'keithtid.map-z1eeg2ge',
                     center: {lat: 40.515, lon: -3.665 },
                     maxZoom: 18,
-                    minZoom: 12,
+                    minZoom: 5,
                     initialZoom: 15,
                     zoomButtons: true,
                     showTooltip: true
@@ -366,6 +366,7 @@ function() {
         
         $('.panel-detail').hide();
         $('.overview-count').html(0);
+        
         
         // API =================================================================
         $('.dashboard').on('show-details', showDetails);

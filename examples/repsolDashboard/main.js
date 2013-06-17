@@ -11,6 +11,7 @@ define(
     'components/minimap',
     'components/dashboard/overview_subpanel',
     'components/paged_panel',
+    'components/paged_container',
     'components/paged_detail',
     'components/detail_panel',
     'components/widget_temperature',
@@ -295,8 +296,8 @@ function() {
             mainContent: [{
                 component: 'mapViewer',
                 map: {
-//                    id: 'keithtid.map-w594ylml',
-                    id: 'keithtid.map-z1eeg2ge',
+                    id: 'keithtid.map-w594ylml',
+//                    id: 'keithtid.map-z1eeg2ge',
                     center: {lat: 40.515, lon: -3.665 },
                     maxZoom: 18,
                     minZoom: 12,
@@ -329,14 +330,14 @@ function() {
                 count: 0,
                 items: [
                     {
-                        component: 'pagedPanel',
+                        component: 'pagedContainer',
                         className: 'panel-list',
                         header: '',
                         ID: 'panel-list',
                         items: []
                     },
                     {
-                        component: 'pagedPanel',
+                        component: 'pagedContainer',
                         className: 'panel-detail',
                         extraHeaderGap: 50,
                         alwaysVisible: [0, 1],

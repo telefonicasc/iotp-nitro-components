@@ -92,7 +92,7 @@ define(
                     else $(v).hide();
                 });
                 
-                if (this.attr.private.pageCount < 1) {
+                if (this.attr.private.pageCount <= 1) {
                     this.select('selectNavigation').hide();
                 }
                 else {

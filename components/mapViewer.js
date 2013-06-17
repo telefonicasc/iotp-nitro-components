@@ -1,64 +1,61 @@
-/* 
- * Mapbox generic map component for M2M-Nitro
- *
- * Andres Picazo Cuesta 
- * Telefonica I+D
- *
- * Marker symbols: http://mapbox.com/maki/
- * Mapbox: www.mapbox.com
- *
- * Configuration example
- {
-    component: 'mapViewer',
-    map: {
-        id: 'keithtid.map-w594ylml',
-        center: initialCenter,
-        maxZoom: 20,
-        minZoom: 5,
-        initialZoom: 13,
-        zoomButtons: true,
-        showTooltip: true
-    },
-    markerClicked: {
-        center: centerOnClick,
-        onClickFn: function (f, dom, previous) {
-            // Change marker size
+/*
+Mapbox map component.
 
-            if (f.properties['marker-size'] === 'large') {
-                f.properties['marker-size'] = 'medium';
-            }
-            else f.properties['marker-size'] = 'large';
-            if (previous !== null) {
-                previous.properties['marker-size'] = 'medium';
-            }
-            try {
-                if (f.properties.submarkers.length === 0) {
-                    showDetails(null,f);
-                }
-            }
-            catch (err) {
-                // submarkers not defined
-                showDetails(null,f);
-            }
-        }
-    },
-    customTooltip: createTooltip,
-    createOffscreenIndicators: true,
-    whenZoomed: function (f) {
-        $('.mapbox').trigger('set-features', f);
-        updateOffscreenIndicators();
-    },
-    whenPanned: function (f) {
-        updateOffscreenIndicators();
-    },
-    featuresPreprocessor: processFeatures,
-    features: []
-}
- *
- * For available simplestyle symbol descriptions, see: http://mapbox.com/maki
- * (Examples are: 'star', 'star-stroked', 'circle', 'circle-stroked'...)
- *
- */
+### Style
+* mapViewer.less
+
+### Config
+```
+this.defaultAttrs({
+            // Do NOT modify these selectors!!
+            selectMapbox: '.mapbox',
+            selectOffscreenIndicator: '.offscreen-indicator',
+            map: {
+                id: 'keithtid.map-w594ylml',
+                center: {lat: 40.414431, lon: -3.703696},
+                maxZoom: 20,
+                minZoom: 12,
+                initialZoom: 15,
+                zoomButtons: true,
+                showTooltip: true,
+                groupMarkers: true
+            },
+            markerClicked: {
+                center: true,
+                onClickFn: function (f, dom) {}
+            },
+            private: {
+                map: null,
+                markerLayer: null,
+                markers: [],
+                selected: null
+            },
+            // featuresPreprocessor: null,
+            customTooltip : '',
+            createOffscreenIndicators: false,
+            features: [],
+            markerColorOK: '#5D909F',
+            markerColorWARN: '#CB3337',
+            whenZoomed: function () {},
+            whenPanned: function () {}
+        });
+```
+
+### API
+* **'center-map'** _(float lat, float lon)_: Centers map at the given position.
+* **'add-feature'** _(GeoJson feature)_: Add a new feature (and marker) to the map, and updates.
+* **'set-features'** _([GeoJson] features, boolean skipPreprocessing)_: Removes all markers and replaces them with the array provided. If skipPreprocessing is false, the preprocessing function provided will not be called.
+* **'announce-features'** _(locator)_: Requests the component to sent an event to the provided locator, with the features array, the map extent, and the current center. The event sent will be: 'feature-announcement'.
+* **'zoom-map'** _(int zoomLevel)_: Sets the current zoom to the value specified.
+* **'get-selected-feature'** _(string locator)_: Requests the component to sent an event to the provided locator, with the currently selected feature, or null if there is none. The event sent will be: 'feature-selected'.
+* **'update-feature-property'** _(string markerTitle, String property, Object value)_: Finds the feature with the given title, and sets the property to the given value.
+* **'center-on-feature'** _(string featureTitle)_: Centers the map on the feature with the title property given.
+* **'reload-features'**: Destroys current map, and recreates it with the current features.
+* **'select-feature'** _(string featureTitle, function callback)_: Finds the feature with the given title property, and runs the callback function with it.
+
+### Generated events
+* **'marker-clicked'** _(DOM node, GeoJSon feature)_: Issued when a marker is clicked.
+*/
 
 define(
 [
@@ -67,7 +64,7 @@ define(
 ],
 function(ComponentManager, DataBinding) {
 
-    return ComponentManager.create('mapViewer', Component, DataBinding);
+    
 
     function Component() {
 
@@ -90,19 +87,12 @@ function(ComponentManager, DataBinding) {
             },
             markerClicked: {
                 center: true,
-                onClickFn: function (f, dom) {console.log(dom);}
+                onClickFn: function (ft, sel, dom) {}
             },
             private: {
                 map: null,
                 markerLayer: null,
                 markers: [],
-                selectedFeature: null,
-                triggers: {
-                    announceFeatures: 'feature-announcement',
-                    selectedFeature: 'feature-selected',
-                    centerFeature: 'center-on-feature'
-                },
-                announceTrigger: 'announce-features',
                 selected: null
             },
             // featuresPreprocessor: null,
@@ -388,7 +378,7 @@ function(ComponentManager, DataBinding) {
         //  * Default trigger is 'feature-announcement'
         //  * Default locator is $(this)
         this.announceFeatures = function (event, locator) {
-            var trigger = this.attr.private.triggers.announceFeatures;
+            var trigger = 'feature-announcement';
             
             if (this.isValidObject(locator)) {
                 $(locator).trigger(trigger, [this.attr.private.markerLayer.features(),
@@ -437,7 +427,7 @@ function(ComponentManager, DataBinding) {
         //  * Default trigger is 'selected-feature'
         //  * Default locator is $(this)
         this.getSelectedFeature = function (event, locator) {
-            var trigger = this.attr.private.triggers.selectedFeature;
+            var trigger = 'feature-selected';
             
             if (this.isValidObject(locator)) {
                 $(locator).trigger(trigger, this.attr.private.selected);
@@ -455,21 +445,20 @@ function(ComponentManager, DataBinding) {
         //  * This method passes the feature, the corresponding dom node and the 
         //    previously selected feature to the onClickFn, if any.
         this.markerClicked = function (event, dom, ft) {
-            var f = this.getFeatureByTitle(dom);
-            if (f !== null) {
+            if ((typeof ft !== 'undefined') && (ft !== null)) {
                 if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
-                    this.attr.markerClicked.onClickFn(f, this.attr.private.selected, dom);
+                    this.attr.markerClicked.onClickFn(ft, this.attr.private.selected, dom);
                     // Skips preprocessor, not to recalculate groups
                     var skipPreprocessor = true;
                     this.setFeatures(this.attr.private.markerLayer.features(), skipPreprocessor);
                 }
                 if (this.attr.markerClicked.center) {
                     // Feature coordinates are reversed!
-                    this.centerMap(f.geometry.coordinates[1], f.geometry.coordinates[0]);
+                    this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
             
-            this.attr.private.selected = f; 
+            this.attr.private.selected = ft; 
         };
         
         // Receives: The markerTitle to use as finder (optional), the property 
@@ -538,8 +527,7 @@ function(ComponentManager, DataBinding) {
         // Component Initializer
         // =====================================================================
         
-        this.after('initialize', function() {
-            // Prepare dom =====================================================
+        this.setComponent = function () {
             this.$node.addClass('fit');
             this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);           
             // Attach map
@@ -558,7 +546,7 @@ function(ComponentManager, DataBinding) {
             this.setFeatures();
             
             var self = this;
-            // If offscreen indicators are required, add them to the node and crete handler
+            // If offscreen indicators are required, add them to the node and create handler
             if (this.attr.createOffscreenIndicators === true) {
                 this.$nodeMap = $(this.offscreenIndicatorsHtml).appendTo(this.$node);
                 
@@ -590,10 +578,9 @@ function(ComponentManager, DataBinding) {
             });
             //</editor-fold>
             
-            // Component API ===================================================
-            
-            //<editor-fold defaultstate="collapsed" desc="API">
-            
+        };
+        
+        this.setAPI = function () {
             // Internal (will bubble up!)
             this.on('marker-clicked',this.markerClicked);
             // Center map:  [lat, lon]
@@ -602,7 +589,7 @@ function(ComponentManager, DataBinding) {
             this.on('add-feature', this.addFeature);
             // Set features: [features]
             this.on('set-features', function (e,f,skip) {
-                this.setFeatures(f);
+                this.setFeatures(f, skip);
             });
             // Announce features: (locator*)
             this.on('announce-features', this.announceFeatures);
@@ -626,9 +613,7 @@ function(ComponentManager, DataBinding) {
                     callback(f,previouslySelected);
                     this.attr.private.selected = f;
                     this.setFeatures(this.attr.private.markerLayer.features());
-                    this.select(this.attr.selectMapbox).trigger(
-                        this.attr.private.triggers.selectedFeature, f
-                    );
+                    this.select(this.attr.selectMapbox).trigger('feature-selected', f);
                 }
             });
 
@@ -659,14 +644,19 @@ function(ComponentManager, DataBinding) {
                     });
                 }
             };
-            //</editor-fold>
-            
+        };
+        
+        this.after('initialize', function() {
+            this.setComponent();
+            this.setAPI();
             // =================================================================
         });
 
         // =====================================================================
 
     } // </function Component()>
+    
+    return ComponentManager.create('mapViewer', Component, DataBinding);
     
 }); // </function(ComponentManager)>
 

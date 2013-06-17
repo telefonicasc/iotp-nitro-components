@@ -303,7 +303,8 @@ function() {
                     minZoom: 5,
                     initialZoom: 15,
                     zoomButtons: true,
-                    showTooltip: true
+                    showTooltip: true,
+                    groupMarkers: true
                 },
                 markerClicked: {
                     center: false,

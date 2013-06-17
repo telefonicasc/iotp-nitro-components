@@ -34,11 +34,11 @@ describeComponent('components/chart/group_bar_chart', function () {
     expect(this.component.updateChart).toHaveBeenCalled();
   });
   
-  it('component values are incremental then trigger "valueChange", groups and bars are painted', function () {
+  /*it('component values are incremental then trigger "valueChange", groups and bars are painted', function () {
     this.component.$node.trigger('valueChange', options); 	
     expect($('.group').length).toEqual(2); // 2 groups
     //expect($('rect.chartbar').length).toEqual(4); //4 bars in total
-  });
+  });*/
 
   it('When trigger "resize" then updateChart is called', function () {
     spyOn(this.component, 'updateChart');

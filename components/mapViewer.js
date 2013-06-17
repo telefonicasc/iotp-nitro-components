@@ -85,7 +85,8 @@ function(ComponentManager, DataBinding) {
                 minZoom: 12,
                 initialZoom: 15,
                 zoomButtons: true,
-                showTooltip: true
+                showTooltip: true,
+                groupMarkers: true
             },
             markerClicked: {
                 center: true,
@@ -108,6 +109,8 @@ function(ComponentManager, DataBinding) {
             customTooltip : '',
             createOffscreenIndicators: false,
             features: [],
+            markerColorOK: '#5D909F',
+            markerColorWARN: '#CB3337',
             whenZoomed: function () {},
             whenPanned: function () {}
         });
@@ -138,6 +141,133 @@ function(ComponentManager, DataBinding) {
             if (typeof obj === 'undefined') return false;
             if (obj === null) return false;
             return true;
+        };
+        
+        // Receives: features to process, and the map they are in
+        // Returns: The features already processed
+        this.markerAutogroup = function (inFeatures, map) {
+            var marker;
+            var markerList = [];
+            var features = [];
+            var groupID = 0;
+            var colorOK = this.attr.markerColorOK;
+            var colorWARN = this.attr.markerColorWARN;
+
+            // Reset groups
+            $.each(inFeatures, function (k,v) {
+                if (typeof v.properties.isGroup !== 'undefined') {
+                    if (v.properties.submarkers.length === 0) {
+                        v.properties.isGroup = false;
+                        v.properties.submarkers = [];
+                        features.push(v);
+                    }
+                    else {
+                        $.each(v.properties.submarkers, function (i,m) {
+                            m.properties.isGroup = false;
+                            m.properties.submarkers = [];
+                            features.push(m);
+                        });
+                    }
+                }
+                else {
+                    v.properties.isGroup = false;
+                    v.properties.submarkers = [];
+                    features.push(v);
+                }
+            });
+
+            var areClose = function (feature1, feature2) {
+
+                var point1 = map.locationPoint({
+                                lat: feature1.geometry.coordinates[0],
+                                lon: feature1.geometry.coordinates[1]
+                            });
+                var point2 = map.locationPoint({
+                                lat: feature2.geometry.coordinates[0],
+                                lon: feature2.geometry.coordinates[1]
+                            });
+                var diffX = point1.x - point2.x;
+                var diffY = point1.y - point2.y;
+                var distance = diffX * diffX + diffY * diffY;
+                return distance <= 300;
+            };
+
+            var canJoin = function (a,b) {
+                // Can't join to itself
+                if (a === b) return false;
+                // If isGroup value is there, I can't join (either is already in
+                // a group, or is a group by itself)
+                if (b.properties.isGroup !== false) return false;
+                return areClose(a,b);
+            };
+
+            var doJoin = function (marker, submarker) {
+                if (marker === null) {
+                    marker = {
+                        geometry: { coordinates: [ 0.0, 0.0 ] },
+                        properties: {
+                            'marker-color':colorOK,
+                            'marker-symbol':'circle',
+                            'marker-size':'medium',
+                            title: 'group_' + groupID,
+                            caption: submarker.title,
+                            isGroup: true,
+                            submarkers: [submarker]
+                        }
+
+                    };
+                    groupID += 1;
+                }
+                else {
+                    marker.properties.submarkers.push(submarker);
+                    marker.properties.caption += ' ' + submarker.title;
+                }
+                submarker.properties.isGroup = true;
+                return marker;
+            };
+
+            var updateGroupMarkers = function (list) {
+                $.each(list, function (k,v){
+                    if (v.properties.submarkers.length > 0) {
+                        v.properties['marker-symbol'] = v.properties.submarkers.length;
+                        var lat = 0;
+                        var lon = 0;
+                        var color = colorOK;
+                        var inc = function(v) {
+                            lat += v.geometry.coordinates[0];
+                            lon += v.geometry.coordinates[1];
+                            if (color === colorWARN  || 
+                                    v.properties['marker-color'] === colorWARN) 
+                            {
+                                color = colorWARN;
+                            }
+                        };
+                        $.each(v.properties.submarkers, function(k,v){inc(v)});
+                        var count = v.properties.submarkers.length;
+                        v.geometry.coordinates = [lat / count, lon / count];
+                        v.properties['marker-color'] = color;
+                    }
+                });
+            };
+
+            $.each(features, function (index,a) {
+                if (!a.properties.isGroup) {
+                    marker = null;
+                    $.each(features, function (k,b) {
+                        if (canJoin(a,b) === true) {
+                            if (marker === null) marker = doJoin(marker,a);
+                            marker = doJoin(marker,b);
+                        };
+                    });
+                    if (marker === null) {
+                        a.properties.isGroup = true;
+                        marker = a;
+                    }
+                    markerList.push(marker);
+                }
+            });
+            updateGroupMarkers(markerList);
+            return markerList;
         };
         
         // Receives: The GeoJson feature array.
@@ -174,6 +304,11 @@ function(ComponentManager, DataBinding) {
                 }
             }
             
+            // Auto group markers?
+            if (this.attr.map.groupMarkers) {
+                features = this.markerAutogroup(features,this.attr.private.map);
+            }
+            
             // Create layer
             var markerLayer = mapbox.markers.layer().features(features);
             // Create marker
@@ -188,7 +323,7 @@ function(ComponentManager, DataBinding) {
                 }
 
                 $(dom).click(function () {
-                    $(this).trigger('marker-clicked', this);
+                    $(this).trigger('marker-clicked', [this, feature]);
                 });
                 
                 return dom; 
@@ -319,7 +454,7 @@ function(ComponentManager, DataBinding) {
         // Notes:
         //  * This method passes the feature, the corresponding dom node and the 
         //    previously selected feature to the onClickFn, if any.
-        this.markerClicked = function (event, dom) {
+        this.markerClicked = function (event, dom, ft) {
             var f = this.getFeatureByTitle(dom);
             if (f !== null) {
                 if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
@@ -439,7 +574,14 @@ function(ComponentManager, DataBinding) {
 
             var features = this.attr.private.markerLayer.features();
             this.attr.private.map.addCallback('zoomed', function () {
+                var map = self.attr.private.map;
                 if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
+                // Auto group markers?
+                if (self.attr.map.groupMarkers) {
+                    var features = self.attr.private.markerLayer.features();
+                    features = self.markerAutogroup(features,map);
+                    self.setFeatures(features,false);
+                }
                 self.attr.whenZoomed(features);
             });
             this.attr.private.map.addCallback('panned', function () {

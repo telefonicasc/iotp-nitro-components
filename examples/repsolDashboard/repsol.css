@@ -1,0 +1,160 @@
+
+/* ========================================================================== */
+/* Dashboard related css */
+/* ========================================================================== */
+.dashboard {
+    overflow: hidden;
+}
+
+.dashboard .main-content {
+    margin: 0 !important;
+}
+
+.dashboard .overview-subpanel .overview-subpanel-body {
+    max-width: 80%;
+}
+
+.dashboard .overview-header .overview-count {
+    background-color: #CA3430;
+}
+
+
+/* ========================================================================== */
+/* Other */
+/* ========================================================================== */
+.overview-subpanel {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+}
+
+.overview-subpanel .text:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.overview-content {
+    background: #E9EFF0;
+}
+
+.overview-count {
+    background-color: #DF0101;
+}
+
+/* Element showing selected asset info and last update */
+.detail-element-header {
+    background: #aecace;
+}
+
+.detail-element-header .caption {
+    color: white !important;
+}
+
+.marker-red {
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
+    margin-right: 12px;
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');*/
+    background-image:url('res/images/rojo-on-1.png');
+}
+
+.marker-blue {
+    width: 34px !important;
+    height: 35px !important;
+    margin-left: 3px;
+    margin-right: 12px;
+    margin-top: 12px;
+    /* To use mapbox marker */
+    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+5E91A0.png');*/
+    background-image:url('res/images/azul-on-1.png');
+}
+
+.warning-item:hover{
+    background-color: #D5E0E2;
+}
+
+.overview-subpanel-body .text {
+    position: relative;
+    /*top: -10px;*/
+    padding-top: 10px;
+}
+
+.overview-subpanel-body .caption {
+    position: relative;
+    /*top: -10px;*/
+    padding-top: 10px;
+}
+
+.minimap {
+    height: 200px;
+    bottom: 20px;
+    top:1px;
+}
+
+.panel-detail .detail-panel-header {
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right:5px;
+    background: #D1E2E4;
+    font-size: 14px;
+    font-weight: normal;
+    color: #5D747C;
+    border-top: 1px solid #C6DADC;
+}
+
+.panel-detail  .detail-panel-content {
+    background: #DDEAEC;
+}
+
+.panel-detail {
+    min-height: 100%; 
+    height: auto !important; /*Cause footer to stick to bottom in IE 6*/
+    height: 100%; 
+    margin: 0 auto -100px; /*Allow for footer height*/
+    vertical-align:bottom;
+    background-color: #AECACE;
+    margin-left: -12px;
+    z-index: 5;
+}
+
+.panel-detail .fit {
+    padding-right: 12px;
+}
+
+.panel-list {
+    z-index: 4;
+}
+
+.detail-errors {
+    min-height: 60px;
+    border-style: solid;
+    border-width: 1px;
+    margin-left: 8px;
+    margin-right: 8px;
+    border-color: #A5B8BD;
+    -webkit-border-radius:5%;
+    border-radius:5%;
+    background-color: #BCCED2;
+    margin-top: 3px;
+    margin-bottom: 8px;
+    color: #6F8388;
+    padding-left: 10px;
+    padding-top: 15px;
+    font-size: small;
+}
+
+/* Details overview header */
+.overview-header .overview-title {
+    color: #A5ADB3;
+}
+
+.overview-header :hover {
+    cursor: pointer;
+    color: white;
+}
+

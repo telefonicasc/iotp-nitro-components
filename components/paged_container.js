@@ -92,7 +92,7 @@ define(
                     else $(v).hide();
                 });
                 
-                if (this.attr.private.pageCount < 1) {
+                if (this.attr.private.pageCount <= 1) {
                     this.select('selectNavigation').hide();
                 }
                 else {
@@ -164,6 +164,8 @@ define(
                 this.select('selectPageRight').click(function () {
                     self.changeToPage(+1,true);
                 });
+                
+                this.select('selectNavigation').hide();
                
                 // API =========================================================
                 var triggers = this.attr.triggers;

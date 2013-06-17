@@ -19,7 +19,8 @@ define(
             this.updateContent = function(dataItems) {
                 this.$node.empty();
                 $.each(dataItems, $.proxy(function(i, item) {
-                    var cmp = ComponentManager.get(this.attr.item.component),
+                    var cmpName = this.attr.item.component || 'component', 
+                        cmp = ComponentManager.get(cmpName),
                         itemNode = $('<div>')
                             .addClass('repeat-container-item'); 
                     
@@ -39,6 +40,8 @@ define(
                 this.on('valueChange', function(e, o) {
                     if (o.value && o.value.length) {
                         this.updateContent(o.value); 
+                    } else {
+                        this.$node.empty();
                     }
                 });
             });

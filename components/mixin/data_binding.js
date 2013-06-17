@@ -35,7 +35,7 @@ define(
                             value = model(value);
 
                         // If model is an object we take it as the value
-                        } else if ($.isPlainObject(model)) {
+                        } else if ($.isPlainObject(model) || $.isArray(model)) {
                             value = model;
 
                         // If model is a JSON path string

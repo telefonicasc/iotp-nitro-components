@@ -1,7 +1,6 @@
 define(
   [
-    'components/component_manager',
-    'components/component'
+    'components/component_manager'
   ],
 
   function(ComponentManager) {

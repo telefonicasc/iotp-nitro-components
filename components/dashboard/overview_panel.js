@@ -7,8 +7,6 @@ define(
 
   function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
 
-    window.aa = ComponentManager;
-
     return ComponentManager.create('overviewPanel',
         DashboardOverview, ContainerMixin);
 
@@ -47,7 +45,7 @@ define(
       };
 
       this.after('initialize', function() {
-        this.$node.addClass('sidebar');
+        this.$node.addClass('dashboard-overview-panel sidebar');
         this.createOverviewHeader();
       });
     }

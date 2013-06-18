@@ -1,13 +1,13 @@
 // =============================================================================
 // Telefonica I+D
 // -----------------------------------------------------------------------------
-// Notes: 
+// Notes:
 //  * Change assetsURL if necessary to be able to access device data
-//  * When moved to kermit, 
+//  * When moved to kermit,
 // =============================================================================
 
 requirejs.config({
-    baseUrl: '/m2m-nitro-components'
+    baseUrl: '../../'
 });
 
 define(
@@ -25,7 +25,7 @@ define(
             'components/widget_battery'
         ],
         function() {
-            
+
             requirejs(['components/jquery_plugins'], function() {
 
                 var warning_subpanel_html = '<div class="warning-item overview-subpanel" data-bind="" style="">'
@@ -63,7 +63,7 @@ define(
                 // =============================================================
 
                 var initialCenter = {lat: 50.456729, lon: 7.485};
-                
+
                 var requestApiData = function (url, callback) {
                     if (useKermit) {
                         API.http.request({method:'GET', url:url})
@@ -164,7 +164,7 @@ define(
                 var centerMap = function(lat, lon) {
                     $('.mapbox').trigger('center-map', [lat, lon]);
                 };
-                
+
                 var updateAssetsFn = function (response) {
                     $.each(response.data, function (k,v) {
                         var lat = v.asset.location.latitude;
@@ -176,14 +176,14 @@ define(
                     });
                     if (centerOnLoad) updateCenter();
                 };
-                
+
                 var updateAssets = function () {
                     requestApiData(assetsDetailedURL, updateAssetsFn);
                 };
 
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
-                    
+
                     // Update selected element name
                     $('.panel-detail .detail-element-header .text').html(assetName);
                     // Get asset errors, if any
@@ -221,15 +221,15 @@ define(
                             }
                         }
                     });
-                    
+
                     // Update lights
-                    
+
                     var urlList = [];
                     var baseURL = assetsURL + '/' + assetName;
                     urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
                     urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
                     urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
-                        
+
                     if (useKermit) {
                         var $q = Kermit.$injector.get('$q');
 
@@ -237,8 +237,8 @@ define(
                         var yellow = API.http.request({method:'GET', url:urlList[1]});
                         var green = API.http.request({method:'GET', url:urlList[2]});
 
-                        $q.all([ red, yellow, green ])                   
-                        .then(function(results) {      
+                        $q.all([ red, yellow, green ])
+                        .then(function(results) {
                             console.log('Got results');
                             $('.lights-widget').trigger('paintLights', [results[0].data, results[1].data, results[2].data]);
                         });
@@ -247,7 +247,7 @@ define(
                         $('.lights-widget').trigger('updateLights',[urlList]);
                     }
                 };
-                
+
                 var updateAssetInfo = function (assetName) {
                     var url = assetsURL + '/' + assetName;
                     requestApiData(url, updateAssetInfoFn);
@@ -264,7 +264,7 @@ define(
                     $('.panel-list').show();
                     $('.panel-detail').hide();
                 };
-                
+
                 var updateCenter = function () {
                     var url = assetsURL + '?detailed=1';
                     var fn = function (response) {
@@ -277,7 +277,7 @@ define(
                             console.log('No data found!');
                         }
                     };
-                    
+
                     requestApiData(url,fn);
 
                     updateOffscreenIndicators();
@@ -304,7 +304,7 @@ define(
                                     .addClass('tooltip-unselected')
                                     .addClass('tooltip-unselected-errors')
                                     .html(warns);
-                                
+
                                 var content = $('<div>').append(errors).append(ok);
                                 return content.html();
                             }
@@ -330,7 +330,7 @@ define(
                     }
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
-                
+
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
@@ -350,7 +350,7 @@ define(
                         }
                     }
                 };
-                
+
                 var updateWarningPanelTrigger = function() {
                     $('.overview-subpanel .text').on('click', function() {
                         var data = {
@@ -372,11 +372,11 @@ define(
                         $('.dashboard').trigger('asset-selected', data);
                     });
                 };
-                
+
                 // =============================================================
                 // Prepare dashboard
                 // =============================================================
-                
+
                 //<editor-fold defaultstate="collapsed" desc="Component list">
                 var compList = [
                     {
@@ -443,7 +443,7 @@ define(
                     }
                 ];
                 //</editor-fold>
-                
+
                 // For kermit install.js
                 //dashboard.m2mdashboard({
                 $('.dashboard').m2mdashboard({
@@ -503,7 +503,7 @@ define(
                 });
 
                 // =============================================================
-                // Complete DOM 
+                // Complete DOM
                 // =============================================================
 
                 // Add error panel to details
@@ -545,7 +545,7 @@ define(
                 $('.dashboard').on('asset-selected', showDetails);
 
                 $('.overview-header').on('click', hideDetails);
-                
+
                 // Event when a tooltip element is clicked
                 $(document).on('click', '.tooltip-selector', function() {
                     var sel = { properties: {
@@ -554,10 +554,10 @@ define(
                     };
                     showDetails(null, sel);
                 });
-                
+
                 // Load initial data
                 updateAssets();
-                
+
                 /* Uncomment this line for device data polling */
                 // window.setInterval(function () { updateAssets(); }, pollInterval);
 

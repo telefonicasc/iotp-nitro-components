@@ -15,8 +15,7 @@ define(
             'components/dashboard/dashboard',
             'components/minimap',
             'components/dashboard/overview_subpanel',
-            'components/paged_panel',
-//            'components/paged_detail',
+            'components/paged_container',
             'components/detail_panel',
             'components/map',
             'components/mapViewer',
@@ -47,8 +46,8 @@ define(
                 var assetsURL;
                 var assetsDetailedURL;
                 if (!useKermit) {
-                    assetsURL = 'http://localhost:8080/MockApi/mock/assets';
-                    assetsDetailedURL = 'http://localhost:8080/MockApi/mock/assets?detailed=1';
+                    assetsURL = '/m2m/v2/services/TrafficLightsDE/assets';
+                    assetsDetailedURL = assetsURL + '?detailed=1';
                 }
                 else {
                     var service = Kermit.$injector.get('$user').credential.serviceName;
@@ -106,8 +105,6 @@ define(
 
                     $('.mapbox').trigger('add-feature', marker);
                     $('.mapbox-mini').trigger('updateMinimap', marker);
-
-//                    updateOffscreenIndicators();
                 };
 
                 var generateErrorText = function(sensorData) {
@@ -121,7 +118,7 @@ define(
                             else if (value.ms.p === 'pitch') {
                                 var pitch = parseInt(value.ms.v);
                                 if (pitch < 80 || pitch > 100) {
-                                    errors += 'Inclination change error</br>';
+                                    errors += 'Inclination change +10</br>';
                                 }
                             }
                             else if (value.ms.p === 'greenLight' && value.ms.v === 'error') {
@@ -187,10 +184,6 @@ define(
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
                     
-                    // REMOVED: Center
-                    // var lat = response.data.asset.location.latitude;
-                    // var lon = response.data.asset.location.longitude;
-                    // $('.mapbox').trigger('center-map', [lat, lon]);
                     // Update selected element name
                     $('.panel-detail .detail-element-header .text').html(assetName);
                     // Get asset errors, if any
@@ -261,9 +254,6 @@ define(
                 };
 
                 var showDetails = function(event, data) {
-//                $('.panel-detail').slideDown();
-//                $('.panel-list').slideUp();
-
                     $('.panel-detail').show();
                     $('.panel-list').hide();
                     updateAssetInfo(data.properties.title);
@@ -271,8 +261,6 @@ define(
                 };
 
                 var hideDetails = function() {
-//                $('.panel-list').slideDown();
-//                $('.panel-detail').slideUp();
                     $('.panel-list').show();
                     $('.panel-detail').hide();
                 };
@@ -294,128 +282,7 @@ define(
 
                     updateOffscreenIndicators();
                 };
-                
-                var processFeatures = function (inFeatures, map) {
-                    var marker;
-                    var markerList = [];
-                    var features = [];
-                    var groupID = 0;
-                    
-                    // Reset groups
-                    $.each(inFeatures, function (k,v) {
-                        if (typeof v.properties.isGroup !== 'undefined') {
-                            if (v.properties.submarkers.length === 0) {
-                                v.properties.isGroup = false;
-                                v.properties.submarkers = [];
-                                features.push(v);
-                            }
-                            else {
-                                $.each(v.properties.submarkers, function (i,m) {
-                                    m.properties.isGroup = false;
-                                    m.properties.submarkers = [];
-                                    features.push(m);
-                                });
-                            }
-                        }
-                        else {
-                            v.properties.isGroup = false;
-                            v.properties.submarkers = [];
-                            features.push(v);
-                        }
-                    });
-                    
-                    var areClose = function (feature1, feature2) {
-                        
-                        var point1 = map.locationPoint({
-                                        lat: feature1.geometry.coordinates[0],
-                                        lon: feature1.geometry.coordinates[1]
-                                    });
-                        var point2 = map.locationPoint({
-                                        lat: feature2.geometry.coordinates[0],
-                                        lon: feature2.geometry.coordinates[1]
-                                    });
-                        var diffX = point1.x - point2.x;
-                        var diffY = point1.y - point2.y;
-                        var distance = diffX * diffX + diffY * diffY;
-                        return distance <= 300;
-                    };
-                    
-                    var canJoin = function (a,b) {
-                        // Can't join to itself
-                        if (a === b) return false;
-                        // If isGroup value is there, I can't join (either is already in
-                        // a group, or is a group by itself)
-                        if (b.properties.isGroup !== false) return false;
-                        return areClose(a,b);
-                    };
-                    
-                    var doJoin = function (marker, submarker) {
-                        if (marker === null) {
-                            marker = {
-                                geometry: { coordinates: [ 0.0, 0.0 ] },
-                                properties: {
-                                    'marker-color':'#000',
-                                    'marker-symbol':'circle',
-                                    'marker-size':'medium',
-                                    title: 'group_' + groupID,
-                                    isGroup: true,
-                                    submarkers: [submarker]
-                                }
-                                
-                            };
-                            groupID += 1;
-                        }
-                        else {
-                            marker.properties.submarkers.push(submarker);
-                        }
-                        submarker.properties.isGroup = true;
-                        return marker;
-                    };
-                    
-                    var updateGroupMarkers = function (list) {
-                        $.each(list, function (k,v){
-                            if (v.properties.submarkers.length > 0) {
-                                v.properties['marker-symbol'] = v.properties.submarkers.length;
-                                var lat = 0;
-                                var lon = 0;
-                                var color = markerColorOk;
-                                var inc = function(v) {
-                                    lat += v.geometry.coordinates[0];
-                                    lon += v.geometry.coordinates[1];
-                                    if (color === markerColorWarn || 
-                                            v.properties['marker-color'] === markerColorWarn) 
-                                    {
-                                        color = markerColorWarn;
-                                    }
-                                };
-                                $.each(v.properties.submarkers, function(k,v){inc(v)});
-                                var count = v.properties.submarkers.length;
-                                v.geometry.coordinates = [lat / count, lon / count];
-                                v.properties['marker-color'] = color;
-                            }
-                        });
-                    };
 
-                    $.each(features, function (index,a) {
-                        if (!a.properties.isGroup) {
-                            marker = null;
-                            $.each(features, function (k,b) {
-                                if (canJoin(a,b) === true) {
-                                    if (marker === null) marker = doJoin(marker,a);
-                                    marker = doJoin(marker,b);
-                                };
-                            });
-                            if (marker === null) {
-                                a.properties.isGroup = true;
-                                marker = a;
-                            }
-                            markerList.push(marker);
-                        }
-                    });
-                    updateGroupMarkers(markerList);
-                    return markerList;
-                };
-                
                 var createTooltip = function (feature, isSelected) {
                     if (typeof feature.properties.submarkers !== 'undefined') {
                         if (feature.properties.submarkers.length === 0) {
@@ -590,7 +457,8 @@ define(
                                 minZoom: 5,
                                 initialZoom: 13,
                                 zoomButtons: true,
-                                showTooltip: true
+                                showTooltip: true,
+                                groupMarkers: true
                             },
                             markerClicked: {
                                 center: centerOnClick,
@@ -605,7 +473,7 @@ define(
                             whenPanned: function (f) {
                                 updateOffscreenIndicators();
                             },
-                            featuresPreprocessor: processFeatures,
+//                            featuresPreprocessor: processFeatures,
                             features: []
                         }
                     ],
@@ -614,14 +482,14 @@ define(
                         count: 0,
                         items: [
                             {
-                                component: 'pagedPanel',
+                                component: 'pagedContainer',
                                 className: 'panel-list',
                                 header: '',
                                 ID: 'panel-list',
                                 items: []
                             },
                             {
-                                component: 'pagedPanel',
+                                component: 'pagedContainer',
                                 className: 'panel-detail',
                                 extraHeaderGap: 50,
                                 alwaysVisible: [0, 1],

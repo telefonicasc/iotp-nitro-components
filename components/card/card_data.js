@@ -156,7 +156,19 @@ function() {
             };
             card.delimiterList = ['IS_OFF'];
             return card;
+        },
+        'alarm' : function (card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontAlarm'
+                }]
+            };
+            card.flippable = false;
+            card.back = {};
+            card.delimiterList = ['IS_OFF', 'IS_ON'];
+            return card;
         }
+        
     };
 
     var encodeAction = {
@@ -225,10 +237,12 @@ function() {
                 name = 'noSensorSignal';
             } else if (phenomenon ==='timeInterval'){
                 name = 'timeInterval';
-            }else if (phenomenon ==='timeElapsed'){
+            } else if (phenomenon ==='timeElapsed'){
                 name = 'timeElapsed';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
+            } else if (phenomenon === 'alarm') {
+                name = 'alarm';
             } else if (phenomenon === 'electricPotential') {
                 name = 'battery';
             } else if (sensorData.dataType === 'Boolean') {

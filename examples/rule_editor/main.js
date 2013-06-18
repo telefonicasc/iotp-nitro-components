@@ -17,7 +17,8 @@ define(
     'components/card/front/binary',
     'components/card/front/quantity_value',
     'components/card/front/off',
-    'components/form/dropdown'
+    'components/form/dropdown',
+    'components/card/front/alarm'
   ],
 
   function() {
@@ -60,7 +61,8 @@ define(
                         'DIFFERENT_TO': 'DIFERENTE',
                         'MINOR_THAN': 'MENOR',
                         'GREATER_THAN': 'MAYOR',
-                        'IS_OFF':'APAGADO'
+                        'IS_OFF': 'APAGADO',
+                        'IS_ON': 'ENCENDIDO' 
                     }
                 };
                 $http.get('actions.json').success(function(data) {

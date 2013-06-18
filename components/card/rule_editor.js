@@ -581,7 +581,6 @@ define(
             };
 
             this.createCardToolbox = function(cards) {
-                console.log(cards);
                 var cardToolbox = $('<div>').appendTo(this.$mainArea);
                 CardToolbox.attachTo(cardToolbox, {
                     containment: this.$mainArea,

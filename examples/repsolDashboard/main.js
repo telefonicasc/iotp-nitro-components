@@ -10,23 +10,25 @@ define(
     'components/mapViewer',
     'components/minimap',
     'components/dashboard/overview_subpanel',
-    'components/paged_panel',
     'components/paged_container',
-    'components/paged_detail',
     'components/detail_panel',
     'components/widget_temperature',
-    'components/widget_battery'
+    'components/widget_battery',
+    'components/chart/bar_chart',
+    'components/chart/area_chart',
+    'components/chart/radar_chart',
+    'components/chart/range_selection_chart'
 ],
     
 function() {
 
     requirejs(['components/jquery_plugins'], function() {
-            
+
+        var useKermit = false;
         var markerColors = {
             ok: '#04B404',
             err: '#DF0101'
         };
-        var useKermit = false;
             
         // =====================================================================    
         /* Service URL setup */
@@ -262,6 +264,23 @@ function() {
                 ]
             },
             {
+                component: 'chartContainer',
+                rangeField: 'selectedRange',
+                valueField: 'totalRegistered',
+                className: 'chart',
+                marginRight: 45,
+                marginBottom: 8,
+                grid: true,
+                axisy: true,
+                charts: [{
+                    type: 'areaChart',
+                    tooltip: true,
+                    model: 'totalRegistered',
+                    //rangeField: 'selectedRange',
+                    cssClass: 'cyan'
+                }]
+            },
+            {
                 component: 'detailPanel',
                 header: 'Battery Level',
                 id: 'battery-level',
@@ -346,7 +365,27 @@ function() {
                     }
                 ]
             },
-            data: function() {}
+            data: function(callback) {
+                var d = '{"totalRegistered": ['
+                    +'{"date": 1356994800000,"value": 25},'
+                    +'{"date": 1357081200000,"value": 32},'
+                    +'{"date": 1357167600000,"value": 39},'
+                    +'{"date": 1357254000000,"value": 45},'
+                    +'{"date": 1357340400000,"value": 53},'
+                    +'{"date": 1357426800000,"value": 58},'
+                    +'{"date": 1357513200000,"value": 66},'
+                    +'{"date": 1357599600000,"value": 72},'
+                    +'{"date": 1357686000000,"value": 77},'
+                    +'{"date": 1357772400000,"value": 84},'
+                    +'{"date": 1357858800000,"value": 89},'
+                    +'{"date": 1357945200000,"value": 97},'
+                    +'{"date": 1358031600000,"value": 104},'
+                    +'{"date": 1358118000000,"value": 109},'
+                    +'{"date": 1358204400000,"value": 115},'
+                    +'{"date": 1358290800000,"value": 123}'
+                    +']}';
+                callback(d);
+            }
         });
         
         //</editor-fold>
@@ -368,12 +407,10 @@ function() {
         $('.panel-detail').hide();
         $('.overview-count').html(0);
         
-        
         // API =================================================================
         $('.dashboard').on('show-details', showDetails);
         $('.dashboard').on('hide-details', hideDetails);
         $('.overview-header').on('click', hideDetails);
-
 
     });
 });

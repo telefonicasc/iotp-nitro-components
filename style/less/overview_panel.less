@@ -1,0 +1,30 @@
+@overview-header-height : 36px;
+.dashboard-overview-panel {
+    .overview-header {
+        height: @overview-header-height;
+        background-color: #64737b;
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+
+        & > *{
+            display: inline-block;
+        }
+
+        .overview-count {
+            text-align: center;
+            background-color: #4a95de;
+            padding: 0 10px;
+            height: @overview-header-height;
+            line-height: @overview-header-height;
+            margin-right: 10px;
+        }
+    }
+    .overview-content {
+        position: absolute;
+        top: @overview-header-height;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+    }
+}

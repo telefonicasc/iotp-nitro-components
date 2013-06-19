@@ -1,0 +1,60 @@
+.overview-subpanel {
+    border-bottom: 1px solid #D6DEE0;
+    min-height: 55px;
+
+    .icon {
+      width: 50px;
+      height: 43px;
+      display: inline-block;
+
+      .withColors(border, ~"");
+      .withColors(background-light, ~"");
+
+      &.dot {
+        width: 18px;
+        height: 18px;
+        border-style: solid;
+        border-width: 4px;
+        border-radius: 13px;
+        margin-left: 12px;
+        margin-right: 12px;
+        margin-top : 15px;
+      }
+
+      &.arrow-down {
+        background: url("@{image-path}/arrow-down.png") no-repeat center center;
+      }
+
+      &.arrow-up {
+        background: url("@{image-path}/arrow-up.png") no-repeat center center;
+      }
+    }
+
+    .overview-subpanel-body {
+      display: inline-block;
+
+      .text {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        color: #313a3f;
+        display: inline-block;
+      }
+
+      .text1 {
+        padding-left: 20px;
+        display: block;
+        font-size: 18px;
+        color: #768e99;
+        display: inline-block;
+      }
+
+      .caption {
+        margin: 0px;
+        color: #999;
+        font-size: 13px;
+        font-weight: normal;
+      }
+
+    }
+  }

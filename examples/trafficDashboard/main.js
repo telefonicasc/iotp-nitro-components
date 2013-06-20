@@ -315,7 +315,7 @@ define(
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
-                        $('.mapbox-mini').trigger('asset-selected',f);
+                        $('.mapbox-mini').trigger('itemselected',f);
                         f.properties['marker-size'] = 'large';
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
@@ -445,11 +445,33 @@ define(
                             whenPanned: function (f) {
                                 updateOffscreenIndicators();
                             },
-                            model: function(assets) {
-                                return {
-                                    format: 'asset',
-                                    features: assets
-                                }
+                            model: function(features) {
+                                /* return {
+                                    'format':'asset',
+                                    'features':features
+                                };
+                                */
+                                var markerColorWarn = '#CB3337';
+                                var markerColorOk = '#5E91A0';
+                                return $.map(features, function(f) {
+                                    var markerColor = (f.errors.length) ? markerColorOk : markerColorWarn;
+                                    var location = f.asset && f.asset.location;
+                                    var marker;
+                                    if (location) {
+                                        marker = {
+                                            geometry: {
+                                                coordinates: [location.longitude, location.latitude]
+                                            },
+                                            properties: {
+                                                'marker-color': markerColor,
+                                                'marker-symbol': 'circle',
+                                                'title': f.asset.name
+                                            }
+                                        };
+                                    };
+                                    return marker;
+                                });
+
                             },
 //                            featuresPreprocessor: processFeatures,
                             features: []

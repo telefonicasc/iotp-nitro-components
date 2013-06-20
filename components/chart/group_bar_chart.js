@@ -22,7 +22,8 @@ function(ComponentManager) {
                     .attr('class', 'group-barchart')
                     .attr('width', this.width)
                     .attr('height', this.height),
-                keys = [];
+                keys = [],
+                maxValuePeriod = 0;
 
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
@@ -89,19 +90,15 @@ function(ComponentManager) {
 
             };
 
-            this.updateChart = function() {
+            this.updateChart = function(anim) {
                 var height = this.height,
                     width = this.width;
 
                 var rangeGroup = d3.range(this.values[0].length);
                 x1.domain(rangeGroup).rangeRoundBands([0, x0.rangeBand()], 0);
-                var maxValuePeriod = d3.max(this.values, function(d) {
-                    return d3.max(d, function(d) {
-                        return d;
-                    });
-                });
-                //y.domain([0, maxValuePeriod]);
-                y.domain([0, this.maxValue]);
+                
+                y.domain([0, maxValuePeriod+0.2*maxValuePeriod]);
+                //y.domain([0, this.maxValue]);
 
                 //Update carousel attributes
                 carouselGroup.attr('transform', 'translate(0, '+(this.height+30)+')');
@@ -122,13 +119,34 @@ function(ComponentManager) {
                     return 'translate(' + (x0(keys[i])) + ',0)';
                 });
                 var bars = barGroups.selectAll('.chartbar');
-                bars.data(function(d) { return d; })
-                .attr('width', x1.rangeBand()-1)
-                .attr('x', function(d, i) { return x1(i); })
-                .attr('y', function(d) { return y(d); })
-                .attr('height', function(d) {
-                    return height - y(d);
-                });
+                if (anim){
+                    bars.data(function(d) { return d; })
+                    .transition().duration(500).attr('width', x1.rangeBand()-1)
+                    .attr('x', function(d, i) { return x1(i); })
+                    .attr('y', function(d) { 
+                        var res = (d>20)? y(20): y(d);
+                        return y(d); 
+                    })
+                    .attr('height', function(d) {
+                        //var yd = (d>20)? y(20): y(d);;
+                        return height - y(d);
+                        
+                    }); 
+                }else{
+                    bars.data(function(d) { return d; })
+                    .attr('width', x1.rangeBand()-1)
+                    .attr('x', function(d, i) { return x1(i); })
+                    .attr('y', function(d) { 
+                        var res = (d>maxValuePeriod)? y(maxValuePeriod): y(d);
+                        return res; 
+                    })
+                    .attr('height', function(d) {
+                        var yd = (d>maxValuePeriod)? y(maxValuePeriod): y(d);;
+                        return height - yd;
+                        
+                    }); 
+                }
+                
 
                 //Update tooltips values for each bar
                 if (this.attr.tooltip){
@@ -145,8 +163,13 @@ function(ComponentManager) {
 
                 //Update axes location and dimension
                 if (axisX && axisY) {
+                    if (anim){
+                        axisY.attr('transform', 'translate('+width+', 0)')
+                        .transition().duration(500).call(yAxis);
+                    }else{
+                        axisY.attr('transform', 'translate('+width+', 0)').call(yAxis);
+                    }
                     axisX.attr('transform', 'translate(0, '+height+')').call(xAxis);
-                    axisY.attr('transform', 'translate('+width+', 0)').call(yAxis);
                 }
             };
 
@@ -220,6 +243,16 @@ function(ComponentManager) {
                 for (var group in rawValues){
                     this.values.push(rawValues[group]);
                 }
+                var anim = false;
+                if (options.value.brushend){
+                    maxValuePeriod = d3.max(this.values, function(d) {
+                        return d3.max(d, function(d) {
+                            return d;
+                        });
+                    });
+                    anim = true;
+                    console.log('maxValuePeriod', maxValuePeriod);
+                }
 
                 //Check if aggregation mode has changed
                 var newKeys = getObjKeys(rawValues);
@@ -228,7 +261,7 @@ function(ComponentManager) {
                     this.createChart();
                 }
 
-                this.updateChart();
+                this.updateChart(anim);
                 this.updateSubpanel();
 
             });

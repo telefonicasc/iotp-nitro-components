@@ -35,7 +35,7 @@ function() {
         // =====================================================================
         
         //<editor-fold defaultstate="collapsed" desc="AssetURL & AssetsDetailedURL">
-
+//        alert(document.location.hostname);
         var assetsURL;
         var assetsDetailedURL;
         if (!useKermit) {
@@ -81,6 +81,29 @@ function() {
             }
         };
         
+        var assets2markers = function (assetDetailedList) {
+            var markers = [];
+            $.each(assetDetailedList, function (k,v) {
+                var f = {
+                    geometry: {
+                        coordinates: [
+                            v.asset.location.longitude,
+                            v.asset.location.latitude
+                        ]
+                    },
+                    properties: {
+                        'title': v.asset.name,
+                        'caption': v.asset.description,
+                        'marker-color': markerColors.ok,
+                        'marker-symbol': 'fuel',
+                        'marker-size': 'medium'
+                    }
+                };
+                markers.push(f);
+            });
+            return markers;
+        };
+        
         var setAssetMarkers = function (restResponse) {
             var features = [];
             $.each(restResponse.data, function (k,v) {
@@ -103,11 +126,9 @@ function() {
             });
             if (features.length > 0) {
                 $('.mapbox').trigger('set-features', [features]);
-                var center = {
-                    lat: features[0].geometry.coordinates[1],
-                    lon: features[0].geometry.coordinates[0]
-                };
-                $('.mapbox').trigger('center-map', [center.lat, center.lon]);
+                // Some features might not be valid, so I request an autocenter
+                // instead of a regular center
+                $('.mapbox').trigger('autocenter');                
             }
         };
         
@@ -239,9 +260,20 @@ function() {
         
         //</editor-fold>
         
+        
+        // Model extractor for chart
+        var formatFillLevelData = function (data) {
+            debugger;
+            return data;
+        };
+        
         // =====================================================================
         // Dashboard component load
         // =====================================================================
+        
+        // DEBUG only:
+        var mock = {"totalRegistered":[{"date":1356994800000,"value":25},{"date":1357081200000,"value":32},{"date":1357167600000,"value":39},{"date":1357254000000,"value":45},{"date":1357340400000,"value":53},{"date":1357426800000,"value":58},{"date":1357513200000,"value":66},{"date":1357599600000,"value":72},{"date":1357686000000,"value":77},{"date":1357772400000,"value":84},{"date":1357858800000,"value":89},{"date":357945200000,"value":97},{"date":1358031600000,"value":104},{"date":1358118000000,"value":109},{"date":1358204400000,"value":115},{"date":1358290800000,"value":123}]};
+        
         
         //<editor-fold defaultstate="collapsed" desc="Component list">
         var detailPanelComponents = [
@@ -264,22 +296,51 @@ function() {
                 ]
             },
             {
-                component: 'chartContainer',
-                rangeField: 'selectedRange',
-                valueField: 'totalRegistered',
-                className: 'chart',
-                marginRight: 45,
-                marginBottom: 8,
-                grid: true,
-                axisy: true,
-                charts: [{
-                    type: 'areaChart',
-                    tooltip: true,
-                    model: 'totalRegistered',
-                    //rangeField: 'selectedRange',
-                    cssClass: 'cyan'
-                }]
+                component: 'detailPanel',
+                header: 'Fill level',
+                items: [
+                    {
+                        component: 'chartContainer',
+                        rangeField: 'notThere',
+                        valueField: 'totalRegistered',
+                        className: 'chart',
+                        marginRight: 45,
+                        marginBottom: 8,
+                        grid: true,
+                        axisy: true,
+                        model: function (f) {
+                            return f.selected.mock;
+                        },
+                        charts: [{
+                            type: 'areaChart',
+                            tooltip: true,
+                            model: 'totalRegistered',
+                            rangeField: 'notThere',
+                            cssClass: 'cyan'
+                        }]
+                    }
+                ]
             },
+//            {
+//                component: 'chartContainer',
+//                rangeField: 'notThrere',
+//                valueField: 'totalRegistered',
+//                className: 'chart',
+//                marginRight: 45,
+//                marginBottom: 8,
+//                grid: true,
+//                axisy: true,
+//                model: function (f) {
+//                    return f.selected.mock;
+//                },
+//                charts: [{
+//                    type: 'areaChart',
+//                    tooltip: true,
+//                    model: 'totalRegistered',
+//                    //rangeField: 'selectedRange',
+//                    cssClass: 'cyan'
+//                }]
+//            },
             {
                 component: 'detailPanel',
                 header: 'Battery Level',
@@ -312,11 +373,13 @@ function() {
         //<editor-fold defaultstate="collapsed" desc="Load dashboard">
         
         $('.dashboard').m2mdashboard({
+            
+            //<editor-fold defaultstate="collapsed" desc="Main content">
             mainContent: [{
                 component: 'mapViewer',
+                model: 'detailed',
                 map: {
                     id: 'keithtid.map-w594ylml',
-//                    id: 'keithtid.map-z1eeg2ge',
                     center: {lat: 40.515, lon: -3.665 },
                     maxZoom: 18,
                     minZoom: 5,
@@ -334,6 +397,7 @@ function() {
                 whenPanned: whenPanned,
                 featuresPreprocessor: featuresPreprocessor,
                 createOffscreenIndicators: true,
+                markerSimpleSymbol: 'fuel',
                 features: [
                     {   
                         geometry: { coordinates: [ -3.664929, 40.51654] },
@@ -345,6 +409,9 @@ function() {
                     }
                 ]
             }],
+            //</editor-fold>
+            
+            //<editor-fold defaultstate="collapsed" desc="Overview panel">
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,
@@ -365,27 +432,49 @@ function() {
                     }
                 ]
             },
+            //</editor-fold>
+            
+            //<editor-fold defaultstate="collapsed" desc="Data binding">
+        
             data: function(callback) {
-                var d = '{"totalRegistered": ['
-                    +'{"date": 1356994800000,"value": 25},'
-                    +'{"date": 1357081200000,"value": 32},'
-                    +'{"date": 1357167600000,"value": 39},'
-                    +'{"date": 1357254000000,"value": 45},'
-                    +'{"date": 1357340400000,"value": 53},'
-                    +'{"date": 1357426800000,"value": 58},'
-                    +'{"date": 1357513200000,"value": 66},'
-                    +'{"date": 1357599600000,"value": 72},'
-                    +'{"date": 1357686000000,"value": 77},'
-                    +'{"date": 1357772400000,"value": 84},'
-                    +'{"date": 1357858800000,"value": 89},'
-                    +'{"date": 1357945200000,"value": 97},'
-                    +'{"date": 1358031600000,"value": 104},'
-                    +'{"date": 1358118000000,"value": 109},'
-                    +'{"date": 1358204400000,"value": 115},'
-                    +'{"date": 1358290800000,"value": 123}'
-                    +']}';
-                callback(d);
+                
+                var acc = {count:0, historic: []};
+                
+                var updateHistoric = function (data) {
+                    if (acc.count < acc.assetList.data.length) {
+                        if (data !== undefined) acc.historic.push(data);
+                        var url = assetsURL + '/' + acc.assetList.data[acc.count].asset.name 
+                                + '/data?attribute=fillLevel&limit=10';
+                        acc.count += 1;
+                        var handleError = function () {
+                            console.error('Update historic query failure: ' + url);
+                            updateHistoric();
+                        };
+                        $.getJSON(url, updateHistoric).fail(handleError);
+                    }
+                    else {
+                        if (data !== undefined) acc.historic.push(data);
+                        callback(acc);
+                    }
+                };
+                
+                $.getJSON(assetsURL, function(data) {
+                    acc.assetList = data;
+                    acc.selected = { name: '', fillHistorical: [], mock: mock}
+                    $.getJSON(assetsDetailedURL, function (data) {
+                        acc.detailed = data;
+                        acc.detailed.format = 'asset';
+                        // Generate features
+                        acc.detailed.features = [];
+                        $.each(acc.detailed.data, function (k,v) {
+                            acc.detailed.features.push(v);
+                        });
+                        
+                        updateHistoric();
+                    });                    
+                });
             }
+            //</editor-fold>
         });
         
         //</editor-fold>
@@ -401,8 +490,8 @@ function() {
         $('.temperature-widget').trigger('drawTemperature');
         $('.battery-widget').trigger('drawBattery');
 
-        /* On load, do api rest call to get devices and set mapbox markers. */
-        loadMarkersFromService();
+        // On load, do api rest call to get devices and set mapbox markers. 
+//        loadMarkersFromService();
         
         $('.panel-detail').hide();
         $('.overview-count').html(0);

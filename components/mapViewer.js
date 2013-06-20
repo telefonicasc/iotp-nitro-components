@@ -101,6 +101,7 @@ function(ComponentManager, DataBinding) {
             features: [],
             markerColorOK: '#5D909F',
             markerColorWARN: '#CB3337',
+            markerSimpleSymbol: 'circle',
             whenZoomed: function () {},
             whenPanned: function () {}
         });
@@ -280,6 +281,14 @@ function(ComponentManager, DataBinding) {
                 else features = this.attr.features;
             }
             
+            // First feature filter: check all features are valid.
+            var self = this;
+            features = $.grep(features, function (ft) {
+                return self.isCorrectFeature(ft);
+            });
+            
+            //<editor-fold defaultstate="collapsed" desc="Feature external processing">
+            
             if (typeof this.attr.featuresPreprocessor === 'function') {
                 if (!skipPreprocessor) {
                     try {
@@ -293,11 +302,14 @@ function(ComponentManager, DataBinding) {
                     }
                 }
             }
-            
+            //</editor-fold>
+                        
             // Auto group markers?
             if (this.attr.map.groupMarkers) {
                 features = this.markerAutogroup(features,this.attr.private.map);
             }
+            
+            //<editor-fold defaultstate="collapsed" desc="Marker layer and marker factory">
             
             // Create layer
             var markerLayer = mapbox.markers.layer().features(features);
@@ -326,7 +338,11 @@ function(ComponentManager, DataBinding) {
             this.attr.private.map.removeLayer('markers');
             this.attr.private.map.addLayer(markerLayer);
             this.attr.private.markerLayer = markerLayer;
+            
+            //</editor-fold>
 
+            //<editor-fold defaultstate="collapsed" desc="Tooltips">
+            
             if (this.attr.map.showTooltip !== false) {
                 var self = this;
                 var interactionLayer = mapbox.markers.interaction(markerLayer);
@@ -352,6 +368,28 @@ function(ComponentManager, DataBinding) {
                     });
                 }
             }
+            
+            //</editor-fold>
+        };
+        
+        // Checks if the feature is correct to show, this is, it has to have 
+        // title and position, at the very least
+        // Receives: Feature to test (GeoJson object)
+        // Returns: True, if valid, false otherwise
+        this.isCorrectFeature = function (feature) {
+            // Feature must have a title
+            if (feature.properties.title === undefined) return false;
+            // Title cannot be empty
+            if (feature.properties.title === '') return false;
+            // Feature must have location
+            if (feature.geometry.coordinates === undefined) return false;
+            // Feature mush have at least two coordinates
+            var loc = feature.geometry.coordinates;
+            if (loc.length < 2) return false;
+            // Coordinates must be defined as numbers
+            if (typeof loc[0] !== 'number') return false;
+            if (typeof loc[1] !== 'number') return false;
+            return true;
         };
         
         // Receives: The new feature GeoJson object to add.
@@ -359,14 +397,20 @@ function(ComponentManager, DataBinding) {
         // Does: Adds the feature to the default markerlayer.
         this.addFeature = function (event, feature) {
             
-            if (typeof feature.properties.submarkers === 'undefined') {
-                feature.properties.submarkers = [];
-                feature.properties.isGroup = false;
+            if (this.isCorrectFeature(feature)) {
+                if (typeof feature.properties.submarkers === 'undefined') {
+                    feature.properties.submarkers = [];
+                    feature.properties.isGroup = false;
+                }
+
+                this.attr.private.markerLayer.add_feature(feature);
+                if (this.attr.createOffscreenIndicators) {
+                    this.updateOffscreenIndicators();
+                }
             }
-            
-            this.attr.private.markerLayer.add_feature(feature);
-            if (this.attr.createOffscreenIndicators) {
-                this.updateOffscreenIndicators();
+            else {
+                console.warn('Requested new feature has some missing fields (\n\
+                    minimum are title and location): ' + JSON.stringify(feature));
             }
         };
         
@@ -616,15 +660,26 @@ function(ComponentManager, DataBinding) {
                     this.select(this.attr.selectMapbox).trigger('feature-selected', f);
                 }
             });
+            this.on('autocenter', function () {
+                var feature = this.attr.private.markerLayer.features[0];
+                if (typeof feature !== 'undefined') {
+                    var loc = feature.geometry.coordinates;
+                    this.centerMap(loc[1],loc[0]);
+                }
+            });
 
             this.on('valueChange', function (e, o) {
                 var values = o.value;
                 if ($.isPlainObject(values)) {
-                    values = this.dataFormats[o.value.format](o.value.features);
+                    if (o.value.format !== undefined && o.value.features !== undefined) {
+                        values = this.dataFormats[o.value.format](o.value.features);
+                    }
                 }
                 this.setFeatures(values);
             });
 
+            var markercolor = this.attr.markerColorOK;
+            var markersimbol = this.attr.markerSimpleSymbol;
             this.dataFormats = {
                 asset: function (features) {
                     return $.map(features, function(f) {
@@ -636,9 +691,11 @@ function(ComponentManager, DataBinding) {
                                      location.latitude]
                                 },
                                 properties: {
-                                    'marker-color': '#000',
-                                    'title': f.name
-                                }
+                                    'marker-color': markercolor,
+                                    'marker-symbol': markersimbol,
+                                    'title': f.asset.name
+                                },
+                                item: f
                             };
                         }
                     });

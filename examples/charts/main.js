@@ -30,7 +30,7 @@ define(
                                     type: 'areaChart',
                                     tooltip: true,
                                     model: 'totalRegistered',
-                                    //rangeField: 'selectedRange',
+                                    rangeField: 'selectedRange',
                                     cssClass: 'cyan'
                                 }]
                         }],

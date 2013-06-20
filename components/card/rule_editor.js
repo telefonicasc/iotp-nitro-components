@@ -28,30 +28,31 @@ define(
                     rule:{
                         cards: []
                     },
-                    isValid:true
+                    isValid: true
                 },
                 cardDefaults: {
                     component: 'Card'
                 },
                 actionsLabel: 'Actions',
                 conditionsLabel: 'Conditions',
-                delimiterLabels: {
+                delimiterLabels: { 
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE',
-                    'IS_OFF':'IS_OFF'
+                    'IS_OFF': 'IS_OFF',
+                    'IS_ON': 'IS_ON' 
                 },
                 locales: {
                     Card:{
                         'subject': 'Subject',
                         'to': 'To',
-                        'sensor_name':'Sensor Name'
+                        'sensor_name': 'Sensor Name'
                     },
                     CardData:{
-                        'true':'True',
-                        'false':'False',
-                        'value':'Value'
+                        'true': 'True',
+                        'false': 'False',
+                        'value': 'Value'
                     }
                 },
                 editable: true

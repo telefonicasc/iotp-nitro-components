@@ -302,7 +302,7 @@ function(ComponentManager, DataBinding) {
             // Create layer
             var markerLayer = mapbox.markers.layer().features(features);
             // Create marker
-            markerLayer.factory(function(feature) {
+            markerLayer.factory($.proxy(function(feature) {
                 var dom = null;
                 if (typeof feature.properties.customMarkerBuilder === 'function') {
                     dom = feature.properties.customMarkerBuilder(feature);
@@ -312,12 +312,15 @@ function(ComponentManager, DataBinding) {
                     dom = mapbox.markers.simplestyle_factory(feature);
                 }
 
-                $(dom).click(function () {
-                    $(this).trigger('marker-clicked', [this, feature]);
-                });
+                $(dom).click($.proxy(function () {
+                    if (feature.item) {
+                        this.trigger('itemselected', { item: feature.item });
+                    }
+                    this.trigger('marker-clicked', [this, feature]);
+                }, this));
                 
                 return dom; 
-            });
+            }, this));
             
             markerLayer.key (function (f) {
                 return f.properties.title;
@@ -638,7 +641,8 @@ function(ComponentManager, DataBinding) {
                                 properties: {
                                     'marker-color': '#000',
                                     'title': f.name
-                                }
+                                },
+                                item: f
                             };
                         }
                     });

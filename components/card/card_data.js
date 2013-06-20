@@ -1,25 +1,29 @@
 define(
 [],
 function() {
+    
     var locales = {
-        'true':'True',
-        'false':'False',
-        'value':'Value',
+        'true': 'True',
+        'false': 'False',
+        'value': 'Value',
         'after': 'After',
         'every': 'Every'
-    };
+    }; 
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
+    
     var cardType = {
-        'SENSOR_CARD':'SensorCard',
-        'ACTION_CARD':'ActionCard'
-    };
+        'SENSOR_CARD': 'SensorCard',
+        'ACTION_CARD': 'ActionCard'
+    }; 
+
     var component = {
-        'ANGLE':'AngleWidget',
-        'SLIDER':'Slider',
-        'BATTERY':'Battery',
-        'SEND_EMAIL':'SendEmail'
-    };
+        'ANGLE': 'AngleWidget',
+        'SLIDER': 'Slider',
+        'BATTERY': 'Battery',
+        'SEND_EMAIL': 'SendEmail'
+    }; 
+
     var encodeSensor = {
         'angle': function(card){
             card.front = {
@@ -165,28 +169,42 @@ function() {
             };
             card.flippable = false;
             card.back = {};
-            card.delimiterList = ['IS_OFF', 'IS_ON'];
+            card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
             return card;
         }
         
     };
-
+    
     var encodeAction = {
-        'SendEmailAction':function(card){
+        'SendEmailAction': function(card) {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = 'Send Email';
             card.component = component.SEND_EMAIL;
             card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;
+        },
+        'SendAlarmAction': function(card){
+            card.cssClass = 'm2m-card-action m2m-card-send-email';
+            card.header = 'Envío de alarma';
+            card.component = 'SendAlarm';
+            return card;
         }
     };
+    
     var decodeSensor = {};
+    
     var decodeAction = {
-        'SendEmailAction':function(cardConfig, cardData){
+        'SendEmailAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
+        },
+         'SendAlarmAction': function(cardConfig, cardData){
+            cardConfig.actionData.userParams = cardData.userParams;
+            return cardConfig;
+            
         }
-    };
+    }; 
+
     var encode = function (card) {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
@@ -208,6 +226,7 @@ function() {
         }
         return card;
     };
+    
     var decode = function(cardConfig, cardData){
         var adapterMethodName = _getMethodNameForPase(cardConfig);
         var adapterMethod;
@@ -222,6 +241,7 @@ function() {
         }
         return cardConfig;
     };
+    
     var addLocales = function(newLocales){
         $.extend(locales, newLocales);
     };
@@ -231,13 +251,12 @@ function() {
             name, phenomenon;
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
-
             //@TODO este nombre de phenomenon es temporal
-            if (phenomenon ==='off'){
+            if (phenomenon === 'off') {
                 name = 'noSensorSignal';
-            } else if (phenomenon ==='timeInterval'){
+            } else if (phenomenon === 'timeInterval') {
                 name = 'timeInterval';
-            } else if (phenomenon ==='timeElapsed'){
+            } else if (phenomenon === 'timeElapsed') {
                 name = 'timeElapsed';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
@@ -259,8 +278,9 @@ function() {
     };
 
     return {
-        'addLocales':addLocales,
-        'encode':encode,
-        'decode':decode
+        'addLocales': addLocales,
+        'encode': encode,
+        'decode': decode
     };
+
 });

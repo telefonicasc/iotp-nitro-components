@@ -8,6 +8,7 @@ define(
   [
     'components/card/rule_editor',
     'components/card/action/send_email',
+    'components/card/action/send_alarm',
     'components/sensor_widget/battery',
     'components/sensor_widget/angle',
     'components/slider',
@@ -17,8 +18,8 @@ define(
     'components/card/front/binary',
     'components/card/front/quantity_value',
     'components/card/front/off',
-    'components/form/dropdown',
-    'components/card/front/alarm'
+      'components/card/front/alarm',
+    'components/form/dropdown'
   ],
 
   function() {
@@ -62,7 +63,8 @@ define(
                         'MINOR_THAN': 'MENOR',
                         'GREATER_THAN': 'MAYOR',
                         'IS_OFF': 'APAGADO',
-                        'IS_ON': 'ENCENDIDO' 
+                        'ACTIVATED': 'ACTIVADA',
+                        'DEACTIVATED': 'DESACTIVADA' 
                     }
                 };
                 $http.get('actions.json').success(function(data) {

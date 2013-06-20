@@ -15,6 +15,7 @@ define(
             'components/dashboard/dashboard',
             'components/minimap',
             'components/dashboard/overview_subpanel',
+            'components/dashboard/overview_subpanel_list',
             'components/paged_container',
             'components/detail_panel',
             'components/map',
@@ -107,31 +108,39 @@ define(
                     $('.mapbox-mini').trigger('updateMinimap', marker);
                 };
 
-                var generateErrorText = function(sensorData) {
-                    var errors = '';
+                //@TODO exportar a m2m-dashboard
+                var getErrors = function(sensorData){
+                    var errors = [];
                     $.each(sensorData, function(index, value) {
                         if ('ms' in value) {
                             // Evaluate error conditions
-                            if (value.ms.p === 'voltage' && parseInt(value.ms.v) < 10) {
-                                errors += 'Voltage < 10V</br>';
+                            if (value.ms.p === 'voltage' && window.parseInt(value.ms.v) < 10) {
+                                errors.push('Voltage < 10V');
                             }
                             else if (value.ms.p === 'pitch') {
                                 var pitch = parseInt(value.ms.v);
                                 if (pitch < 80 || pitch > 100) {
-                                    errors += 'Inclination change +10</br>';
+                                    errors.push('Inclination change +10');
                                 }
                             }
                             else if (value.ms.p === 'greenLight' && value.ms.v === 'error') {
-                                errors += 'Green light error</br>';
+                                errors.push('Green light error');
                             }
                             else if (value.ms.p === 'yellowLight' && value.ms.v === 'error') {
-                                errors += 'Yellow light error</br>';
+                                errors.push('Yellow light error');
                             }
                             else if (value.ms.p === 'redLight' && value.ms.v === 'error') {
-                                errors += 'Red light error</br>';
+                                errors.push('Red light error');
                             }
                         }
+                        var a = null;
                     });
+                    return errors;
+                };
+
+                //@TODO exportar a m2m-dashboard
+                var generateErrorText = function(sensorData) {
+                    var errors = getErrors(sensorData).join(' <br/> ');
                     return errors;
                 };
 
@@ -181,22 +190,16 @@ define(
                     requestApiData(assetsDetailedURL, updateAssetsFn);
                 };
 
+                //@TODO export to m2m-dashboard
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
+                    var erromsg;
 
                     // Update selected element name
                     $('.panel-detail .detail-element-header .text').html(assetName);
-                    // Get asset errors, if any
-                    if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                        $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
-                        $('.panel-detail .detail-element-header .icon').addClass('marker-red');
-                        var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                        $('.panel-detail .detail-errors').html(errors);
-                    }
-                    else {
-                        $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
-                        $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
-                        $('.panel-detail .detail-errors').html('No problems detected');
+                    if(response.data.errors.length){
+                        erromsg = generateErrorText(response.data.sensorData);
+                        $('.panel-detail .detail-errors').html(erromsg);
                     }
                     var last_update = 'Last update: ';
                     if (response.data.sensorData.length > 0)
@@ -222,30 +225,6 @@ define(
                         }
                     });
 
-                    // Update lights
-
-                    var urlList = [];
-                    var baseURL = assetsURL + '/' + assetName;
-                    urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
-
-                    if (useKermit) {
-                        var $q = Kermit.$injector.get('$q');
-
-                        var red = API.http.request({method:'GET', url:urlList[0]});
-                        var yellow = API.http.request({method:'GET', url:urlList[1]});
-                        var green = API.http.request({method:'GET', url:urlList[2]});
-
-                        $q.all([ red, yellow, green ])
-                        .then(function(results) {
-                            console.log('Got results');
-                            $('.lights-widget').trigger('paintLights', [results[0].data, results[1].data, results[2].data]);
-                        });
-                    }
-                    else {
-                        $('.lights-widget').trigger('updateLights',[urlList]);
-                    }
                 };
 
                 var updateAssetInfo = function (assetName) {
@@ -253,11 +232,13 @@ define(
                     requestApiData(url, updateAssetInfoFn);
                 };
 
+                //@TODO mover al m2m-dashboard
                 var showDetails = function(event, data) {
+                    var item = data.item;
                     $('.panel-detail').show();
                     $('.panel-list').hide();
-                    updateAssetInfo(data.properties.title);
                     $('.panel-detail').trigger('update-view');
+                    updateAssetInfo(item.asset.name);
                 };
 
                 var hideDetails = function() {
@@ -338,15 +319,6 @@ define(
                         f.properties['marker-size'] = 'large';
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
-                        }
-                        try {
-                            if (f.properties.submarkers.length === 0) {
-                                showDetails(null,f);
-                            }
-                        }
-                        catch (err) {
-                            // submarkers not defined
-                            showDetails(null,f);
                         }
                     }
                 };
@@ -473,20 +445,41 @@ define(
                             whenPanned: function (f) {
                                 updateOffscreenIndicators();
                             },
+                            model: function(assets) {
+                                return {
+                                    format: 'asset',
+                                    features: assets
+                                }
+                            },
 //                            featuresPreprocessor: processFeatures,
                             features: []
                         }
                     ],
                     overviewPanel: {
                         title: 'Lights with warnings',
-                        count: 0,
-                        items: [
-                            {
-                                component: 'pagedContainer',
+                        count: 10,//@TODO esto no funciona porque hay que overviewPanel no lo lee
+                        items: [{
+                                component: 'OverviewSubpanelList',
+                                iconClass: 'marker-red',
                                 className: 'panel-list',
-                                header: '',
                                 ID: 'panel-list',
-                                items: []
+                                text: function(data) {
+                                    var value = '';
+                                    if(data && data.asset){
+                                        value = data.asset.name;
+                                    }
+                                    return value;
+                                },
+                                caption: function(data) {
+                                    var value = '';
+                                    if(data && data.sensorData){
+                                        value = generateErrorText(data.sensorData);
+                                    }
+                                    return value;
+                                },
+                                filter : function(item){
+                                    return (item.errors.length>0);
+                                }
                             },
                             {
                                 component: 'pagedContainer',
@@ -494,13 +487,40 @@ define(
                                 extraHeaderGap: 50,
                                 alwaysVisible: [0, 1],
                                 items: compList
-                            }
-                        ]
-                    },
-                    data: function() {
+                            }]
+                        },
+                        data: function(cb) {
+                            requestApiData('data/assets.json', function(assets){
+                                $.each(assets.data, function(i, item){
+                                    item.errors = getErrors(item.sensorData);
+                                });
+                                cb(assets.data);
+                                if (centerOnLoad) updateCenter();
+                            });
+                        },
+                        itemData: function(item, cb) {
+                            var results = [];
+                            var paintLights = function(response) {
+                                results.push(response);
+                                if(results.length === 3){
+                                    $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
+                                }
+                            };
 
+                            requestApiData('data/AssetSemaphore.json', function(data){
+                                data.data.errors = getErrors(data.data.sensorData);
+                                $('.panel-detail').show();
+                                $('.panel-list').hide();
+                                $('.panel-detail').trigger('update-view');
+                                updateAssetInfoFn(data);
+                            });
+                            requestApiData('data/redLight.json', paintLights);
+                            requestApiData('data/greenLight.json', paintLights);
+                            requestApiData('data/yellowLight.json', paintLights);
+
+                        }
                     }
-                });
+                );
 
                 // =============================================================
                 // Complete DOM
@@ -542,11 +562,12 @@ define(
                     }
                 );
 
-                $('.dashboard').on('asset-selected', showDetails);
+                //$('.dashboard').on('itemselected', showDetails);
 
                 $('.overview-header').on('click', hideDetails);
 
                 // Event when a tooltip element is clicked
+                /*
                 $(document).on('click', '.tooltip-selector', function() {
                     var sel = { properties: {
                             title: $(this).html()
@@ -554,9 +575,10 @@ define(
                     };
                     showDetails(null, sel);
                 });
+                */
 
                 // Load initial data
-                updateAssets();
+                //updateAssets();
 
                 /* Uncomment this line for device data polling */
                 // window.setInterval(function () { updateAssets(); }, pollInterval);

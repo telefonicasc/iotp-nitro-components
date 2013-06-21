@@ -9,7 +9,6 @@ define(
         return ComponentManager.create('minimap', Minimap);
 
         function Minimap() {
-            var mapM;
             var markerLayer;
 
             this.defaultAttrs({

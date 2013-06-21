@@ -1,12 +1,14 @@
 define (
 [
     'components/component_manager',
+    'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
                                 
-function (ComponentManager) {
+function (ComponentManager, DataBinding) {
     
-    return ComponentManager.create('temperatureWidget', TemperatureWidget);
+    return ComponentManager.create('temperatureWidget', TemperatureWidget,
+        DataBinding);
                                                         
     function TemperatureWidget () {
         
@@ -36,6 +38,13 @@ function (ComponentManager) {
                 this.attr.widget = this.createTemperatureChart(); 
                 this.drawTemperature(this.attr.widget, this.attr.temp);
                 $(this.attr.temperatureLabel).html(this.attr.temp + 'ºC');
+            });
+
+            this.on('valueChange', function(e,o) {
+                var value = o.value;
+                if (value !== undefined) {
+                    this.trigger('drawTemperature', value);
+                }
             });
         });
 

@@ -1,6 +1,45 @@
 {
     "count": 17,
     "data": [
+    	{
+            "id": "000",
+            "type": "SensorCard",
+            "model": "Alarm",
+            "sensorData": {
+                "measureName": "Alarm",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:Alarm",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:alarm",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        },
+        {
+            "id": "000",
+            "type": "SensorCard",
+            "model": "TimeInterval",
+            "sensorData": {
+                "measureName": "TimeInterval",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeInterval",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeInterval",
+                "dataType": "Quantity",
+                "uom": "hrs"
+            },
+            "configData": {}
+        },
+        {
+            "id": "000",
+            "type": "SensorCard",
+            "model": "TimeElapsed",
+            "sensorData": {
+                "measureName": "TimeElapsed",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeElapsed",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeElapsed",
+                "dataType": "Quantity",
+                "uom": "sec"
+            },
+            "configData": {}
+        },
         {
             "id": "1b4c0bd1-c868-40ee-96c7-015573da030a",
             "type": "SensorCard",
@@ -8,7 +47,7 @@
             "sensorData": {
                 "measureName": "pitch",
                 "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
-                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                "phenomenon":    "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
                 "dataType": "Quantity",
                 "uom": "deg"
             },

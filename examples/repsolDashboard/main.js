@@ -335,7 +335,7 @@ function() {
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-            $('.minimap').trigger('minimap-update', feature);
+            this.updateMinimap(null, m);
         };
         
         var updateSelectedAssetInfo = function (feature) {
@@ -344,21 +344,19 @@ function() {
             requestApiData(assetInfoURL,updateAssetView);            
         };
         
+        var updateMinimap = function (f,m) {
+            var data = {};
+            data.value = f;
+            data.value.markerModel = m;
+            $('.minimap').trigger('valueChange', data);
+        };
         
         //</editor-fold>
         
         
-        // Model extractor for chart
-        var formatFillLevelData = function (data) {
-            debugger;
-            return data;
-        };
-        
         // =====================================================================
         // Dashboard component load
         // =====================================================================
-        
-        
         
         //</editor-fold>
         
@@ -435,7 +433,9 @@ function() {
                         mapId: 'keithtid.map-z1eeg2ge',
                         zoomValue: 16,
                         movable: true,
-                        listenTo: 'minimap-update',
+                        model: function (v) {debugger
+                            return v.item.asset;
+                        },
                         containerClass: 'minimap'
                     }
                 ]
@@ -488,7 +488,7 @@ function() {
                         component: 'pagedContainer',
                         className: 'panel-detail',
                         alwaysVisible: [0, 1],
-                        items: [ //detailPanelComponents
+                        items: [ 
                             detailedHeader,
                             detailedConditions,
                             detailedFillLevel,
@@ -545,7 +545,7 @@ function() {
         
         //</editor-fold>
             
-        //<editor-fold defaultstate="collapsed" desc="Startup">
+        //<editor-fold defaultstate="collapsed" desc="Startup & Event handlers">
         // =====================================================================
         // Startup
         // =====================================================================
@@ -567,7 +567,9 @@ function() {
         $('.dashboard').on('show-details', showDetails);
         $('.dashboard').on('hide-details', hideDetails);
         $('.overview-header').on('click', hideDetails);
-        
+        $('.dashboard').on('itemselected', function (k,v) { 
+            updateMinimap(v,assets2markers(v)[0]) 
+        });
         //</editor-fold>
     });
 });

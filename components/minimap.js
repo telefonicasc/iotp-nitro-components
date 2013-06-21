@@ -1,12 +1,13 @@
 define(
     [
         'components/component_manager',
+        'components/mixin/data_binding',
         'libs/mapbox'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, DataBinding) {
 
-        return ComponentManager.create('minimap', Minimap);
+//        return ComponentManager.create('minimap', Minimap, DataBinding);
 
         function Minimap() {
             var markerLayer;
@@ -50,8 +51,7 @@ define(
                 
                 this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
 
-                // Event listener
-                this.on(this.attr.listenTo,function (event, markerModel) {
+                this.updateValue = function (markerModel) {
                     this.markerLayer = mapbox.markers.layer().features([markerModel]);
                     this.mapM.removeLayer('markers');
                     this.mapM.addLayer(this.markerLayer);
@@ -60,6 +60,12 @@ define(
                         lon: markerModel.geometry.coordinates[0]
                     };
                     this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
+                };
+
+                // Event listener
+                // Deprecated! use value change instead
+                this.on(this.attr.listenTo, function (event, markerModel) {
+                    this.updateValue(markerModel);
                 });
                 
                 // center on marker if required
@@ -67,7 +73,36 @@ define(
                     event.stopPropagation();
                     this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
                 });
+                
+                // Expects something like: "{"name":"Tank-501340596","location":{"altitude":0,"latitude":40.513538,"longitude":-3.663769}}"
+                this.on('valueChange', function (e, o) {
+                    e.stopPropagation();
+                    var markerModel = o.value.markerModel === undefined? null : o.value.markerModel;
+                    var values = o.value;
+                    if (markerModel !== null) this.updateValue(markerModel);
+                    else if ($.isPlainObject(values)) {
+                        // Create marker model from asset
+                        var f = {
+                            geometry: {
+                                coordinates: [
+                                    values.asset.location.longitude,
+                                    values.asset.location.latitude
+                                ]
+                            },
+                            properties: {
+                                'title': values.asset.name,
+                                'caption': values.asset.description,
+                                'marker-color': '#0F0',
+                                'marker-symbol': 'circle',
+                                'marker-size': 'medium'
+                            }
+                        };
+                        this.updateValue(f);
+                    }
+                });
             });
         }
+        
+        return ComponentManager.create('minimap', Minimap, DataBinding);
     }
 );

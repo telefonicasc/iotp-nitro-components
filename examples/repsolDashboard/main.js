@@ -32,85 +32,65 @@ function() {
             err: '#CB3337'
         };
         
-        var mock = {"totalRegistered":[
-                {"date":1356994800000,"value":25},
-                {"date":1357081200000,"value":32},
-                {"date":1357081200000,"value":12},
-                {"date":1357081200000,"value":45},
-                {"date":1357081200000,"value":29}
-        ]};
+//        var mock = {"totalRegistered":[
+//                {"date":1356994800000,"value":25},
+//                {"date":1357081200000,"value":32},
+//                {"date":1357081200000,"value":12},
+//                {"date":1357081200000,"value":45},
+//                {"date":1357081200000,"value":29}
+//        ]};
     
         // DEBUG only:
         //<editor-fold defaultstate="collapsed" desc="Full mock">
         
-//        var mock = {
-//           "totalRegistered":[
-//              {
-//                 "date":1356994800000,
-//                 "value":25
-//              },
-//              {
-//                 "date":1357081200000,
-//                 "value":32
-//              },
-//              {
-//                 "date":1357167600000,
-//                 "value":39
-//              },
-//              {
-//                 "date":1357254000000,
-//                 "value":45
-//              },
-//              {
-//                 "date":1357340400000,
-//                 "value":53
-//              },
-//              {
-//                 "date":1357426800000,
-//                 "value":58
-//              },
-//              {
-//                 "date":1357513200000,
-//                 "value":66
-//              },
-//              {
-//                 "date":1357599600000,
-//                 "value":72
-//              },
-//              {
-//                 "date":1357686000000,
-//                 "value":77
-//              },
-//              {
-//                 "date":1357772400000,
-//                 "value":84
-//              },
-//              {
-//                 "date":1357858800000,
-//                 "value":89
-//              },
-//              {
-//                 "date":357945200000,
-//                 "value":97
-//              },
-//              {
-//                 "date":1358031600000,
-//                 "value":104
-//              },
-//              {
-//                 "date":1358118000000,
-//                 "value":109
-//              },
-//              {
-//                 "date":1358204400000,
-//                 "value":115
-//              },
-//              {
-//                 "date":1358290800000,
-//                 "value":123
-//              }
-//           ]
-//        };
+        var mock = {
+           "totalRegistered":[
+              {
+                 "date":1356994800000,
+                 "value":12
+              },
+              {
+                 "date":1357081200000,
+                 "value":26
+              },
+              {
+                 "date":1357167600000,
+                 "value":47
+              },
+              {
+                 "date":1357254000000,
+                 "value":21
+              },
+              {
+                 "date":1357340400000,
+                 "value":67
+              },
+              {
+                 "date":1357426800000,
+                 "value":4
+              },
+              {
+                 "date":1357513200000,
+                 "value":9
+              },
+              {
+                 "date":1357599600000,
+                 "value":56
+              },
+              {
+                 "date":1357686000000,
+                 "value":89
+              },
+              {
+                 "date":1357772400000,
+                 "value":65
+              },
+              {
+                 "date":1357858800000,
+                 "value":40
+              }
+           ]
+        };
         //</editor-fold>
         
         //</editor-fold>
@@ -335,7 +315,7 @@ function() {
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-            this.updateMinimap(null, m);
+//            updateMinimap({}, feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
@@ -390,7 +370,6 @@ function() {
                 items: [
                     {
                         component: 'chartContainer',
-                        rangeField: 'totalRegistered',
                         valueField: 'totalRegistered',
                         className: 'chart',
                         marginRight: 45,
@@ -404,7 +383,6 @@ function() {
                             type: 'areaChart',
                             tooltip: true,
                             model: 'totalRegistered',
-                            rangeField: 'totalRegistered',
                             cssClass: 'cyan'
                         }]
                     }
@@ -433,8 +411,8 @@ function() {
                         mapId: 'keithtid.map-z1eeg2ge',
                         zoomValue: 16,
                         movable: true,
-                        model: function (v) {debugger
-                            return v.item.asset;
+                        model: function (v) {
+                            return v.detailed.data[0].asset;
                         },
                         containerClass: 'minimap'
                     }
@@ -567,9 +545,6 @@ function() {
         $('.dashboard').on('show-details', showDetails);
         $('.dashboard').on('hide-details', hideDetails);
         $('.overview-header').on('click', hideDetails);
-        $('.dashboard').on('itemselected', function (k,v) { 
-            updateMinimap(v,assets2markers(v)[0]) 
-        });
         //</editor-fold>
     });
 });

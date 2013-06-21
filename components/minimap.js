@@ -65,7 +65,7 @@ define(
                 // Event listener
                 // Deprecated! use value change instead
                 this.on(this.attr.listenTo, function (event, markerModel) {
-                    this.updateValue(markerModel);
+//                    this.updateValue(markerModel);
                 });
                 
                 // center on marker if required
@@ -80,18 +80,18 @@ define(
                     var markerModel = o.value.markerModel === undefined? null : o.value.markerModel;
                     var values = o.value;
                     if (markerModel !== null) this.updateValue(markerModel);
-                    else if ($.isPlainObject(values)) {
+                    else if ($.isPlainObject(values) && values.location.longitude !== "") {
                         // Create marker model from asset
                         var f = {
                             geometry: {
                                 coordinates: [
-                                    values.asset.location.longitude,
-                                    values.asset.location.latitude
+                                    values.location.longitude,
+                                    values.location.latitude
                                 ]
                             },
                             properties: {
-                                'title': values.asset.name,
-                                'caption': values.asset.description,
+                                'title': values.name,
+                                'caption': values.description,
                                 'marker-color': '#0F0',
                                 'marker-symbol': 'circle',
                                 'marker-size': 'medium'

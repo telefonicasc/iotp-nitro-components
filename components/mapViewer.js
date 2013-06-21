@@ -619,7 +619,7 @@ function(ComponentManager, DataBinding) {
                     this.select(this.attr.selectMapbox).trigger('feature-selected', f);
                 }
             });
-            this.on('update-current-selected-feature', function (event, callback) {
+            this.on('unselect-feature', function (event, callback) {
                 var currentSelected = this.attr.private.selected;
                 if (currentSelected !== null) {
                     callback(currentSelected);
@@ -627,7 +627,6 @@ function(ComponentManager, DataBinding) {
                     this.setFeatures(this.attr.private.markerLayer.features());
                 }
             });
-
             this.on('valueChange', function (e, o) {
                 var values = o.value;
                 if ($.isPlainObject(values)) {

@@ -24,6 +24,7 @@ define(
                 start = null,
                 end = null,
                 context = d3.select(this.node);
+                
             this.brush = d3.svg.brush()
               .x(this.attr.x)
               .on('brush', $.proxy(function() {
@@ -37,19 +38,20 @@ define(
                   }
                   this.updateExtent(ext);
                   this.value[this.attr.selectedRangeField] = ext;
+                  this.value['brush'] = 'brush';
                   previousExtend = ext;
-                  this.trigger('valueChange', { value: this.value, brush: 'brushend' });                       
+                  this.trigger('valueChange', { value: this.value });                       
                     
               }, this))
-              .on('brushstart', $.proxy(function(){
-                    this.value['brushend'] = false;
+              .on('brushstart', $.proxy(function() {
+                  this.value['brush'] = 'start';
               }, this))
               .on('brushend', $.proxy(function(){
-                    ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
-                    this.updateExtent(ext);
-                    this.value[this.attr.selectedRangeField] = [start, end];
-                    this.value['brushend'] = true;
-                    this.trigger('valueChange', { value: this.value });
+                  ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                  this.updateExtent(ext);
+                  this.value[this.attr.selectedRangeField] = [start, end];
+                  this.value['brush'] = 'end';
+                  this.trigger('valueChange', { value: this.value });
               }, this));
 
             if (this.attr.x && this.attr.y){
@@ -87,7 +89,6 @@ define(
 
             this.on('valueChange', function(e, options) {
                 this.value = options.value;
-                //this.brushStatus = options.brush;
                 //e.stopPropagation();
             });
 

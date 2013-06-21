@@ -48,9 +48,10 @@ define(
                 });
 
                 this.after('renderItems', function() {
-                    this.$detailsPanel = $('.dashboard-details-panel', 
+                    this.$detailsPanel = $('.dashboard-details-panel',
                         this.$node);
                     this.$detailsPanel.trigger('collapse', { duration: 0 });
+                    this.$overviewPanel = $('.dashboard-overview-panel', this.$node);
                     this.updateData();
 
                     this.$node.on('click', '.overview-header',
@@ -63,12 +64,12 @@ define(
                     var item = o.item;
                     if (this.attr.itemData) {
                         this.attr.itemData(item, $.proxy(function(data) {
-                            this.$detailsPanel.trigger('valueChange', { 
+                            this.$detailsPanel.trigger('valueChange', {
                                 value: data, silent: true
                             });
                         }, this));
-                    } else {                        
-                        this.$detailsPanel.trigger('valueChange', { 
+                    } else {
+                        this.$detailsPanel.trigger('valueChange', {
                             value: item, silent: true
                         });
                     }

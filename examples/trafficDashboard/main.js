@@ -89,7 +89,7 @@ define(
                         });
                     }
                 };
-
+                /*
                 var createNewMarker = function(name, lat, lon, color) {
                     color = (typeof color === 'undefined') ? markerColorOk : color;
                     // Add marker to map
@@ -107,6 +107,7 @@ define(
                     $('.mapbox').trigger('add-feature', marker);
                     $('.mapbox-mini').trigger('updateMinimap', marker);
                 };
+                */
 
                 //@TODO exportar a m2m-dashboard
                 var getErrors = function(sensorData){
@@ -143,7 +144,7 @@ define(
                     var errors = getErrors(sensorData).join(' <br/> ');
                     return errors;
                 };
-
+/*
                 var updateWarningList = function(assetName, warnings) {
                     var matches = $('.panel-list .overview-subpanel .text:contains(\"' + assetName + '\")');
 
@@ -170,6 +171,7 @@ define(
                     $('.overview-count').html(count);
                 };
 
+
                 var centerMap = function(lat, lon) {
                     $('.mapbox').trigger('center-map', [lat, lon]);
                 };
@@ -189,7 +191,7 @@ define(
                 var updateAssets = function () {
                     requestApiData(assetsDetailedURL, updateAssetsFn);
                 };
-
+*/
                 //@TODO export to m2m-dashboard
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
@@ -226,24 +228,25 @@ define(
                     });
 
                 };
-
+/*
                 var updateAssetInfo = function (assetName) {
                     var url = assetsURL + '/' + assetName;
                     requestApiData(url, updateAssetInfoFn);
                 };
-
+*/
                 //@TODO mover al m2m-dashboard
                 var showDetails = function(event, data) {
                     var item = data.item;
-                    $('.panel-detail').show();
-                    $('.panel-list').hide();
+                    //$('.panel-detail').show();
+                    //$('.panel-list').hide();
                     $('.panel-detail').trigger('update-view');
                     updateAssetInfo(item.asset.name);
                 };
 
+                //@TODO export to m2m-dashboard
                 var hideDetails = function() {
                     $('.panel-list').show();
-                    $('.panel-detail').hide();
+                    //$('.panel-detail').hide();
                     $('.mapbox').trigger('unselect-feature', function(feature){
                         feature.properties['marker-size'] = 'medium';
                     });
@@ -325,7 +328,7 @@ define(
                         }
                     }
                 };
-
+/*
                 var updateWarningPanelTrigger = function() {
                     $('.overview-subpanel .text').on('click', function() {
                         var data = {
@@ -347,6 +350,7 @@ define(
                         $('.dashboard').trigger('asset-selected', data);
                     });
                 };
+                */
 
                 // =============================================================
                 // Prepare dashboard
@@ -484,37 +488,46 @@ define(
                     ],
                     overviewPanel: {
                         title: 'Lights with warnings',
-                        count: 10,//@TODO esto no funciona porque hay que overviewPanel no lo lee
-                        items: [{
-                                component: 'OverviewSubpanelList',
-                                iconClass: 'marker-red',
-                                className: 'panel-list',
-                                ID: 'panel-list',
-                                text: function(data) {
-                                    var value = '';
-                                    if(data && data.asset){
-                                        value = data.asset.name;
-                                    }
-                                    return value;
-                                },
-                                caption: function(data) {
-                                    var value = '';
-                                    if(data && data.sensorData){
-                                        value = generateErrorText(data.sensorData);
-                                    }
-                                    return value;
-                                },
-                                filter : function(item){
-                                    return (item.errors.length>0);
-                                }
-                            },
+                        // count: 10,//@TODO esto no funciona porque Dashboard no lo lee
+                        items: [
                             {
                                 component: 'pagedContainer',
-                                className: 'panel-detail',
-                                extraHeaderGap: 50,
-                                alwaysVisible: [0, 1],
+                                className: 'panel-list',
+                                header: '',
+                                ID: 'panel-list',
+                                selectElements: '.repeat-container',
+                                items: [
+                                    {
+                                        component: 'OverviewSubpanelList',
+                                        iconClass: 'marker-red',
+                                        className: 'panel-list',
+                                        ID: 'panel-list',
+                                        text: function(data) {
+                                            var value = '';
+                                            if(data && data.asset){
+                                                value = data.asset.name;
+                                            }
+                                            return value;
+                                        },
+                                        caption: function(data) {
+                                            var value = '';
+                                            if(data && data.sensorData){
+                                                value = generateErrorText(data.sensorData);
+                                            }
+                                            return value;
+                                        },
+                                        filter : function(item){
+                                            return (item.errors.length>0);
+                                        }
+                                    }
+
+                                ]
+                            },
+                            {
+                                component: 'DashboardDetailsPanel',
                                 items: compList
-                            }]
+                            }
+                        ]
                         },
                         data: function(cb) {
                             requestApiData('data/assets.json', function(assets){
@@ -582,7 +595,7 @@ define(
                 // On resize, update panel views
                 $(window).bind('resize', function() {
                     $('.panel-list').trigger('update-view');
-                    $('.panel-detail').trigger('update-view');
+                    $('.dashboard-details-panel').trigger('update-view');
                 });
 
                 // Update widgets
@@ -603,7 +616,12 @@ define(
 
                 //$('.dashboard').on('itemselected', showDetails);
 
-                $('.overview-header').on('click', hideDetails);
+                //$('.overview-header').on('click', hideDetails);
+                $('.dashboard').on('click', '.overview-header', hideDetails);
+                $('.dashboard').on('valueChange', function(e,data){
+                    var count = data.value.length;
+                    $('.dashboard-overview-panel .overview-count', this).text(count);
+                });
 
                 // Event when a tooltip element is clicked
                 /*

@@ -88,7 +88,7 @@ define(
                 if(cardConfig.conditionList.length){
                     delimiterValue = cardConfig.conditionList[0].operator;
                 }else{
-                    delimiterValue = this.attr.delimiterList[0];
+                    delimiterValue = delimiterList[0];
                 }
 
                 this.setDelimiterValue(delimiterValue);

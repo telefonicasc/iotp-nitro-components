@@ -1,6 +1,9 @@
 (function() {
 
-    define(['components/component_manager'], function(ComponentManager) {
+    define([
+        'components/component_manager',
+        'components/component'
+    ], function(ComponentManager) {
 
         var pluginPrefix = 'm2m';
 

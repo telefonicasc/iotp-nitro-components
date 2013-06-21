@@ -61,9 +61,17 @@ define(
 
                 this.on('itemselected', function(e, o) {
                     var item = o.item;
-                    this.$detailsPanel.trigger('valueChange', { 
-                        value: item, silent: true
-                    });
+                    if (this.attr.itemData) {
+                        this.attr.itemData(item, $.proxy(function(data) {
+                            this.$detailsPanel.trigger('valueChange', { 
+                                value: data, silent: true
+                            });
+                        }, this));
+                    } else {                        
+                        this.$detailsPanel.trigger('valueChange', { 
+                            value: item, silent: true
+                        });
+                    }
                     this.$detailsPanel.trigger('expand');
                 });
             });

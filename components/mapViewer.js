@@ -52,6 +52,7 @@ this.defaultAttrs({
 * **'center-on-feature'** _(string featureTitle)_: Centers the map on the feature with the title property given.
 * **'reload-features'**: Destroys current map, and recreates it with the current features.
 * **'select-feature'** _(string featureTitle, function callback)_: Finds the feature with the given title property, and runs the callback function with it.
+* **'unselect-feature'** _(function callback)_: Unselect current feature
 
 ### Generated events
 * **'marker-clicked'** _(DOM node, GeoJSon feature)_: Issued when a marker is clicked.
@@ -64,7 +65,7 @@ define(
 ],
 function(ComponentManager, DataBinding) {
 
-    
+
 
     function Component() {
 
@@ -104,9 +105,9 @@ function(ComponentManager, DataBinding) {
             whenZoomed: function () {},
             whenPanned: function () {}
         });
-        
+
         //<editor-fold defaultstate="collapsed" desc="Html templates">
-        
+
         this.offscreenIndicatorsHtml =
             '<div class="offscreen-indicator nwmarkers">0</div>' +
             '<div class="offscreen-indicator nmarkers">0</div>' +
@@ -116,15 +117,15 @@ function(ComponentManager, DataBinding) {
             '<div class="offscreen-indicator smarkers">0</div>' +
             '<div class="offscreen-indicator swmarkers">0</div>' +
             '<div class="offscreen-indicator wmarkers">0</div>';
-        
+
         //</editor-fold>
-        
+
         // =====================================================================
         // Functions
         // =====================================================================
-        
+
         //<editor-fold defaultstate="collapsed" desc="Component methods">
-        
+
         // Receives: An object to check.
         // Returns: true if not undefined or null, false otherwise.
         this.isValidObject = function (obj) {
@@ -132,7 +133,7 @@ function(ComponentManager, DataBinding) {
             if (obj === null) return false;
             return true;
         };
-        
+
         // Receives: features to process, and the map they are in
         // Returns: The features already processed
         this.markerAutogroup = function (inFeatures, map) {
@@ -226,8 +227,8 @@ function(ComponentManager, DataBinding) {
                         var inc = function(v) {
                             lat += v.geometry.coordinates[0];
                             lon += v.geometry.coordinates[1];
-                            if (color === colorWARN  || 
-                                    v.properties['marker-color'] === colorWARN) 
+                            if (color === colorWARN  ||
+                                    v.properties['marker-color'] === colorWARN)
                             {
                                 color = colorWARN;
                             }
@@ -259,10 +260,10 @@ function(ComponentManager, DataBinding) {
             updateGroupMarkers(markerList);
             return markerList;
         };
-        
+
         // Receives: The GeoJson feature array.
         // Returns: Nothing.
-        // Does: Creates a marker layer, including all features provided, and 
+        // Does: Creates a marker layer, including all features provided, and
         //       sets it to be the 'markers' layer.
         // Notes:
         //  * The marker can be created using a function defined in the GeoJson
@@ -272,14 +273,14 @@ function(ComponentManager, DataBinding) {
         //    using the property 'customTooltip', as a string, or as a function.
         this.setFeatures = function (features, skipPreprocessor) {
             if (!this.isValidObject(skipPreprocessor)) skipPreprocessor = false;
-            
+
             if (typeof features === 'undefined' || features === null) {
                 if (this.attr.private.markerLayer !== null) {
-                    features = this.attr.private.markerLayer.features();                    
+                    features = this.attr.private.markerLayer.features();
                 }
                 else features = this.attr.features;
             }
-            
+
             if (typeof this.attr.featuresPreprocessor === 'function') {
                 if (!skipPreprocessor) {
                     try {
@@ -293,12 +294,12 @@ function(ComponentManager, DataBinding) {
                     }
                 }
             }
-            
+
             // Auto group markers?
             if (this.attr.map.groupMarkers) {
                 features = this.markerAutogroup(features,this.attr.private.map);
             }
-            
+
             // Create layer
             var markerLayer = mapbox.markers.layer().features(features);
             // Create marker
@@ -318,14 +319,14 @@ function(ComponentManager, DataBinding) {
                     }
                     this.trigger('marker-clicked', [this, feature]);
                 }, this));
-                
-                return dom; 
+
+                return dom;
             }, this));
-            
+
             markerLayer.key (function (f) {
                 return f.properties.title;
             });
-            
+
             this.attr.private.map.removeLayer('markers');
             this.attr.private.map.addLayer(markerLayer);
             this.attr.private.markerLayer = markerLayer;
@@ -333,7 +334,7 @@ function(ComponentManager, DataBinding) {
             if (this.attr.map.showTooltip !== false) {
                 var self = this;
                 var interactionLayer = mapbox.markers.interaction(markerLayer);
-                // Set tooltip, using a string or a function 
+                // Set tooltip, using a string or a function
                 if (typeof this.attr.customTooltip === 'string') {
                     if (this.attr.customTooltip !== '') {
                         interactionLayer.formatter(function () {
@@ -356,23 +357,23 @@ function(ComponentManager, DataBinding) {
                 }
             }
         };
-        
+
         // Receives: The new feature GeoJson object to add.
         // Returns: Nothing.
         // Does: Adds the feature to the default markerlayer.
         this.addFeature = function (event, feature) {
-            
+
             if (typeof feature.properties.submarkers === 'undefined') {
                 feature.properties.submarkers = [];
                 feature.properties.isGroup = false;
             }
-            
+
             this.attr.private.markerLayer.add_feature(feature);
             if (this.attr.createOffscreenIndicators) {
                 this.updateOffscreenIndicators();
             }
         };
-        
+
         // Receives: Jquery locator to send the trigger to.
         // Returns: Nothing.
         // Does: Sends an event with the specified configuration containing the
@@ -382,7 +383,7 @@ function(ComponentManager, DataBinding) {
         //  * Default locator is $(this)
         this.announceFeatures = function (event, locator) {
             var trigger = 'feature-announcement';
-            
+
             if (this.isValidObject(locator)) {
                 $(locator).trigger(trigger, [this.attr.private.markerLayer.features(),
                     this.attr.private.map.getExtent(), this.attr.private.map.getCenter()]);
@@ -392,7 +393,7 @@ function(ComponentManager, DataBinding) {
                     this.attr.private.map.getExtent(), this.attr.private.map.getCenter()]);
             }
         };
-        
+
         // Receives: Dom node to find corresponding feature or feature title.
         // Returns: GeoJson object of the feature if found, null otherwise.
         // Notes: Uses 'alt' attribute to query, corresponding to feature title.
@@ -407,21 +408,21 @@ function(ComponentManager, DataBinding) {
             });
             return feature;
         };
-        
+
         // Receives: Latitude and longitude.
         // Returns: Nothing.
         // Does: Centers map on the specified location.
         this.centerMap = function (lat, lon){
             this.attr.private.map.center({lat: lat, lon: lon});
         };
-        
+
         // Receives: New zoom level to set
         // Returns: Nothing
         // Does: Zooms map to the selected level
         this.zoomMap = function (event, zoom) {
             this.attr.private.map.zoom(zoom);
         };
-        
+
         // Receives: Locator to send the trigger to.
         // Returns: Nothing.
         // Does: Sends an event with the specified configuration containing the
@@ -431,7 +432,7 @@ function(ComponentManager, DataBinding) {
         //  * Default locator is $(this)
         this.getSelectedFeature = function (event, locator) {
             var trigger = 'feature-selected';
-            
+
             if (this.isValidObject(locator)) {
                 $(locator).trigger(trigger, this.attr.private.selected);
             }
@@ -439,13 +440,13 @@ function(ComponentManager, DataBinding) {
                 $(this).trigger(trigger, this.attr.private.selected);
             }
         };
-        
+
         // Receives: Event object and dom node clicked.
         // Returns: Nothing.
         // Does: If by config is requested to center map, does it on the marker,
         //      also runs the onClickFn, if declared (!== undefined).
         // Notes:
-        //  * This method passes the feature, the corresponding dom node and the 
+        //  * This method passes the feature, the corresponding dom node and the
         //    previously selected feature to the onClickFn, if any.
         this.markerClicked = function (event, dom, ft) {
             if ((typeof ft !== 'undefined') && (ft !== null)) {
@@ -460,20 +461,20 @@ function(ComponentManager, DataBinding) {
                     this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
-            
-            this.attr.private.selected = ft; 
+
+            this.attr.private.selected = ft;
         };
-        
-        // Receives: The markerTitle to use as finder (optional), the property 
+
+        // Receives: The markerTitle to use as finder (optional), the property
         //      to update and the new value.
         // Returns: Nothing.
         // Notes: if markerTitle is null, all markers will be updated.
         this.updateFeatureProperty = function (event, markerTitle, property, value) {
-            
+
             var fn = function (feature) {
                 feature.properties[property] = value;
             };
-            
+
             var self = this;
             $.each(this.attr.private.markerLayer.features(), function (k,v) {
                 if (self.isValidObject(markerTitle)) {
@@ -481,18 +482,18 @@ function(ComponentManager, DataBinding) {
                 }
                 else fn(v);
             });
-            
+
             this.setFeatures(this.attr.private.markerLayer.features());
-            
+
         };
-        
+
         // Receives: Nothing.
         // Returns: Nothing.
         // Does: Updates screen indicators, used when zoomed or panned
         this.updateOffscreenIndicators = function () {
             var data = this.attr.private.markerLayer.features();
             var extent = this.attr.private.map.getExtent();
-            
+
             $.each(this.select('selectOffscreenIndicator'), function(key, value) {
                 $(value).hide();
                 $(value).html('0');
@@ -521,18 +522,18 @@ function(ComponentManager, DataBinding) {
                     this.select('selectOffscreen').show();
                     this.select('selectOffscreen').attr('last', el.properties.title);
                 }
-            }             
+            }
         };
-        
+
         //</editor-fold>
-        
+
         // =====================================================================
         // Component Initializer
         // =====================================================================
-        
+
         this.setComponent = function () {
             this.$node.addClass('fit');
-            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);           
+            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);
             // Attach map
             this.attr.private.map = mapbox.map(this.$nodeMap[0]);
             // Load map id
@@ -543,24 +544,24 @@ function(ComponentManager, DataBinding) {
             // Show zoom buttons if required
             this.attr.private.map.ui.zoomer.add(this.attr.map.zoomButtons);
             this.attr.private.map.centerzoom(
-                    this.attr.map.center, 
+                    this.attr.map.center,
                     this.attr.map.initialZoom);
             // If I already have markers, paint them.
             this.setFeatures();
-            
+
             var self = this;
             // If offscreen indicators are required, add them to the node and create handler
             if (this.attr.createOffscreenIndicators === true) {
                 this.$nodeMap = $(this.offscreenIndicatorsHtml).appendTo(this.$node);
-                
+
                 this.select('selectOffscreenIndicator').on('click', function(event) {
                     self.select('selectMapbox').trigger('center-on-feature', $(event.target).attr('last'));
                     self.updateOffscreenIndicators();
                 });
             }
-            
+
             // Map callbacks ===================================================
-            
+
             //<editor-fold defaultstate="collapsed" desc="Callbacks">
 
             var features = this.attr.private.markerLayer.features();
@@ -580,9 +581,9 @@ function(ComponentManager, DataBinding) {
                 self.attr.whenPanned(features);
             });
             //</editor-fold>
-            
+
         };
-        
+
         this.setAPI = function () {
             // Internal (will bubble up!)
             this.on('marker-clicked',this.markerClicked);
@@ -619,7 +620,14 @@ function(ComponentManager, DataBinding) {
                     this.select(this.attr.selectMapbox).trigger('feature-selected', f);
                 }
             });
-
+            this.on('unselect-feature', function (event, callback) {
+                var currentSelected = this.attr.private.selected;
+                if (currentSelected !== null) {
+                    callback(currentSelected);
+                    this.attr.private.selected = null;
+                    this.setFeatures(this.attr.private.markerLayer.features());
+                }
+            });
             this.on('valueChange', function (e, o) {
                 var values = o.value;
                 if ($.isPlainObject(values)) {
@@ -634,8 +642,8 @@ function(ComponentManager, DataBinding) {
                         var location = f.asset && f.asset.location;
                         if (location) {
                             return {
-                                geometry: { coordinates: 
-                                    [location.longitude, 
+                                geometry: { coordinates:
+                                    [location.longitude,
                                      location.latitude]
                                 },
                                 properties: {
@@ -649,7 +657,7 @@ function(ComponentManager, DataBinding) {
                 }
             };
         };
-        
+
         this.after('initialize', function() {
             this.setComponent();
             this.setAPI();
@@ -659,9 +667,9 @@ function(ComponentManager, DataBinding) {
         // =====================================================================
 
     } // </function Component()>
-    
+
     return ComponentManager.create('mapViewer', Component, DataBinding);
-    
+
 }); // </function(ComponentManager)>
 
 

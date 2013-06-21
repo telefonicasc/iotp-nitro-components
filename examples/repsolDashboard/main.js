@@ -24,11 +24,98 @@ function() {
 
     requirejs(['components/jquery_plugins'], function() {
 
+        //<editor-fold defaultstate="collapsed" desc="Variables">
+        
         var useKermit = false;
         var markerColors = {
-            ok: '#04B404',
-            err: '#DF0101'
+            ok: '#5D909F',
+            err: '#CB3337'
         };
+        
+        var mock = {"totalRegistered":[
+                {"date":1356994800000,"value":25},
+                {"date":1357081200000,"value":32},
+                {"date":1357081200000,"value":12},
+                {"date":1357081200000,"value":45},
+                {"date":1357081200000,"value":29}
+        ]};
+    
+        // DEBUG only:
+        //<editor-fold defaultstate="collapsed" desc="Full mock">
+        
+//        var mock = {
+//           "totalRegistered":[
+//              {
+//                 "date":1356994800000,
+//                 "value":25
+//              },
+//              {
+//                 "date":1357081200000,
+//                 "value":32
+//              },
+//              {
+//                 "date":1357167600000,
+//                 "value":39
+//              },
+//              {
+//                 "date":1357254000000,
+//                 "value":45
+//              },
+//              {
+//                 "date":1357340400000,
+//                 "value":53
+//              },
+//              {
+//                 "date":1357426800000,
+//                 "value":58
+//              },
+//              {
+//                 "date":1357513200000,
+//                 "value":66
+//              },
+//              {
+//                 "date":1357599600000,
+//                 "value":72
+//              },
+//              {
+//                 "date":1357686000000,
+//                 "value":77
+//              },
+//              {
+//                 "date":1357772400000,
+//                 "value":84
+//              },
+//              {
+//                 "date":1357858800000,
+//                 "value":89
+//              },
+//              {
+//                 "date":357945200000,
+//                 "value":97
+//              },
+//              {
+//                 "date":1358031600000,
+//                 "value":104
+//              },
+//              {
+//                 "date":1358118000000,
+//                 "value":109
+//              },
+//              {
+//                 "date":1358204400000,
+//                 "value":115
+//              },
+//              {
+//                 "date":1358290800000,
+//                 "value":123
+//              }
+//           ]
+//        };
+        //</editor-fold>
+        
+        //</editor-fold>
+    
+        //<editor-fold defaultstate="collapsed" desc="Methods">
             
         // =====================================================================    
         /* Service URL setup */
@@ -271,20 +358,23 @@ function() {
         // Dashboard component load
         // =====================================================================
         
-        // DEBUG only:
-        var mock = {"totalRegistered":[{"date":1356994800000,"value":25},{"date":1357081200000,"value":32},{"date":1357167600000,"value":39},{"date":1357254000000,"value":45},{"date":1357340400000,"value":53},{"date":1357426800000,"value":58},{"date":1357513200000,"value":66},{"date":1357599600000,"value":72},{"date":1357686000000,"value":77},{"date":1357772400000,"value":84},{"date":1357858800000,"value":89},{"date":357945200000,"value":97},{"date":1358031600000,"value":104},{"date":1358118000000,"value":109},{"date":1358204400000,"value":115},{"date":1358290800000,"value":123}]};
         
         
-        //<editor-fold defaultstate="collapsed" desc="Component list">
-        var detailPanelComponents = [
-            {
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Load dashboard">
+        
+        //<editor-fold defaultstate="collapsed" desc="Components">
+        
+        var detailedHeader = {
                 component: 'OverviewSubpanel',
                 className: 'detail-element-header',
                 iconClass: 'marker-red',
                 text: '',
                 caption: ''
-            },
-            {
+            };
+            
+        var detailedConditions = {
                 component: 'detailPanel',
                 header: 'Physical conditions',
                 id: 'physical-conditions',
@@ -294,14 +384,15 @@ function() {
                         className: 'temperature-widget'
                     }
                 ]
-            },
-            {
+            };
+        
+        var detailedFillLevel = {
                 component: 'detailPanel',
                 header: 'Fill level',
                 items: [
                     {
                         component: 'chartContainer',
-                        rangeField: 'notThere',
+                        rangeField: 'totalRegistered',
                         valueField: 'totalRegistered',
                         className: 'chart',
                         marginRight: 45,
@@ -315,33 +406,14 @@ function() {
                             type: 'areaChart',
                             tooltip: true,
                             model: 'totalRegistered',
-                            rangeField: 'notThere',
+                            rangeField: 'totalRegistered',
                             cssClass: 'cyan'
                         }]
                     }
                 ]
-            },
-//            {
-//                component: 'chartContainer',
-//                rangeField: 'notThrere',
-//                valueField: 'totalRegistered',
-//                className: 'chart',
-//                marginRight: 45,
-//                marginBottom: 8,
-//                grid: true,
-//                axisy: true,
-//                model: function (f) {
-//                    return f.selected.mock;
-//                },
-//                charts: [{
-//                    type: 'areaChart',
-//                    tooltip: true,
-//                    model: 'totalRegistered',
-//                    //rangeField: 'selectedRange',
-//                    cssClass: 'cyan'
-//                }]
-//            },
-            {
+            };
+        
+        var detailedBattery = {
                 component: 'detailPanel',
                 header: 'Battery Level',
                 id: 'battery-level',
@@ -351,8 +423,9 @@ function() {
                         className: 'battery-widget'
                     }
                 ]
-            },
-            {
+            };  
+            
+        var detailedMinimap = {
                 component: 'detailPanel',
                 header: 'Last Location',
                 id: 'last-location',
@@ -366,16 +439,9 @@ function() {
                         containerClass: 'minimap'
                     }
                 ]
-            }
-        ];
-        //</editor-fold>
-                
-        //<editor-fold defaultstate="collapsed" desc="Load dashboard">
-        
-        $('.dashboard').m2mdashboard({
+            };
             
-            //<editor-fold defaultstate="collapsed" desc="Main content">
-            mainContent: [{
+        var mainMap = {
                 component: 'mapViewer',
                 model: 'detailed',
                 map: {
@@ -398,20 +464,16 @@ function() {
                 featuresPreprocessor: featuresPreprocessor,
                 createOffscreenIndicators: true,
                 markerSimpleSymbol: 'fuel',
-                features: [
-                    {   
-                        geometry: { coordinates: [ -3.664929, 40.51654] },
-                        properties: {
-                            'marker-color':'#F00',
-                            'marker-symbol':'fuel',
-                            'title': 'ERROR!'
-                        }
-                    }
-                ]
-            }],
-            //</editor-fold>
+                features: []
+            };        
+        
+        //</editor-fold>
+                
+        $('.dashboard').m2mdashboard({
             
-            //<editor-fold defaultstate="collapsed" desc="Overview panel">
+            //<editor-fold defaultstate="collapsed" desc="Configuration">
+            mainContent: [mainMap],
+            
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,
@@ -420,15 +482,19 @@ function() {
                         component: 'pagedContainer',
                         className: 'panel-list',
                         header: '',
-                        ID: 'panel-list',
                         items: []
                     },
                     {
                         component: 'pagedContainer',
                         className: 'panel-detail',
-                        extraHeaderGap: 50,
                         alwaysVisible: [0, 1],
-                        items: detailPanelComponents
+                        items: [ //detailPanelComponents
+                            detailedHeader,
+                            detailedConditions,
+                            detailedFillLevel,
+                            detailedBattery,
+                            detailedMinimap
+                        ]
                     }
                 ]
             },
@@ -447,7 +513,7 @@ function() {
                                 + '/data?attribute=fillLevel&limit=10';
                         acc.count += 1;
                         var handleError = function () {
-                            console.error('Update historic query failure: ' + url);
+                            console.warn('Update historic query failure: ' + url);
                             updateHistoric();
                         };
                         $.getJSON(url, updateHistoric).fail(handleError);
@@ -460,7 +526,7 @@ function() {
                 
                 $.getJSON(assetsURL, function(data) {
                     acc.assetList = data;
-                    acc.selected = { name: '', fillHistorical: [], mock: mock}
+                    acc.selected = { name: '', fillHistorical: [], mock: mock};
                     $.getJSON(assetsDetailedURL, function (data) {
                         acc.detailed = data;
                         acc.detailed.format = 'asset';
@@ -479,6 +545,7 @@ function() {
         
         //</editor-fold>
             
+        //<editor-fold defaultstate="collapsed" desc="Startup">
         // =====================================================================
         // Startup
         // =====================================================================
@@ -491,7 +558,7 @@ function() {
         $('.battery-widget').trigger('drawBattery');
 
         // On load, do api rest call to get devices and set mapbox markers. 
-//        loadMarkersFromService();
+        // loadMarkersFromService();
         
         $('.panel-detail').hide();
         $('.overview-count').html(0);
@@ -500,6 +567,7 @@ function() {
         $('.dashboard').on('show-details', showDetails);
         $('.dashboard').on('hide-details', hideDetails);
         $('.overview-header').on('click', hideDetails);
-
+        
+        //</editor-fold>
     });
 });

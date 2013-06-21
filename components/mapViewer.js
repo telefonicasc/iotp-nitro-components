@@ -619,7 +619,6 @@ function(ComponentManager, DataBinding) {
                     this.select(this.attr.selectMapbox).trigger('feature-selected', f);
                 }
             });
-
             this.on('update-current-selected-feature', function (event, callback) {
                 var currentSelected = this.attr.private.selected;
                 if (currentSelected !== null) {

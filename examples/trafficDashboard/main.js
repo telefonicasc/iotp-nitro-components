@@ -244,6 +244,9 @@ define(
                 var hideDetails = function() {
                     $('.panel-list').show();
                     $('.panel-detail').hide();
+                    $('.mapbox').trigger('unselect-feature', function(feature){
+                        feature.properties['marker-size'] = 'medium';
+                    });
                 };
 
                 var updateCenter = function () {
@@ -466,9 +469,11 @@ define(
                                                 'marker-color': markerColor,
                                                 'marker-symbol': 'circle',
                                                 'title': f.asset.name
-                                            }
+                                            },
+                                            item:f
                                         };
-                                    };
+                                    }
+
                                     return marker;
                                 });
 
@@ -528,6 +533,15 @@ define(
                                     $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
                                 }
                             };
+                            var selectFeature = function (sel, prev) {
+                                if (sel !== prev) {
+                                    $('.mapbox-mini').trigger('asset-selected',sel);
+                                    sel.properties['marker-size'] = 'large';
+                                    if (prev !== null) {
+                                        prev.properties['marker-size'] = 'medium';
+                                    }
+                                }
+                            };
 
                             requestApiData('data/AssetSemaphore.json', function(data){
                                 data.data.errors = getErrors(data.data.sensorData);
@@ -535,10 +549,13 @@ define(
                                 $('.panel-list').hide();
                                 $('.panel-detail').trigger('update-view');
                                 updateAssetInfoFn(data);
+                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature]);
                             });
                             requestApiData('data/redLight.json', paintLights);
                             requestApiData('data/greenLight.json', paintLights);
                             requestApiData('data/yellowLight.json', paintLights);
+
+
 
                         }
                     }

@@ -15,8 +15,11 @@ define(
       this.defaultAttrs({
         tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
              '<div class="overview-subpanel-body">' +
-               '<div><span class="text">{{text}}{{value.text}}</span><span class="text1">{{text1}}{{value.text1}}</span></div>' +
-               '<div class="caption">{{caption}}{{value.caption}}</div>' +
+                '<h2>'+
+                  '<span class="text">{{text}}{{value.text}}</span>'+
+                  '<span class="text1">{{text1}}{{value.text1}}</span>'+
+                '</h2>' +
+                '<div class="caption">{{caption}}{{value.caption}}CC</div>' +
              '</div>',
         iconClass: '',
         text: '',

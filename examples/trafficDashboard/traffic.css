@@ -6,10 +6,10 @@
 .marker-popup {
     position:relative;
     left:-50%;
-    max-width:400px;    
+    max-width:400px;
     background:#e9eff0;
     border:2px solid #ccc;
-    color:#60777e;  
+    color:#60777e;
     font-size: small;
     font-weight: bold;
     padding:10px;
@@ -19,7 +19,7 @@
     -webkit-box-shadow: 2px 2px 5px -2px #ccc;
     box-shadow: 2px 2px 5px -2px #ccc;
     -webkit-border-radius: 8px;
-    border-radius: 8px;    
+    border-radius: 8px;
 }
 .marker-popup:after,
 .marker-popup:before {
@@ -31,7 +31,7 @@
     width:0;
     left:50%;
     position:absolute;
-    pointer-events:none;    
+    pointer-events:none;
 }
 
 .marker-popup:after {
@@ -68,7 +68,6 @@
 
 .tooltip-selector {
     cursor: pointer;
-    /*background-size:12px 12px;*/
     background-size: contain;
     background-repeat:no-repeat;
     padding-left: 15px;
@@ -89,10 +88,6 @@
 
 .dashboard .main-content {
     margin: 0;
-}
-
-.dashboard .overview-subpanel .overview-subpanel-body {
-    max-width: 80%;
 }
 
 .dashboard .overview-header .overview-count {
@@ -131,9 +126,9 @@
 }
 
 .panel-detail {
-    min-height: 100%; 
+    min-height: 100%;
     height: auto !important; /*Cause footer to stick to bottom in IE 6*/
-    height: 100%; 
+    height: 100%;
     margin: 0 auto -100px; /*Allow for footer height*/
     vertical-align:bottom;
     background-color: #AECACE;
@@ -147,6 +142,9 @@
 
 .panel-list {
     z-index: 4;
+}
+.overview-subpanel:hover{
+    background-color: #D5E0E2;
 }
 
 
@@ -179,13 +177,8 @@
     left:20px;
 }
 
-.overview-header .overview-title {
-    color: #A5ADB3;
-}
-
-.overview-header :hover {
+.overview-header{
     cursor: pointer;
-    color: white;
 }
 
 
@@ -286,17 +279,6 @@
     border-top: 1px solid #C6DADC;
 }
 
-.overview-subpanel {
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-bottom: 8px;
-}
-
-.overview-subpanel .text:hover {
-    cursor: pointer;
-    color: white;
-}
-
 .overview-content {
     background: #E9EFF0;
 }
@@ -342,7 +324,7 @@ Paged panel :: Navigation   |
 }
 
 .navigation .page-chooser {
-    
+
     cursor: pointer;
     background-color: #BDD0D5;
     display: inline-block;
@@ -355,7 +337,7 @@ Paged panel :: Navigation   |
     font-size: 11px;
     color: #64737B;
     font-weight: bold;
-    padding-top: 3px;    
+    padding-top: 3px;
 }
 
 .navigation .selected {
@@ -364,45 +346,21 @@ Paged panel :: Navigation   |
     color: #bdd0d5;
 }
 
-.detail-element-header .caption {
-    color: white !important;
-}
-
 .marker-red {
-    width: 34px !important;
-    height: 35px !important;
-    margin-left: 3px;
-    margin-right: 12px;
-    margin-top: 12px;
-    /* To use mapbox marker */
-    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+DF0101.png');*/
     background-image:url('res/images/rojo-on-1.png');
 }
 
 .marker-blue {
-    width: 34px !important;
-    height: 35px !important;
-    margin-left: 3px;
-    margin-right: 12px;
-    margin-top: 12px;
-    /* To use mapbox marker */
-    /*background-image:url('http://a.tiles.mapbox.com/v3/marker/pin-m-circle+5E91A0.png');*/
     background-image:url('res/images/azul-on-1.png');
-}
-
-.warning-item:hover{
-    background-color: #D5E0E2;
 }
 
 .overview-subpanel-body .text {
     position: relative;
-    /*top: -10px;*/
     padding-top: 10px;
 }
 
 .overview-subpanel-body .caption {
     position: relative;
-    /*top: -10px;*/
     padding-top: 10px;
 }
 
@@ -431,7 +389,7 @@ Paged panel :: Navigation   |
     opacity: 1;
     filter:alpha(opacity=100);
     text-indent: 0px;
-} 
+}
 
 .detail-errors {
     min-height: 60px;
@@ -455,18 +413,18 @@ Paged panel :: Navigation   |
     top: 37px;
     left: 37px;
     background-image: url('res/images/NW.png');
-} 
+}
 .nmarkers {
     top: 8px;
     left: 50%;
     margin-left: -30px;
     background-image: url('res/images/N.png');
-} 
+}
 .nemarkers {
     top: 37px;
     right: 37px;
     background-image: url('res/images/NE.png');
-} 
+}
 .emarkers {
     top: 50%;
     right: 8px;

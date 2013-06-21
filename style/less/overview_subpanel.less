@@ -1,12 +1,20 @@
 .overview-subpanel {
+    cursor: pointer;
     border-bottom: 1px solid #D6DEE0;
     min-height: 55px;
+    padding: 10px 10px 10px 0;
+
+
+    .icon, .overview-subpanel-body{
+      display: inline-block;
+      vertical-align: top;
+    }
 
     .icon {
       width: 50px;
       height: 43px;
-      display: inline-block;
-
+      background-repeat:no-repeat;
+      background-position: center top;
       .withColors(border, ~"");
       .withColors(background-light, ~"");
 
@@ -22,38 +30,33 @@
       }
 
       &.arrow-down {
-        background: url("@{image-path}/arrow-down.png") no-repeat center center;
+        background-image: url("@{image-path}/arrow-down.png");
       }
 
       &.arrow-up {
-        background: url("@{image-path}/arrow-up.png") no-repeat center center;
+        background-image: url("@{image-path}/arrow-up.png");
       }
     }
 
     .overview-subpanel-body {
-      display: inline-block;
-
-      .text {
-        display: block;
+      width: 80%;
+      h2{
         font-size: 18px;
+      }
+      .text {
         font-weight: bold;
         color: #313a3f;
-        display: inline-block;
       }
 
       .text1 {
         padding-left: 20px;
-        display: block;
-        font-size: 18px;
         color: #768e99;
-        display: inline-block;
       }
 
       .caption {
         margin: 0px;
         color: #999;
         font-size: 13px;
-        font-weight: normal;
       }
 
     }

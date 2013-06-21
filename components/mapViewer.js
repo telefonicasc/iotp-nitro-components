@@ -52,6 +52,7 @@ this.defaultAttrs({
 * **'center-on-feature'** _(string featureTitle)_: Centers the map on the feature with the title property given.
 * **'reload-features'**: Destroys current map, and recreates it with the current features.
 * **'select-feature'** _(string featureTitle, function callback)_: Finds the feature with the given title property, and runs the callback function with it.
+* **'unselect-feature'** _(function callback)_: Unselect current feature
 
 ### Generated events
 * **'marker-clicked'** _(DOM node, GeoJSon feature)_: Issued when a marker is clicked.

@@ -58,8 +58,7 @@ function (ComponentManager) {
             else{
               temp = tempCelsius;
             }
-            tamano = temp*(tmax-1)/(tmax-tmin);
-
+            tamano = (((temp - tmin) / (tmax - tmin)) + 0.5) * 12;
             temperatureChart.thermoBar.animate({
               height: tamano,
               y: 42 - tamano

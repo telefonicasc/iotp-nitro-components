@@ -315,7 +315,7 @@ function() {
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-//            updateMinimap({}, feature);
+            updateMinimap({}, feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
@@ -466,7 +466,7 @@ function() {
                         component: 'pagedContainer',
                         className: 'panel-detail',
                         alwaysVisible: [0, 1],
-                        items: [ 
+                        items: [
                             detailedHeader,
                             detailedConditions,
                             detailedFillLevel,

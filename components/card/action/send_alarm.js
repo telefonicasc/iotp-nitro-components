@@ -1,9 +1,9 @@
 /**
  * @component SendAlarm
  *
- * @event {in} change 
+ * @event {in} change. Listen dropdown change
  * 
- * @event {out} valueChange
+ * @event {out} valueChange. When dropdown change, valueChange is triggered
  * 
  * @mixin Card
  * @mixin DataBinding
@@ -27,9 +27,16 @@ function(ComponentManager, DataBinding, Card, Dropdown) {
                 description: '',
                 userParams: []
             }
+            // Locales defined in card_data (encodeAction --> SendAlarmAction)
+            /*,
+            locales: {
+                'activated': 'Activated',
+                'deactivated': 'Deactivated',
+                'sendAlarmBack': 'Send alarm'
+            }*/
         };
 
-        var backTpl = '<div class="card-header"> Envío de alarma </div>' + '<div class="m2m-action-alarm"></div>';
+        var backTpl = '<div class="card-header"></div>' + '<div class="m2m-action-alarm"></div>';
 
         var frontTpl = '<div class="m2m-action-alarm">' + '<div class="m2m-action-alarm-img with-x"></div>';
 
@@ -44,15 +51,17 @@ function(ComponentManager, DataBinding, Card, Dropdown) {
 
             Dropdown.attachTo(this.$back.find('.m2m-action-alarm'), {
                 options: [{
-                    label: 'Desactivada',
+                    label: this.attr.locales.deactivated,
                     value: 'DEACTIVATED'
                 }, {
-                    label: 'Activada',
+                    label: this.attr.locales.activated,
                     value: 'ACTIVATED'
                 }]
             });
            
            var selectStatus = this.$back.find('.m2m-action-alarm> select'); 
+           
+           this.$back.find('.card-header').html(this.attr.locales.sendAlarmBack);
             
             selectStatus.on('change', $.proxy(function() {
                 _configFrontImg(selectStatus.val(), this);

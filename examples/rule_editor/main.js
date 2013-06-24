@@ -51,8 +51,12 @@ define(
                             'false':'Falso',
                             'value':'Valor',
                             'after': 'Después de',
-                            'every': 'Repite cada'
-
+                            'every': 'Repite cada',
+                            'sendEmailHeader': 'Enviar email',
+                            'sendAlarmHeader': 'Enviar alarma',
+                            'sendAlarmBack': 'Envío de alarma',
+                            'deactivated': 'Desactivado',
+                            'activated': 'Activado'
                         }
                     },
                     actionsLabel: 'Acciones',

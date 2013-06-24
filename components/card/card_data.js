@@ -7,7 +7,12 @@ function() {
         'false': 'False',
         'value': 'Value',
         'after': 'After',
-        'every': 'Every'
+        'every': 'Every',
+        'sendAlarmHeader': 'Send alarm',
+        'sendEmailHeader': 'Send email',
+        'activated': 'Activated',
+        'deactivated': 'Deactivated',
+        'sendAlarmBack': 'Send alarm'
     }; 
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -178,14 +183,19 @@ function() {
     var encodeAction = {
         'SendEmailAction': function(card) {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
-            card.header = 'Send Email';
+            card.header = locales.sendEmailHeader;
             card.component = component.SEND_EMAIL;
             card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;
         },
         'SendAlarmAction': function(card){
             card.cssClass = 'm2m-card-action m2m-card-send-email';
-            card.header = 'Envío de alarma';
+            card.header = locales.sendAlarmHeader;
+            card.locales = {
+                deactivated: locales.deactivated,
+                activated: locales.activated,
+                sendAlarmBack: locales.sendAlarmBack
+            };
             card.component = 'SendAlarm';
             return card;
         }

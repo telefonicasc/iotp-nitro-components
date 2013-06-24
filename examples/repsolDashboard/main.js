@@ -31,6 +31,7 @@ function() {
             ok: '#5D909F',
             err: '#CB3337'
         };
+        var lastData = 10;
         
 //        var mock = {"totalRegistered":[
 //                {"date":1356994800000,"value":25},
@@ -43,55 +44,76 @@ function() {
         // DEBUG only:
         //<editor-fold defaultstate="collapsed" desc="Full mock">
         
+//        var mock = {
+//           "fillLevel":[
+//              {
+//                 "date":1356994800000,
+//                 "value":12
+//              },
+//              {
+//                 "date":1357081200000,
+//                 "value":26
+//              },
+//              {
+//                 "date":1357167600000,
+//                 "value":47
+//              },
+//              {
+//                 "date":1357254000000,
+//                 "value":21
+//              },
+//              {
+//                 "date":1357340400000,
+//                 "value":67
+//              },
+//              {
+//                 "date":1357426800000,
+//                 "value":4
+//              },
+//              {
+//                 "date":1357513200000,
+//                 "value":9
+//              },
+//              {
+//                 "date":1357599600000,
+//                 "value":56
+//              },
+//              {
+//                 "date":1357686000000,
+//                 "value":89
+//              },
+//              {
+//                 "date":1357772400000,
+//                 "value":65
+//              },
+//              {
+//                 "date":1357858800000,
+//                 "value":40
+//              }
+//           ]
+//        };
+        //</editor-fold>
+        
         var mock = {
-           "totalRegistered":[
+           "fillLevel":[
               {
-                 "date":1356994800000,
-                 "value":12
+                 "date":"1370949909",
+                 "value":98.8
               },
               {
-                 "date":1357081200000,
-                 "value":26
+                 "date":"1370950183",
+                 "value":98.8
               },
               {
-                 "date":1357167600000,
-                 "value":47
+                 "date":"1370950260",
+                 "value":98.8
               },
               {
-                 "date":1357254000000,
-                 "value":21
-              },
-              {
-                 "date":1357340400000,
-                 "value":67
-              },
-              {
-                 "date":1357426800000,
-                 "value":4
-              },
-              {
-                 "date":1357513200000,
-                 "value":9
-              },
-              {
-                 "date":1357599600000,
-                 "value":56
-              },
-              {
-                 "date":1357686000000,
-                 "value":89
-              },
-              {
-                 "date":1357772400000,
-                 "value":65
-              },
-              {
-                 "date":1357858800000,
-                 "value":40
+                 "date":"1370956826",
+                 "value":95.8
               }
            ]
         };
-        //</editor-fold>
         
         //</editor-fold>
     
@@ -370,19 +392,39 @@ function() {
                 items: [
                     {
                         component: 'chartContainer',
-                        valueField: 'totalRegistered',
+                        valueField: 'fillLevel',
                         className: 'chart',
                         marginRight: 45,
                         marginBottom: 8,
                         grid: true,
                         axisy: true,
                         model: function (f) {
-                            return f.selected.mock;
+                            var data = $('.dashboard').data().m2mValue.historic;
+                            
+                            var found = false;
+                            var i = 0;
+                            if (f.historic !== undefined) return null;
+                            
+                            while (!found && i < data.length) {
+                                if (data[i].asset === f.asset.name) found = true;
+                                else i += 1;
+                            }
+                            
+                            if (!found) return null;
+                            var historic = { fillLevel : [] };
+                            
+                            $.each(data[i].data, function (k,v){
+                                var entry = {date : v.st, value: v.ms.v};
+                                historic.fillLevel.push(entry);
+                                
+                            });
+                            return historic;
+
                         },
                         charts: [{
                             type: 'areaChart',
                             tooltip: true,
-                            model: 'totalRegistered',
+                            model: 'fillLevel',
                             cssClass: 'cyan'
                         }]
                     }
@@ -412,7 +454,9 @@ function() {
                         zoomValue: 16,
                         movable: true,
                         model: function (v) {
-                            return v.detailed.data[0].asset;
+                            if (v.detailed !== undefined) 
+                                return v.detailed.data[0].asset;
+                            else return v.asset;
                         },
                         containerClass: 'minimap'
                     }
@@ -461,20 +505,23 @@ function() {
                         className: 'panel-list',
                         header: '',
                         items: []
-                    },
-                    {
-                        component: 'pagedContainer',
-                        className: 'panel-detail',
-                        alwaysVisible: [0, 1],
-                        items: [
-                            detailedHeader,
-                            detailedConditions,
-                            detailedFillLevel,
-                            detailedBattery,
-                            detailedMinimap
-                        ]
                     }
                 ]
+            },
+                    
+            detailsPanel: {
+                items: [{
+                    component: 'pagedContainer',
+                    className: 'panel-detail',
+                    alwaysVisible: [0, 1],
+                    items: [
+                        detailedHeader,
+                        detailedConditions,
+                        detailedFillLevel,
+                        detailedBattery,
+                        detailedMinimap
+                    ]
+                }]
             },
             //</editor-fold>
             
@@ -483,7 +530,6 @@ function() {
             data: function(callback) {
                 
                 var acc = {count:0, historic: []};
-                
                 var updateHistoric = function (data) {
                     if (acc.count < acc.assetList.data.length) {
                         if (data !== undefined) acc.historic.push(data);
@@ -534,17 +580,9 @@ function() {
         // Init widgets
         $('.temperature-widget').trigger('drawTemperature');
         $('.battery-widget').trigger('drawBattery');
+        
+        $('.overview-count').html(0);      
 
-        // On load, do api rest call to get devices and set mapbox markers. 
-        // loadMarkersFromService();
-        
-        $('.panel-detail').hide();
-        $('.overview-count').html(0);
-        
-        // API =================================================================
-        $('.dashboard').on('show-details', showDetails);
-        $('.dashboard').on('hide-details', hideDetails);
-        $('.overview-header').on('click', hideDetails);
         //</editor-fold>
     });
 });

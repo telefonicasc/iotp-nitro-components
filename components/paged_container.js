@@ -106,7 +106,7 @@ define(
                 cfg.pageCount = page;
                 // Update currentPage
                 if (cfg.currentPage > cfg.pageCount) {
-                    cfg.currentPage = cfg.pageCount +1;
+                    cfg.currentPage = cfg.pageCount;
                 }
             };
 

@@ -41,8 +41,6 @@ define(
                 delimiterList:false,
                 defaultValue : '',
                 locales: {
-                    'subject': 'Subject',
-                    'to': 'To',
                     'sensor_name':'Sensor Name'
                 }
             });

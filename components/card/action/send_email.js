@@ -20,7 +20,7 @@ define(
                 userParams:[]
             }
 
-            // Se definene en Card ya que éste componente extiende de Card y no puede heredar el atributo
+           // Locales defined in card_data (encodeAction --> SendEmailAction)
 
             // locales: {
             //    subject: 'Subject',
@@ -109,7 +109,10 @@ define(
                     message : $(frontTpl[2])
                 }
             };
-
+            
+            this.$back.find('.email-subject-label').html(this.attr.locales.subject);
+            this.$back.find('.email-address-label').html(this.attr.locales.to);
+            
             var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
 
             this.$back.on('click', _stopPropagation);

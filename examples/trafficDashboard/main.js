@@ -536,6 +536,8 @@ define(
                                 });
                                 cb(assets.data);
                                 if (centerOnLoad) updateCenter();
+
+                                $('.dashboard .paged-container').trigger('update');
                             });
                         },
                         itemData: function(item, cb) {

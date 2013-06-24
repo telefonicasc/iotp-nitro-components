@@ -24,52 +24,35 @@ define(
                 start = null,
                 end = null,
                 context = d3.select(this.node);
+                
             this.brush = d3.svg.brush()
               .x(this.attr.x)
               .on('brush', $.proxy(function() {
-
-                    //if (this.brush.extent()[0].getDay()===1) {
                       
-                      start = this.brush.extent()[0];
-                      end = this.brush.extent()[1];
+                  start = this.brush.extent()[0];
+                  end = this.brush.extent()[1];
 
-                      //console.log(start);
-
-                      var ext = [start, end];
-                      if (this.attr.fixRange > 0){
-                          ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
-                      }
-                      this.updateExtent(ext);
-                      this.value[this.attr.selectedRangeField] = ext;
-                      previousExtend = ext;
-                      this.trigger('valueChange', { value: this.value });
-                    //}
-                              
+                  var ext = [start, end];
+                  if (this.attr.fixRange > 0){
+                      ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                  }
+                  this.updateExtent(ext);
+                  this.value[this.attr.selectedRangeField] = ext;
+                  this.value['brush'] = 'brush';
+                  previousExtend = ext;
+                  this.trigger('valueChange', { value: this.value });                       
                     
-                }, this))
-              .on('brushstart', $.proxy(function(){
-                    //this.disableBrush();
+              }, this))
+              .on('brushstart', $.proxy(function() {
+                  this.value['brush'] = 'start';
               }, this))
               .on('brushend', $.proxy(function(){
-                    this.updateExtent([start, end]);
+                  ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                  this.updateExtent(ext);
+                  this.value[this.attr.selectedRangeField] = [start, end];
+                  this.value['brush'] = 'end';
+                  this.trigger('valueChange', { value: this.value });
               }, this));
-
-            this.updateExtent = function(extent) {
-                this.brush.extent(extent);
-                var start = this.attr.x(extent[0]),
-                    end = this.attr.x(extent[1]);
-
-                context.select('.w').attr('transform', 'translate(' + start + ',0)').style('display', 'block');
-                context.select('.e').attr('transform', 'translate(' + end + ',0)').style('display', 'block');
-                context.select('.extent').attr('x', start).attr('width', end - start);
-
-            };
-
-            this.disableBrush = function(){
-               context.select('.extent').style("pointer-events", "none");
-               context.select('.w').style("pointer-events", "none");
-               context.select('.e').style("pointer-events", "none");
-            };
 
             if (this.attr.x && this.attr.y){
                 context
@@ -83,7 +66,18 @@ define(
                     .attr('rx', 4)
                     .attr('ry', 4)
                     .style('visibility', 'inherit');
-            }
+            }  
+
+            this.updateExtent = function(extent) {
+                this.brush.extent(extent);
+                var start = this.attr.x(extent[0]),
+                    end = this.attr.x(extent[1]);
+
+                context.select('.w').attr('transform', 'translate(' + start + ',0)').style('display', 'block');
+                context.select('.e').attr('transform', 'translate(' + end + ',0)').style('display', 'block');
+                context.select('.extent').attr('x', start).attr('width', end - start);
+
+            };
 
             this.on('resize', function(e) {
                 d3.select(this.node).select('rect')

@@ -7,18 +7,18 @@ define(
     ],
 
     function(ComponentManager, ContainerMixin, WatchResize, DataBinding) {
-        
+
         return ComponentManager.create('DashboardDetailsPanel',
             DashboardDetailsPanel, WatchResize, ContainerMixin, DataBinding);
-        
+
         function DashboardDetailsPanel() {
 
             this.defaultAttrs({
                 marginTop: 36
             });
-            
+
             this.after('initialize', function() {
-                this.$node.addClass('dashboard-details-panel sidebar');    
+                this.$node.addClass('dashboard-details-panel');
 
                 this.on('expand', function(e, o) {
                     var duration = o && o.duration !== undefined ? duration : 300;
@@ -28,16 +28,16 @@ define(
 
                 this.on('collapse', function(e, o) {
                     var duration = o && o.duration !== undefined ? duration : 300;
-                    this.$node.animate({ height: 0 }, duration);                  
+                    this.$node.animate({ height: 0 }, duration);
                     this.expanded = false;
                 });
 
                 this.on('resize', function() {
-                    this.height = this.$node.parent().height() - 
+                    this.height = this.$node.parent().height() -
                             this.attr.marginTop;
 
                     if (this.expanded) {
-                        this.$node.css({ 
+                        this.$node.css({
                             height: this.height
                         });
                     }
@@ -46,4 +46,4 @@ define(
         }
     }
 );
-    
+

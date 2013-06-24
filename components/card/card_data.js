@@ -12,7 +12,9 @@ function() {
         'sendEmailHeader': 'Send email',
         'activated': 'Activated',
         'deactivated': 'Deactivated',
-        'sendAlarmBack': 'Send alarm'
+        'sendAlarmBack': 'Send alarm',
+        'subject': 'Subject',
+        'to': 'To'
     }; 
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -184,6 +186,10 @@ function() {
         'SendEmailAction': function(card) {
             card.cssClass = 'm2m-card-action m2m-card-send-email';
             card.header = locales.sendEmailHeader;
+            card.locales = {
+                subject: locales.subject,
+                to: locales.to
+            }
             card.component = component.SEND_EMAIL;
             card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;

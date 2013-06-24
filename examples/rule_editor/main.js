@@ -42,8 +42,6 @@ define(
                     },
                     locales: {
                         Card: {
-                            subject: 'Asunto',
-                            to: 'Para',
                             sensor_name: 'Nombre del sensor'
                         },
                         CardData:{
@@ -56,7 +54,9 @@ define(
                             'sendAlarmHeader': 'Enviar alarma',
                             'sendAlarmBack': 'Envío de alarma',
                             'deactivated': 'Desactivado',
-                            'activated': 'Activado'
+                            'activated': 'Activado',
+                            'to': 'Para',
+                            'subject': 'Asunto'
                         }
                     },
                     actionsLabel: 'Acciones',

@@ -27,6 +27,7 @@ function (ComponentManager, DataBinding) {
                                                                                         
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
+            this.$node.addClass('temperature-widget');
             
             //this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
 

@@ -1,12 +1,13 @@
 define(
     [
         'components/component_manager',
+        'components/mixin/data_binding',
         'libs/mapbox'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, DataBinding) {
 
-        return ComponentManager.create('minimap', Minimap);
+        return ComponentManager.create('minimap', Minimap, DataBinding);
 
         function Minimap() {
             var mapM;
@@ -67,6 +68,19 @@ define(
                 this.on('center', function (event) {
                     event.stopPropagation();
                     this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
+                });
+
+                this.on('valueChange', function(e, o) {
+                    var feature = o.value, lat, lon;
+                    if (feature && feature.geometry &&
+                        feature.geometry.coordinates) {
+                        lat = feature.geometry.coordinates[1];
+                        lon = feature.geometry.coordinates[0];
+                        this.markerLayer.features([feature]);
+                        this.mapM.centerzoom({
+                            lat: lat, lon: lon
+                        }, this.attr.zoomValue);
+                    }
                 });
             });
         }

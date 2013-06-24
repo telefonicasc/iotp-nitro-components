@@ -31,89 +31,6 @@ function() {
             ok: '#5D909F',
             err: '#CB3337'
         };
-        var lastData = 10;
-        
-//        var mock = {"totalRegistered":[
-//                {"date":1356994800000,"value":25},
-//                {"date":1357081200000,"value":32},
-//                {"date":1357081200000,"value":12},
-//                {"date":1357081200000,"value":45},
-//                {"date":1357081200000,"value":29}
-//        ]};
-    
-        // DEBUG only:
-        //<editor-fold defaultstate="collapsed" desc="Full mock">
-        
-//        var mock = {
-//           "fillLevel":[
-//              {
-//                 "date":1356994800000,
-//                 "value":12
-//              },
-//              {
-//                 "date":1357081200000,
-//                 "value":26
-//              },
-//              {
-//                 "date":1357167600000,
-//                 "value":47
-//              },
-//              {
-//                 "date":1357254000000,
-//                 "value":21
-//              },
-//              {
-//                 "date":1357340400000,
-//                 "value":67
-//              },
-//              {
-//                 "date":1357426800000,
-//                 "value":4
-//              },
-//              {
-//                 "date":1357513200000,
-//                 "value":9
-//              },
-//              {
-//                 "date":1357599600000,
-//                 "value":56
-//              },
-//              {
-//                 "date":1357686000000,
-//                 "value":89
-//              },
-//              {
-//                 "date":1357772400000,
-//                 "value":65
-//              },
-//              {
-//                 "date":1357858800000,
-//                 "value":40
-//              }
-//           ]
-//        };
-        //</editor-fold>
-        
-        var mock = {
-           "fillLevel":[
-              {
-                 "date":"1370949909",
-                 "value":98.8
-              },
-              {
-                 "date":"1370950183",
-                 "value":98.8
-              },
-              {
-                 "date":"1370950260",
-                 "value":98.8
-              },
-              {
-                 "date":"1370956826",
-                 "value":95.8
-              }
-           ]
-        };
         
         //</editor-fold>
     
@@ -399,24 +316,22 @@ function() {
                         grid: true,
                         axisy: true,
                         model: function (f) {
-                            var data = $('.dashboard').data().m2mValue.historic;
-                            
+                            var data = $('.dashboard').data().m2mValue.historic;  
+                            var historic = { fillLevel : [] };
                             var found = false;
                             var i = 0;
-                            if (f.historic !== undefined) return null;
+                            if (f.historic !== undefined) return historic;
                             
                             while (!found && i < data.length) {
                                 if (data[i].asset === f.asset.name) found = true;
                                 else i += 1;
                             }
                             
-                            if (!found) return null;
-                            var historic = { fillLevel : [] };
+                            if (!found) return historic;
                             
                             $.each(data[i].data, function (k,v){
-                                var entry = {date : v.st, value: v.ms.v};
+                                var entry = {date : Date.parse(v.st), value: v.ms.v};
                                 historic.fillLevel.push(entry);
-                                
                             });
                             return historic;
 
@@ -510,6 +425,7 @@ function() {
             },
                     
             detailsPanel: {
+                marginTop: 16,
                 items: [{
                     component: 'pagedContainer',
                     className: 'panel-detail',
@@ -528,7 +444,7 @@ function() {
             //<editor-fold defaultstate="collapsed" desc="Data binding">
         
             data: function(callback) {
-                
+                debugger
                 var acc = {count:0, historic: []};
                 var updateHistoric = function (data) {
                     if (acc.count < acc.assetList.data.length) {
@@ -550,7 +466,7 @@ function() {
                 
                 $.getJSON(assetsURL, function(data) {
                     acc.assetList = data;
-                    acc.selected = { name: '', fillHistorical: [], mock: mock};
+                    acc.selected = { name: '', fillHistorical: []};
                     $.getJSON(assetsDetailedURL, function (data) {
                         acc.detailed = data;
                         acc.detailed.format = 'asset';
@@ -559,7 +475,6 @@ function() {
                         $.each(acc.detailed.data, function (k,v) {
                             acc.detailed.features.push(v);
                         });
-                        
                         updateHistoric();
                     });                    
                 });
@@ -583,6 +498,9 @@ function() {
         
         $('.overview-count').html(0);      
 
+        $('.dashboard').on('expanded', function () {
+            $('.panel-detail').trigger('update');
+        });
         //</editor-fold>
     });
 });

@@ -524,9 +524,15 @@ define(
                                 ]
                             },
                             {
-                                component: 'DashboardDetailsPanel',
-                                items: compList
+                                component: 'pagedContainer',
+                                //className: 'panel-list',
+                                selectElements: '.dashboard-details-panel',
+                                items: [{
+                                    component: 'DashboardDetailsPanel',
+                                    items: compList
+                                }]
                             }
+
                         ]
                         },
                         data: function(cb) {

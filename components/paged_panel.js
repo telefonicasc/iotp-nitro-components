@@ -1,267 +1,180 @@
 define(
     [
         'components/component_manager',
+        'components/mixin/template',
         'components/mixin/container'
     ],
 
-    function(ComponentManager, ContainerMixin) {
+    function(ComponentManager, Template, Container) {
 
-        return ComponentManager.create('pagedPanel', PagedPanel, ContainerMixin);
+        return ComponentManager.create('pagedContainer', Template, Container, Component);
 
-        function PagedPanel() {
+        function Component() {
 
             this.defaultAttrs({
-                insertionPoint: '.fixed',                
-                pagerLocator: '.paged-navigation',
-                pageDisplay: '.paged-navigation-display',
-                buttonLeftClass: '.paged-button-left',
-                buttonRightClass: '.paged-button-right',
-                pageLeftLocator: '.page-left',
-                pageRightLocator: '.page-right',
-                selectNavigation : '.navigation',
-                selectPageLeft: '.page-left',
-                selectPageRight: '.page-right',
-                selectFixed: '.fixed',
-                selectPages: '.panel-page',
-                extraHeaderGap: 25,
+                selectElements: '.elements',
+                selectNavigation: '.navigation',
+                selectPageLeft: '.pageLeft',
+                selectPageRight: '.pageRight',
+                selectContainer: '.paged-container',
+                selectPageChooser: '.page-chooser',
+                selectFixedPage: '.fit',
+                triggers: {
+                    update: 'update'
+                },
+                private: {
+                    currentPage: 1,
+                    pageCount: 0,
+                    available: 0
+                },
+                insertionPoint: '.elements',
+                tpl: '<div class="fit"><div class="elements"/>'
+                    + '<div class="navigation"/></div>',
                 alwaysVisible: [],
                 items: []
             });
-            
-            this.getPageCount = function () {
-                var pagesWithContent = 0;
-                var add = function (k,v) {
-                    if ($(v).children().length !== 0) pagesWithContent += 1;
-                };
-                this.select('selectPages').each(add);
-                return pagesWithContent;
+            this.next = function(){
+                this.changeToPage(+1,true);
             };
-            
-            this.selectPage = function (pageNumber) {
-                var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
-                // next page is there?
-                var pageSelect = 'selectPage' + (pageNumber);
-                // get the page
-                var page = this.select(pageSelect);
-                // is it there?
-                if (typeof page !== 'undefined') {
-                    if (page.children().length !== 0) {
-                        // update page marker
-                        this.setPageMarker(pageNumber);
-                        // hide current page
-                        this.hidePage(currentPage);
-                        // show page
-                        this.showPage(pageNumber);
-                    }
-                }
-                // update page marker
-                this.select('selectNavigation').attr('page-marker',pageNumber);
-                // update pager
-                this.updatePager();
-            };
-            
-            this.movePage = function (displacement) {
-                var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
-                var pageCount = this.getPageCount();
-                if (currentPage + displacement < 0) return;
-                if (currentPage + displacement >= pageCount) return;
-                
-                // next page is there?
-                var pageSelect = 'selectPage' + (currentPage + displacement);
-                // get the page
-                var page = this.select(pageSelect);
-                // is it there?
-                if (typeof page !== 'undefined') {
-                    if (page.children().length !== 0) {
-                        // update page marker
-                        this.setPageMarker(currentPage + displacement);
-                        // hide current page
-                        this.hidePage(currentPage);
-                        // show page
-                        this.showPage(currentPage + displacement);
-                    }
-                }
-                // update page marker
-                this.select('selectNavigation').attr('page-marker',currentPage + displacement);
-                // update pager
-                this.updatePager();
-            };
-            
-            this.hidePage = function (pageNumber) {
-                var pageSelector = 'selectPage' + pageNumber;
-                this.select(pageSelector).slideUp();  
-            };
-            
-            this.showPage = function (pageNumber) {
-                var pageSelector = 'selectPage' + pageNumber;
-                this.select(pageSelector).slideDown();
+            this.prev = function(){
+                this.changeToPage(-1,true);
             };
 
-            this.updatePager = function () {
-                // get current page
-                var currentPage = parseInt(this.select('selectNavigation').attr('page-marker'));
-                // Pages start at 1, but selectors at 0, so add 1 to currentPage
-                currentPage += 1;
-                // how many pages have content?
-                var pagesWithContent = this.getPageCount();
-                // Hide the pager if pagesWithContent = 0
-                if (pagesWithContent <= 1) {
+            this.drawNavigation =  function(totalPages){
+                var changeToPage = $.proxy(this.changeToPage, this);
+                var $nav = this.select('selectNavigation');
+
+                $('<div>').addClass('page-left').
+                    click($.proxy(this.prev, this)).
+                    appendTo($nav);
+                $('<div/>').addClass('pages-index').
+                    appendTo($nav);
+                $('<div>').addClass('page-right').
+                    click($.proxy(this.next, this)).
+                    appendTo($nav);
+
+                $nav.on('click', '.page-chooser', function(){
+                    var page = $(this).text();
+                    changeToPage(page,false);
+                });
+                this.select('selectNavigation').hide();
+            };
+
+            this.addPage = function(index){
+                var navContainer = $('.pages-index', this.select('selectNavigation'));
+                $('<div>')
+                    .addClass('page-chooser')
+                    .text(index)
+                    .appendTo(navContainer);
+            };
+
+            this.assignPages = function () {
+                var cfg = this.attr.private;
+                var elements = this.select('selectElements').children();
+                cfg.pageCount = 0;
+
+                // Calculate available space (fit div height - navigation bar height)
+                var nav = this.select('selectNavigation');
+                cfg.available = this.select('selectFixedPage').height() - nav.height();
+                var remaining = cfg.available;
+                // Assign a page to each one
+                var alwaysVisible = this.attr.alwaysVisible;
+
+                $('.pages-index', this.select('selectNavigation')).empty();
+                var page = 1;
+                var cacheHeight=0;
+                this.addPage(page);
+
+                $.each(elements, $.proxy(function (k,v) {
+                        // Does this component fit?
+                        var requiredHeight = $(v).outerHeight();
+                        cacheHeight += requiredHeight;
+
+                        if (cacheHeight > remaining) {
+                            cacheHeight=0;
+                            this.addPage(++page);
+                        }
+
+                        if (parseInt(k) in alwaysVisible) {
+                            $(v).attr('assigned-page',0);
+                        }else{
+                            $(v).attr('assigned-page',page);
+                        }
+
+                    }, this));
+                // Update page count
+                cfg.pageCount = page;
+                // Update currentPage
+                if (cfg.currentPage > cfg.pageCount) {
+                    cfg.currentPage = cfg.pageCount +1;
+                }
+            };
+
+            this.updateVisualization = function () {
+                var currentPage = this.attr.private.currentPage;
+                var elements = this.select('selectElements').children();
+                // First hide, then show
+                $.each(elements, function(k,v){
+                    var assignedPage = parseInt($(v).attr('assigned-page'));
+                    if (assignedPage === currentPage) $(v).show();
+                    else if (assignedPage === 0) $(v).show();
+                    else $(v).hide();
+                });
+
+                if (this.attr.private.pageCount <= 1) {
                     this.select('selectNavigation').hide();
                 }
                 else {
-                    if (currentPage === 0) currentPage = 1;
-                    var text = currentPage + '/' + pagesWithContent;
-//                    this.select('selectNavigation').children('.navigation-display').html(text);
                     this.select('selectNavigation').show();
-                    this.select('selectNavigation').children('.page-chooser').each( function (k,v) {
-                        if ($(v).html() == currentPage) $(v).addClass('selected');
+                    // hide unnecesary page numbers
+                    var pages = this.select('selectPageChooser');
+                    var pageCount = this.attr.private.pageCount;
+                    $.each(pages, function (k,v) {
+                        var i = parseInt($(v).html());
+                        if (i > pageCount) $(v).hide();
+                        if (i === currentPage) $(v).addClass('selected');
                         else $(v).removeClass('selected');
-                        if (parseInt(k) >= pagesWithContent) $(v).hide();
-                        else $(v).show();
                     });
                 }
-                // Mark current page
-                
             };
 
-            // Careful, seems to load things wrong when there is another paged-panel
-            this.loadItems = function (items) {
-                var self = this;
-                $.each(items, $.proxy(function (i, item) {
-                    self.attr.items.push(item);
-                })); 
-                self.renderItems();
-            };
-            
-            this.setPageMarker = function (number) {
-                this.select('selectNavigation').attr('page-marker', number);
-            };
-            
-            this.update = function () {
-                var self = this;
-                // (move all to fixed)
-                $.each(this.select('selectPages').siblings('.panel-page'),
-                    function (k,v) {
-                        $(v).children().appendTo(self.select('selectFixed'));
-                    }
-                );
-                
-                // Max height
-                var h = this.$node.height();
-                h -= this.attr.extraHeaderGap;
-                // Substract pager height if visible
-                var pager = this.select('selectNavigation');
-                if (pager.is(':visible')) {
-                    h -= pager.height();
+            this.changeToPage = function (pageNumber, isDisplacement) {
+                if (typeof isDisplacement === 'undefined') isDisplacement = false;
+                if (isDisplacement === null) isDisplacement = false;
+
+                var currentPage = this.attr.private.currentPage;
+                var pageCount = this.attr.private.pageCount;
+
+                if (isDisplacement) {
+                    pageNumber = currentPage + pageNumber;
                 }
-                // Remaining height in page
-                var pageH = 0;
-                // Current page selector
-                var curPage = 0;
-                // What page am I right now
-                var pageMarker = parseInt(this.select('selectNavigation').attr('page-marker'));
-                
-                var alwaysVisible = this.attr.alwaysVisible;
-                
-                var move = function (k,v) {
-                    var compH = $(v).height();
-                    self.attr['selectPage'+curPage] = '.page-' + curPage;
-                    if (k in alwaysVisible) {
-                        h -= compH;
-                        pageH = h;
-                    }
-                    else {
-                        // todo: first component must always fit
-                        if (pageH - compH >= 0) {
-                            pageH -= compH;
-                            // move component to page 'curPage'
-                            $(v).appendTo(self.select('selectPage'+curPage));
-                        }
-                        else {
-                            // component doesn't fit in this page
-                            curPage += 1;
-                            self.attr['selectPage'+curPage] = '.page-' + curPage;
-                            pageH = h - compH;
-                            $(v).appendTo(self.select('selectPage'+curPage));
-                        }
-                    }
-                    if (pageMarker === curPage) self.showPage(curPage);
-                    else self.hidePage(curPage);
-                };
-                
-                $.each(this.select('selectFixed').children(), move);
-                
-                // Current page has no content now!
-                if (pageMarker > curPage) {
-                    this.hidePage(pageMarker-1);
-                    this.showPage(curPage-1);
-                    this.select('selectNavigation').attr('page-marker',curPage);
+                if (pageNumber < 1) pageNumber = 1;
+                if (pageNumber > pageCount) pageNumber = currentPage;
+                if (typeof pageNumber === 'string') pageNumber = parseInt(pageNumber);
+
+                // Update visual
+                if (pageNumber !== currentPage) {
+                    this.attr.private.currentPage = pageNumber;
+                    this.updateVisualization();
                 }
-                this.updatePager();
+            };
+
+            this.update = function(){
+                this.assignPages();
+                this.updateVisualization();
             };
 
             this.after('initialize', function() {
-                
-                // Create component DOM template
-                var template = '<div class="fit"><div class="fixed"></div>';
-                
-                // I need at most as many pages as items, minus the ones to be seen already
-                var pagesToCreate = this.attr.items.length - this.attr.alwaysVisible.length;
+                this.$node.addClass('paged-container');
+                this.update();
+                this.drawNavigation();
 
-                // There is always at least on page created
-                for (var i = 0; i <= pagesToCreate; i++) {
-                    template += '<div class="panel-page page-' + i + '"></div>';
-                }
-                
-                template += '<div class="navigation"></div></div>';
-                
-                this.$node.addClass('paged-panel');
-                
-                this.$nodeMap = $(template).appendTo(this.$node);
-                
-                var self = this;
-                var left = $('<div>').addClass('page-left');
-                var right = $('<div>').addClass('page-right');
+                // API =========================================================
+                var triggers = this.attr.triggers;
+                this.on(triggers.update, this.update);
+                // Resize binding
+                $(window).bind('resize', $.proxy(this.update, this));
 
-                // Create navigation buttons and current page display
-                var nav = this.select('selectNavigation');
-
-                nav.append(left);
-                for (var i = 0; i <= pagesToCreate; i++) {
-                    var pageChooser = $('<div>').addClass('page-chooser').html(i+1);
-                    var fn = function () {
-                        self.selectPage(parseInt($(this).html())-1);
-                    };
-                    
-                    pageChooser.on('click', fn);
-                    nav.append(pageChooser);
-                }
-                
-                nav.append('</div>');
-                
-                nav.append(right);
-                
-                // add click triggers
-                this.select('selectPageLeft').on('click', function () { self.movePage(-1); });
-                this.select('selectPageRight').on('click', function () { self.movePage(+1); });
-                
-                // Add page marker at navigation
-                this.select('selectNavigation').attr('page-marker','0');
-               
-                this.updatePager();
-                
-                // Update event handler
-                this.on('update-view', function () {
-                    this.update();
-                    return false;
-                });
-
-                this.on('load-items', function (event, items) {
-                    if (items !== null) {
-                        this.loadItems(items);
-                    }
-                    else console.error('Required parameter: items []');
-                });
             });
         }
     }

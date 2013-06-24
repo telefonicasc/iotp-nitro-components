@@ -14,10 +14,11 @@
 define(
     [
         'components/component_manager',
-        'components/mixin/container'
+        'components/mixin/container',
+        'components/mixin/data_binding'
     ],
     
-    function(ComponentManager, Container) {
+    function(ComponentManager, Container, DataBinding) {
 
         var Window = function() {
 
@@ -63,6 +64,7 @@ define(
             };
         };
 
-        return ComponentManager.create('Window', Window, Container);
+        return ComponentManager.create('Window', Window, 
+            Container, DataBinding);
     }
 );

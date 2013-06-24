@@ -1,7 +1,7 @@
 define(
     [
         'components/component_manager',
-        'components/mixin/template', 
+        'components/mixin/template',
         'components/mixin/container'
     ],
 
@@ -18,6 +18,7 @@ define(
                 selectPageRight: '.pageRight',
                 selectContainer: '.paged-container',
                 selectPageChooser: '.page-chooser',
+                selectFixedPage: '.fit',
                 triggers: {
                     update: 'update'
                 },
@@ -32,55 +33,83 @@ define(
                 alwaysVisible: [],
                 items: []
             });
-            
+            this.next = function(){
+                this.changeToPage(+1,true);
+            };
+            this.prev = function(){
+                this.changeToPage(-1,true);
+            };
+
+            this.drawNavigation =  function(totalPages){
+                var changeToPage = $.proxy(this.changeToPage, this);
+                var $nav = this.select('selectNavigation');
+
+                $('<div>').addClass('page-left').
+                    click($.proxy(this.prev, this)).
+                    appendTo($nav);
+                $('<div/>').addClass('pages-index').
+                    appendTo($nav);
+                $('<div>').addClass('page-right').
+                    click($.proxy(this.next, this)).
+                    appendTo($nav);
+
+                $nav.on('click', '.page-chooser', function(){
+                    var page = $(this).text();
+                    changeToPage(page,false);
+                });
+                this.select('selectNavigation').hide();
+            };
+
+            this.addPage = function(index){
+                var navContainer = $('.pages-index', this.select('selectNavigation'));
+                $('<div>')
+                    .addClass('page-chooser')
+                    .text(index)
+                    .appendTo(navContainer);
+            };
+
             this.assignPages = function () {
                 var cfg = this.attr.private;
                 var elements = this.select('selectElements').children();
                 cfg.pageCount = 0;
-                
+
                 // Calculate available space (fit div height - navigation bar height)
                 var nav = this.select('selectNavigation');
-                cfg.available = this.select('selectElements').parent().height() - nav.height();
-                
+                cfg.available = this.select('selectFixedPage').height() - nav.height();
                 var remaining = cfg.available;
-                var page = 1;
-                
-                var getRequiredHeight = function (v) {
-                    return $(v).height();
-                };
-                
                 // Assign a page to each one
                 var alwaysVisible = this.attr.alwaysVisible;
-                
-                $.each(elements, function (k,v) {
-                    // Does this component fit?
-                    var requiredHeight = getRequiredHeight(v);
-                    
-                    if (parseInt(k) in alwaysVisible) {
-                        remaining -= requiredHeight;
-                        cfg.available = remaining;
-                        $(v).attr('assigned-page',0);
-                    }
-                    else {
-                        if (requiredHeight <= remaining) {
-                            remaining -= requiredHeight;
+
+                $('.pages-index', this.select('selectNavigation')).empty();
+                var page = 1;
+                var cacheHeight=0;
+                this.addPage(page);
+
+                $.each(elements, $.proxy(function (k,v) {
+                        // Does this component fit?
+                        var requiredHeight = $(v).outerHeight();
+                        cacheHeight += requiredHeight;
+
+                        if (cacheHeight > remaining) {
+                            cacheHeight=0;
+                            this.addPage(++page);
                         }
-                        else {
-                            remaining = cfg.available - requiredHeight;
-                            page += 1;
+
+                        if (parseInt(k) in alwaysVisible) {
+                            $(v).attr('assigned-page',0);
+                        }else{
+                            $(v).attr('assigned-page',page);
                         }
-                        // Set element page
-                        $(v).attr('assigned-page',page);
-                    }
-                });
+
+                    }, this));
                 // Update page count
                 cfg.pageCount = page;
                 // Update currentPage
                 if (cfg.currentPage > cfg.pageCount) {
-                    cfg.currentPage = cfg.pageCount +1;
+                    cfg.currentPage = cfg.pageCount;
                 }
             };
-            
+
             this.updateVisualization = function () {
                 var currentPage = this.attr.private.currentPage;
                 var elements = this.select('selectElements').children();
@@ -91,7 +120,7 @@ define(
                     else if (assignedPage === 0) $(v).show();
                     else $(v).hide();
                 });
-                
+
                 if (this.attr.private.pageCount <= 1) {
                     this.select('selectNavigation').hide();
                 }
@@ -108,14 +137,14 @@ define(
                     });
                 }
             };
-            
+
             this.changeToPage = function (pageNumber, isDisplacement) {
                 if (typeof isDisplacement === 'undefined') isDisplacement = false;
                 if (isDisplacement === null) isDisplacement = false;
-                
+
                 var currentPage = this.attr.private.currentPage;
                 var pageCount = this.attr.private.pageCount;
-                
+
                 if (isDisplacement) {
                     pageNumber = currentPage + pageNumber;
                 }
@@ -130,57 +159,21 @@ define(
                 }
             };
 
+            this.update = function(){
+                this.assignPages();
+                this.updateVisualization();
+            };
+
             this.after('initialize', function() {
-                var self = this;
-                
                 this.$node.addClass('paged-container');
-                
-                var nav = this.select('selectNavigation');
-                
-                var left = $('<div>').addClass('page-left').click(function () {
-                    self.changeToPage(-1,true);
-                });
-                
-                nav.append(left);
-                
-                var i = 1;
-                $.each(this.attr.items, function (k,v) {
-                    var chooser = $('<div>').addClass('page-chooser').html(i).click(function () {
-                        self.changeToPage($(this).html(),false);
-                    });
-                    i += 1;
-                    nav.append(chooser);
-                });
-                
-                var right = $('<div>').addClass('page-right').click(function () {
-                    self.changeToPage(+1,true);
-                });
-                
-                nav.append(right);
-                
-                this.select('selectPageLeft').click(function () {
-                    self.changeToPage(-1,true);
-                });
-                this.select('selectPageRight').click(function () {
-                    self.changeToPage(+1,true);
-                });
-                
-                this.select('selectNavigation').hide();
-               
+                this.update();
+                this.drawNavigation();
+
                 // API =========================================================
                 var triggers = this.attr.triggers;
-                
-                this.on(triggers.update, function () {
-                    this.assignPages();
-                    this.updateVisualization();
-                });
-                
+                this.on(triggers.update, this.update);
                 // Resize binding
-                
-                $(window).bind('resize', function() {
-                    self.assignPages();
-                    self.updateVisualization();
-                });
+                $(window).bind('resize', $.proxy(this.update, this));
 
             });
         }

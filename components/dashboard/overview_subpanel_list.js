@@ -6,7 +6,7 @@ define(
 
     function(ComponentManager, RepeatContainer) {
 
-        return ComponentManager.create('OverviewSubpanelList', 
+        return ComponentManager.create('OverviewSubpanelList',
             OverviewSubpanelList);
 
         function OverviewSubpanelList() {
@@ -15,23 +15,29 @@ define(
                 text: '',
                 caption: '',
                 iconClass: ''
+                //, filter: function(elementOfArray, indexInArray){ return true }
             });
 
             this.after('initialize', function() {
                 var repeatContainer = $('<div>').appendTo(this.$node);
-
-                RepeatContainer.attachTo(repeatContainer, {
+                var repeatConfig = {
                     component: 'RepeatContainer',
                     model: '$[*]',
                     item: {
                         component: 'OverviewSubpanel',
                         iconClass: this.attr.iconClass,
                         text: this.attr.text,
-                        caption: this.attr.caption 
+                        caption: this.attr.caption
                     }
-                });
-                
-                this.$node.on('click', '.repeat-container-item', 
+                };
+
+                if(this.attr.filter){
+                    repeatConfig.filter = this.attr.filter;
+                }
+
+                RepeatContainer.attachTo(repeatContainer, repeatConfig);
+
+                this.$node.on('click', '.repeat-container-item',
                     $.proxy(function(e, node) {
                         var dataItem = $(e.currentTarget).data('m2mValue');
                         this.trigger('itemselected', { item: dataItem });

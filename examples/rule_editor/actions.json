@@ -25,7 +25,21 @@
                 "type": "SendEmailAction"
             },
             "id": "email"
+        },
+        {
+            "type": "ActionCard",
+            "actionData": {
+                "userParams": [
+                    {
+                        "name": "alarm.status",
+                        "value": "dca_support@tid.es"
+                    }
+                ],
+                "name": "alarm",
+                "type": "SendAlarmAction"
+            },
+            "id": "alarm"
         }
     ],
-    "count": 1
+    "count": 2
 }

@@ -28,6 +28,8 @@ define(
                         .appendTo($('body'));
                 }
 
+                var anim = false;
+
                 this.updateChart = function() {
                     var bars = context.selectAll('.bar').data(data),
                         barWidth = this.attr.barWidth *
@@ -39,21 +41,25 @@ define(
                     bars.attr('x', function(d) {
                         return x(d.date) - halfBarWidth;
                     })
-                    .attr('width', barWidth)
-                    .attr('y', function(d) {
-                        return d.value >= 0 ? y(d.value) : y(0);
-                    })
-                    .attr('height', function(d) {
-                        return Math.abs(y(0) - y(d.value));
-                    })
-                    .on('mouseover', function(d) {
+                    .attr('width', barWidth);
+                    bars.on('mouseover', function(d) {
                         self.showTooltip(this, d.value, barWidth);
                     })
                     .on('mouseout', function(d) {
                         self.hideTooltip();
                     });
-
                     bars.exit().remove();
+                    
+                    if (anim){
+                        bars = bars.transition().duration(800);
+                    }
+                    bars.attr('height', function(d) {
+                        return Math.abs(y(0) - y(d.value));
+                    })
+                    .attr('y', function(d) {
+                        return d.value >= 0 ? y(d.value) : y(0);
+                    });
+                    anim = false;
                    
                 };
 
@@ -84,12 +90,14 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
-                    console.log('barchart actionSelected', value);
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }
-                    this.attr.tooltip.caption = (value.caption)? value.caption: '';
+                    if (this.attr.tooltip)
+                        this.attr.tooltip.caption = (value.caption)? value.caption: '';
+                    anim = true;
                     this.trigger('valueChange', this.options);
+
                 });
 
                 this.showTooltip = function(rect, d, barWidth) {

@@ -111,6 +111,7 @@ define(
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     } 
+                    this.anim = true;
                     this.trigger('valueChange', this.options);  
                 });
             });

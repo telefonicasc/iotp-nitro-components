@@ -458,6 +458,7 @@ function() {
                         detailedMinimap
                     ]
                 }]
+
             },      
             data: loadData
         });
@@ -499,6 +500,9 @@ function() {
             }
         });
 
+        $('.dashboard').on('expanded', function () {
+            $('.panel-detail').trigger('update');
+        });
         //</editor-fold>
     });
 });

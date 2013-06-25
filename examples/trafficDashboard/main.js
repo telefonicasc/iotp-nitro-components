@@ -470,11 +470,13 @@ define(
                     }
                 );
                 $('.dashboard').on('click', '.overview-header', function() {
-                    $('.panel-detail').hide();
+                    //$('.panel-detail').hide();
                     $('.panel-list').show();
+                    $('.paged-container').trigger('update');
                     $('.mapbox').trigger('unselect-feature', function(feature){
                         feature.properties['marker-size'] = 'medium';
                     });
+
                 });
                 $('.dashboard').on('valueChange', function(e,data){
                     var count = data.value.length;

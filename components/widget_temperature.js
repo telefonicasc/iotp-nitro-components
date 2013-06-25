@@ -27,6 +27,7 @@ function (ComponentManager, DataBinding) {
                                                                                         
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
+            this.$node.addClass('temperature-widget');
             
             this.on('drawTemperature', function (event, temp) {
                 if (temp !== null) this.attr.temp = temp;

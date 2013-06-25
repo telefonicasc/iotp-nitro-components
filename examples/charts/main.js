@@ -36,7 +36,7 @@ define(
                         }],
                     overviewPanel: {},
                     data: function(callback) {
-                        var path = '/m2m-nitro-components/examples/charts/res/data/mock.json';
+                        var path = 'res/data/mock.json';
 
                         $.getJSON(path, function(data) {
                             callback(data);

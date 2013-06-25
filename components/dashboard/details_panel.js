@@ -18,7 +18,7 @@ define(
             });
 
             this.after('initialize', function() {
-                this.$node.addClass('dashboard-details-panel');
+                this.$node.addClass('dashboard-details-panel sidebar');
 
                 this.on('expand', function(e, o) {
                     var duration = o && o.duration !== undefined ? duration : 300;

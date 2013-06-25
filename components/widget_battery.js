@@ -17,7 +17,7 @@ function (ComponentManager) {
             batteryLegend: '.battery-legend',
             fillColor: '#6F8388',
             borderColor: '#6F8388',
-            baseColor: '#E9EFF0',
+            baseColor: '#DDEAEC',
             id: 'battery-widget',
             value: 0
         });
@@ -234,7 +234,7 @@ function (ComponentManager) {
                 xlabels: xlabels
                 //  ylabels: ylabels
             };
-        } 
+        }; 
         
 
     } // </PitchWidget>

@@ -116,6 +116,15 @@
     padding: @padding/2 @padding;
     border-radius: 4px;
 
+    &.disabled {
+      color: #D4D2D8;
+    }
+
+    &.selected {
+      background-color: #64737b;
+      color: white;
+    }
+
     &:hover {
       background-color: #6EB4DB;
       color: white;
@@ -196,6 +205,9 @@
 
     &:hover {
       background: #6EB4DB url("@{image-path}/submenu-indicator-hover.png") no-repeat right center;
+    }
+    &.selected {
+      background: #64737b url("@{image-path}/submenu-indicator-hover.png") no-repeat right center;
     }
   }
 }

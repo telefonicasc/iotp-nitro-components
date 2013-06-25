@@ -22,7 +22,9 @@ define(
 
                 this.on('expand', function(e, o) {
                     var duration = o && o.duration !== undefined ? duration : 300;
-                    this.$node.animate({ height: this.height }, duration);
+                    this.$node.animate({ height: this.height }, duration, 'swing', $.proxy(function () {
+                        this.trigger('expanded');
+                    },this));
                     this.expanded = true;
                 });
 

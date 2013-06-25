@@ -17,7 +17,8 @@ define(
     'components/chart/bar_chart',
     'components/chart/area_chart',
     'components/chart/radar_chart',
-    'components/chart/range_selection_chart'
+    'components/chart/range_selection_chart',
+    'components/window/window'
 ],
     
 function() {
@@ -333,7 +334,7 @@ function() {
         var detailedHeader = {
             component: 'OverviewSubpanel',
             className: 'detail-element-header',
-            iconClass: 'marker-red',
+            iconClass: 'marker-blue',
             text: '',
             caption: ''
         };
@@ -426,12 +427,26 @@ function() {
             createOffscreenIndicators: true,
             markerSimpleSymbol: 'fuel',
             features: []
-        };        
+        };  
+        
+        var window = {
+            component: 'Window',
+            className: 'fillLevelWindow',
+            items: [
+                {
+                    component: 'OverviewSubpanel',
+                    className: 'detail-window-placeholder',
+                    iconClass: 'marker-red',
+                    text: 'Echo',
+                    caption: 'Test'
+                }                
+            ]
+        };
         
         //</editor-fold>
                 
         $('.dashboard').m2mdashboard({            
-            mainContent: [mainMap],            
+            mainContent: [mainMap,window],            
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,

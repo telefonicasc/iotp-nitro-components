@@ -28,7 +28,7 @@ define(
         function() {
 
             requirejs(['components/jquery_plugins'], function() {
-
+/*
                 var warning_subpanel_html = '<div class="warning-item overview-subpanel" data-bind="" style="">'
                         + '<div class="icon marker-red"></div>'
                         + '<div class="overview-subpanel-body">'
@@ -37,6 +37,7 @@ define(
                         + '</div></div>';
 
                 var pollInterval = 5000;
+                */
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
                 var useKermit = false;
@@ -233,8 +234,7 @@ define(
                     var url = assetsURL + '/' + assetName;
                     requestApiData(url, updateAssetInfoFn);
                 };
-*/
-                //@TODO mover al m2m-dashboard
+
                 var showDetails = function(event, data) {
                     var item = data.item;
                     //$('.panel-detail').show();
@@ -242,11 +242,12 @@ define(
                     $('.panel-detail').trigger('update-view');
                     updateAssetInfo(item.asset.name);
                 };
-
+*/
                 //@TODO export to m2m-dashboard
                 var hideDetails = function() {
+                    //
+                    $('.panel-detail').hide();
                     $('.panel-list').show();
-                    //$('.panel-detail').hide();
                     $('.mapbox').trigger('unselect-feature', function(feature){
                         feature.properties['marker-size'] = 'medium';
                     });
@@ -453,11 +454,6 @@ define(
                                 updateOffscreenIndicators();
                             },
                             model: function(features) {
-                                /* return {
-                                    'format':'asset',
-                                    'features':features
-                                };
-                                */
                                 var markerColorWarn = '#CB3337';
                                 var markerColorOk = '#5E91A0';
                                 return $.map(features, function(f) {
@@ -482,10 +478,22 @@ define(
                                 });
 
                             },
-//                            featuresPreprocessor: processFeatures,
                             features: []
                         }
                     ],
+                    detailPanel:{
+                        items:[
+                            {
+                                component: 'pagedContainer',
+                                className: 'panel-detail',
+                                selectElements: '.dashboard-details-panel',
+                                items: [{
+                                    component: 'DashboardDetailsPanel',
+                                    items: compList
+                                }]
+                            }
+                        ]
+                    },
                     overviewPanel: {
                         title: 'Lights with warnings',
                         // count: 10,//@TODO esto no funciona porque Dashboard no lo lee
@@ -522,21 +530,12 @@ define(
                                     }
 
                                 ]
-                            },
-                            {
-                                component: 'pagedContainer',
-                                //className: 'panel-list',
-                                selectElements: '.dashboard-details-panel',
-                                items: [{
-                                    component: 'DashboardDetailsPanel',
-                                    items: compList
-                                }]
                             }
 
                         ]
-                        },
-                        data: function(cb) {
-                            requestApiData('data/assets.json', function(assets){
+                    },
+                    data: function(cb) {
+                            var onLoadData = function(assets){
                                 $.each(assets.data, function(i, item){
                                     item.errors = getErrors(item.sensorData);
                                 });
@@ -544,9 +543,15 @@ define(
                                 if (centerOnLoad) updateCenter();
 
                                 $('.dashboard .paged-container').trigger('update');
-                            });
-                        },
-                        itemData: function(item, cb) {
+                            }
+                            requestApiData('data/assets.json', onLoadData);
+/*
+                            window.setInterval(function () {
+                                requestApiData('data/assets.json', onLoadData);
+                            }, 5000);
+                            */
+                    },
+                    itemData: function(item, cb) {
                             var results = [];
                             var paintLights = function(response) {
                                 results.push(response);
@@ -575,17 +580,14 @@ define(
                             requestApiData('data/redLight.json', paintLights);
                             requestApiData('data/greenLight.json', paintLights);
                             requestApiData('data/yellowLight.json', paintLights);
-
-
-
-                        }
                     }
-                );
+                }
+            );
 
                 // =============================================================
                 // Complete DOM
                 // =============================================================
-
+/*
                 // Add error panel to details
                 var template_error_details = '<div class="detail-errors"></div>';
                 $('.detail-element-header').after(template_error_details);
@@ -595,7 +597,7 @@ define(
                 // =============================================================
 
                 // Hide details on load
-                $('.panel-detail').hide();
+
 
                 // Update paged panel, to adjust components on load
                 $('.paged-panel').trigger('update-view');
@@ -605,12 +607,15 @@ define(
                     $('.panel-list').trigger('update-view');
                     $('.dashboard-details-panel').trigger('update-view');
                 });
+                */
+                $('.panel-detail').hide();
 
                 // Update widgets
                 $('.temperature-widget').trigger('drawTemperature');
                 $('.pitch-widget').trigger('drawPitch');
                 $('.lights-widget').trigger('drawLights');
                 $('.battery-widget').trigger('drawBattery');
+
 
                 // =============================================================
                 // Trigger listeners
@@ -629,6 +634,9 @@ define(
                 $('.dashboard').on('valueChange', function(e,data){
                     var count = data.value.length;
                     $('.dashboard-overview-panel .overview-count', this).text(count);
+                });
+                $('.dashboard-details-panel').on('expanded', function(){
+                    $('.panel-detail').trigger('update');
                 });
 
                 // Event when a tooltip element is clicked

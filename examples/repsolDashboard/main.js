@@ -17,25 +17,32 @@ define(
     'components/chart/bar_chart',
     'components/chart/area_chart',
     'components/chart/radar_chart',
-    'components/chart/range_selection_chart'
+    'components/chart/range_selection_chart',
+    'components/window/window'
 ],
     
 function() {
 
     requirejs(['components/jquery_plugins'], function() {
 
+        //<editor-fold defaultstate="collapsed" desc="Variables">
+        
         var useKermit = false;
         var markerColors = {
-            ok: '#04B404',
-            err: '#DF0101'
+            ok: '#5D909F',
+            err: '#CB3337'
         };
+        
+        //</editor-fold>
+    
+        //<editor-fold defaultstate="collapsed" desc="Methods">
             
         // =====================================================================    
         /* Service URL setup */
         // =====================================================================
         
         //<editor-fold defaultstate="collapsed" desc="AssetURL & AssetsDetailedURL">
-
+//        alert(document.location.hostname);
         var assetsURL;
         var assetsDetailedURL;
         if (!useKermit) {
@@ -81,6 +88,29 @@ function() {
             }
         };
         
+        var assets2markers = function (assetDetailedList) {
+            var markers = [];
+            $.each(assetDetailedList, function (k,v) {
+                var f = {
+                    geometry: {
+                        coordinates: [
+                            v.asset.location.longitude,
+                            v.asset.location.latitude
+                        ]
+                    },
+                    properties: {
+                        'title': v.asset.name,
+                        'caption': v.asset.description,
+                        'marker-color': markerColors.ok,
+                        'marker-symbol': 'fuel',
+                        'marker-size': 'medium'
+                    }
+                };
+                markers.push(f);
+            });
+            return markers;
+        };
+        
         var setAssetMarkers = function (restResponse) {
             var features = [];
             $.each(restResponse.data, function (k,v) {
@@ -103,11 +133,9 @@ function() {
             });
             if (features.length > 0) {
                 $('.mapbox').trigger('set-features', [features]);
-                var center = {
-                    lat: features[0].geometry.coordinates[1],
-                    lon: features[0].geometry.coordinates[0]
-                };
-                $('.mapbox').trigger('center-map', [center.lat, center.lon]);
+                // Some features might not be valid, so I request an autocenter
+                // instead of a regular center
+                $('.mapbox').trigger('autocenter');                
             }
         };
         
@@ -127,40 +155,63 @@ function() {
             updateSelectedAssetInfo(feature);
         };
         
-        var customTooltip = function (feature) {
-            return feature.properties.title;
-        };
-        
-        var whenZoomed = function (features) {
-            
-        };
-        
-        var whenPanned = function (features) {
-            
-        };
-        
-        var featuresPreprocessor = function (features, map) {
-            return features;
-        };
-        
+      
         //</editor-fold>
         
         // =====================================================================
         // Service methods
         // =====================================================================
         
-        var showDetails = function() {
-            $('.panel-detail').show();
-            $('.panel-list').hide();
-            $('.panel-detail').trigger('update-view');
-        };
-
-        var hideDetails = function() {
-            $('.panel-list').show();
-            $('.panel-detail').hide();
-        };
-        
+       
         //<editor-fold defaultstate="collapsed" desc="Service specific methods">
+        
+        var customTooltip = function (feature, isSelected) {
+            if (typeof feature.properties.submarkers !== 'undefined') {
+                if (feature.properties.submarkers.length === 0) {
+                    return '<h2>' + feature.properties.title + '</h2>';
+                }
+                else {
+                    var submarkers = feature.properties.submarkers;
+                    // cool things go here
+                    if (!isSelected) {
+                        var warns = 0;
+                        $.each(submarkers, function (k,v) {
+                            if (v.properties['marker-color'] === markerColors.err) warns += 1;
+                        });
+                        var ok = $('<h2>')
+                            .addClass('tooltip-unselected')
+                            .addClass('tooltip-unselected-ok')
+                            .html(submarkers.length - warns);
+                        var errors = $('<h2>')
+                            .addClass('tooltip-unselected')
+                            .addClass('tooltip-unselected-errors')
+                            .html(warns);
+
+                        var content = $('<div>').append(errors).append(ok);
+                        return content.html();
+                    }
+                    else {
+                        var html = '<h2>';
+                        $.each(submarkers, function (k,v) {
+                            var selClass;
+                            if (v.properties['marker-color'] === markerColors.err) {
+                                selClass += ' tooltip-selected-error';
+                            }
+                            else {
+                                selClass += ' tooltip-selected-ok';
+                            }
+                            var elem = $('<h3>')
+                                    .addClass('tooltip-selector')
+                                    .addClass(selClass)
+                                    .html(v.properties.title);
+                            html = $(html).append(elem);
+                        });
+                        return '<h2>'+html.html()+'</h2>';
+                    }
+                }
+            }
+            else return '<h2>' + feature.properties.title + "</h2>";
+        };
         
         var updateAssetView = function (info) {
             // Update vidget data
@@ -179,172 +230,223 @@ function() {
                 catch (err) {}
             });
             
-            // Has errors?
-            var errors = 0;
-            // TODO
-            
             // Update panel-detail-header
             var assetName = info.data.asset.name;
             $('.panel-detail .detail-element-header .text').html(assetName);
-            // Get asset errors, if any
-            if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
-                $('.panel-detail .detail-element-header .icon').addClass('marker-red');
-                var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                $('.panel-detail .detail-errors').html(errors);
-            }
-            else {
-                $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
-                $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
-                $('.panel-detail .detail-errors').html('No problems detected');
-            }
-            var last_update = 'Last update: ';
-            if (info.data.sensorData.length > 0)
-                last_update += info.data.sensorData[0].st;
-            else
-                last_update += 'unknown';
-            $('.panel-detail .detail-element-header .caption').html(last_update);
+            // errors not defined
+            $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
+            $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
+            $('.panel-detail .detail-errors').html('No problems detected');
             
-            // Update minimap
-            var color = errors === 0 ? markerColors.ok : markerColors.err;
-            var feature = {
-                geometry: {
-                    coordinates: [
-                        info.data.asset.location.longitude,
-                        info.data.asset.location.latitude
-                    ]
-                },
-                properties: {
-                    title: info.data.asset.name,
-                   'marker-color': color,  
-                   'marker-symbol': 'fuel',  
-                   'marker-size': 'medium',
-                   isGroup: false,
-                   submarkers: []
-                }
-            };
+            var last_update = 'Last update: ';
+            if (info.data.sensorData.length > 0) last_update += info.data.sensorData[0].st;
+            else last_update += 'unknown';
+            $('.panel-detail .detail-element-header .caption').html(last_update);
             
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-            $('.minimap').trigger('minimap-update', feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
             var assetName = feature.properties.title;
             var assetInfoURL = assetsURL + '/' + assetName;
-            requestApiData(assetInfoURL,updateAssetView);            
+            requestApiData(assetInfoURL,updateAssetView);
         };
         
+        var updateMinimap = function (f,m) {
+//            var data = {};
+//            data.value = f;
+//            data.value.markerModel = m;
+//            $('.minimap').trigger('valueChange', data);
+        };
+        
+        var loadData = function (callback) {
+            var acc = {count:0, historic: []};
+            var updateHistoric = function (data) {
+                if (acc.count < acc.assetList.data.length) {
+                    if (data !== undefined) acc.historic.push(data);
+                    var url = assetsURL + '/' + acc.assetList.data[acc.count].asset.name 
+                            + '/data?attribute=fillLevel&limit=10';
+                    acc.count += 1;
+                    var handleError = function () {
+                        console.warn('Update historic query failure: ' + url);
+                        updateHistoric();
+                    };
+                    $.getJSON(url, updateHistoric).fail(handleError);
+                }
+                else {
+                    if (data !== undefined) acc.historic.push(data);
+                    callback(acc);
+                }
+            };
+
+            $.getJSON(assetsURL, function(data) {
+                acc.assetList = data;
+                acc.selected = { name: '', fillHistorical: []};
+                $.getJSON(assetsDetailedURL, function (data) {
+                    acc.detailed = data;
+                    acc.detailed.format = 'asset';
+                    // Generate features
+                    acc.detailed.features = [];
+                    $.each(acc.detailed.data, function (k,v) {
+                        acc.detailed.features.push(v);
+                    });
+                    updateHistoric();
+                });                    
+            });
+        };
+        
+        var modelFillLevel = function (f) {
+            var data = $('.dashboard').data().m2mValue.historic;  
+            var historic = { fillLevel : [] };
+            var found = false;
+            var i = 0;
+            if (f.historic !== undefined) return historic;
+
+            while (!found && i < data.length) {
+                if (data[i].asset === f.asset.name) found = true;
+                else i += 1;
+            }
+
+            if (!found) return historic;
+
+            $.each(data[i].data, function (k,v){
+                var entry = {date : Date.parse(v.st), value: v.ms.v};
+                historic.fillLevel.push(entry);
+            });
+            return historic;
+        };
         
         //</editor-fold>
+        
         
         // =====================================================================
         // Dashboard component load
         // =====================================================================
         
-        //<editor-fold defaultstate="collapsed" desc="Component list">
-        var detailPanelComponents = [
-            {
-                component: 'OverviewSubpanel',
-                className: 'detail-element-header',
-                iconClass: 'marker-red',
-                text: '',
-                caption: ''
-            },
-            {
-                component: 'detailPanel',
-                header: 'Physical conditions',
-                id: 'physical-conditions',
-                items: [
-                    {
-                        component: 'temperatureWidget',
-                        className: 'temperature-widget'
-                    }
-                ]
-            },
-            {
-                component: 'chartContainer',
-                rangeField: 'selectedRange',
-                valueField: 'totalRegistered',
-                className: 'chart',
-                marginRight: 45,
-                marginBottom: 8,
-                grid: true,
-                axisy: true,
-                charts: [{
-                    type: 'areaChart',
-                    tooltip: true,
-                    model: 'totalRegistered',
-                    //rangeField: 'selectedRange',
-                    cssClass: 'cyan'
-                }]
-            },
-            {
-                component: 'detailPanel',
-                header: 'Battery Level',
-                id: 'battery-level',
-                items: [
-                    {
-                        component: 'batteryWidget',
-                        className: 'battery-widget'
-                    }
-                ]
-            },
-            {
-                component: 'detailPanel',
-                header: 'Last Location',
-                id: 'last-location',
-                items: [
-                    {
-                        component: 'minimap',
-                        mapId: 'keithtid.map-z1eeg2ge',
-                        zoomValue: 16,
-                        movable: true,
-                        listenTo: 'minimap-update',
-                        containerClass: 'minimap'
-                    }
-                ]
-            }
-        ];
         //</editor-fold>
-                
+        
         //<editor-fold defaultstate="collapsed" desc="Load dashboard">
         
-        $('.dashboard').m2mdashboard({
-            mainContent: [{
-                component: 'mapViewer',
-                map: {
-                    id: 'keithtid.map-w594ylml',
-//                    id: 'keithtid.map-z1eeg2ge',
-                    center: {lat: 40.515, lon: -3.665 },
-                    maxZoom: 18,
-                    minZoom: 5,
-                    initialZoom: 15,
-                    zoomButtons: true,
-                    showTooltip: true,
-                    groupMarkers: true
-                },
-                markerClicked: {
-                    center: false,
-                    onClickFn: markerClicked
-                },
-                customTooltip: customTooltip,
-                whenZoomed: whenZoomed,
-                whenPanned: whenPanned,
-                featuresPreprocessor: featuresPreprocessor,
-                createOffscreenIndicators: true,
-                features: [
-                    {   
-                        geometry: { coordinates: [ -3.664929, 40.51654] },
-                        properties: {
-                            'marker-color':'#F00',
-                            'marker-symbol':'fuel',
-                            'title': 'ERROR!'
-                        }
-                    }
-                ]
-            }],
+        //<editor-fold defaultstate="collapsed" desc="Components">
+        
+        var detailedHeader = {
+            component: 'OverviewSubpanel',
+            className: 'detail-element-header',
+            iconClass: 'marker-blue',
+            text: '',
+            caption: ''
+        };
+            
+        var detailedConditions = {
+            component: 'detailPanel',
+            header: 'Physical conditions',
+            id: 'physical-conditions',
+            items: [
+                {
+                    component: 'temperatureWidget',
+                    className: 'temperature-widget'
+                }
+            ]
+        };
+        
+        var detailedFillLevel = {
+            component: 'detailPanel',
+            header: 'Fill level',
+            items: [
+                {
+                    component: 'chartContainer',
+                    valueField: 'fillLevel',
+                    className: 'chart',
+                    marginRight: 45,
+                    marginBottom: 8,
+                    grid: true,
+                    axisy: true,
+                    model: modelFillLevel,
+                    charts: [{
+                        type: 'areaChart',
+                        tooltip: true,
+                        model: 'fillLevel',
+                        cssClass: 'cyan'
+                    }]
+                }
+            ]
+        };
+        
+        var detailedBattery = {
+            component: 'detailPanel',
+            header: 'Battery Level',
+            id: 'battery-level',
+            items: [
+                {
+                    component: 'batteryWidget',
+                    className: 'battery-widget'
+                }
+            ]
+        };  
+            
+        var detailedMinimap = {
+            component: 'detailPanel',
+            header: 'Last Location',
+            id: 'last-location',
+            items: [
+                {
+                    component: 'minimap',
+                    mapId: 'keithtid.map-z1eeg2ge',
+                    zoomValue: 16,
+                    movable: true,
+                    model: function (v) {
+                        if (v.detailed !== undefined) 
+                            return v.detailed.data[0].asset;
+                        else return v.asset;
+                    },
+                    containerClass: 'minimap'
+                }
+            ]
+        };
+            
+        var mainMap = {
+            component: 'mapViewer',
+            model: 'detailed',
+            map: {
+                id: 'keithtid.map-w594ylml',
+                center: {lat: 40.515, lon: -3.665 },
+                maxZoom: 18,
+                minZoom: 5,
+                initialZoom: 14,
+                zoomButtons: true,
+                showTooltip: true,
+                groupMarkers: true
+            },
+            markerClicked: {
+                center: false,
+                onClickFn: markerClicked
+            },
+            customTooltip: customTooltip,
+            createOffscreenIndicators: true,
+            markerSimpleSymbol: 'fuel',
+            features: []
+        };  
+        
+        var window = {
+            component: 'Window',
+            className: 'fillLevelWindow',
+            items: [
+                {
+                    component: 'OverviewSubpanel',
+                    className: 'detail-window-placeholder',
+                    iconClass: 'marker-red',
+                    text: 'Echo',
+                    caption: 'Test'
+                }                
+            ]
+        };
+        
+        //</editor-fold>
+                
+        $('.dashboard').m2mdashboard({            
+            mainContent: [mainMap,window],            
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,
@@ -353,43 +455,32 @@ function() {
                         component: 'pagedContainer',
                         className: 'panel-list',
                         header: '',
-                        ID: 'panel-list',
                         items: []
-                    },
-                    {
-                        component: 'pagedContainer',
-                        className: 'panel-detail',
-                        extraHeaderGap: 50,
-                        alwaysVisible: [0, 1],
-                        items: detailPanelComponents
                     }
                 ]
-            },
-            data: function(callback) {
-                var d = '{"totalRegistered": ['
-                    +'{"date": 1356994800000,"value": 25},'
-                    +'{"date": 1357081200000,"value": 32},'
-                    +'{"date": 1357167600000,"value": 39},'
-                    +'{"date": 1357254000000,"value": 45},'
-                    +'{"date": 1357340400000,"value": 53},'
-                    +'{"date": 1357426800000,"value": 58},'
-                    +'{"date": 1357513200000,"value": 66},'
-                    +'{"date": 1357599600000,"value": 72},'
-                    +'{"date": 1357686000000,"value": 77},'
-                    +'{"date": 1357772400000,"value": 84},'
-                    +'{"date": 1357858800000,"value": 89},'
-                    +'{"date": 1357945200000,"value": 97},'
-                    +'{"date": 1358031600000,"value": 104},'
-                    +'{"date": 1358118000000,"value": 109},'
-                    +'{"date": 1358204400000,"value": 115},'
-                    +'{"date": 1358290800000,"value": 123}'
-                    +']}';
-                callback(d);
-            }
+            },                    
+            detailsPanel: {
+                marginTop: 16,
+                items: [{
+                    component: 'pagedContainer',
+                    className: 'panel-detail',
+                    alwaysVisible: [0, 1],
+                    items: [
+                        detailedHeader,
+                        detailedConditions,
+                        detailedFillLevel,
+                        detailedBattery,
+                        detailedMinimap
+                    ]
+                }]
+
+            },      
+            data: loadData
         });
         
         //</editor-fold>
             
+        //<editor-fold defaultstate="collapsed" desc="Startup & Event handlers">
         // =====================================================================
         // Startup
         // =====================================================================
@@ -400,17 +491,33 @@ function() {
         // Init widgets
         $('.temperature-widget').trigger('drawTemperature');
         $('.battery-widget').trigger('drawBattery');
-
-        /* On load, do api rest call to get devices and set mapbox markers. */
-        loadMarkersFromService();
         
-        $('.panel-detail').hide();
         $('.overview-count').html(0);
-        
-        // API =================================================================
-        $('.dashboard').on('show-details', showDetails);
-        $('.dashboard').on('hide-details', hideDetails);
-        $('.overview-header').on('click', hideDetails);
 
+        $('.dashboard').on('expanded', function () {
+            $('.panel-detail').trigger('update');
+        });
+        
+        $(document).on('click', '.tooltip-selector', function() {
+            var m2mValue = $('.dashboard').data().m2mValue;
+            var data = m2mValue.detailed.data;
+            var title = $(this).html();
+            // find correct data
+            var i = 0;
+            var value = null;
+            while (i < data.length && value === null) {
+                if (data[i].asset.name === title) value = {item : data[i], data: data[i] };
+                else i++;
+            }
+            if (value !== null) {
+                updateAssetView(value);
+                $('.dashboard').trigger('itemselected',value);
+            }
+        });
+
+        $('.dashboard').on('expanded', function () {
+            $('.panel-detail').trigger('update');
+        });
+        //</editor-fold>
     });
 });

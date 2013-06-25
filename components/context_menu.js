@@ -65,7 +65,7 @@ define(
         this.on('selected', function(e, item) {
           if (item.items) {
             this.pushPanel(item);
-          } else if (this.attr.onSelect) {
+          } else if (this.attr.onSelect && !item.disabled) {
             this.attr.onSelect(item);
             this.$node.hide();
           }

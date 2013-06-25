@@ -562,11 +562,16 @@ function(ComponentManager, DataBinding) {
                 else if (lon < extent.west) locator += 'w';
 
                 locator += 'markers';
+                var count = 1;
+                if (data[x].properties.isGroup === true) {
+                    count = data[x].properties.submarkers.length;
+                    count = count === 0 ? 1 : count;
+                }
 
                 if (locator !== '.markers') {
                     this.attr.selectOffscreen = locator;
                     this.select('selectOffscreen');
-                    var count = parseInt(this.select('selectOffscreen').html()) + 1;
+                    var count = parseInt(this.select('selectOffscreen').html()) + count;
                     this.select('selectOffscreen').html(count);
                     this.select('selectOffscreen').show();
                     this.select('selectOffscreen').attr('last', el.properties.title);

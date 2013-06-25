@@ -14,6 +14,7 @@ define(
 
             this.defaultAttrs({
                 mapId: 'keithtid.map-w594ylml',
+                markerColor: '#5C8F9E',
                 zoomValue: 16,
                 movable: false,
                 listenTo: 'updateMinimap',
@@ -74,6 +75,11 @@ define(
                     this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
                 });
                 
+                this.on('changeColor', function (event, color) {
+                    this.attr.markerColor = color;
+                });
+                
+                var markerColor = this.attr.markerColor;
                 // Expects something like: "{"name":"Tank-501340596","location":{"altitude":0,"latitude":40.513538,"longitude":-3.663769}}"
                 this.on('valueChange', function (e, o) {
                     e.stopPropagation();
@@ -92,7 +98,7 @@ define(
                             properties: {
                                 'title': values.name,
                                 'caption': values.description,
-                                'marker-color': '#0F0',
+                                'marker-color': markerColor,
                                 'marker-symbol': 'circle',
                                 'marker-size': 'medium'
                             }

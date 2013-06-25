@@ -208,12 +208,13 @@ function() {
             
             // Has errors?
             var errors = 0;
-            // TODO
+            // TODO?
             
             // Update panel-detail-header
             var assetName = info.data.asset.name;
             $('.panel-detail .detail-element-header .text').html(assetName);
             // Get asset errors, if any
+            /*
             if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
                 $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
                 $('.panel-detail .detail-element-header .icon').addClass('marker-red');
@@ -225,6 +226,13 @@ function() {
                 $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
                 $('.panel-detail .detail-errors').html('No problems detected');
             }
+            */
+            // errors not defined
+            $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
+            $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
+            $('.panel-detail .detail-errors').html('No problems detected');
+            
+            
             var last_update = 'Last update: ';
             if (info.data.sensorData.length > 0)
                 last_update += info.data.sensorData[0].st;
@@ -254,7 +262,7 @@ function() {
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-            updateMinimap({}, feature);
+//            updateMinimap({}, feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
@@ -264,10 +272,10 @@ function() {
         };
         
         var updateMinimap = function (f,m) {
-            var data = {};
-            data.value = f;
-            data.value.markerModel = m;
-            $('.minimap').trigger('valueChange', data);
+//            var data = {};
+//            data.value = f;
+//            data.value.markerModel = m;
+//            $('.minimap').trigger('valueChange', data);
         };
         
         //</editor-fold>
@@ -284,125 +292,125 @@ function() {
         //<editor-fold defaultstate="collapsed" desc="Components">
         
         var detailedHeader = {
-                component: 'OverviewSubpanel',
-                className: 'detail-element-header',
-                iconClass: 'marker-red',
-                text: '',
-                caption: ''
-            };
+            component: 'OverviewSubpanel',
+            className: 'detail-element-header',
+            iconClass: 'marker-red',
+            text: '',
+            caption: ''
+        };
             
         var detailedConditions = {
-                component: 'detailPanel',
-                header: 'Physical conditions',
-                id: 'physical-conditions',
-                items: [
-                    {
-                        component: 'temperatureWidget',
-                        className: 'temperature-widget'
-                    }
-                ]
-            };
+            component: 'detailPanel',
+            header: 'Physical conditions',
+            id: 'physical-conditions',
+            items: [
+                {
+                    component: 'temperatureWidget',
+                    className: 'temperature-widget'
+                }
+            ]
+        };
         
         var detailedFillLevel = {
-                component: 'detailPanel',
-                header: 'Fill level',
-                items: [
-                    {
-                        component: 'chartContainer',
-                        valueField: 'fillLevel',
-                        className: 'chart',
-                        marginRight: 45,
-                        marginBottom: 8,
-                        grid: true,
-                        axisy: true,
-                        model: function (f) {
-                            var data = $('.dashboard').data().m2mValue.historic;  
-                            var historic = { fillLevel : [] };
-                            var found = false;
-                            var i = 0;
-                            if (f.historic !== undefined) return historic;
-                            
-                            while (!found && i < data.length) {
-                                if (data[i].asset === f.asset.name) found = true;
-                                else i += 1;
-                            }
-                            
-                            if (!found) return historic;
-                            
-                            $.each(data[i].data, function (k,v){
-                                var entry = {date : Date.parse(v.st), value: v.ms.v};
-                                historic.fillLevel.push(entry);
-                            });
-                            return historic;
+            component: 'detailPanel',
+            header: 'Fill level',
+            items: [
+                {
+                    component: 'chartContainer',
+                    valueField: 'fillLevel',
+                    className: 'chart',
+                    marginRight: 45,
+                    marginBottom: 8,
+                    grid: true,
+                    axisy: true,
+                    model: function (f) {
+                        var data = $('.dashboard').data().m2mValue.historic;  
+                        var historic = { fillLevel : [] };
+                        var found = false;
+                        var i = 0;
+                        if (f.historic !== undefined) return historic;
 
-                        },
-                        charts: [{
-                            type: 'areaChart',
-                            tooltip: true,
-                            model: 'fillLevel',
-                            cssClass: 'cyan'
-                        }]
-                    }
-                ]
-            };
+                        while (!found && i < data.length) {
+                            if (data[i].asset === f.asset.name) found = true;
+                            else i += 1;
+                        }
+
+                        if (!found) return historic;
+
+                        $.each(data[i].data, function (k,v){
+                            var entry = {date : Date.parse(v.st), value: v.ms.v};
+                            historic.fillLevel.push(entry);
+                        });
+                        return historic;
+
+                    },
+                    charts: [{
+                        type: 'areaChart',
+                        tooltip: true,
+                        model: 'fillLevel',
+                        cssClass: 'cyan'
+                    }]
+                }
+            ]
+        };
         
         var detailedBattery = {
-                component: 'detailPanel',
-                header: 'Battery Level',
-                id: 'battery-level',
-                items: [
-                    {
-                        component: 'batteryWidget',
-                        className: 'battery-widget'
-                    }
-                ]
-            };  
+            component: 'detailPanel',
+            header: 'Battery Level',
+            id: 'battery-level',
+            items: [
+                {
+                    component: 'batteryWidget',
+                    className: 'battery-widget'
+                }
+            ]
+        };  
             
         var detailedMinimap = {
-                component: 'detailPanel',
-                header: 'Last Location',
-                id: 'last-location',
-                items: [
-                    {
-                        component: 'minimap',
-                        mapId: 'keithtid.map-z1eeg2ge',
-                        zoomValue: 16,
-                        movable: true,
-                        model: function (v) {
-                            if (v.detailed !== undefined) 
-                                return v.detailed.data[0].asset;
-                            else return v.asset;
-                        },
-                        containerClass: 'minimap'
-                    }
-                ]
-            };
+            component: 'detailPanel',
+            header: 'Last Location',
+            id: 'last-location',
+            items: [
+                {
+                    component: 'minimap',
+                    mapId: 'keithtid.map-z1eeg2ge',
+                    zoomValue: 16,
+                    movable: true,
+                    model: function (v) {
+                        if (v.detailed !== undefined) 
+                            return v.detailed.data[0].asset;
+                        else return v.asset;
+                    },
+                    containerClass: 'minimap'
+                }
+            ]
+        };
             
         var mainMap = {
-                component: 'mapViewer',
-                model: 'detailed',
-                map: {
-                    id: 'keithtid.map-w594ylml',
-                    center: {lat: 40.515, lon: -3.665 },
-                    maxZoom: 18,
-                    minZoom: 5,
-                    initialZoom: 15,
-                    zoomButtons: true,
-                    showTooltip: true,
-                    groupMarkers: true
-                },
-                markerClicked: {
-                    center: false,
-                    onClickFn: markerClicked
-                },
-                customTooltip: customTooltip,
-                whenZoomed: whenZoomed,
-                whenPanned: whenPanned,
-                featuresPreprocessor: featuresPreprocessor,
-                createOffscreenIndicators: true,
-                markerSimpleSymbol: 'fuel',
-                features: []
-            };        
+            component: 'mapViewer',
+            model: 'detailed',
+            map: {
+                id: 'keithtid.map-w594ylml',
+                center: {lat: 40.515, lon: -3.665 },
+                maxZoom: 18,
+                minZoom: 5,
+                initialZoom: 14,
+                zoomButtons: true,
+                showTooltip: true,
+                groupMarkers: true
+            },
+            markerClicked: {
+                center: false,
+                onClickFn: markerClicked
+            },
+            customTooltip: customTooltip,
+            whenZoomed: whenZoomed,
+            whenPanned: whenPanned,
+            featuresPreprocessor: featuresPreprocessor,
+            createOffscreenIndicators: true,
+            markerSimpleSymbol: 'fuel',
+            features: []
+        };        
         
         //</editor-fold>
                 
@@ -444,7 +452,6 @@ function() {
             //<editor-fold defaultstate="collapsed" desc="Data binding">
         
             data: function(callback) {
-                debugger
                 var acc = {count:0, historic: []};
                 var updateHistoric = function (data) {
                     if (acc.count < acc.assetList.data.length) {

@@ -481,7 +481,7 @@ define(
                             features: []
                         }
                     ],
-                    detailPanel:{
+                    detailsPanel:{
                         items:[
                             {
                                 component: 'pagedContainer',

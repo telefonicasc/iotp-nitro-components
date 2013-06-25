@@ -90,7 +90,6 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
-                    console.log('actionSelected', value.newModel);
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }

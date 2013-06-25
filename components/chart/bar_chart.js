@@ -84,7 +84,6 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
-                    console.log('barchart actionSelected', value);
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }

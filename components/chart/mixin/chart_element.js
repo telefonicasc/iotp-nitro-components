@@ -102,7 +102,16 @@ define(
                     this.scalex.domain(options.range);
                     this.scaley.domain(options.valueRange);
                     this.updateChart();
+                    this.options = options;
                     e.stopPropagation();
+                });
+
+                this.on('actionSelected', function(e, value){
+                    e.stopPropagation();
+                    if (value.newModel){
+                        this.attr.model = value.newModel;
+                    } 
+                    this.trigger('valueChange', this.options);  
                 });
             });
 

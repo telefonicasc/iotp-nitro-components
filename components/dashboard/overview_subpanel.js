@@ -16,7 +16,7 @@ define(
         tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
              '<div class="overview-subpanel-body">' +
                '<div><span class="text">{{text}}{{value.text}}</span><span class="text1">{{text1}}{{value.text1}}</span></div>' +
-               '<div class="caption">{{caption}}{{value.caption}}</div>' +
+               '<div class="caption">{{{caption}}}{{{value.caption}}}</div>' +
              '</div>',
         iconClass: '',
         text: '',

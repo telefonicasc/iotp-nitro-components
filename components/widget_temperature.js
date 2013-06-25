@@ -18,22 +18,19 @@ function (ComponentManager, DataBinding) {
             temperatureLabel: '.temperature-label',
             fillColor: '#6F8388',
             borderColor: '#6F8388',
-            baseColor: '#E9EFF0',
+            baseColor: '#DDEAEC',
             id: 'temperature-widget',
             tmin: 0,
-            tmax: 20,
-            temp: 15.6
+            tmax: 30,
+            temp: 0.0
         });
                                                                                         
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
             this.$node.addClass('temperature-widget');
             
-            //this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
-
-            //var obj = this.createTemperatureChart();
             this.on('drawTemperature', function (event, temp) {
-                if (temp != null) this.attr.temp = temp;
+                if (temp !== null) this.attr.temp = temp;
                 this.$node.empty();
                 this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
                 this.attr.widget = this.createTemperatureChart(); 
@@ -68,8 +65,7 @@ function (ComponentManager, DataBinding) {
             else{
               temp = tempCelsius;
             }
-            tamano = temp*(tmax-1)/(tmax-tmin);
-
+            tamano = (((temp - tmin) / (tmax - tmin)) + 0.5) * 12;
             temperatureChart.thermoBar.animate({
               height: tamano,
               y: 42 - tamano
@@ -128,7 +124,7 @@ function (ComponentManager, DataBinding) {
               thermoCircle: thermoCircle,
               thermoBorder: thermoBorder
             };
-        }
+        };
     }
 });
 

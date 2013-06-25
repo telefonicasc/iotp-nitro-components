@@ -28,16 +28,6 @@ define(
         function() {
 
             requirejs(['components/jquery_plugins'], function() {
-/*
-                var warning_subpanel_html = '<div class="warning-item overview-subpanel" data-bind="" style="">'
-                        + '<div class="icon marker-red"></div>'
-                        + '<div class="overview-subpanel-body">'
-                        + '<div class="text"></div>'
-                        + '<div class="caption"></div>'
-                        + '</div></div>';
-
-                var pollInterval = 5000;
-                */
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
                 var useKermit = false;
@@ -59,11 +49,6 @@ define(
 
                 /* Gallus, germany */
                 // var initialCenter = {lat: 50.103749, lon: 8.641774};
-
-                // =============================================================
-                // Functions
-                // =============================================================
-
                 var initialCenter = {lat: 50.456729, lon: 7.485};
 
                 var requestApiData = function (url, callback) {
@@ -90,26 +75,6 @@ define(
                         });
                     }
                 };
-                /*
-                var createNewMarker = function(name, lat, lon, color) {
-                    color = (typeof color === 'undefined') ? markerColorOk : color;
-                    // Add marker to map
-                    var marker = {
-                        geometry: {
-                            coordinates: [parseFloat(lon), parseFloat(lat)]
-                        },
-                        properties: {
-                            'marker-color': color,
-                            'marker-symbol': 'circle',
-                            'title': name
-                        }
-                    };
-
-                    $('.mapbox').trigger('add-feature', marker);
-                    $('.mapbox-mini').trigger('updateMinimap', marker);
-                };
-                */
-
                 //@TODO exportar a m2m-dashboard
                 var getErrors = function(sensorData){
                     var errors = [];
@@ -145,54 +110,6 @@ define(
                     var errors = getErrors(sensorData).join(' <br/> ');
                     return errors;
                 };
-/*
-                var updateWarningList = function(assetName, warnings) {
-                    var matches = $('.panel-list .overview-subpanel .text:contains(\"' + assetName + '\")');
-
-                    if (matches.length === 0 && warnings !== '') {
-                        // append another subpanel
-                        $('.panel-list').append(warning_subpanel_html);
-
-                        $('.panel-list .overview-subpanel .text').last().html(assetName);
-                        $('.panel-list .overview-subpanel .caption').last().html(warnings);
-
-                        updateWarningPanelTrigger();
-                    }
-                    else {
-                        if (warnings === '') {
-                            $(matches[0]).remove();
-                        }
-                        else {
-                            $(matches[0]).parent().children('.caption').html(warnings);
-                        }
-                    }
-
-                    // update warning counter
-                    var count = $('.panel-list .overview-subpanel').length;
-                    $('.overview-count').html(count);
-                };
-
-
-                var centerMap = function(lat, lon) {
-                    $('.mapbox').trigger('center-map', [lat, lon]);
-                };
-
-                var updateAssetsFn = function (response) {
-                    $.each(response.data, function (k,v) {
-                        var lat = v.asset.location.latitude;
-                        var lon = v.asset.location.longitude;
-                        var errors = generateErrorText(v.sensorData);
-                        updateWarningList(v.asset.name, errors);
-                        var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
-                        createNewMarker(v.asset.name, lat, lon, markerColor);
-                    });
-                    if (centerOnLoad) updateCenter();
-                };
-
-                var updateAssets = function () {
-                    requestApiData(assetsDetailedURL, updateAssetsFn);
-                };
-*/
                 //@TODO export to m2m-dashboard
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
@@ -202,7 +119,7 @@ define(
                     $('.panel-detail .detail-element-header .text').html(assetName);
                     if(response.data.errors.length){
                         erromsg = generateErrorText(response.data.sensorData);
-                        $('.panel-detail .detail-errors').html(erromsg);
+                        $('.detail-errors').html(erromsg);
                     }
                     var last_update = 'Last update: ';
                     if (response.data.sensorData.length > 0)
@@ -228,29 +145,6 @@ define(
                         }
                     });
 
-                };
-/*
-                var updateAssetInfo = function (assetName) {
-                    var url = assetsURL + '/' + assetName;
-                    requestApiData(url, updateAssetInfoFn);
-                };
-
-                var showDetails = function(event, data) {
-                    var item = data.item;
-                    //$('.panel-detail').show();
-                    //$('.panel-list').hide();
-                    $('.panel-detail').trigger('update-view');
-                    updateAssetInfo(item.asset.name);
-                };
-*/
-                //@TODO export to m2m-dashboard
-                var hideDetails = function() {
-                    //
-                    $('.panel-detail').hide();
-                    $('.panel-list').show();
-                    $('.mapbox').trigger('unselect-feature', function(feature){
-                        feature.properties['marker-size'] = 'medium';
-                    });
                 };
 
                 var updateCenter = function () {
@@ -329,30 +223,6 @@ define(
                         }
                     }
                 };
-/*
-                var updateWarningPanelTrigger = function() {
-                    $('.overview-subpanel .text').on('click', function() {
-                        var data = {
-                            properties: {
-                                title: $(this).html(),
-                                caption: $(this.parentNode.childNodes[1]).html()
-                            }
-                        };
-                        var fn = function (sel, prev) {
-                            if (sel !== prev) {
-                                $('.mapbox-mini').trigger('asset-selected',sel);
-                                sel.properties['marker-size'] = 'large';
-                                if (prev !== null) {
-                                    prev.properties['marker-size'] = 'medium';
-                                }
-                            }
-                        };
-                        $('.mapbox').trigger('select-feature', [$(this).html(), fn]);
-                        $('.dashboard').trigger('asset-selected', data);
-                    });
-                };
-                */
-
                 // =============================================================
                 // Prepare dashboard
                 // =============================================================
@@ -365,6 +235,10 @@ define(
                         iconClass: 'marker-red',
                         text: 'AssetSemaphore2',
                         caption: 'Inclination change +10'
+                    },
+                    {
+                        component: 'container',
+                        className: 'detail-errors'
                     },
                     {
                         component: 'detailPanel',
@@ -389,10 +263,6 @@ define(
                             {
                                 component: 'lightsWidget',
                                 className: 'lights-widget'
-                                // Only when moved to install.js
-    //                            ,
-    //                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
-    //                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
                             }
                         ]
                     },
@@ -486,11 +356,8 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
-                                selectElements: '.dashboard-details-panel',
-                                items: [{
-                                    component: 'DashboardDetailsPanel',
-                                    items: compList
-                                }]
+                                //selectElements: '.dashboard-details-panel',
+                                items: compList
                             }
                         ]
                     },
@@ -584,30 +451,6 @@ define(
                 }
             );
 
-                // =============================================================
-                // Complete DOM
-                // =============================================================
-/*
-                // Add error panel to details
-                var template_error_details = '<div class="detail-errors"></div>';
-                $('.detail-element-header').after(template_error_details);
-
-                // =============================================================
-                // Set up
-                // =============================================================
-
-                // Hide details on load
-
-
-                // Update paged panel, to adjust components on load
-                $('.paged-panel').trigger('update-view');
-
-                // On resize, update panel views
-                $(window).bind('resize', function() {
-                    $('.panel-list').trigger('update-view');
-                    $('.dashboard-details-panel').trigger('update-view');
-                });
-                */
                 $('.panel-detail').hide();
 
                 // Update widgets
@@ -626,35 +469,21 @@ define(
                         $('.mapbox-mini').trigger('center');
                     }
                 );
-
-                //$('.dashboard').on('itemselected', showDetails);
-
-                //$('.overview-header').on('click', hideDetails);
-                $('.dashboard').on('click', '.overview-header', hideDetails);
+                $('.dashboard').on('click', '.overview-header', function() {
+                    $('.panel-detail').hide();
+                    $('.panel-list').show();
+                    $('.mapbox').trigger('unselect-feature', function(feature){
+                        feature.properties['marker-size'] = 'medium';
+                    });
+                });
                 $('.dashboard').on('valueChange', function(e,data){
                     var count = data.value.length;
                     $('.dashboard-overview-panel .overview-count', this).text(count);
                 });
                 $('.dashboard-details-panel').on('expanded', function(){
+                    $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
                 });
-
-                // Event when a tooltip element is clicked
-                /*
-                $(document).on('click', '.tooltip-selector', function() {
-                    var sel = { properties: {
-                            title: $(this).html()
-                        }
-                    };
-                    showDetails(null, sel);
-                });
-                */
-
-                // Load initial data
-                //updateAssets();
-
-                /* Uncomment this line for device data polling */
-                // window.setInterval(function () { updateAssets(); }, pollInterval);
 
             }); // requirejs
         }

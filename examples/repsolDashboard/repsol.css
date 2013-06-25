@@ -134,3 +134,45 @@
     color: white;
 }
 
+/* Tooltips for groups */
+.tooltip-unselected {
+    min-height: 20px;
+    background-size:contain ;
+    /*background-size:18px 18px;*/
+    background-repeat:no-repeat;
+    padding-left: 24px;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.tooltip-unselected-ok {
+    background-image:url('res/images/Markers_Blue_Sidebar.png');
+    margin-left: 15px;
+}
+
+.tooltip-unselected-errors {
+    background-image:url('res/images/Markers_Red_Sidebar.png');
+    color: red;
+}
+
+.tooltip-selector {
+    cursor: pointer;
+    background-size: contain;
+    background-repeat:no-repeat;
+    padding-left: 15px;
+    margin-top: 3px;
+}
+
+.tooltip-selected-ok {
+    background-image:url('res/images/Markers_Blue_Sidebar.png');
+}
+
+.tooltip-selected-error {
+    background-image:url('res/images/Markers_Red_Sidebar.png');
+}
+
+
+
+.dashboard .dashboard-details-panel {
+    /*top: 30px !important;*/
+}

@@ -97,12 +97,15 @@ function(ComponentManager, DataBinding) {
                 selected: null
             },
             // featuresPreprocessor: null,
-            customTooltip : '',
+            customTooltip : function (feature) {
+                return feature.properties.title;
+            },
             createOffscreenIndicators: false,
             features: [],
             markerColorOK: '#5D909F',
             markerColorWARN: '#CB3337',
             markerSimpleSymbol: 'circle',
+            distanceToGroup: 400,
             whenZoomed: function () {},
             whenPanned: function () {}
         });
@@ -144,7 +147,7 @@ function(ComponentManager, DataBinding) {
             var groupID = 0;
             var colorOK = this.attr.markerColorOK;
             var colorWARN = this.attr.markerColorWARN;
-
+            var distanceToGroup = this.attr.distanceToGroup;
             // Reset groups
             $.each(inFeatures, function (k,v) {
                 if (typeof v.properties.isGroup !== 'undefined') {
@@ -181,7 +184,7 @@ function(ComponentManager, DataBinding) {
                 var diffX = point1.x - point2.x;
                 var diffY = point1.y - point2.y;
                 var distance = diffX * diffX + diffY * diffY;
-                return distance <= 300;
+                return distance <= distanceToGroup;
             };
 
             var canJoin = function (a,b) {

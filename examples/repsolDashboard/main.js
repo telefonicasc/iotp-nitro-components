@@ -154,40 +154,63 @@ function() {
             updateSelectedAssetInfo(feature);
         };
         
-        var customTooltip = function (feature) {
-            return feature.properties.title;
-        };
-        
-        var whenZoomed = function (features) {
-            
-        };
-        
-        var whenPanned = function (features) {
-            
-        };
-        
-        var featuresPreprocessor = function (features, map) {
-            return features;
-        };
-        
+      
         //</editor-fold>
         
         // =====================================================================
         // Service methods
         // =====================================================================
         
-        var showDetails = function() {
-            $('.panel-detail').show();
-            $('.panel-list').hide();
-            $('.panel-detail').trigger('update-view');
-        };
-
-        var hideDetails = function() {
-            $('.panel-list').show();
-            $('.panel-detail').hide();
-        };
-        
+       
         //<editor-fold defaultstate="collapsed" desc="Service specific methods">
+        
+        var customTooltip = function (feature, isSelected) {
+            if (typeof feature.properties.submarkers !== 'undefined') {
+                if (feature.properties.submarkers.length === 0) {
+                    return '<h2>' + feature.properties.title + '</h2>';
+                }
+                else {
+                    var submarkers = feature.properties.submarkers;
+                    // cool things go here
+                    if (!isSelected) {
+                        var warns = 0;
+                        $.each(submarkers, function (k,v) {
+                            if (v.properties['marker-color'] === markerColors.err) warns += 1;
+                        });
+                        var ok = $('<h2>')
+                            .addClass('tooltip-unselected')
+                            .addClass('tooltip-unselected-ok')
+                            .html(submarkers.length - warns);
+                        var errors = $('<h2>')
+                            .addClass('tooltip-unselected')
+                            .addClass('tooltip-unselected-errors')
+                            .html(warns);
+
+                        var content = $('<div>').append(errors).append(ok);
+                        return content.html();
+                    }
+                    else {
+                        var html = '<h2>';
+                        $.each(submarkers, function (k,v) {
+                            var selClass;
+                            if (v.properties['marker-color'] === markerColors.err) {
+                                selClass += ' tooltip-selected-error';
+                            }
+                            else {
+                                selClass += ' tooltip-selected-ok';
+                            }
+                            var elem = $('<h3>')
+                                    .addClass('tooltip-selector')
+                                    .addClass(selClass)
+                                    .html(v.properties.title);
+                            html = $(html).append(elem);
+                        });
+                        return '<h2>'+html.html()+'</h2>';
+                    }
+                }
+            }
+            else return '<h2>' + feature.properties.title + "</h2>";
+        };
         
         var updateAssetView = function (info) {
             // Update vidget data
@@ -206,69 +229,28 @@ function() {
                 catch (err) {}
             });
             
-            // Has errors?
-            var errors = 0;
-            // TODO?
-            
             // Update panel-detail-header
             var assetName = info.data.asset.name;
             $('.panel-detail .detail-element-header .text').html(assetName);
-            // Get asset errors, if any
-            /*
-            if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
-                $('.panel-detail .detail-element-header .icon').addClass('marker-red');
-                var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                $('.panel-detail .detail-errors').html(errors);
-            }
-            else {
-                $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
-                $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
-                $('.panel-detail .detail-errors').html('No problems detected');
-            }
-            */
             // errors not defined
             $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
             $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
             $('.panel-detail .detail-errors').html('No problems detected');
             
-            
             var last_update = 'Last update: ';
-            if (info.data.sensorData.length > 0)
-                last_update += info.data.sensorData[0].st;
-            else
-                last_update += 'unknown';
+            if (info.data.sensorData.length > 0) last_update += info.data.sensorData[0].st;
+            else last_update += 'unknown';
             $('.panel-detail .detail-element-header .caption').html(last_update);
-            
-            // Update minimap
-            var color = errors === 0 ? markerColors.ok : markerColors.err;
-            var feature = {
-                geometry: {
-                    coordinates: [
-                        info.data.asset.location.longitude,
-                        info.data.asset.location.latitude
-                    ]
-                },
-                properties: {
-                    title: info.data.asset.name,
-                   'marker-color': color,  
-                   'marker-symbol': 'fuel',  
-                   'marker-size': 'medium',
-                   isGroup: false,
-                   submarkers: []
-                }
-            };
             
             // Show info panel
             $('.dashboard').trigger('show-details');
             $('.panel-detail').trigger('update');
-//            updateMinimap({}, feature);
         };
         
         var updateSelectedAssetInfo = function (feature) {
             var assetName = feature.properties.title;
             var assetInfoURL = assetsURL + '/' + assetName;
-            requestApiData(assetInfoURL,updateAssetView);            
+            requestApiData(assetInfoURL,updateAssetView);
         };
         
         var updateMinimap = function (f,m) {
@@ -276,6 +258,63 @@ function() {
 //            data.value = f;
 //            data.value.markerModel = m;
 //            $('.minimap').trigger('valueChange', data);
+        };
+        
+        var loadData = function (callback) {
+            var acc = {count:0, historic: []};
+            var updateHistoric = function (data) {
+                if (acc.count < acc.assetList.data.length) {
+                    if (data !== undefined) acc.historic.push(data);
+                    var url = assetsURL + '/' + acc.assetList.data[acc.count].asset.name 
+                            + '/data?attribute=fillLevel&limit=10';
+                    acc.count += 1;
+                    var handleError = function () {
+                        console.warn('Update historic query failure: ' + url);
+                        updateHistoric();
+                    };
+                    $.getJSON(url, updateHistoric).fail(handleError);
+                }
+                else {
+                    if (data !== undefined) acc.historic.push(data);
+                    callback(acc);
+                }
+            };
+
+            $.getJSON(assetsURL, function(data) {
+                acc.assetList = data;
+                acc.selected = { name: '', fillHistorical: []};
+                $.getJSON(assetsDetailedURL, function (data) {
+                    acc.detailed = data;
+                    acc.detailed.format = 'asset';
+                    // Generate features
+                    acc.detailed.features = [];
+                    $.each(acc.detailed.data, function (k,v) {
+                        acc.detailed.features.push(v);
+                    });
+                    updateHistoric();
+                });                    
+            });
+        };
+        
+        var modelFillLevel = function (f) {
+            var data = $('.dashboard').data().m2mValue.historic;  
+            var historic = { fillLevel : [] };
+            var found = false;
+            var i = 0;
+            if (f.historic !== undefined) return historic;
+
+            while (!found && i < data.length) {
+                if (data[i].asset === f.asset.name) found = true;
+                else i += 1;
+            }
+
+            if (!found) return historic;
+
+            $.each(data[i].data, function (k,v){
+                var entry = {date : Date.parse(v.st), value: v.ms.v};
+                historic.fillLevel.push(entry);
+            });
+            return historic;
         };
         
         //</editor-fold>
@@ -323,27 +362,7 @@ function() {
                     marginBottom: 8,
                     grid: true,
                     axisy: true,
-                    model: function (f) {
-                        var data = $('.dashboard').data().m2mValue.historic;  
-                        var historic = { fillLevel : [] };
-                        var found = false;
-                        var i = 0;
-                        if (f.historic !== undefined) return historic;
-
-                        while (!found && i < data.length) {
-                            if (data[i].asset === f.asset.name) found = true;
-                            else i += 1;
-                        }
-
-                        if (!found) return historic;
-
-                        $.each(data[i].data, function (k,v){
-                            var entry = {date : Date.parse(v.st), value: v.ms.v};
-                            historic.fillLevel.push(entry);
-                        });
-                        return historic;
-
-                    },
+                    model: modelFillLevel,
                     charts: [{
                         type: 'areaChart',
                         tooltip: true,
@@ -404,9 +423,6 @@ function() {
                 onClickFn: markerClicked
             },
             customTooltip: customTooltip,
-            whenZoomed: whenZoomed,
-            whenPanned: whenPanned,
-            featuresPreprocessor: featuresPreprocessor,
             createOffscreenIndicators: true,
             markerSimpleSymbol: 'fuel',
             features: []
@@ -414,11 +430,8 @@ function() {
         
         //</editor-fold>
                 
-        $('.dashboard').m2mdashboard({
-            
-            //<editor-fold defaultstate="collapsed" desc="Configuration">
-            mainContent: [mainMap],
-            
+        $('.dashboard').m2mdashboard({            
+            mainContent: [mainMap],            
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,
@@ -430,8 +443,7 @@ function() {
                         items: []
                     }
                 ]
-            },
-                    
+            },                    
             detailsPanel: {
                 marginTop: 16,
                 items: [{
@@ -446,47 +458,8 @@ function() {
                         detailedMinimap
                     ]
                 }]
-            },
-            //</editor-fold>
-            
-            //<editor-fold defaultstate="collapsed" desc="Data binding">
-        
-            data: function(callback) {
-                var acc = {count:0, historic: []};
-                var updateHistoric = function (data) {
-                    if (acc.count < acc.assetList.data.length) {
-                        if (data !== undefined) acc.historic.push(data);
-                        var url = assetsURL + '/' + acc.assetList.data[acc.count].asset.name 
-                                + '/data?attribute=fillLevel&limit=10';
-                        acc.count += 1;
-                        var handleError = function () {
-                            console.warn('Update historic query failure: ' + url);
-                            updateHistoric();
-                        };
-                        $.getJSON(url, updateHistoric).fail(handleError);
-                    }
-                    else {
-                        if (data !== undefined) acc.historic.push(data);
-                        callback(acc);
-                    }
-                };
-                
-                $.getJSON(assetsURL, function(data) {
-                    acc.assetList = data;
-                    acc.selected = { name: '', fillHistorical: []};
-                    $.getJSON(assetsDetailedURL, function (data) {
-                        acc.detailed = data;
-                        acc.detailed.format = 'asset';
-                        // Generate features
-                        acc.detailed.features = [];
-                        $.each(acc.detailed.data, function (k,v) {
-                            acc.detailed.features.push(v);
-                        });
-                        updateHistoric();
-                    });                    
-                });
-            }
-            //</editor-fold>
+            },      
+            data: loadData
         });
         
         //</editor-fold>
@@ -503,11 +476,29 @@ function() {
         $('.temperature-widget').trigger('drawTemperature');
         $('.battery-widget').trigger('drawBattery');
         
-        $('.overview-count').html(0);      
+        $('.overview-count').html(0);
 
         $('.dashboard').on('expanded', function () {
             $('.panel-detail').trigger('update');
         });
+        
+        $(document).on('click', '.tooltip-selector', function() {
+            var m2mValue = $('.dashboard').data().m2mValue;
+            var data = m2mValue.detailed.data;
+            var title = $(this).html();
+            // find correct data
+            var i = 0;
+            var value = null;
+            while (i < data.length && value === null) {
+                if (data[i].asset.name === title) value = {item : data[i], data: data[i] };
+                else i++;
+            }
+            if (value !== null) {
+                updateAssetView(value);
+                $('.dashboard').trigger('itemselected',value);
+            }
+        });
+
         //</editor-fold>
     });
 });

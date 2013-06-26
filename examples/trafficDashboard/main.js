@@ -216,7 +216,12 @@ define(
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
-                        $('.mapbox-mini').trigger('itemselected',f);
+                        //$('.mapbox-mini').trigger('itemselected',f);
+                        $('.mapbox-mini').trigger('valueChange',{
+                            value: {
+                                markerModel:f
+                            }
+                        });
                         f.properties['marker-size'] = 'large';
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
@@ -343,7 +348,7 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
-                                alwaysVisible:[1,2],
+                                alwaysVisible:[0,1],
                                 items: compList
                             }
                         ]
@@ -426,7 +431,11 @@ define(
                                             return div[0];
                                         };
 
-                                        $('.mapbox-mini').trigger('itemselected',sel);
+                                        $('.mapbox-mini').trigger('valueChange',{
+                                            value: {
+                                                markerModel:sel
+                                            }
+                                        });
                                         if (prev !== null) {
                                             prev.properties['marker-size'] = 'medium';
                                             delete sel.properties['customMarkerBuilder'];

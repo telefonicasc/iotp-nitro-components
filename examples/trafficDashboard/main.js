@@ -212,22 +212,6 @@ define(
                     }
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
-
-                var markerClicked = function (f, previous, dom) {
-                    // Change marker size
-                    if (f !== previous) {
-                        //$('.mapbox-mini').trigger('itemselected',f);
-                        $('.mapbox-mini').trigger('valueChange',{
-                            value: {
-                                markerModel:f
-                            }
-                        });
-                        f.properties['marker-size'] = 'large';
-                        if (previous !== null) {
-                            previous.properties['marker-size'] = 'medium';
-                        }
-                    }
-                };
                 // =============================================================
                 // Prepare dashboard
                 // =============================================================
@@ -313,8 +297,7 @@ define(
                                 groupMarkers: true
                             },
                             markerClicked: {
-                                center: centerOnClick,
-                                onClickFn: markerClicked
+                                center: centerOnClick
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
@@ -430,7 +413,6 @@ define(
 
                                             return div[0];
                                         };
-
                                         $('.mapbox-mini').trigger('valueChange',{
                                             value: {
                                                 markerModel:sel
@@ -438,7 +420,7 @@ define(
                                         });
                                         if (prev !== null) {
                                             prev.properties['marker-size'] = 'medium';
-                                            delete sel.properties['customMarkerBuilder'];
+                                            delete prev.properties['customMarkerBuilder'];
                                         }
                                     }
                                 };

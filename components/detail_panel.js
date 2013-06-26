@@ -1,62 +1,44 @@
-/*
- * Trigger sample: $('.detail-panel').trigger('update-header','test');
- *
- */
 
 define (
     [ 
         'components/component_manager',
+        'components/mixin/template',
         'components/mixin/container'
     ],  
 
-    function (ComponentManager, ContainerMixin) {
+    function (ComponentManager, Template, ContainerMixin) {
 
-        return ComponentManager.create('detailPanel', DetailPanel, ContainerMixin);
-
-        var self;
+        return ComponentManager.create('detailPanel', DetailPanel, Template, ContainerMixin);
 
         function DetailPanel () {
-            var self = this;
 
             this.defaultAttrs({
+                selectHeader: '.detail-panel-header',
+                selectContent: '.detail-panel-content',
                 insertionPoint: '.detail-panel-content',
-                headerClass: '.detail-panel-header',
-                contentClass: 'detail-panel-content',
-                id: '',
                 header: '',
+                tpl: '<div class="detail-panel-header">{{header}}{{value.header}}</div>'+
+                        '<div class="detail-panel-content"/>',
                 items: []
             });
 
             this.after('initialize', function () {
 
-                self = this;
-
                 this.$node.addClass('detail-panel');
-                this.$nodeMap = $('<div>').addClass('detail-panel-header').appendTo(this.$node);
-                this.$nodeMap = $('<div>').addClass('detail-panel-content').appendTo(this.$node);
                 
-                // Adds Header & ID
-                this.$node.find(self.attr.headerClass).html(self.attr.header);
-                this.$node.find(self.attr.headerClass).attr('id',self.attr.id);
+                this.select('selectHeader').html(this.attr.header);
 
-                // Update header trigger
-                this.on('update-header', function (event, header) {
-                    console.log('ID:' + self.attr.id + ' New header: ' + header);
-                    self.$node.find(self.attr.headerClass).html(header);
-                    debugger;
-                });
+                this.on('update-header', $.proxy(function (event, header) {
+                    this.select('selectHeader').html(header);
+                }, this));
                 
-                
-                // TEST
-                /*
-                $(window).bind('click', function () {
-                    console.log('click');
-                    $('.detail-panel').trigger('update-header','test');
+                this.on('render', function () {
+                    this.select('selectHeader').click(function () {
+                        $(this).trigger('detailPanelClick');
+                    });
                 });
-                */
+                                
             });
-
-
         }
     }
 );

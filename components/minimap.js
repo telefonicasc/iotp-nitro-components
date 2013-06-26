@@ -86,8 +86,12 @@ define(
                         }
                         var markerModel = o.value.markerModel === undefined ? null : o.value.markerModel;
                         var values = o.value;
-                        if (markerModel !== null)
+                        if (markerModel !== null){
                             this.updateValue(markerModel);
+                        }
+                        else if ($.isPlainObject(values) && values.geometry && values.properties){
+                            this.updateValue(values);
+                        }
                         else if ($.isPlainObject(values) && values.location.longitude !== "") {
                             // Create marker model from asset
                             var f = {

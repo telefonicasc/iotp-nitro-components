@@ -1,3 +1,9 @@
+/**
+@component pagedContainer
+@event {in} valueChange Change value in component
+@event {in} update Redraw pages
+@event {out} pageChanged When page is changed
+*/
 define(
     [
         'components/component_manager',
@@ -156,6 +162,7 @@ define(
                 if (pageNumber !== currentPage) {
                     this.attr.private.currentPage = pageNumber;
                     this.updateVisualization();
+                    this.trigger('pageChanged', [pageNumber]);
                 }
             };
 

@@ -29,8 +29,19 @@
     position: relative !important;
     min-height: 150px !important;
     margin-left: 10px;
-
 }
+
+.m2m-window-content {
+/*    background-color: #DDEAEC !important;*/
+}
+
+.m2m-window-content .chart-window {
+    position: relative !important;
+    min-height: 300px;
+    min-width: 600px;
+    margin-left: 10px;
+}
+
 
 /* ========================================================================== */
 /* Other */
@@ -61,6 +72,13 @@
 
 .detail-element-header .caption {
     color: white !important;
+}
+
+.detail-panel .detail-panel-header {
+    cursor: pointer;
+}
+.detail-panel .detail-panel-header:hover{
+    color: white;
 }
 
 .marker-red {

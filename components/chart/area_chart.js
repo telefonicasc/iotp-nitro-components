@@ -82,10 +82,15 @@ define(
 
                     pathArea.datum(this.value);
                     pathLine.datum(this.value);
-                    if (this.attr.area)
-                        pathArea.attr('d', area);
-                    pathLine.attr('d', line);
+
+                    if (this.attr.area){
+                        (this.anim)? pathArea.transition().duration(500).attr('d', area) : pathArea.attr('d', area);
+                    }
+                    (this.anim)? pathLine.transition().duration(500).attr('d', line) : pathLine.attr('d', line);
+                 
+                    this.anim = false;
                 });
+                
             });
         }
     }

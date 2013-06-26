@@ -321,12 +321,6 @@ function() {
         // =====================================================================
         
         //</editor-fold>
-        
-       
-        var modelFillLevel2 = function (f) {
-//            debugger
-            modelFillLevel(f);
-        };
        
         //<editor-fold defaultstate="collapsed" desc="Load dashboard">
         
@@ -436,27 +430,12 @@ function() {
             className: 'fillLevelWindow',
             items: [
                 {
-                    component: 'detailPanel',
-                    header: 'Fill Level Detail',
-                    items: [
-                        {
-                            component: 'chartContainer',
-                            valueField: 'fillLevel',
-                            className: 'chart chart-window',
-                            marginRight: 45,
-                            marginBottom: 8,
-                            grid: true,
-                            axisy: true,
-                            model: modelFillLevel,
-                            charts: [{
-                                type: 'areaChart',
-                                tooltip: true,
-                                model: 'fillLevel',
-                                cssClass: 'brown'
-                            }]
-                        }
-                    ]
-                }/*,
+                    component: 'OverviewSubpanel',
+                    className: 'detail-chart-header',
+                    iconClass: '',
+                    text: 'Detailed Tank Fill Level',
+                    caption: ''
+                },
                 {
                     component: 'chartContainer',
                     valueField: 'fillLevel',
@@ -468,11 +447,11 @@ function() {
                     model: modelFillLevel,
                     charts: [{
                         type: 'areaChart',
-                        tooltip: true,
+                        tooltip: false,
                         model: 'fillLevel',
-                        cssClass: 'cyan'
+                        cssClass: 'purple'
                     }]
-                }*/
+                }
             ]
         };
         

@@ -14,7 +14,7 @@ define(
                 colorArea: ['#ff0000'],
                 colorLine: ['#00ff00'],
                 fillOpacity: 0.85,
-                subModels: []
+                subModelsSufix: []
             });
 
             this.after('initialize', function() {
@@ -157,7 +157,7 @@ define(
                     var valueField = this.attr.model;
                     data = [];
 
-                    $.each(this.attr.subModels, function (i, submodel){
+                    $.each(this.attr.subModelsSufix, function (i, submodel){
                       var values = $.map(options.value[valueField+submodel], function(val, i) {
                           if (val.date >= options.range[0] &&
                               val.date <= options.range[1]) {
@@ -179,7 +179,6 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
-
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }

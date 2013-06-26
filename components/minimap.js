@@ -81,13 +81,14 @@ define(
                     // Expects something like: "{"name":"Tank-501340596","location":{"altitude":0,"latitude":40.513538,"longitude":-3.663769}}"
                     this.on('valueChange', function(e, o) {
                         e.stopPropagation();
-                        if (!o.value) { 
+                        if (!o.value) {
                             return;
                         }
                         var markerModel = o.value.markerModel === undefined ? null : o.value.markerModel;
                         var values = o.value;
-                        if (markerModel !== null)
+                        if (markerModel !== null){
                             this.updateValue(markerModel);
+                        }
                         else if ($.isPlainObject(values) && values.location.longitude !== "") {
                             // Create marker model from asset
                             var f = {
@@ -108,6 +109,10 @@ define(
                             this.updateValue(f);
 
                         }
+                    });
+
+                    this.on('draw', function(){
+                        this.mapM.draw();
                     });
                 });
             }

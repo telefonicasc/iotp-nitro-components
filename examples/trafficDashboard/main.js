@@ -466,14 +466,6 @@ define(
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
-                            whenZoomed: function (f) {
-                                $('.mapbox').trigger('set-features', f);
-                                updateOffscreenIndicators();
-                            },
-                            whenPanned: function (f) {
-                                updateOffscreenIndicators();
-                            },
-//                            featuresPreprocessor: processFeatures,
                             features: []
                         }
                     ],

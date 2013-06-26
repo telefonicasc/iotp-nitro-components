@@ -28,6 +28,7 @@ function() {
         //<editor-fold defaultstate="collapsed" desc="Variables">
         
         var useKermit = false;
+        var historicSize = 40;
         var markerColors = {
             ok: '#5D909F',
             err: '#CB3337'
@@ -252,14 +253,7 @@ function() {
             var assetName = feature.properties.title;
             var assetInfoURL = assetsURL + '/' + assetName;
             requestApiData(assetInfoURL,updateAssetView);
-        };
-        
-        var updateMinimap = function (f,m) {
-//            var data = {};
-//            data.value = f;
-//            data.value.markerModel = m;
-//            $('.minimap').trigger('valueChange', data);
-        };
+        };        
         
         var loadData = function (callback) {
             var acc = {count:0, historic: []};
@@ -267,7 +261,8 @@ function() {
                 if (acc.count < acc.assetList.data.length) {
                     if (data !== undefined) acc.historic.push(data);
                     var url = assetsURL + '/' + acc.assetList.data[acc.count].asset.name 
-                            + '/data?attribute=fillLevel&limit=10';
+                            + '/data?attribute=fillLevel&limit=' + historicSize;
+                    
                     acc.count += 1;
                     var handleError = function () {
                         console.warn('Update historic query failure: ' + url);
@@ -327,6 +322,12 @@ function() {
         
         //</editor-fold>
         
+       
+        var modelFillLevel2 = function (f) {
+//            debugger
+            modelFillLevel(f);
+        };
+       
         //<editor-fold defaultstate="collapsed" desc="Load dashboard">
         
         //<editor-fold defaultstate="collapsed" desc="Components">
@@ -354,6 +355,7 @@ function() {
         var detailedFillLevel = {
             component: 'detailPanel',
             header: 'Fill level',
+            className: 'clickable-header',
             items: [
                 {
                     component: 'chartContainer',
@@ -366,7 +368,7 @@ function() {
                     model: modelFillLevel,
                     charts: [{
                         type: 'areaChart',
-                        tooltip: true,
+                        tooltip: false,
                         model: 'fillLevel',
                         cssClass: 'cyan'
                     }]
@@ -434,19 +436,50 @@ function() {
             className: 'fillLevelWindow',
             items: [
                 {
-                    component: 'OverviewSubpanel',
-                    className: 'detail-window-placeholder',
-                    iconClass: 'marker-red',
-                    text: 'Echo',
-                    caption: 'Test'
-                }                
+                    component: 'detailPanel',
+                    header: 'Fill Level Detail',
+                    items: [
+                        {
+                            component: 'chartContainer',
+                            valueField: 'fillLevel',
+                            className: 'chart chart-window',
+                            marginRight: 45,
+                            marginBottom: 8,
+                            grid: true,
+                            axisy: true,
+                            model: modelFillLevel,
+                            charts: [{
+                                type: 'areaChart',
+                                tooltip: true,
+                                model: 'fillLevel',
+                                cssClass: 'brown'
+                            }]
+                        }
+                    ]
+                }/*,
+                {
+                    component: 'chartContainer',
+                    valueField: 'fillLevel',
+                    className: 'chart chart-window',
+                    marginRight: 45,
+                    marginBottom: 8,
+                    grid: true,
+                    axisy: true,
+                    model: modelFillLevel,
+                    charts: [{
+                        type: 'areaChart',
+                        tooltip: true,
+                        model: 'fillLevel',
+                        cssClass: 'cyan'
+                    }]
+                }*/
             ]
         };
         
         //</editor-fold>
                 
-        $('.dashboard').m2mdashboard({            
-            mainContent: [mainMap,window],            
+        $('.dashboard').m2mdashboard({
+            mainContent: [mainMap,window],
             overviewPanel: {
                 title: 'Tanks with warnings',
                 count: 0,
@@ -458,7 +491,7 @@ function() {
                         items: []
                     }
                 ]
-            },                    
+            },
             detailsPanel: {
                 marginTop: 16,
                 items: [{
@@ -473,8 +506,7 @@ function() {
                         detailedMinimap
                     ]
                 }]
-
-            },      
+            },
             data: loadData
         });
         
@@ -518,6 +550,22 @@ function() {
         $('.dashboard').on('expanded', function () {
             $('.panel-detail').trigger('update');
         });
+        
+        $('.dashboard').on('detailPanelClick', function (e) {
+            var srcHeader = $(e.target).html();
+            if (srcHeader === 'Fill level') {
+                $('.fillLevelWindow').trigger('show');
+                $('.chart-window').trigger('updateSize');
+            }
+        });
+        
+        $('.dashboard').on('itemselected', function (e,o) {
+            var historic = modelFillLevel(o.item);
+            $('.chart-window').trigger('valueChange', {
+                value: historic, silent: true
+            });
+        });
+        
         //</editor-fold>
     });
 });

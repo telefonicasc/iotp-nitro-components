@@ -232,7 +232,7 @@ function(ComponentManager) {
                     var count = self.values[i][lastIndex];
 
                     var val = {
-                        text1:  round(count/self.totalCount*100)+' %',
+                        text1:  (self.totalCount === 0)? 0 +' %': round(count/self.totalCount*100)+' %',
                         caption1: self.modelData.caption1,
                         text2: ((self.modelData.unit)? self.modelData.unit: '')+' '+round(count),
                         caption2: self.modelData.caption2

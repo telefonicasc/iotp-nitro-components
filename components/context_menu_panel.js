@@ -53,6 +53,14 @@ define(
               itemEl.addClass(item.className);
             }
 
+            if (item.selected){
+              itemEl.addClass('selected');
+            }
+
+            if (item.disabled){
+              itemEl.addClass('disabled');
+            }
+
             itemEl.on('click', $.proxy(function() {
               this.trigger('selected', item);
             }, this));

@@ -18,7 +18,6 @@ define(
         });
 
         this.after('initialize', function() {
-            var previousExtend = null;
             var x = this.attr.x,
                 y = this.attr.y,
                 start = null,
@@ -31,27 +30,18 @@ define(
                       
                   start = this.brush.extent()[0];
                   end = this.brush.extent()[1];
+                  this.brushing('brush');     
 
-                  var ext = [start, end];
-                  if (this.attr.fixRange > 0){
-                      ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
-                  }
-                  this.updateExtent(ext);
-                  this.value[this.attr.selectedRangeField] = ext;
-                  this.value['brush'] = 'brush';
-                  previousExtend = ext;
-                  this.trigger('valueChange', { value: this.value });                       
-                    
               }, this))
               .on('brushstart', $.proxy(function() {
+
                   this.value['brush'] = 'start';
+
               }, this))
               .on('brushend', $.proxy(function(){
-                  ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
-                  this.updateExtent(ext);
-                  this.value[this.attr.selectedRangeField] = [start, end];
-                  this.value['brush'] = 'end';
-                  this.trigger('valueChange', { value: this.value });
+
+                  this.brushing('end');     
+                  
               }, this));
 
             if (this.attr.x && this.attr.y){
@@ -105,6 +95,17 @@ define(
                 this.trigger('valueChange', { value: this.value });
                 e.stopPropagation();
             });
+
+            this.brushing = function(state){
+                var ext = [start, end];
+                if (this.attr.fixRange > 0){
+                  ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                }
+                this.updateExtent(ext);
+                this.value[this.attr.selectedRangeField] = ext;
+                this.value['brush'] = state;
+                this.trigger('valueChange', { value: this.value });
+            };
         });
 
         function getFixExtent(currentExtent, range){

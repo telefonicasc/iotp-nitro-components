@@ -1,13 +1,13 @@
 // =============================================================================
 // Telefonica I+D
 // -----------------------------------------------------------------------------
-// Notes: 
+// Notes:
 //  * Change assetsURL if necessary to be able to access device data
-//  * When moved to kermit, 
+//  * When moved to kermit,
 // =============================================================================
 
 requirejs.config({
-    baseUrl: '/m2m-nitro-components'
+    baseUrl: '../../'
 });
 
 define(
@@ -15,6 +15,7 @@ define(
             'components/dashboard/dashboard',
             'components/minimap',
             'components/dashboard/overview_subpanel',
+            'components/dashboard/overview_subpanel_list',
             'components/paged_container',
             'components/detail_panel',
             'components/map',
@@ -25,17 +26,8 @@ define(
             'components/widget_battery'
         ],
         function() {
-            
+
             requirejs(['components/jquery_plugins'], function() {
-
-                var warning_subpanel_html = '<div class="warning-item overview-subpanel" data-bind="" style="">'
-                        + '<div class="icon marker-red"></div>'
-                        + '<div class="overview-subpanel-body">'
-                        + '<div class="text"></div>'
-                        + '<div class="caption"></div>'
-                        + '</div></div>';
-
-                var pollInterval = 5000;
                 var markerColorWarn = '#CB3337';
                 var markerColorOk = '#5E91A0';
                 var useKermit = false;
@@ -57,13 +49,8 @@ define(
 
                 /* Gallus, germany */
                 // var initialCenter = {lat: 50.103749, lon: 8.641774};
-
-                // =============================================================
-                // Functions
-                // =============================================================
-
                 var initialCenter = {lat: 50.456729, lon: 7.485};
-                
+
                 var requestApiData = function (url, callback) {
                     if (useKermit) {
                         API.http.request({method:'GET', url:url})
@@ -88,115 +75,51 @@ define(
                         });
                     }
                 };
-
-                var createNewMarker = function(name, lat, lon, color) {
-                    color = (typeof color === 'undefined') ? markerColorOk : color;
-                    // Add marker to map
-                    var marker = {
-                        geometry: {
-                            coordinates: [parseFloat(lon), parseFloat(lat)]
-                        },
-                        properties: {
-                            'marker-color': color,
-                            'marker-symbol': 'circle',
-                            'title': name
-                        }
-                    };
-
-                    $('.mapbox').trigger('add-feature', marker);
-                    $('.mapbox-mini').trigger('updateMinimap', marker);
-                };
-
-                var generateErrorText = function(sensorData) {
-                    var errors = '';
+                //@TODO exportar a m2m-dashboard
+                var getErrors = function(sensorData){
+                    var errors = [];
                     $.each(sensorData, function(index, value) {
                         if ('ms' in value) {
                             // Evaluate error conditions
-                            if (value.ms.p === 'voltage' && parseInt(value.ms.v) < 10) {
-                                errors += 'Voltage < 10V</br>';
+                            if (value.ms.p === 'voltage' && window.parseInt(value.ms.v) < 10) {
+                                errors.push('Voltage < 10V');
                             }
                             else if (value.ms.p === 'pitch') {
                                 var pitch = parseInt(value.ms.v);
                                 if (pitch < 80 || pitch > 100) {
-                                    errors += 'Inclination change +10</br>';
+                                    errors.push('Inclination change +10');
                                 }
                             }
                             else if (value.ms.p === 'greenLight' && value.ms.v === 'error') {
-                                errors += 'Green light error</br>';
+                                errors.push('Green light error');
                             }
                             else if (value.ms.p === 'yellowLight' && value.ms.v === 'error') {
-                                errors += 'Yellow light error</br>';
+                                errors.push('Yellow light error');
                             }
                             else if (value.ms.p === 'redLight' && value.ms.v === 'error') {
-                                errors += 'Red light error</br>';
+                                errors.push('Red light error');
                             }
                         }
+                        var a = null;
                     });
                     return errors;
                 };
 
-                var updateWarningList = function(assetName, warnings) {
-                    var matches = $('.panel-list .overview-subpanel .text:contains(\"' + assetName + '\")');
-
-                    if (matches.length === 0 && warnings !== '') {
-                        // append another subpanel
-                        $('.panel-list').append(warning_subpanel_html);
-
-                        $('.panel-list .overview-subpanel .text').last().html(assetName);
-                        $('.panel-list .overview-subpanel .caption').last().html(warnings);
-
-                        updateWarningPanelTrigger();
-                    }
-                    else {
-                        if (warnings === '') {
-                            $(matches[0]).remove();
-                        }
-                        else {
-                            $(matches[0]).parent().children('.caption').html(warnings);
-                        }
-                    }
-
-                    // update warning counter
-                    var count = $('.panel-list .overview-subpanel').length;
-                    $('.overview-count').html(count);
+                //@TODO exportar a m2m-dashboard
+                var generateErrorText = function(sensorData) {
+                    var errors = getErrors(sensorData).join(' <br/> ');
+                    return errors;
                 };
-
-                var centerMap = function(lat, lon) {
-                    $('.mapbox').trigger('center-map', [lat, lon]);
-                };
-                
-                var updateAssetsFn = function (response) {
-                    $.each(response.data, function (k,v) {
-                        var lat = v.asset.location.latitude;
-                        var lon = v.asset.location.longitude;
-                        var errors = generateErrorText(v.sensorData);
-                        updateWarningList(v.asset.name, errors);
-                        var markerColor = (errors === '') ? markerColorOk : markerColorWarn;
-                        createNewMarker(v.asset.name, lat, lon, markerColor);
-                    });
-                    if (centerOnLoad) updateCenter();
-                };
-                
-                var updateAssets = function () {
-                    requestApiData(assetsDetailedURL, updateAssetsFn);
-                };
-
+                //@TODO export to m2m-dashboard
                 var updateAssetInfoFn = function (response) {
                     var assetName = response.data.asset.name;
-                    
+                    var erromsg;
+
                     // Update selected element name
                     $('.panel-detail .detail-element-header .text').html(assetName);
-                    // Get asset errors, if any
-                    if (parseInt($('.warning-item .text:contains("' + assetName + '")').length) !== 0) {
-                        $('.panel-detail .detail-element-header .icon').removeClass('marker-blue');
-                        $('.panel-detail .detail-element-header .icon').addClass('marker-red');
-                        var errors = $('.warning-item .text:contains("' + assetName + '")').siblings('.caption').html();
-                        $('.panel-detail .detail-errors').html(errors);
-                    }
-                    else {
-                        $('.panel-detail .detail-element-header .icon').removeClass('marker-red');
-                        $('.panel-detail .detail-element-header .icon').addClass('marker-blue');
-                        $('.panel-detail .detail-errors').html('No problems detected');
+                    if(response.data.errors.length){
+                        erromsg = generateErrorText(response.data.sensorData);
+                        $('.detail-errors').html(erromsg);
                     }
                     var last_update = 'Last update: ';
                     if (response.data.sensorData.length > 0)
@@ -221,50 +144,9 @@ define(
                             }
                         }
                     });
-                    
-                    // Update lights
-                    
-                    var urlList = [];
-                    var baseURL = assetsURL + '/' + assetName;
-                    urlList.push(baseURL + '/data?attribute=redLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=yellowLight&sortBy=!samplingTime&limit=14');
-                    urlList.push(baseURL + '/data?attribute=greenLight&sortBy=!samplingTime&limit=14');
-                        
-                    if (useKermit) {
-                        var $q = Kermit.$injector.get('$q');
 
-                        var red = API.http.request({method:'GET', url:urlList[0]});
-                        var yellow = API.http.request({method:'GET', url:urlList[1]});
-                        var green = API.http.request({method:'GET', url:urlList[2]});
-
-                        $q.all([ red, yellow, green ])                   
-                        .then(function(results) {      
-                            console.log('Got results');
-                            $('.lights-widget').trigger('paintLights', [results[0].data, results[1].data, results[2].data]);
-                        });
-                    }
-                    else {
-                        $('.lights-widget').trigger('updateLights',[urlList]);
-                    }
-                };
-                
-                var updateAssetInfo = function (assetName) {
-                    var url = assetsURL + '/' + assetName;
-                    requestApiData(url, updateAssetInfoFn);
                 };
 
-                var showDetails = function(event, data) {
-                    $('.panel-detail').show();
-                    $('.panel-list').hide();
-                    updateAssetInfo(data.properties.title);
-                    $('.panel-detail').trigger('update-view');
-                };
-
-                var hideDetails = function() {
-                    $('.panel-list').show();
-                    $('.panel-detail').hide();
-                };
-                
                 var updateCenter = function () {
                     var url = assetsURL + '?detailed=1';
                     var fn = function (response) {
@@ -277,7 +159,7 @@ define(
                             console.log('No data found!');
                         }
                     };
-                    
+
                     requestApiData(url,fn);
 
                     updateOffscreenIndicators();
@@ -304,7 +186,7 @@ define(
                                     .addClass('tooltip-unselected')
                                     .addClass('tooltip-unselected-errors')
                                     .html(warns);
-                                
+
                                 var content = $('<div>').append(errors).append(ok);
                                 return content.html();
                             }
@@ -330,61 +212,30 @@ define(
                     }
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
-                
+
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
-                        $('.mapbox-mini').trigger('asset-selected',f);
+                        $('.mapbox-mini').trigger('itemselected',f);
                         f.properties['marker-size'] = 'large';
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
                         }
-                        try {
-                            if (f.properties.submarkers.length === 0) {
-                                showDetails(null,f);
-                            }
-                        }
-                        catch (err) {
-                            // submarkers not defined
-                            showDetails(null,f);
-                        }
                     }
                 };
-                
-                var updateWarningPanelTrigger = function() {
-                    $('.overview-subpanel .text').on('click', function() {
-                        var data = {
-                            properties: {
-                                title: $(this).html(),
-                                caption: $(this.parentNode.childNodes[1]).html()
-                            }
-                        };
-                        var fn = function (sel, prev) {
-                            if (sel !== prev) {
-                                $('.mapbox-mini').trigger('asset-selected',sel);
-                                sel.properties['marker-size'] = 'large';
-                                if (prev !== null) {
-                                    prev.properties['marker-size'] = 'medium';
-                                }
-                            }
-                        };
-                        $('.mapbox').trigger('select-feature', [$(this).html(), fn]);
-                        $('.dashboard').trigger('asset-selected', data);
-                    });
-                };
-                
                 // =============================================================
                 // Prepare dashboard
                 // =============================================================
-                
+
                 //<editor-fold defaultstate="collapsed" desc="Component list">
                 var compList = [
                     {
                         component: 'OverviewSubpanel',
-                        className: 'detail-element-header',
-                        iconClass: 'marker-red',
-                        text: 'AssetSemaphore2',
-                        caption: 'Inclination change +10'
+                        className: 'detail-element-header'
+                    },
+                    {
+                        component: 'container',
+                        className: 'detail-errors'
                     },
                     {
                         component: 'detailPanel',
@@ -409,10 +260,6 @@ define(
                             {
                                 component: 'lightsWidget',
                                 className: 'lights-widget'
-                                // Only when moved to install.js
-    //                            ,
-    //                            arrowURL: 'url(/packages/dashboard/dashboards/traffic/res/images/arrow.png)',
-    //                            greyLightURL: 'url(/packages/dashboard/dashboards/traffic/res/images/greyLight.png)'
                             }
                         ]
                     },
@@ -437,13 +284,13 @@ define(
                                 mapId: 'keithtid.map-z1eeg2ge',
                                 zoomValue: 16,
                                 movable: true,
-                                listenTo: 'asset-selected'
+                                listenTo: 'itemselected'
                             }
                         ]
                     }
                 ];
                 //</editor-fold>
-                
+
                 // For kermit install.js
                 //dashboard.m2mdashboard({
                 $('.dashboard').m2mdashboard({
@@ -466,63 +313,155 @@ define(
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
-                            features: []
+                            model: function(features) {
+                                return $.map(features, function(f) {
+                                    var markerColor = (f.errors.length) ? markerColorWarn : markerColorOk;
+                                    var location = f.asset && f.asset.location;
+                                    var marker;
+                                    if (location) {
+                                        marker = {
+                                            geometry: {
+                                                coordinates: [location.longitude, location.latitude]
+                                            },
+                                            properties: {
+                                                'marker-color': markerColor,
+                                                'marker-symbol': 'circle',
+                                                'title': f.asset.name
+                                            },
+                                            item:f
+                                        };
+                                    }
+
+                                    return marker;
+                                });
+
+                            }
                         }
                     ],
+                    detailsPanel:{
+                        items:[
+                            {
+                                component: 'pagedContainer',
+                                className: 'panel-detail',
+                                items: compList
+                            }
+                        ]
+                    },
                     overviewPanel: {
                         title: 'Lights with warnings',
-                        count: 0,
+                        // count: 10,//@TODO esto no funciona porque Dashboard no lo lee
                         items: [
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-list',
                                 header: '',
                                 ID: 'panel-list',
-                                items: []
-                            },
-                            {
-                                component: 'pagedContainer',
-                                className: 'panel-detail',
-                                extraHeaderGap: 50,
-                                alwaysVisible: [0, 1],
-                                items: compList
+                                selectElements: '.repeat-container',
+                                items: [
+                                    {
+                                        component: 'OverviewSubpanelList',
+                                        iconClass: 'marker-red',
+                                        className: 'panel-list',
+                                        ID: 'panel-list',
+                                        text: function(data) {
+                                            var value = '';
+                                            if(data && data.asset){
+                                                value = data.asset.name;
+                                            }
+                                            return value;
+                                        },
+                                        caption: function(data) {
+                                            var value = '';
+                                            if(data && data.sensorData){
+                                                value = generateErrorText(data.sensorData);
+                                            }
+                                            return value;
+                                        },
+                                        filter : function(item){
+                                            return (item.errors.length>0);
+                                        }
+                                    }
+
+                                ]
                             }
+
                         ]
                     },
-                    data: function() {
+                    data: function(cb) {
+                            var onLoadData = function(assets){
+                                $.each(assets.data, function(i, item){
+                                    item.errors = getErrors(item.sensorData);
+                                });
+                                cb(assets.data);
+                                if (centerOnLoad) updateCenter();
 
+                                $('.dashboard .paged-container').trigger('update');
+                            }
+                            requestApiData('data/assets.json', onLoadData);
+/*
+                            window.setInterval(function () {
+                                requestApiData('data/assets.json', onLoadData);
+                            }, 5000);
+                            */
+                    },
+                    itemData: function(item, cb) {
+                            var results = [];
+                            var paintLights = function(response) {
+                                results.push(response);
+                                if(results.length === 3){
+                                    $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
+                                }
+                            };
+                            var selectFeature = function(errors){
+                                return function (sel, prev) {
+                                    if (sel !== prev) {
+                                        var currentColor = sel.properties['marker-color'];
+                                        sel.properties['customMarkerBuilder'] = function(a, b){
+                                            var div = $('<div />').addClass('marker');
+                                            var cls = (errors.length ?
+                                                'marker-red-selected-large' : 'marker-blue-selected-large');
+                                            div.addClass(cls);
+
+                                            return div[0];
+                                        };
+
+                                        $('.mapbox-mini').trigger('itemselected',sel);
+                                        if (prev !== null) {
+                                            prev.properties['marker-size'] = 'medium';
+                                            delete sel.properties['customMarkerBuilder'];
+                                        }
+                                    }
+                                };
+                            };
+
+                            requestApiData('data/AssetSemaphore.json', function(data){
+                                data.data.errors = getErrors(data.data.sensorData);
+                                $('.panel-detail').show();
+                                $('.panel-list').hide();
+                                $('.panel-detail').trigger('update-view');
+                                updateAssetInfoFn(data);
+                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature( data.data.errors)]);
+                                $('.detail-element-header .icon').
+                                    removeClass('marker-red-selected').
+                                    removeClass('marker-blue-selected');
+                                $('.detail-element-header .icon').
+                                    addClass( data.data.errors.length?'marker-red-selected':'marker-blue-selected' );
+                            });
+                            requestApiData('data/redLight.json', paintLights);
+                            requestApiData('data/greenLight.json', paintLights);
+                            requestApiData('data/yellowLight.json', paintLights);
                     }
-                });
+                }
+            );
 
-                // =============================================================
-                // Complete DOM 
-                // =============================================================
-
-                // Add error panel to details
-                var template_error_details = '<div class="detail-errors"></div>';
-                $('.detail-element-header').after(template_error_details);
-
-                // =============================================================
-                // Set up
-                // =============================================================
-
-                // Hide details on load
                 $('.panel-detail').hide();
-
-                // Update paged panel, to adjust components on load
-                $('.paged-panel').trigger('update-view');
-
-                // On resize, update panel views
-                $(window).bind('resize', function() {
-                    $('.panel-list').trigger('update-view');
-                    $('.panel-detail').trigger('update-view');
-                });
 
                 // Update widgets
                 $('.temperature-widget').trigger('drawTemperature');
                 $('.pitch-widget').trigger('drawPitch');
                 $('.lights-widget').trigger('drawLights');
                 $('.battery-widget').trigger('drawBattery');
+
 
                 // =============================================================
                 // Trigger listeners
@@ -533,25 +472,24 @@ define(
                         $('.mapbox-mini').trigger('center');
                     }
                 );
+                $('.dashboard').on('click', '.overview-header', function() {
+                    //$('.panel-detail').hide();
+                    $('.panel-list').show();
+                    $('.paged-container').trigger('update');
+                    $('.mapbox').trigger('unselect-feature', function(feature){
+                        feature.properties['marker-size'] = 'medium';
+                        delete feature.properties['customMarkerBuilder'];
+                    });
 
-                $('.dashboard').on('asset-selected', showDetails);
-
-                $('.overview-header').on('click', hideDetails);
-                
-                // Event when a tooltip element is clicked
-                $(document).on('click', '.tooltip-selector', function() {
-                    var sel = { properties: {
-                            title: $(this).html()
-                        }
-                    };
-                    showDetails(null, sel);
                 });
-                
-                // Load initial data
-                updateAssets();
-                
-                /* Uncomment this line for device data polling */
-                // window.setInterval(function () { updateAssets(); }, pollInterval);
+                $('.dashboard').on('valueChange', function(e,data){
+                    var count = data.value.length;
+                    $('.dashboard-overview-panel .overview-count', this).text(count);
+                });
+                $('.dashboard-details-panel').on('expanded', function(){
+                    $( this ).trigger('resize');
+                    $('.panel-detail').trigger('update');
+                });
 
             }); // requirejs
         }

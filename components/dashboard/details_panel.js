@@ -14,36 +14,61 @@ define(
         function DashboardDetailsPanel() {
 
             this.defaultAttrs({
-                marginTop: 36
+                marginTop: 36,
+                expandHorizontally: false
             });
 
             this.after('initialize', function() {
                 this.$node.addClass('dashboard-details-panel sidebar');
 
                 this.on('expand', function(e, o) {
-                    var duration = o && o.duration !== undefined ? duration : 300;
-                    this.$node.animate({ height: this.height }, duration, 'swing', $.proxy(function () {
+                    var duration = o && o.duration !== undefined ? duration : 300,
+                        animProps;
+
+                    if (this.attr.expandHorizontally) {
+                        animProps = { width: 'show' };
+                    } else {
+                        animProps = { height: this.height };
+                    }
+                   
+                    this.$node.animate(animProps, duration, 'swing', $.proxy(function () {
                         this.trigger('expanded');
                     },this));
                     this.expanded = true;
                 });
 
                 this.on('collapse', function(e, o) {
-                    var duration = o && o.duration !== undefined ? duration : 300;
-                    this.$node.animate({ height: 0 }, duration);
+                    var duration = o && o.duration !== undefined ? duration : 300,
+                        animProps;
+
+                    if (this.attr.expandHorizontally) {
+                        animProps = { width: 'hide' };
+                    } else {
+                        animProps = { height: 0 };
+                    }
+
+                    this.$node.animate(animProps, duration, 'swing', $.proxy(function() {
+                        this.trigger('collapsed');
+                    }, this));
                     this.expanded = false;
                 });
 
                 this.on('resize', function() {
-                    this.height = this.$node.parent().height() -
-                            this.attr.marginTop;
+                    if (!this.attr.expandHorizontally) {
+                        this.height = this.$node.parent().height() -
+                                this.attr.marginTop;
 
-                    if (this.expanded) {
-                        this.$node.css({
-                            height: this.height
-                        });
+                        if (this.expanded) {
+                            this.$node.css({
+                                height: this.height
+                            });
+                        }
                     }
                 });
+
+                if (this.attr.expandHorizontally) {
+                    this.$node.css({ top: this.attr.marginTop });
+                }
             });
         }
     }

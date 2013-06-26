@@ -91,7 +91,7 @@ define(
                     this.value['fixRange'] = item.fixRange;
                     this.updateExtent(ext);
                 }
-
+                this.value['brush'] = null;
                 this.trigger('valueChange', { value: this.value });
                 e.stopPropagation();
             });

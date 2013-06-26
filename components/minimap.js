@@ -81,6 +81,9 @@ define(
                     // Expects something like: "{"name":"Tank-501340596","location":{"altitude":0,"latitude":40.513538,"longitude":-3.663769}}"
                     this.on('valueChange', function(e, o) {
                         e.stopPropagation();
+                        if (!o.value) { 
+                            return;
+                        }
                         var markerModel = o.value.markerModel === undefined ? null : o.value.markerModel;
                         var values = o.value;
                         if (markerModel !== null)

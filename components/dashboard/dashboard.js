@@ -40,10 +40,9 @@ define(
                     }];
 
                     if (this.attr.detailsPanel) {
-                        this.attr.items.push({
+                        this.attr.items.push($.extend({
                             component: 'DashboardDetailsPanel',
-                            items: this.attr.detailsPanel.items
-                        });
+                        }, this.attr.detailsPanel));
                     }
                 });
 

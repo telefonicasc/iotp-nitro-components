@@ -231,10 +231,7 @@ define(
                 var compList = [
                     {
                         component: 'OverviewSubpanel',
-                        className: 'detail-element-header',
-                        iconClass: 'marker-red',
-                        text: 'AssetSemaphore2',
-                        caption: 'Inclination change +10'
+                        className: 'detail-element-header'
                     },
                     {
                         component: 'container',
@@ -287,7 +284,7 @@ define(
                                 mapId: 'keithtid.map-z1eeg2ge',
                                 zoomValue: 16,
                                 movable: true,
-                                listenTo: 'asset-selected'
+                                listenTo: 'itemselected'
                             }
                         ]
                     }
@@ -316,18 +313,9 @@ define(
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
-                            whenZoomed: function (f) {
-                                $('.mapbox').trigger('set-features', f);
-                                updateOffscreenIndicators();
-                            },
-                            whenPanned: function (f) {
-                                updateOffscreenIndicators();
-                            },
                             model: function(features) {
-                                var markerColorWarn = '#CB3337';
-                                var markerColorOk = '#5E91A0';
                                 return $.map(features, function(f) {
-                                    var markerColor = (f.errors.length) ? markerColorOk : markerColorWarn;
+                                    var markerColor = (f.errors.length) ? markerColorWarn : markerColorOk;
                                     var location = f.asset && f.asset.location;
                                     var marker;
                                     if (location) {
@@ -347,8 +335,7 @@ define(
                                     return marker;
                                 });
 
-                            },
-                            features: []
+                            }
                         }
                     ],
                     detailsPanel:{
@@ -356,7 +343,6 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
-                                //selectElements: '.dashboard-details-panel',
                                 items: compList
                             }
                         ]
@@ -426,14 +412,26 @@ define(
                                     $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
                                 }
                             };
-                            var selectFeature = function (sel, prev) {
-                                if (sel !== prev) {
-                                    $('.mapbox-mini').trigger('asset-selected',sel);
-                                    sel.properties['marker-size'] = 'large';
-                                    if (prev !== null) {
-                                        prev.properties['marker-size'] = 'medium';
+                            var selectFeature = function(errors){
+                                return function (sel, prev) {
+                                    if (sel !== prev) {
+                                        var currentColor = sel.properties['marker-color'];
+                                        sel.properties['customMarkerBuilder'] = function(a, b){
+                                            var div = $('<div />').addClass('marker');
+                                            var cls = (errors.length ?
+                                                'marker-red-selected-large' : 'marker-blue-selected-large');
+                                            div.addClass(cls);
+
+                                            return div[0];
+                                        };
+
+                                        $('.mapbox-mini').trigger('itemselected',sel);
+                                        if (prev !== null) {
+                                            prev.properties['marker-size'] = 'medium';
+                                            delete sel.properties['customMarkerBuilder'];
+                                        }
                                     }
-                                }
+                                };
                             };
 
                             requestApiData('data/AssetSemaphore.json', function(data){
@@ -442,7 +440,12 @@ define(
                                 $('.panel-list').hide();
                                 $('.panel-detail').trigger('update-view');
                                 updateAssetInfoFn(data);
-                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature]);
+                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature( data.data.errors)]);
+                                $('.detail-element-header .icon').
+                                    removeClass('marker-red-selected').
+                                    removeClass('marker-blue-selected');
+                                $('.detail-element-header .icon').
+                                    addClass( data.data.errors.length?'marker-red-selected':'marker-blue-selected' );
                             });
                             requestApiData('data/redLight.json', paintLights);
                             requestApiData('data/greenLight.json', paintLights);
@@ -475,6 +478,7 @@ define(
                     $('.paged-container').trigger('update');
                     $('.mapbox').trigger('unselect-feature', function(feature){
                         feature.properties['marker-size'] = 'medium';
+                        delete feature.properties['customMarkerBuilder'];
                     });
 
                 });

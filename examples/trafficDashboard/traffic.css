@@ -90,10 +90,6 @@
     margin: 0;
 }
 
-.dashboard .overview-header .overview-count {
-    background-color: #CA3430;
-}
-
 .mapbox-mini {
     height: 200px;
     bottom: 20px;
@@ -134,6 +130,10 @@
     background-color: #AECACE;
     margin-left: -12px;
     z-index: 5;
+
+    -moz-box-shadow: -1px -1px 7px #999;
+    -webkit-box-shadow: -1px -1px 7px #999;
+    box-shadow: -1px -1px 7px #999;
 }
 
 .panel-detail .fit {
@@ -143,8 +143,24 @@
 .panel-list {
     z-index: 4;
 }
+.detail-errors {
+    color: #6F8388;
+    background-color: #BCCED2;
+    border: 1px solid #A5B8BD;
+    font-size: small;
+    padding: 10px;
+    margin: 0 8px 8px 8px;
+    line-height: 125%;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
 .overview-subpanel:hover{
     background-color: #D5E0E2;
+}
+.detail-element-header .caption{
+    color:#fff;
 }
 
 
@@ -176,11 +192,6 @@
 .zoomout {
     left:20px;
 }
-
-.overview-header{
-    cursor: pointer;
-}
-
 
 .temperature-widget {
     width: 50%;
@@ -279,13 +290,6 @@
     border-top: 1px solid #C6DADC;
 }
 
-.overview-content {
-    background: #E9EFF0;
-}
-
-.overview-count {
-    background-color: #DF0101;
-}
 
 /* ========================*\
 Paged panel :: Navigation   |
@@ -345,26 +349,34 @@ Paged panel :: Navigation   |
     border: 1px solid #758690;
     color: #bdd0d5;
 }
-
+.marker {
+    width: 43px;
+    height: 43px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: -43px;
+    margin-left: -21px;
+}
 .marker-red {
+    background-image:url('res/images/rojo-off-1.png');
+}
+.marker-red-selected {
     background-image:url('res/images/rojo-on-1.png');
+}
+.marker-red-selected-large {
+    background-image:url('res/images/rojo-on-2.png');
 }
 
 .marker-blue {
+    background-image:url('res/images/azul-off-1.png');
+}
+
+.marker-blue-selected {
     background-image:url('res/images/azul-on-1.png');
 }
-
-.overview-subpanel-body .text {
-    position: relative;
-    padding-top: 10px;
+.marker-blue-selected-large {
+    background-image:url('res/images/azul-on-2.png');
 }
-
-.overview-subpanel-body .caption {
-    position: relative;
-    padding-top: 10px;
-}
-
-
 /* Offscreen indicators */
 
 .offscreen-indicator {
@@ -389,20 +401,6 @@ Paged panel :: Navigation   |
     opacity: 1;
     filter:alpha(opacity=100);
     text-indent: 0px;
-}
-
-.detail-errors {
-    color: #6F8388;
-    background-color: #BCCED2;
-    border: 1px solid #A5B8BD;
-    font-size: small;
-    padding: 15px;
-    margin: 8px;
-    min-height: 60px;
-
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
 }
 
 .nwmarkers {

@@ -164,53 +164,50 @@ define(
 
                     updateOffscreenIndicators();
                 };
-
                 var createTooltip = function (feature, isSelected) {
-                    if (typeof feature.properties.submarkers !== 'undefined') {
-                        if (feature.properties.submarkers.length === 0) {
-                            return '<h2>' + feature.properties.title + '</h2>';
+                    var ele = $('<h2 class="jim">');
+                    var submarkers = feature.properties.submarkers;
+                    var warns = 0;
+
+                    if (submarkers && submarkers.length){
+                        if (!isSelected) {
+                            $.each(submarkers, function (k,v) {
+                                if (v.properties['marker-color'] === markerColorWarn){
+                                    warns += 1;
+                                }
+                            });
+                            var ok = $('<h2>')
+                                .addClass('tooltip-unselected')
+                                .addClass('tooltip-unselected-ok')
+                                .html(submarkers.length - warns);
+                            var errors = $('<h2>')
+                                .addClass('tooltip-unselected')
+                                .addClass('tooltip-unselected-errors')
+                                .html(warns);
+                            ele = $('<div>').append(errors).append(ok);
                         }
                         else {
-                            var submarkers = feature.properties.submarkers;
-                            // cool things go here
-                            if (!isSelected) {
-                                var warns = 0;
-                                $.each(submarkers, function (k,v) {
-                                    if (v.properties['marker-color'] === markerColorWarn) warns += 1;
-                                });
-                                var ok = $('<h2>')
-                                    .addClass('tooltip-unselected')
-                                    .addClass('tooltip-unselected-ok')
-                                    .html(submarkers.length - warns);
-                                var errors = $('<h2>')
-                                    .addClass('tooltip-unselected')
-                                    .addClass('tooltip-unselected-errors')
-                                    .html(warns);
-
-                                var content = $('<div>').append(errors).append(ok);
-                                return content.html();
-                            }
-                            else {
-                                var html = '<h2>';
-                                $.each(submarkers, function (k,v) {
-                                    var selClass;
-                                    if (v.properties['marker-color'] === markerColorWarn) {
-                                        selClass += ' tooltip-selected-error';
-                                    }
-                                    else {
-                                        selClass += ' tooltip-selected-ok';
-                                    }
-                                    var elem = $('<h3>')
-                                            .addClass('tooltip-selector')
-                                            .addClass(selClass)
-                                            .html(v.properties.title);
-                                    html = $(html).append(elem);
-                                });
-                                return '<h2>'+html.html()+'</h2>';
-                            }
+                            $.each(submarkers, function (k,v) {
+                                var selClass;
+                                if (v.properties['marker-color'] === markerColorWarn) {
+                                    selClass += ' tooltip-selected-error';
+                                }
+                                else {
+                                    selClass += ' tooltip-selected-ok';
+                                }
+                                var elem = $('<h3>')
+                                        .addClass('tooltip-selector')
+                                        .addClass(selClass)
+                                        .html(v.properties.title);
+                                ele.append(elem);
+                            });
                         }
+                    }else{
+                        ele.html(feature.properties.title);
                     }
-                    else return '<h2>' + feature.properties.title + "</h2>";
+
+                    return ele.html();
+
                 };
                 // =============================================================
                 // Prepare dashboard

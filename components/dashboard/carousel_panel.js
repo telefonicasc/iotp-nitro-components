@@ -54,8 +54,8 @@ define(
                 
                 this.$topValueNode.html( (data.text1 ) ? data.text1: '');
                 this.$bottomValueNode.html( (data.text2)?data.text2: ''); 
-                this.$topCaptionNode.html( (data.caption1)?data.caption1: '');
-                this.$bottomCaptionNode.html( (data.caption2)?data.caption2: '');
+                this.$topCaptionNode.html( (data.caption1)?data.caption1: this.attr.title.caption);
+                this.$bottomCaptionNode.html( (data.caption2)?data.caption2: this.attr.content.caption);
                 this.$chartNode.trigger('valueChange', {values: data.values} );
 
                 e.stopPropagation();

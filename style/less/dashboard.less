@@ -18,7 +18,7 @@
     right: 320px;
 
     .dashboard-main-panel {
-      
+
       position: relative;
       margin-bottom: 14px;
 
@@ -53,16 +53,11 @@
 
     &.dashboard-details-panel {
       width: 330px;
-      top: auto;    
+      top: auto;
     }
   }
 
   .overview-content {
-    position: absolute;
-    top: 30px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
 
     .last-section-panel {
       border-bottom: 1px solid #9ea3a5;
@@ -104,89 +99,8 @@
     height: 100%;
   }
 
-  .overview-subpanel {
-    border-bottom: 1px solid #D6DEE0;
-    min-height: 55px;
 
-    .icon {
-      width: 50px;
-      height: 43px;
-      display: inline-block;
 
-      .withColors(border, ~"");
-      .withColors(background-light, ~""); 
-
-      &.dot {
-        width: 18px;
-        height: 18px;
-        border-style: solid;
-        border-width: 4px;
-        border-radius: 13px;
-        margin-left: 12px;
-        margin-right: 12px;
-        margin-top : 15px;   
-      }
-
-      &.arrow-down {
-        background: url("@{image-path}/arrow-down.png") no-repeat center center;        
-      }
-
-      &.arrow-up {
-        background: url("@{image-path}/arrow-up.png") no-repeat center center;        
-      }
-    }
-
-    .overview-subpanel-body {
-      display: inline-block;
-
-      .text {
-        display: block;
-        font-size: 18px;
-        font-weight: bold;
-        color: #313a3f;
-        display: inline-block;
-      }
-
-      .text1 {
-        padding-left: 20px;
-        display: block;
-        font-size: 18px;
-        color: #768e99;
-        display: inline-block;
-      }
-
-      .caption {
-        margin: 0px;
-        color: #999;
-        font-size: 13px;
-        font-weight: normal;
-      }
-
-    }
-  }
-
-  .overview-header {
-    height: 30px;
-    width: 100%;
-    background-color: #64737b;
-    color: white;
-    font-weight: bold;      
-
-    .overview-count {      
-      text-align: center;
-      padding-top: 6px;
-      display: inline-block;
-      background-color: #4a95de;
-      min-width: 27px;
-      height: 24px;
-      padding-left: 4px;
-      padding-right: 4px;
-    }    
-
-    .overview-title { 
-      padding-left: 10px;
-    }
-  }
 
     .detail-panel-header {
         text-align: left;
@@ -235,6 +149,16 @@
     stroke: #B3B8BE;
     stroke-width: 1px;
   }
+
+  .chart-labels {
+    div {
+      color: #64737b;
+      font-weight: bold;
+      font-size: 12px;
+      padding-bottom: 26px;
+    }
+    
+  }
 }
 
 .range-selection-chart {
@@ -242,8 +166,8 @@
   svg {
     position: absolute;
   }
-  
-  .selected-range { 
+
+  .selected-range {
     border-top: 2px solid #788d9a;
     border-bottom: 2px solid #788d9a;
   }
@@ -334,7 +258,7 @@
     font-size: 12px;
     fill: #7c91a5;
   }
-  
+
   .radar.base path {
     fill: #ced7dc;
     fill-opacity: 0.4;
@@ -366,7 +290,7 @@
 
   color: #617789;
   text-align: center;
-  
+
   svg {
     text {
       font-size: 11px;
@@ -396,17 +320,18 @@
       font-size: 10px;
       color: #adbabc;
     }
-   
+
   }
   .chart-carousel {
     background-color: #bfcecf;
   }
   .content {
     background-color: #bfcecf;
-    padding: 10px;
+    padding: 15px 10px;
     text-align: center;
     .value {
-      font-size: 22px;
+      font-size: 20px;
+      white-space:nowrap;
       color: #525f65;
     }
     .caption {
@@ -431,7 +356,7 @@
     text {
       fill: #7F8C8D;
       font-size: 12px;
-    } 
+    }
   }
   .axis_y {
     text {

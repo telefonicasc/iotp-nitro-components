@@ -11,6 +11,8 @@ define(
         function ColumnChart() {
 
             this.defaultAttrs({
+                //model: null,
+                //fixRange: null,
                 opacity: 0.02,
                 paddingColumn: 3,
                 cssClass: ''
@@ -21,11 +23,11 @@ define(
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     data = this.$node.data('value') || this.attr.value || [],
-                    columns = 0,
+                    columns = 1,
                     context = d3.select(this.node).append('svg');
-                
-                d3.select(this.node).attr('class', 'chart columns ' + this.attr.cssClass);   
-                
+
+                d3.select(this.node).attr('class', 'chart columns ' + this.attr.cssClass);
+
                 this.createChart = function() {
                     var columnWidth = this.width/(columns)-this.attr.paddingColumn,
                         _attr = this.attr;
@@ -46,33 +48,36 @@ define(
 
                     columnsBars.exit().remove();
 
+                    //If there are ITEMS then attach the item component
                     var _items = _attr.items;
                     if (_items && _items.length > 0){
 
-                        context.selectAll('.cell-barchart-subpanel').remove();
-                        var subPanelgroup = context.selectAll('.cell-barchart-subpanel').data(data);
-                        subPanelgroup.enter().append('foreignObject')
-                        .attr('class', 'cell-barchart-subpanel')
-                        .attr('x', function(d) {
-                            return x(d.date);
-                        })
-                        .attr('width', columnWidth)
-                        .attr('height', this.height);
+                        $.each(_items, function (j, item){
 
-                        subPanelgroup.exit().remove();
+                            context.selectAll('.'+item.className).remove();
 
-                        $('.cell-barchart-subpanel').each(function(i, panel){
-                            var attr = $.extend(_items[0].text, _items[0].chart);
-                            ComponentManager.get(_items[0].component).attachTo(panel, attr);
-                            $(panel).trigger('valueChange', { text1:data[i+1].value.text[0]+'', text2:data[i+1].value.text[1]+'', values: data[i+1].value.chart } );
-                            
+                            var subPanelgroup = context.selectAll('.'+item.className).data(data);
+                            subPanelgroup.enter().append('foreignObject')
+                            .attr('class', item.className)
+                            .attr('x', function(d) {
+                                return x(d.date);
+                            })
+                            .attr('width', columnWidth)
+                            .attr('height', this.height);
+
+                            subPanelgroup.exit().remove();
+
+                            //Attaching item component to nodes
+                            $('.'+item.className).each(function(i, panel){
+                                ComponentManager.get(item.component).attachTo(panel, item.attr);
+                            });
+
                         });
                     }
-
                 };
 
                 this.updateChart = function(){
-                    
+
                     var columnWidth = this.width/(columns)-this.attr.paddingColumn;
 
                     var columnsBars = context.selectAll('.bar_column').data(data);
@@ -83,78 +88,69 @@ define(
                     .attr('width', columnWidth)
                     .attr('height', this.height);
 
-                    
                     subPanelgroup.attr('x', function(d, i) {
                         return x(d.date);
                     })
                     .attr('width', columnWidth)
                     .attr('height', this.height);
+                };
 
+                this.updateAttachedComps = function(){
+
+                    if (!this.attr.items) { return; }
+
+                    $.each(this.attr.items, function (j, item){
+                        $('.'+item.className).each(function(i, panel){
+                            $(panel).trigger('valueChange',  data[i].value);
+                        });
+                    });
                 };
 
                 this.on('resize', function(e, chartSize) {
                     e.stopPropagation();
-                    
+
                     this.width = chartSize.width;
                     this.height = chartSize.height;
-                    
                     x.range([0, this.width]);
                     y.range([this.height, 0]);
 
-                    this.updateChart();       
-                    
+                    this.updateChart();
+
                 });
 
                 this.on('valueChange', function(e, options) {
                     e.stopPropagation();
-                    console.log(options);
-                    if (!options.value.fixRange){ return; }
 
-                    x.domain(options.range); 
+                    if (!this.attr.model || ! this.attr.fixRange) { return; }
 
-                    var valueField = this.attr.model;
-                    this.attr.value = options.value[valueField];
-                    var daysTick = (options.value.fixRange === 35) ? 7 : 1;
+                    if (options.value.fixRange){
+                        this.attr.fixRange = options.value.fixRange;
+                    }
 
-                    var newDivision = options.value.fixRange/daysTick;
-                    
-                    if (newDivision !== columns){
-                        columns = options.value.fixRange/daysTick;
+                    data = options.value[this.attr.model+this.attr.fixRange];
+                    x.domain(options.range);
 
-                        data = [];
-                        var s = 0;
-                        var percent = sum(this.attr.value, options.range);
+                    var rangeMillis = options.range[1].getTime()-options.range[0].getTime();
+                    var newColumnsNumber = Math.floor(rangeMillis/getTimeIntervalMillis(data));
 
-                        $.each(this.attr.value, function(i, val){
-                            s += val.value.text[1];
-                            if (i % daysTick === 0) {
-                                var d = { date:val.date, value: {text:[val.value.text[0], s], chart: val.value.chart } };
-                                data.push(d);
-                                s = 0;
-                            }
-                        });
-
+                    if (newColumnsNumber !== columns){
+                        columns = newColumnsNumber;
                         this.createChart();
+                        this.updateAttachedComps();
+
                     }else{
                         this.updateChart();
-                    }                  
+                    }
 
                 });
 
-                function sum(a, range) {
-                    var sum = 0;
-                    if (a) {
-                      $.each(a, function(i, item) {
-                        if (!range ||
-                          item.date >= range[0] &&
-                          item.date <= range[1]) {
-                          sum += item.value;
-                        }
-                      });
+                function getTimeIntervalMillis(data){
+                    if (data.length>1){
+                        return Math.abs(data[1].date - data[0].date);
+                    }else{
+                        return 1;
                     }
-                    return sum;
                 }
-
             });
         }
     }

@@ -45,12 +45,10 @@
     border-width:18px;
     margin-left:-18px;
 }
-
 .tooltip-unselected {
     min-height: 20px;
-    background-size:contain ;
-    /*background-size:18px 18px;*/
     background-repeat:no-repeat;
+    background-position:left center;
     padding-left: 24px;
     display: inline-block;
     font-size: 15px;
@@ -60,6 +58,9 @@
     background-image:url('res/images/Markers_Blue_Sidebar.png');
     margin-left: 15px;
 }
+.tooltip-unselected-ok.tooltip-selector{
+    margin-left: 0;
+}
 
 .tooltip-unselected-errors {
     background-image:url('res/images/Markers_Red_Sidebar.png');
@@ -68,7 +69,6 @@
 
 .tooltip-selector {
     cursor: pointer;
-    background-size: contain;
     background-repeat:no-repeat;
     padding-left: 15px;
     margin-top: 3px;
@@ -377,6 +377,10 @@ Paged panel :: Navigation   |
 .marker-blue-selected-large {
     background-image:url('res/images/azul-on-2.png');
 }
+.tooltip-selector.tooltip-selected-ok { background-image: url(res/images/azul-on-tooltip.png) }
+.tooltip-selector.tooltip-selected-error { background-image: url(res/images/rojo-on-tooltip.png) }
+.tooltip-selector.tooltip-unselected-ok { background-image: url(res/images/azul-off-tooltip.png) }
+.tooltip-selector.tooltip-unselected-error { background-image: url(res/images/rojo-off-tooltip.png) }
 /* Offscreen indicators */
 
 .offscreen-indicator {

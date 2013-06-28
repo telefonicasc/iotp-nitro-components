@@ -165,7 +165,7 @@ define(
                     updateOffscreenIndicators();
                 };
                 var createTooltip = function (feature, isSelected) {
-                    var ele = $('<h2 class="jim">');
+                    var ele = $('<h2>');
                     var submarkers = feature.properties.submarkers;
                     var warns = 0;
 
@@ -187,19 +187,21 @@ define(
                             ele = $('<div>').append(errors).append(ok);
                         }
                         else {
+                            ele = $('div');
+                            var listElement = $('<ul>').appendTo(ele);
                             $.each(submarkers, function (k,v) {
-                                var selClass;
+                                var selClass = '';
                                 if (v.properties['marker-color'] === markerColorWarn) {
-                                    selClass += ' tooltip-selected-error';
+                                    selClass += ' tooltip-unselected-error';
                                 }
                                 else {
-                                    selClass += ' tooltip-selected-ok';
+                                    selClass += ' tooltip-unselected-ok';
                                 }
-                                var elem = $('<h3>')
+                                var elem = $('<li>')
                                         .addClass('tooltip-selector')
                                         .addClass(selClass)
                                         .html(v.properties.title);
-                                ele.append(elem);
+                                listElement.append(elem);
                             });
                         }
                     }else{

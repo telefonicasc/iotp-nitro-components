@@ -32,7 +32,7 @@ function() {
     }; 
 
     var encodeSensor = {
-        'angle': function(card){
+        'angle': function(card) {
             card.front = {
                 items: [{
                     component: component.ANGLE
@@ -47,7 +47,7 @@ function() {
             card.defaultValue = '0';
             return card;
         },
-        'battery': function(card){
+        'battery': function(card) {
             card.front = {
                 items: [{
                     component: component.BATTERY
@@ -113,12 +113,12 @@ function() {
                 items: [{
                     component: 'CardBackText',
                     label: locales['value'],
-                    dataType:card.sensorData.dataType
+                    dataType: card.sensorData.dataType
                 }]
             };
             return card;
         },
-        'timeElapsed': function(card){
+        'timeElapsed': function(card) {
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',
@@ -130,12 +130,12 @@ function() {
                 items: [{
                     component: 'CardBackText',
                     label: locales['value'],
-                    dataType:card.sensorData.dataType
+                    dataType: card.sensorData.dataType
                 }]
             };
             return card;
         },
-        'timeInterval': function(card){
+        'timeInterval': function(card) {
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',
@@ -147,12 +147,12 @@ function() {
                 items: [{
                     component: 'CardBackText',
                     label: locales['value'],
-                    dataType:card.sensorData.dataType
+                    dataType: card.sensorData.dataType
                 }]
             };
             return card;
         },
-        'noSensorSignal':function(card){
+        'noSensorSignal': function(card) {
             card.front = {
                 items: [{
                     component: 'CardFrontOff'
@@ -168,7 +168,7 @@ function() {
             card.delimiterList = ['IS_OFF'];
             return card;
         },
-        'alarm' : function (card) {
+        'alarm': function(card) {
             card.front = {
                 items: [{
                     component: 'CardFrontAlarm'
@@ -178,9 +178,25 @@ function() {
             card.back = {};
             card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
             return card;
+        },
+        'threshold': function(card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontThreshold'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackThreshold',
+                    phenomenonData: card.configData
+                }]
+            };        
+            card.header = 'Umbral';
+       
+            return card;
         }
-        
-    };
+    }; 
+
     
     var encodeAction = {
         'SendEmailAction': function(card) {
@@ -265,7 +281,7 @@ function() {
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
             name, phenomenon;
-        if(cardConfig.type === cardType.SENSOR_CARD){
+        if(cardConfig.type === cardType.SENSOR_CARD ){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
@@ -278,6 +294,8 @@ function() {
                 name = 'angle';
             } else if (phenomenon === 'alarm') {
                 name = 'alarm';
+            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold') {
+               name = 'threshold';
             } else if (phenomenon === 'electricPotential') {
                 name = 'battery';
             } else if (sensorData.dataType === 'Boolean') {

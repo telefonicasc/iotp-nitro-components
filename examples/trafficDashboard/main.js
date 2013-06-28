@@ -191,25 +191,22 @@ define(
                                 return content.html();
                             }
                             else {
-                                var html = '<ul>';
+                                var html = '<h2>';
                                 $.each(submarkers, function (k,v) {
-                                    var selClass = '';
-                                    var prefixSelect = v.properties.selected ? 'selected':'unselected';
-                                    console.log(v.properties.selected);
-
+                                    var selClass;
                                     if (v.properties['marker-color'] === markerColorWarn) {
-                                        selClass += ' tooltip-'+prefixSelect+'-error';
+                                        selClass += ' tooltip-selected-error';
                                     }
                                     else {
-                                        selClass += ' tooltip-'+prefixSelect+'-ok';
+                                        selClass += ' tooltip-selected-ok';
                                     }
-                                    var elem = $('<li>')
+                                    var elem = $('<h3>')
                                             .addClass('tooltip-selector')
                                             .addClass(selClass)
                                             .html(v.properties.title);
                                     html = $(html).append(elem);
                                 });
-                                return '<ul>'+html.html()+'</ul>';
+                                return '<h2>'+html.html()+'</h2>';
                             }
                         }
                     }
@@ -221,8 +218,6 @@ define(
                     if (f !== previous) {
                         $('.mapbox-mini').trigger('itemselected',f);
                         f.properties['marker-size'] = 'large';
-                        f.properties.selected = true;
-                        console.log(f.properties.selected);
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
                         }

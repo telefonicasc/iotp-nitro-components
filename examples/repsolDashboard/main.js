@@ -476,7 +476,7 @@ function() {
                 ]
             },
             detailsPanel: {
-                marginTop: 16,
+                marginTop: 36,
                 items: [{
                     component: 'pagedContainer',
                     className: 'panel-detail',
@@ -525,8 +525,8 @@ function() {
                 else i++;
             }
             if (value !== null) {
-                updateAssetView(value);
                 $('.dashboard').trigger('itemselected',value);
+                updateAssetView(value);
             }
         });
 
@@ -547,6 +547,8 @@ function() {
             $('.chart-window').trigger('valueChange', {
                 value: historic, silent: true
             });
+            $('.chart').trigger('updateSize');
+            $('.chart-window').trigger('updateSize');
         });
         
         //</editor-fold>

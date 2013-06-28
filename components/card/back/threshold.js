@@ -46,8 +46,8 @@ define(
                  
                 $.each(pheData, function(i, data) {
                     var opt = {
-                        label: data.phenomenonApp,
-                        value: data.phenomenonApp,
+                        label: data.sensorData.measureName,
+                        value: data.sensorData.phenomenonApp,
                         attr: JSON.stringify(data)
                     }
                     options.push(opt);

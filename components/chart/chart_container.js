@@ -134,11 +134,9 @@ define(
 
                     $.each(this.attr.charts, function(i, chart) {
                         var chartModel = chart.model;
-                        if (chart.subModels){
-                            $.each(chart.subModels, function(i, submodel) {
-                                chartModel = chart.model + submodel;
-                                setValueRange(model, chartModel, valueRange);
-                            });
+                        if (chart.modelTotalSufix){
+                            chartModel = chart.model + chart.modelTotalSufix;
+                            setValueRange(model, chartModel, valueRange);
                         }else{
                             setValueRange(model, chartModel, valueRange);
                         }
@@ -146,7 +144,6 @@ define(
 
                     function setValueRange(model, chartModel, valueRange){
                         var chartMin, chartMax;
-
                         if (model[chartModel]) {
                             chartMin = d3.min(model[chartModel], function(d) {
                                 return d.value;
@@ -164,6 +161,7 @@ define(
                     }
 
                     valueRange[0] = Math.min(valueRange[0], 0);
+                    
                     y.domain(valueRange);
                     this.$node.find('g.chart, g.grid, g.axis.y')
                         .trigger('valueChange', $.extend({

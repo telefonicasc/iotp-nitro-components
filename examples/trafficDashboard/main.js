@@ -165,51 +165,66 @@ define(
                     updateOffscreenIndicators();
                 };
                 var createTooltip = function (feature, isSelected) {
-                    var ele = $('<h2>');
-                    var submarkers = feature.properties.submarkers;
-                    var warns = 0;
-
-                    if (submarkers && submarkers.length){
-                        if (!isSelected) {
-                            $.each(submarkers, function (k,v) {
-                                if (v.properties['marker-color'] === markerColorWarn){
-                                    warns += 1;
-                                }
-                            });
-                            var ok = $('<h2>')
-                                .addClass('tooltip-unselected')
-                                .addClass('tooltip-unselected-ok')
-                                .html(submarkers.length - warns);
-                            var errors = $('<h2>')
-                                .addClass('tooltip-unselected')
-                                .addClass('tooltip-unselected-errors')
-                                .html(warns);
-                            ele = $('<div>').append(errors).append(ok);
+                    if (typeof feature.properties.submarkers !== 'undefined') {
+                        if (feature.properties.submarkers.length === 0) {
+                            return '<h2>' + feature.properties.title + '</h2>';
                         }
                         else {
-                            ele = $('div');
-                            var listElement = $('<ul>').appendTo(ele);
-                            $.each(submarkers, function (k,v) {
-                                var selClass = '';
-                                if (v.properties['marker-color'] === markerColorWarn) {
-                                    selClass += ' tooltip-unselected-error';
-                                }
-                                else {
-                                    selClass += ' tooltip-unselected-ok';
-                                }
-                                var elem = $('<li>')
-                                        .addClass('tooltip-selector')
-                                        .addClass(selClass)
-                                        .html(v.properties.title);
-                                listElement.append(elem);
-                            });
+                            var submarkers = feature.properties.submarkers;
+                            // cool things go here
+                            if (!isSelected) {
+                                var warns = 0;
+                                $.each(submarkers, function (k,v) {
+                                    if (v.properties['marker-color'] === markerColorWarn) warns += 1;
+                                });
+                                var ok = $('<h2>')
+                                    .addClass('tooltip-unselected')
+                                    .addClass('tooltip-unselected-ok')
+                                    .html(submarkers.length - warns);
+                                var errors = $('<h2>')
+                                    .addClass('tooltip-unselected')
+                                    .addClass('tooltip-unselected-errors')
+                                    .html(warns);
+
+                                var content = $('<div>').append(errors).append(ok);
+                                return content.html();
+                            }
+                            else {
+                                var html = '<ul>';
+                                $.each(submarkers, function (k,v) {
+                                    var selClass = 'tooltip-';
+                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
+
+                                    var elem = $('<li>')
+                                            .addClass('tooltip-selector')
+                                            .addClass(selClass)
+                                            .html(v.properties.title);
+                                    if(k===0){
+                                        elem.addClass('selected');
+                                    }
+                                    html = $(html).append(elem);
+                                });
+                                return '<ul>'+html.html()+'</ul>';
+                            }
                         }
-                    }else{
-                        ele.html(feature.properties.title);
                     }
+                    else return '<h2>' + feature.properties.title + "</h2>";
+                };
 
-                    return ele.html();
+                var markerClicked = function (f, previous, dom) {
+                    // Change marker size
+                    if (f !== previous) {
+                        var itemSelected = f;
+                        if(f.properties.submarkers.length){
+                            f = f.properties.submarkers[0];
+                        }
 
+                        $('.mapbox-mini').trigger('itemselected',f);
+                        f.properties['marker-size'] = 'large';
+                        if (previous !== null) {
+                            previous.properties['marker-size'] = 'medium';
+                        }
+                    }
                 };
                 // =============================================================
                 // Prepare dashboard
@@ -296,7 +311,8 @@ define(
                                 groupMarkers: true
                             },
                             markerClicked: {
-                                center: centerOnClick
+                                center: centerOnClick,
+                                onClickFn: markerClicked
                             },
                             customTooltip: createTooltip,
                             createOffscreenIndicators: true,
@@ -471,7 +487,7 @@ define(
                         feature.properties['marker-size'] = 'medium';
                         delete feature.properties['customMarkerBuilder'];
                     });
-
+                    $('.mapbox').trigger('tooltip-group-hide');
                 });
                 $('.dashboard').on('valueChange', function(e,data){
                     var count = data.value.length;
@@ -483,6 +499,13 @@ define(
                 });
                 $('.dashboard').on('pageChanged', '.panel-detail', function(){
                     $('.mapbox-mini').trigger('draw');
+                });
+                $('.dashboard .group-tooltip').on('click', ' li', function(){
+                    var ele = $(this);
+                    var title = ele.text();
+                    $('.dashbaord').trigger('select-feature', [title]);
+                    $('.dashboard .group-tooltip .selected').removeClass('selected');
+                    ele.addClass('selected');
                 });
 
             }); // requirejs

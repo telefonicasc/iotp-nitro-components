@@ -35,7 +35,7 @@ define(
                 },
                 insertionPoint: '.elements',
                 tpl: '<div class="fit"><div class="elements"/>'
-                    + '<div class="navigation"/></div>',
+                    + '</div><div class="navigation"/>',
                 alwaysVisible: [],
                 items: []
             });

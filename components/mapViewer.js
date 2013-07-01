@@ -141,7 +141,6 @@ function(ComponentManager, DataBinding) {
                 isGroup = (isGroup === undefined ? false:isGroup);
 
                 var contentElement = isGroup ? $groupTooltip : $tooltip;
-                var content = $(htmlContent || '');
 
                 $('.tooltip-content', contentElement).html(htmlContent || '');
                 _tooltip._updateContainerPositon(contentElement, markerElement);

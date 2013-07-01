@@ -7,8 +7,7 @@ define (
                                 
 function (ComponentManager, DataBinding) {
     
-    return ComponentManager.create('temperatureWidget', TemperatureWidget,
-        DataBinding);
+    return ComponentManager.create('temperatureWidget', TemperatureWidget, DataBinding);
                                                         
     function TemperatureWidget () {
         
@@ -28,20 +27,33 @@ function (ComponentManager, DataBinding) {
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
             this.$node.addClass('temperature-widget');
+            this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
+
+            this.on('render', function () {
+                this.attr.widget = this.createTemperatureChart(); 
+            });
             
             this.on('drawTemperature', function (event, temp) {
-                if (temp !== null) this.attr.temp = temp;
-                this.$node.empty();
-                this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
-                this.attr.widget = this.createTemperatureChart(); 
-                this.drawTemperature(this.attr.widget, this.attr.temp);
-                $(this.attr.temperatureLabel).html(this.attr.temp + 'ºC');
+                if (temp !== undefined && temp !== null) {
+                    this.attr.temp = temp;
+                    this.drawTemperature(this.attr.widget, this.attr.temp);
+                    this.select('temperatureLabel').html(this.attr.temp + 'ºC');
+                }
+                else {
+                    this.attr.temp = 0;
+                    this.drawTemperature(this.attr.widget, 0);
+                    this.select('temperatureLabel').html('-');
+                }
             });
 
             this.on('valueChange', function(e,o) {
+
                 var value = o.value;
-                if (value !== undefined) {
+                if (value !== undefined && typeof value === 'number') {
                     this.trigger('drawTemperature', value);
+                }
+                else {
+                    this.trigger('drawTemperature', null);
                 }
             });
         });
@@ -51,8 +63,6 @@ function (ComponentManager, DataBinding) {
         // ==========================
         this.drawTemperature = function(temperatureChart,temperature) {
             var temp;
-            //var tmin = 0;
-            //var tmax = 20;
             var tmin = this.attr.tmin;
             var tmax = this.attr.tmax;
             var tempCelsius = parseFloat(temperature);

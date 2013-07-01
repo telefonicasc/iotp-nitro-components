@@ -1,13 +1,27 @@
+/*
+Expected value change format:
+
+{ 
+    value: 
+        {
+            voltage: <float>,
+            charge: <float>,
+        },
+    silent: <bln>
+}
+
+*/
+
+
 define (
 [
     'components/component_manager',
+    'components/mixin/template',
     'libs/raphael/raphael'
 ],
                                 
-function (ComponentManager) {
+function (ComponentManager, Template) {
     
-    return ComponentManager.create('batteryWidget', BatteryWidget);
-                                                        
     function BatteryWidget () {
         
         this.defaultAttrs({
@@ -19,28 +33,25 @@ function (ComponentManager) {
             borderColor: '#6F8388',
             baseColor: '#DDEAEC',
             id: 'battery-widget',
-            value: 0
+            value: 0,
+            tpl: '<div class="battery-graph" id="battery-graph"/>' +
+                '<div class="battery-chart" id="battery-chart"/>' + 
+                '<div class="battery-label"/>' +
+                '<div class="battery-legend"/>'
         });
                                                                                         
         this.after('initialize', function () {
             
-            // Set attributes for use with raphael
             this.attr.batteryLabelID = this.attr.batteryLabel.substring(1);
             
             this.$node.attr('id', this.attr.id);
-            
-            this.$nodeMap = $('<div>').addClass('battery-graph')
-                .attr('id','battery-graph').appendTo(this.$node);
-            this.$nodeMap = $('<div>').addClass('battery-chart')
-                .attr('id','battery-chart').appendTo(this.$node);
-            this.$nodeMap = $('<div>').addClass('battery-label').appendTo(this.$node);
-            this.$nodeMap = $('<div>').addClass('battery-legend').appendTo(this.$node);
-       
-            this.on('drawBattery', function (event, batteryLevel, voltage) {
+
+            this.on('render', function () {
                 this.attr.widgetGraph = this.createBatteryGraph(); 
                 this.attr.widgetChart = this.createBatteryChart();
-                this.drawBatteryGraph(this.attr.widgetGraph, batteryLevel, voltage);
-
+            });
+       
+            this.on('drawBattery', function (event, batteryLevel, voltage) {
                 this.drawBatteryVoltage(voltage);
                 this.drawBatteryVoltage(batteryLevel);
             });
@@ -51,6 +62,17 @@ function (ComponentManager) {
             
             this.on('drawBattery-level', function (event, batteryLevel) {
                 this.drawBatteryLevel(batteryLevel);
+            });
+
+            this.on('valueChange', function (e,o) {
+                if (!o.value) return;
+                if (o.value.voltage) {
+                    this.drawBatteryVoltage(o.value.voltage);
+                }
+                if (o.value.charge) {
+                    this.drawBatteryLevel(o.value.charge);
+                }
+
             });
 
             Raphael.fn.drawGrid = function (x, y, w, h, wv, hv, color) {
@@ -105,7 +127,7 @@ function (ComponentManager) {
 
         this.drawBatteryVoltage = function (voltage) {
             if (voltage == null) {
-                $(this.select('batteryLabel')).html('Error');
+                $(this.select('batteryLabel')).html('-');
             }
             else {
                 $(this.select('batteryLabel')).html((Math.round(parseFloat(voltage) * 10) / 10) + 'V');
@@ -136,30 +158,8 @@ function (ComponentManager) {
                     height: batteryStatus,
                     y: 48 - batteryStatus
                 }, 300);
-//                this.attr.widgetGraph.fill.animate({
-//                    height: Math.min(parseFloat(batteryStatus), 14) * 1.2,
-//                    y: 48 - Math.min(parseFloat(batteryStatus), 14) * 1.2
-//                }, 300);
                 this.attr.widgetGraph.fill.show();
             }
-        };
-
-        this.drawBatteryGraph = function(batteryGraph, batteryLevel, voltage) {
-            // Set voltage level
-            if (voltage == null) {
-                $(this.select('batteryLabel')).html('Error');
-//                this.ui.batteryLabel.html("Error");
-            }
-            else {
-                $(this.select('batteryLabel')).html((Math.round(parseFloat(voltage) * 10) / 10) + 'V');
-//                this.batteryGraph.fill.animate({
-//                    height: Math.min(parseFloat(voltage), 14) * 1.2,
-//                    y: 48 - Math.min(parseFloat(voltage), 14) * 1.2
-//                }, 300);
-//                this.batteryGraph.fill.show();
-            }
-            
-            // Fill the battey graphic
         };
         
         this.createBatteryGraph = function() {
@@ -224,19 +224,18 @@ function (ComponentManager) {
                  "#00ff0000"
                ]
             };
-            // TODO: Fix this
-//            lineChart = paper.linechart(0, 0, width, height + topgutter,[],
-//              [[],[100, 0]], options);
+
             
             return {
                 paper: paper,
-//                lineChart: lineChart,
                 xlabels: xlabels
-                //  ylabels: ylabels
             };
-        }; 
-        
+        };
+
+
 
     } // </PitchWidget>
+
+    return ComponentManager.create('batteryWidget', Template, BatteryWidget);
 });
 

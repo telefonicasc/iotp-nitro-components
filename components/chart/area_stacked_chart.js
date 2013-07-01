@@ -26,6 +26,8 @@ define(
                     data = this.$node.data('value') || [],
                     context = d3.select(this.node);
                 var svg = context.append('g');
+                var axisY = context.append('g').attr('class', 'axis y');
+                var yAxis = d3.svg.axis().scale(y).orient('right');
     
 
                 context.attr('class', 'chart stacked');
@@ -75,6 +77,8 @@ define(
                 }
 
                 this.createChart = function(){
+
+
                                   
                   var attrib = this.attr; 
                   var self = this;       
@@ -110,9 +114,11 @@ define(
 
                 this.updateChart = function() {
 
-                    var attrib = this.attr;                    
+                    var attrib = this.attr;                  
 
                     svg.attr('width', this.width).attr('height', this.height);
+                    axisY.attr('transform', 'translate('+this.width+', 0)');
+
                     var self = this;
                     if (data && data.length > 0){
 
@@ -124,10 +130,13 @@ define(
                         if (this.anim){
                             lines.transition().ease('linear').duration(200).attr('d', function(d) { return line(d.values); });
                             areas.transition().ease('linear').duration(200).attr('d', function(d) { return area(d.values); }); 
+                            axisY.transition().ease('linear').duration(200).call(yAxis);  
                         }else{
                             lines.attr('d', function(d) { return line(d.values); });
                             areas.attr('d', function(d) { return area(d.values); }); 
                         }
+
+                       
                         
                         if (this.attr.tooltip) {
 

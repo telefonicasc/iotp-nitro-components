@@ -11,7 +11,7 @@ define(
         function CarouselBarChart() {
 
             this.defaultAttrs({
-                conf :{
+                chartConf :{
                     maxHeight: 75, width: 60, barPadding: 5
                 }
                 //,data: [ { name:'+', value: 72 }, {name:'-', value: 46 } ]
@@ -19,7 +19,7 @@ define(
 
             this.after('initialize', function() {
 
-                var _chartConf = this.attr.conf;
+                var _chartConf = this.attr.chartConf;
                 var _data = this.attr.data || [];
                 var svg = d3.select(this.node)
                 .append('svg')
@@ -29,7 +29,6 @@ define(
                 svg.attr('class', 'carousel-barchart');
 
                 this.updateChart = function(){
-
                     svg.attr('width', _chartConf.width*_data.length + _chartConf.barPadding*(_data.length));
 
                     svg.selectAll('rect')
@@ -48,8 +47,8 @@ define(
                         return ( i%2 === 0 )? 'color2' : 'color1';
                     });
 
-                    svg.selectAll('text')
-                    .data(_data).enter().append('text')
+                    svg.selectAll('text').data(_data)
+                    .enter().append('text')
                     .text(function(d) {
                         return d.name;
                     })
@@ -63,8 +62,8 @@ define(
                 };
 
 
-                this.on('valueChange', function(e, values) {
-                    _data = values.values;
+                this.on('valueChange', function(e, options) {
+                    _data = options.values;
                     this.updateChart();
                     e.stopPropagation();
                 });

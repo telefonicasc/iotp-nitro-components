@@ -117,10 +117,24 @@ define(
                             this.$node.data('conditionList', [condition]);
                         }
                     });
+                    
                     this.on('valueChange', function(e, o) {
                         condition.parameterValue = o.value;
                         this.$node.data('conditionList', [condition]);
                     });
+                    
+                    this.on('phenomenonChange', $.proxy(function(e, o) {
+                        var jsonPhen = JSON.parse(o.phenomenon);
+                        this.attr.model = jsonPhen.model;
+                        this.attr.sensorData = jsonPhen.sensorData;
+                        this.attr.__cardConfig.model = jsonPhen.model;
+                        this.attr.__cardConfig.sensorData = jsonPhen.sensorData;
+                        this.$node.find('.body > *' ).trigger('updatePhenomenon', {phenomenon: jsonPhen.sensorData.measureName});
+                    }, this)); 
+                    
+                    this.on('levelChange', $.proxy(function(e, o) { 
+                        this.$node.find('.body > *' ).trigger('updateLevel', o);
+                    }, this)); 
 
                     if(condition.parameterValue !== null ){
                         this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });

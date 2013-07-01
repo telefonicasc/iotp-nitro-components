@@ -1,26 +1,33 @@
 define(
     [
         'components/component_manager',
-        'components/mixin/data_binding',
         'components/mixin/template'
     ],
 
-    function(ComponentManager, DataBinding, Template) {
+    function(ComponentManager, Template) {
         
 
         function CardFrontThreshold() {
             
             this.defaultAttrs({
                 tpl: '<div class="m2m-card-threshold">' +
-                    '<div class="m2m-card-threshold-phenomenon" >Temperatura' +
-                    '</div>' +
-                    '<div class="m2m-card-threshold-level"> Nivel crítico' +
-                    '</div>' +
+                    '<div class="m2m-card-threshold-phenomenon"></div>' +
+                    '<div class="m2m-card-threshold-level"></div>' +
                     '</div>'
             });
+            
+            this.after('initialize', function() {
+                this.on('updateLevel', $.proxy(function(e, o) {
+                   this.$node.find('.m2m-card-threshold-level').html(o.level);
+               }, this));
+               
+               this.on('updatePhenomenon', $.proxy(function(e, o) {
+                   this.$node.find('.m2m-card-threshold-phenomenon').html(o.phenomenon);
+               }, this));
+            });
         }
-        
-        return ComponentManager.create('CardFrontThreshold', DataBinding,
+             
+        return ComponentManager.create('CardFrontThreshold', 
             Template, CardFrontThreshold);
 
     }

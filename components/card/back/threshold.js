@@ -39,6 +39,22 @@ define(
                         value: '${device.asset.userProps.umbral.critical}'
                     }]
                 });
+                
+                var phenomenonEl = this.$node.find('.m2m-card-threshold-phenomenon> select');
+                var levelEl = this.$node.find('.m2m-card-threshold-level> select');
+                
+                phenomenonEl.on('change', $.proxy(function() {
+                    this.trigger('phenomenonChange', { 
+                        phenomenon: phenomenonEl.find(':selected').attr('attr'),
+                        value: phenomenonEl.val()
+                    });
+                    
+                    levelEl.trigger('valueChange', {value: levelEl.val()});
+                }, this));
+                
+                levelEl.on('change', $.proxy(function() {
+                     levelEl.trigger('levelChange', {level: levelEl.find(':selected').text()});
+                }, this));
             }); 
             
             function _phenomenonOptions (pheData) {

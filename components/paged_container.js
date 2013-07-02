@@ -122,9 +122,13 @@ define(
                 // First hide, then show
                 $.each(elements, function(k,v){
                     var assignedPage = parseInt($(v).attr('assigned-page'));
-                    if (assignedPage === currentPage) $(v).show();
-                    else if (assignedPage === 0) $(v).show();
-                    else $(v).hide();
+                    if (assignedPage === currentPage){
+                        $(v).show();
+                    }else if (assignedPage === 0){
+                        $(v).show();
+                    }else{
+                        $(v).hide();
+                    }
                 });
 
                 if (this.attr.private.pageCount <= 1) {
@@ -142,6 +146,12 @@ define(
                         else $(v).removeClass('selected');
                     });
                 }
+                var fixElement = this.select('selectFixedPage');
+                var childs = $(this.attr.selectElements+' > *:visible', fixElement);
+                this.trigger('show-page', {
+                    'childs':childs,
+                    'height':this.attr.private.available
+                });
             };
 
             this.changeToPage = function (pageNumber, isDisplacement) {

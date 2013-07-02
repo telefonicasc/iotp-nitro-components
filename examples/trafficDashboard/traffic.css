@@ -128,16 +128,11 @@
     margin: 0 auto -100px; /*Allow for footer height*/
     vertical-align:bottom;
     background-color: #AECACE;
-    margin-left: -12px;
     z-index: 5;
 
     -moz-box-shadow: -1px -1px 7px #999;
     -webkit-box-shadow: -1px -1px 7px #999;
     box-shadow: -1px -1px 7px #999;
-}
-
-.panel-detail .fit {
-    padding-right: 12px;
 }
 
 .panel-list {
@@ -301,7 +296,6 @@ Paged panel :: Navigation   |
     background: #9EB9BF;
     position: absolute;
     bottom: 0;
-    margin-left: -12px;
     width: 103%;
 }
 

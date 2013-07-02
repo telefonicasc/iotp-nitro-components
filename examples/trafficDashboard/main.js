@@ -497,6 +497,7 @@ define(
                     $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
                 });
+                
                 $('.dashboard').on('pageChanged', '.panel-detail', function(){
                     $('.mapbox-mini').trigger('draw');
                 });

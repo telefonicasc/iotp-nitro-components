@@ -496,15 +496,24 @@ function(ComponentManager, DataBinding) {
         // Returns: GeoJson object of the feature if found, null otherwise.
         // Notes: Uses 'alt' attribute to query, corresponding to feature title.
         this.getFeatureByTitle = function (obj) {
-
+            var title='';
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-            var feature = null;
+          
             var features = this.attr.private.markerLayer.features();
-            $.each(features, function (k,v) {
-                feature = (v.properties.title === title) ? v : feature;
-            });
-            return feature;
+            var getFeature = function(features){
+                var feature = null;
+                for(var v, i=features.length;i--;){
+                    v = features[i];
+                    if(v.properties.submarkers.length){
+                        feature = getFeature(v.properties.submarkers);
+                    }else{
+                        feature = (v.properties.title === title) ? v : feature;
+                    }
+                }
+                return feature;
+            };
+            return getFeature(features);
         };
 
         // Receives: Latitude and longitude.
@@ -559,7 +568,6 @@ function(ComponentManager, DataBinding) {
                     this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
-
             this.attr.private.selected = ft;
         };
 

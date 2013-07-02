@@ -47,8 +47,11 @@ function (ComponentManager, DataBinding) {
             });
 
             this.on('valueChange', function(e,o) {
-
+                if (o.value === undefined) return;
                 var value = o.value;
+                if( Object.prototype.toString.call( value ) === '[object Array]' ) {
+                    value = value[0];
+                }
                 if (value !== undefined && typeof value === 'number') {
                     this.trigger('drawTemperature', value);
                 }

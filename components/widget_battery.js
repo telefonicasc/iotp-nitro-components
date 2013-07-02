@@ -17,10 +17,12 @@ define (
 [
     'components/component_manager',
     'components/mixin/template',
-    'libs/raphael/raphael'
+    'components/mixin/data_binding',
+    'libs/raphael/raphael',
+    'libs/jsonpath'
 ],
                                 
-function (ComponentManager, Template) {
+function (ComponentManager, Template, Data_binding) {
     
     function BatteryWidget () {
         
@@ -64,15 +66,22 @@ function (ComponentManager, Template) {
                 this.drawBatteryLevel(batteryLevel);
             });
 
-            this.on('valueChange', function (e,o) {
+            // Receives and array of measures, and parses the data required
+            // Requires: {value: {charge: <text>, voltage: <float>}, silent:<>bln }
+            this.on('valueChange', function (e,o) {             
                 if (!o.value) return;
-                if (o.value.voltage) {
-                    this.drawBatteryVoltage(o.value.voltage);
-                }
-                if (o.value.charge) {
-                    this.drawBatteryLevel(o.value.charge);
+                var value = o.value;
+                if( Object.prototype.toString.call( value ) === '[object Array]' ) {
+                    value = value[0];
                 }
 
+                this.attr.widgetChart = this.createBatteryChart();
+                if (value.voltage !== undefined) {
+                    this.drawBatteryVoltage(o.value.voltage);
+                }
+                if (value.charge !== undefined) {
+                    this.drawBatteryLevel(o.value.charge);
+                }
             });
 
             Raphael.fn.drawGrid = function (x, y, w, h, wv, hv, color) {
@@ -135,6 +144,7 @@ function (ComponentManager, Template) {
         };
         
         this.drawBatteryLevel = function (batteryLevel) {
+            this.attr.widgetGraph = this.createBatteryGraph(); 
             if (batteryLevel == null) {
                 console.log('Battery Status Level is: NULL');
             }
@@ -236,6 +246,6 @@ function (ComponentManager, Template) {
 
     } // </PitchWidget>
 
-    return ComponentManager.create('batteryWidget', Template, BatteryWidget);
+    return ComponentManager.create('batteryWidget', Template, Data_binding, BatteryWidget);
 });
 

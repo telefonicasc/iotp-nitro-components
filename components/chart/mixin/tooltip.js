@@ -14,30 +14,29 @@ define(
                         .appendTo($('body'));
             }
 
-            this.on('showTooltip', function(e, value){
+            this.on('showTooltip', function(e, o){
 
-                var pos = $(value.elem).offset();
-                var offset = (value.offset)? value.offset : 0;
+                var pos = $(o.elem).offset();
+                var offset = (o.offset)? o.offset : 0;
 
                 var css = {
                     top: pos.top,
                     left: pos.left + offset
                 };
 
-                console.log('pos', pos);
                 var self = this;
-                this.tooltip.html(value.html);
+                this.tooltip.html(o.html);
                 this.tooltip.css(css);
 
                 this.tooltip.show();
 
                 this.on('mouseout', function(d) {
-                    var o = (value.fnHide)? { fn: value.fnHide}: {};
-                    self.trigger('hideTooltip',  o);
+                    var obj = (o.fnHide)? { fn: o.fnHide}: {};
+                    self.trigger('hideTooltip',  obj);
                 });
 
-                if (value.elemId)
-                    fireEvent(value.elemId, 'mouseover');
+                if (o.value)
+                    fireEvent(o.value.date, 'mouseover');
 
                 e.stopPropagation();
 
@@ -50,9 +49,7 @@ define(
                 $('.tooltip').hide();
             });
 
-            function fireEvent( elemId, eventName ) {
-                console.log('fire mouseover', elemId);
-                
+            function fireEvent( elemId, eventName ) {                
                 var elem = document.getElementById(elemId);
                 if( elem != null ){   
                     if(elem.fireEvent) {

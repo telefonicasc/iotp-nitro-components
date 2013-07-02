@@ -109,3 +109,10 @@ rect.bg_grid_green.odd{
 .dashboard .overview-subpanel .overview-subpanel-body .caption {
   color: #64737b;
 }
+
+.tooltip-2 {
+   opacity: 0.8;
+}
+.tooltip-2:after {
+  border-width: 0px;
+}

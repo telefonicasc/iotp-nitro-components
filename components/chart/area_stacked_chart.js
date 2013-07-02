@@ -16,7 +16,9 @@ define(
                 colorLine: ['#00ff00'],
                 fillOpacity: 0.85,
                 subModelsSufix: [],
-                autoscale: false
+                autoscale: false,
+                tooltip: true,
+                tooltip2: false,
             });
 
             this.after('initialize', function() {
@@ -29,12 +31,10 @@ define(
                 var axisY = context.append('g').attr('class', 'axis y');
                 var yAxis = d3.svg.axis().scale(y).orient('right');
     
-
                 context.attr('class', 'chart stacked');
 
                 this.maxRangeValue = 0;
                 this.initialized = null;
-                this.range0 = 0;
 
                 var stack = d3.layout.stack()
                   .offset('zero')
@@ -76,49 +76,61 @@ define(
                     });           
                 }
 
+                var hLine = d3.select(this.node).append('line')
+                .attr('class', 'maxLine').attr('x1', 0)
+                .attr('stroke', '#ffffff')
+                .attr('stroke-width', 2);
+
+                var vLine = d3.select(this.node).append('line')
+                .attr('class', 'maxLine').attr('y1', 0)
+                .attr('stroke', '#ffffff')
+                .attr('stroke-width', 2);
+
+                if (this.attr.tooltip2){
+                   this.tooltip2 = $('<div>').addClass('tooltip').addClass('tooltip-2')
+                        .appendTo($('body'));
+                }
+                
+
                 this.createChart = function(){
 
-
-                                  
                   var attrib = this.attr; 
                   var self = this;       
                   if (data && data.length > 0){
 
                       var layers = stack(data);
-                      svg.selectAll('.layer')
-                        .data(layers)
-                        .enter().append('svg:path')
-                        .attr('class', function(d, i){
-                            return 'layer '+attrib.cssClass[i];
-                        })
-                        .style('fill', function(d, i){
-                            return areaColor[i];
-                        })
-                        .style('fill-opacity', attrib.fillOpacity)
-                        .attr('d', function(d) { return area(d.values); });
 
-                      svg.selectAll('.line')
-                        .data(layers)
-                        .enter().append('svg:path')
-                        .attr('class', function(d){
-                          return 'line '+d.key;
-                        })
-                        .style('stroke', function(d, i){
-                          return attrib.colorLine[i];
-                        })
-                        
-                        .attr('d', function(d) { return line(d.values); });; 
+                      svg.selectAll('.layer').remove();
+                      var l1 = svg.selectAll('.layer').data(layers);
+                      l1.enter().append('svg:path')
+                      .attr('class', function(d, i){
+                          return 'layer '+attrib.cssClass[i];
+                      })
+                      .style('fill', function(d, i){
+                          return areaColor[i];
+                      })
+                      .style('fill-opacity', attrib.fillOpacity)
+                      .attr('d', function(d) { return area(d.values); });
+
+
+                      svg.selectAll('.line').remove();
+                      var l2 = svg.selectAll('.line').data(layers);
+                      l2.enter().append('svg:path')
+                      .attr('class', function(d){
+                        return 'line '+d.key;
+                      })
+                      .style('stroke', function(d, i){
+                        return attrib.colorLine[i];
+                      })
+                      .attr('d', function(d) { return line(d.values); });
                   }     
-
                 };
 
                 this.updateChart = function() {
 
-                    var attrib = this.attr;                  
-
+                    var attrib = this.attr;
                     svg.attr('width', this.width).attr('height', this.height);
                     axisY.attr('transform', 'translate('+this.width+', 0)');
-
                     var self = this;
                     if (data && data.length > 0){
 
@@ -136,52 +148,52 @@ define(
                             areas.attr('d', function(d) { return area(d.values); }); 
                         }
 
-                       
-                        
                         if (this.attr.tooltip) {
-
-                            $.each(data, function(i, val){
-                                svg.selectAll('.hoverCircle').remove();
-                                var hoverCircle = null;
-                                hoverCircle = svg.selectAll('.hoverCircle '+val.key)
-                                    .data(val.values);
-                                hoverCircle.enter().append('circle')
-                                    .attr('r', 6)
-                                    .attr('opacity', 0)
-                                    .attr('class', function(d){
-                                      return 'hoverCircle '+val.key;
-                                    })
-                                    .attr('transform', function (d, i){
-                                        return 'translate('+x(d.date)+','+y(d.y0 + d.value)+')';
-                                    })
-                                    .on('mouseover', function(d) {
-                                        self.showTooltip(this, d);
-                                    });
-                                   
-                                hoverCircle.exit().remove();
-                     
-                            });  
+                            svg.selectAll('.hoverCircle').remove();
+                            this.setTooltip(); 
                         }  
                     }
                 };
 
+                this.setTooltip = function(){
+                    
+                    var val = data[data.length-1];
+                    svg.selectAll('.hoverCircle '+val.key).remove();
+                    var hoverCircle = null;
+                    hoverCircle = svg.selectAll('.hoverCircle '+val.key)
+                        .data(val.values);
+                    hoverCircle.enter().append('circle')
+                        .attr('r', 6)
+                        .attr('opacity', 0)
+                        .attr('class', function(d){
+                          return 'hoverCircle '+val.key;
+                        })
+                        .attr('transform', function (d, i){
+                            return 'translate('+x(d.date)+','+y(d.y0 + d.value)+')';
+                        })
+                        .on('mouseover', function(d) {
+                            self.showTooltip(this, d);
+                        });
+                       
+                    hoverCircle.exit().remove();
+                     
+                };
+
                 this.on('resize', function(e, chartSize) {
                     e.stopPropagation();
-
-                    this.width = chartSize.width;
-                    this.height = chartSize.height;
-                    x.range([0, this.width]);
-                    y.range([this.height, 0]);
-                    this.updateChart();
+                    
+                    if (e.target === this.node){
+                        this.width = chartSize.width;
+                        this.height = chartSize.height;
+                        x.range([0, this.width]);
+                        y.range([this.height, 0]);
+                        this.updateChart();
+                    }
+                   
                 });
 
                 this.on('valueChange', function(e, options) {
                     e.stopPropagation();
-
-                    if (!options.range || this.range0 === options.range[0].getTime()){
-                      return;
-                    }
-                    this.range0 = options.range[0].getTime();
 
                     var valueField = this.attr.model;
                     data = [];
@@ -203,11 +215,11 @@ define(
                     this.anim = false;
                     var valueRange = options.valueRange;
                     if (this.attr.autoscale){
-                      if (this.maxRangeValue !== maxValue){
-                        this.maxRangeValue = maxValue;
-                        this.anim = true;
-                      }
-                      valueRange = [0, this.maxRangeValue*1.15];
+                        if (this.maxRangeValue !== maxValue){
+                          this.maxRangeValue = maxValue;
+                          this.anim = true;
+                        }
+                        valueRange = [0, this.maxRangeValue*1.15];
                     };
                     
                     x.domain(options.range);
@@ -216,10 +228,10 @@ define(
                     this.options = options;
 
                     if (!this.initialized){
-                      this.initialized = true;
-                      this.createChart();
+                        this.initialized = true;
+                        this.createChart();
                     }else{
-                      this.updateChart();
+                        this.updateChart();
                     }       
                 });
 
@@ -239,14 +251,41 @@ define(
                     d3.select(elem).attr('opacity', 1);
                     var offset = $(elem).width() / 2;
                     var hide = function(){
-                         d3.select(elem).attr('opacity', 0);
+                        d3.select(elem).attr('opacity', 0);
+                        hLine.attr('x1',0).attr('x2',0).attr('y1',0).attr('y2', 0);
+                        vLine.attr('x1',0).attr('x2',0).attr('y1',0).attr('y2', 0);
                     };
-                    var html = '<div class"value">'+(d.value+d.y0)+'</div><div class="caption">'+this.attr.tooltip.caption+'</div>'; 
-                    var triggerObj = {'html': html, 'elem': elem, 'offset': offset, 'fnHide':  hide, 'elemId': d.date};
+                    var html = '<div class"value">'+(d.value+d.y0)
+                              +'</div><div class="caption">'+this.attr.tooltip.caption+'</div>'; 
+                    var triggerObj = {'html': html, 'elem': elem, 'offset': offset, 'fnHide':  hide, 'value': d};
                     this.trigger('showTooltip', triggerObj);
 
-                };
+                    //Show lines
+                    hLine.attr('x2', this.width)
+                    .attr('y1', y(d.y0 + d.value))
+                    .attr('y2', y(d.y0 + d.value));
 
+                    vLine.attr('y2', this.height)
+                    .attr('y1', y(d.y0 + d.value))
+                    .attr('x1', x(d.date))
+                    .attr('x2', x(d.date));
+
+                    if (this.attr.tooltip2){
+
+                        //Show tooltip percetanges
+                        var total = d.value+d.y0;
+                        var v1 = (total>0)? Math.round(d.value/total*100*100)/100 : 0;
+                        var v2 = (total>0)? Math.round(d.y0/total*100*100)/100 : 0;
+                        var pos = $(elem).offset();
+                        var html2 = '<div class"value">'+v1+'% Time</div>'
+                                    +'<br /><div class"value">'+v2+'% Data</div>'; 
+                        var css = { top: pos.top+90, left: pos.left };
+                        this.tooltip2.html(html2);
+                        this.tooltip2.css(css);
+                        this.tooltip2.show();
+                    }
+
+                };
             });
         }
     }

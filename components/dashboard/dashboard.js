@@ -74,6 +74,10 @@ define(
                     }
                     this.$detailsPanel.trigger('expand');
                 });
+
+                this.on('updateData', function () {
+                    this.updateData();
+                });
             });
         }
     }

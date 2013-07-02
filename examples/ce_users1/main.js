@@ -15,7 +15,6 @@ define(
     'components/chart/carousel_barchart',
     'components/dashboard/dashboard_main_panel',
     'components/dashboard/overview_subpanel',
-    'components/dashboard/cell_barchart_subpanel',
     'components/dashboard/carousel_panel'
   ],
   
@@ -24,13 +23,6 @@ define(
     requirejs(['dashce.js','components/jquery_plugins'], function() {
       
       $('.dashboard').m2mdashboard(DashCE_users.config);
-      setTimeout(function(){
-          $('.range-selection-chart').trigger('rangeSelected', {
-              text: 'Month',
-              action: 'action-month',
-              fixRange: 35 // 5 weeks of 7 days
-          });
-      }, 500);
     
     });
   }

@@ -10,8 +10,9 @@ define(
     function CarouselPanel() {
 
         this.defaultAttrs({
+            //chartConf: null,
             title: { value: '', caption: '' },
-            content: { value: '', caption: '' },
+            content: { value: '', caption: '' }
         });
 
         this.after('initialize', function() {
@@ -42,23 +43,35 @@ define(
 
             this.$chartNode = $('<div>').addClass('chart-carousel');
 
-            //Add nodes to component
+            //Add nodes to component (order matters)
             this.$bottomNode.appendTo(this.$node);
-            if (this.attr.conf){
+            if (this.attr.chartConf){
+              //If chart then attache 'carouselBarchart' component
               this.$chartNode.appendTo(this.$node);
               var chart = ComponentManager.get('carouselBarchart').attachTo(this.$chartNode, this.attr);
             }               
             this.$topNode.appendTo(this.$node); 
 
             this.on('valueChange', function(e, data) {
-                
-                this.$topValueNode.html( (data.text1 ) ? data.text1: '');
-                this.$bottomValueNode.html( (data.text2)?data.text2: ''); 
-                this.$topCaptionNode.html( (data.caption1)?data.caption1: '');
-                this.$bottomCaptionNode.html( (data.caption2)?data.caption2: '');
-                this.$chartNode.trigger('valueChange', {values: data.values} );
+              
+              /*
+              var data = {
+                  topValue: "a",
+                  topCaption: "a1",
+                  bottomValue: "c",
+                  bottomCaption: "c1",
+                  chartValues: [{name:'', value: 10}, {name: '', value:20}, .... ]
+              }
+              */
 
-                e.stopPropagation();
+              var _attr = this.attr;
+              this.$topValueNode.html( (data.topValue) ? data.topValue: _attr.title.value);
+              this.$bottomValueNode.html( (data.bottomValue )? data.bottomValue: _attr.content.value); 
+              this.$topCaptionNode.html( (data.topCaption) ? data.topCaption: _attr.title.caption);
+              this.$bottomCaptionNode.html( (data.bottomCaption) ? data.bottomCaption: _attr.content.caption);
+              this.$chartNode.trigger('valueChange', {values: data.chartValues});
+
+              e.stopPropagation();
             });
         });
 

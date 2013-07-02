@@ -122,6 +122,62 @@ function(ComponentManager, DataBinding) {
             '<div class="offscreen-indicator swmarkers">0</div>' +
             '<div class="offscreen-indicator wmarkers">0</div>';
 
+        var $tooltip = null; // tooltip element
+        var $groupTooltip = null; // tooltip element
+        this.$nodeMap = null; // map element
+
+        var _tooltip = {
+            TEMPLATE : ['<div class="hover-tooltip marker-tooltip">'+
+                    '<div class="tooltip-arrow-border"></div>'+
+                    '<div class="tooltip-arrow"></div>'+
+                    '<div class="tooltip-content"></div>'+
+                '</div>'].join(),
+            GROUP_TEMPLATE : ['<div class="group-tooltip marker-tooltip">'+
+                    '<div class="tooltip-arrow-border"></div>'+
+                    '<div class="tooltip-arrow"></div>'+
+                    '<div class="tooltip-content"></div>'+
+                '</div>'].join(),
+            show:function(markerElement, htmlContent, isGroup){
+                isGroup = (isGroup === undefined ? false:isGroup);
+
+                var contentElement = isGroup ? $groupTooltip : $tooltip;
+
+                $('.tooltip-content', contentElement).html(htmlContent || '');
+                _tooltip._updateContainerPositon(contentElement, markerElement);
+                contentElement.
+                    show().
+                    data('markerElement', markerElement);
+                if(isGroup){
+                    $('.tooltip-content', contentElement).wrapInner('<div class="scroll-container">');
+                    if( $('.scroll-container', contentElement)['jScrollPane'] ){
+                        $('.scroll-container', contentElement).jScrollPane();
+                    }
+                }
+            },
+            hide:function(isGroup){
+                isGroup = (isGroup === undefined ? false:isGroup);
+                var content = isGroup ? $groupTooltip : $tooltip;
+                content.
+                    hide().
+                    removeData('markerElement');
+            },
+            updatePositon: function(){
+                var markerElement = $tooltip.data('markerElement');
+                var markerElementOfGroup = $groupTooltip.data('markerElement');
+                if(markerElement){
+                    _tooltip._updateContainerPositon($tooltip, markerElement);
+                }
+                if(markerElementOfGroup){
+                    _tooltip._updateContainerPositon($groupTooltip, markerElementOfGroup);
+                }
+            },
+            _updateContainerPositon: function(tooltipContainer, markerElement){
+                var position = $(markerElement).position();
+                position.left -= (tooltipContainer.outerWidth() / 2);
+                tooltipContainer.css(position);
+            }
+        };
+
         //</editor-fold>
 
         // =====================================================================
@@ -284,15 +340,15 @@ function(ComponentManager, DataBinding) {
                 }
                 else features = this.attr.features;
             }
-            
+
             // First feature filter: check all features are valid.
             var self = this;
             features = $.grep(features, function (ft) {
                 return self.isCorrectFeature(ft);
             });
-            
+
             //<editor-fold defaultstate="collapsed" desc="Feature external processing">
-            
+
 
             if (typeof this.attr.featuresPreprocessor === 'function') {
                 if (!skipPreprocessor) {
@@ -309,15 +365,15 @@ function(ComponentManager, DataBinding) {
             }
 
             //</editor-fold>
-                        
+
 
             // Auto group markers?
             if (this.attr.map.groupMarkers) {
                 features = this.markerAutogroup(features,this.attr.private.map);
             }
-            
+
             //<editor-fold defaultstate="collapsed" desc="Marker layer and marker factory">
-            
+
 
             // Create layer
             var markerLayer = mapbox.markers.layer().features(features);
@@ -333,11 +389,33 @@ function(ComponentManager, DataBinding) {
                 }
 
                 $(dom).click($.proxy(function () {
-                    if (feature.item) {
+                    _tooltip.hide(true);
+                    if (feature.item && (feature.properties.submarkers.length === 0) ) {
                         this.trigger('itemselected', { item: feature.item });
                     }
                     this.trigger('marker-clicked', [this, feature]);
                 }, this));
+
+                if(this.attr.map.showTooltip){
+                    var customTooltip = this.attr.customTooltip;
+                    $(dom).hover($.proxy(function(){
+
+                        var content = feature.properties.title;
+                        var currentSelectedMarker = this.attr.private.selected;
+                        var isSelected = (currentSelectedMarker &&
+                            (content === currentSelectedMarker.properties.title) );
+                        var isGroup = (feature.properties.submarkers.length > 0);
+                        if( $.isFunction(customTooltip) ){
+                            content = customTooltip(feature, isSelected);
+                        }else if( customTooltip ){
+                            content = customTooltip;
+                        }
+                        _tooltip.show(dom, content, (isSelected && isGroup));
+
+                    },this), $.proxy(function(){
+                        _tooltip.hide();
+                    },this));
+                }
 
                 return dom;
             }, this));
@@ -349,41 +427,9 @@ function(ComponentManager, DataBinding) {
             this.attr.private.map.removeLayer('markers');
             this.attr.private.map.addLayer(markerLayer);
             this.attr.private.markerLayer = markerLayer;
-            
-            //</editor-fold>
-
-            //<editor-fold defaultstate="collapsed" desc="Tooltips">
-            
-            if (this.attr.map.showTooltip !== false) {
-                var self = this;
-                var interactionLayer = mapbox.markers.interaction(markerLayer);
-                // Set tooltip, using a string or a function
-                if (typeof this.attr.customTooltip === 'string') {
-                    if (this.attr.customTooltip !== '') {
-                        interactionLayer.formatter(function () {
-                            return self.attr.customTooltip;
-                        });
-                    }
-                }
-                else if (typeof this.attr.customTooltip === 'function') {
-                    var self = this;
-                    interactionLayer.formatter(function (feature) {
-                        var isSelected;
-                        try {
-                            isSelected = feature.properties.title === self.attr.private.selected.properties.title;
-                        }
-                        catch (err) {
-                            isSelected = false;
-                        }
-                        return self.attr.customTooltip(feature, isSelected);
-                    });
-                }
-            }
-            
-            //</editor-fold>
         };
-        
-        // Checks if the feature is correct to show, this is, it has to have 
+
+        // Checks if the feature is correct to show, this is, it has to have
         // title and position, at the very least
         // Receives: Feature to test (GeoJson object)
         // Returns: True, if valid, false otherwise
@@ -407,7 +453,7 @@ function(ComponentManager, DataBinding) {
         // Returns: Nothing.
         // Does: Adds the feature to the default markerlayer.
         this.addFeature = function (event, feature) {
-            
+
             if (this.isCorrectFeature(feature)) {
                 if (typeof feature.properties.submarkers === 'undefined') {
                     feature.properties.submarkers = [];
@@ -450,15 +496,24 @@ function(ComponentManager, DataBinding) {
         // Returns: GeoJson object of the feature if found, null otherwise.
         // Notes: Uses 'alt' attribute to query, corresponding to feature title.
         this.getFeatureByTitle = function (obj) {
-
+            var title='';
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-            var feature = null;
+          
             var features = this.attr.private.markerLayer.features();
-            $.each(features, function (k,v) {
-                feature = (v.properties.title === title) ? v : feature;
-            });
-            return feature;
+            var getFeature = function(features){
+                var feature = null;
+                for(var v, i=features.length;i--;){
+                    v = features[i];
+                    if(v.properties.submarkers.length){
+                        feature = getFeature(v.properties.submarkers);
+                    }else{
+                        feature = (v.properties.title === title) ? v : feature;
+                    }
+                }
+                return feature;
+            };
+            return getFeature(features);
         };
 
         // Receives: Latitude and longitude.
@@ -513,7 +568,6 @@ function(ComponentManager, DataBinding) {
                     this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
-
             this.attr.private.selected = ft;
         };
 
@@ -589,8 +643,6 @@ function(ComponentManager, DataBinding) {
         // =====================================================================
 
         this.setComponent = function () {
-            this.$node.addClass('fit');
-            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);
             // Attach map
             this.attr.private.map = mapbox.map(this.$nodeMap[0]);
             // Load map id
@@ -623,6 +675,7 @@ function(ComponentManager, DataBinding) {
 
             var features = this.attr.private.markerLayer.features();
             this.attr.private.map.addCallback('zoomed', function () {
+                _tooltip.hide(true);
                 var map = self.attr.private.map;
                 if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 // Auto group markers?
@@ -634,6 +687,7 @@ function(ComponentManager, DataBinding) {
                 self.attr.whenZoomed(features);
             });
             this.attr.private.map.addCallback('panned', function () {
+                _tooltip.updatePositon();
                 if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 self.attr.whenPanned(features);
             });
@@ -706,6 +760,10 @@ function(ComponentManager, DataBinding) {
                 this.setFeatures(values);
             });
 
+            this.on('tooltip-group-hide', function(){
+                _tooltip.hide(true);
+            });
+
             var markercolor = this.attr.markerColorOK;
             var markersimbol = this.attr.markerSimpleSymbol;
             this.dataFormats = {
@@ -732,6 +790,11 @@ function(ComponentManager, DataBinding) {
         };
 
         this.after('initialize', function() {
+            this.$node.addClass('m2m-mapviewer fit');
+            this.$nodeMap = $('<div>').addClass('mapbox').appendTo(this.$node);
+            $tooltip = $(_tooltip.TEMPLATE).prependTo(this.$node);
+            $groupTooltip = $(_tooltip.GROUP_TEMPLATE).prependTo(this.$node);
+
             this.setComponent();
             this.setAPI();
             // =================================================================

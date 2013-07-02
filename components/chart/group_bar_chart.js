@@ -8,11 +8,18 @@ function(ComponentManager) {
     var GroupBarChart = function(){
 
         this.defaultAttrs({
+            //labels:{},
+            tooltip:false,
             grid: true,
-            colors: ['#000000']
+            colors: ['#000000'],
+            carouselHeight: 100,
+            animDuration: 600,
+            axisXheight: 35
         });
 
-        this.after('initialize', function() {
+        var marginRight = 100;
+
+        this.after('initialize', function() { 
 
             var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
                 x1 = d3.scale.ordinal(),
@@ -26,9 +33,11 @@ function(ComponentManager) {
                 maxValuePeriod = 0,
                 prevMaxValuePeriod = 0;
 
+
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
                 axisX = context.append('g').attr('class', 'axis_x');
+                axisX.append('rect').attr('width',this.width).attr('height', this.attr.axisXheight).attr('fill', '#e0e0db');
                 axisY = context.append('g').attr('class', 'axis_y');
                 xAxis = d3.svg.axis().scale(x0).orient('bottom');
                 yAxis = d3.svg.axis().scale(y).orient('right');
@@ -48,6 +57,14 @@ function(ComponentManager) {
 
             if (this.attr.tooltip){
                 this.tooltip = $('<div>').addClass('tooltip').appendTo($('body'));
+            }
+
+            var labelsPanel = null;
+            if (this.attr.labels){
+                labelsPanel = d3.select(this.node).append('g')
+                .append('foreignObject')
+                .attr('class', 'chart-labels')
+                .attr('width', this.attr.labels.width);
             }
 
             this.createChart = function(){
@@ -71,7 +88,7 @@ function(ComponentManager) {
                 .attr('class', function(key, i){
                     return 'cell-barchart-subpanel';
                 })
-                .attr('height', 100);
+                .attr('height', this.attr.carouselHeight);
 
                 //Attach carousel subpanels
                 $('.cell-barchart-subpanel').each(function(i, panel){
@@ -110,9 +127,26 @@ function(ComponentManager) {
                 .enter().append('rect')
                 .attr('class', 'chartbarEx');
 
+                if (this.modelData.labels && this.attr.labels) {
+                    var labelsPanelEl = $('.chart-labels');
+                    $.each(this.modelData.labels, function(i, label){
+                        labelsPanelEl.append($('<div>').attr('class', 'labelChart').html(label));
+                    });
+                }
+
             };
 
             this.updateChart = function(anim) {
+
+                if (this.modelData.labels && this.attr.labels){
+                    labelsPanel.attr('height', this.attr.carouselHeight+40)
+                    .attr('x', this.width+30)
+                    .attr('y', this.height+10); 
+                    $('.labelChart').remove(); 
+                    $.each(this.modelData.labels, function(i, label){
+                        $('.chart-labels').append($('<div>').attr('class', 'labelChart').html(label));
+                    });
+                }
                 
                 context.selectAll('.minLine').remove();
                 var minLine = context.append('line')
@@ -129,7 +163,7 @@ function(ComponentManager) {
                 y.domain([0, maxValuePeriod+0.2*maxValuePeriod]);
 
                 //Update carousel attributes
-                carouselGroup.attr('transform', 'translate(0, '+(this.height+30)+')');
+                carouselGroup.attr('transform', 'translate(0, '+(this.height+this.attr.axisXheight)+')');
                 var carouselPanel = carouselGroup.selectAll('.cell-barchart-subpanel')
                 .attr('width', width/keys.length - 2)
                 .attr('x', function(key) { return  x0(key); });
@@ -155,17 +189,17 @@ function(ComponentManager) {
                 .attr('width', x1.rangeBand()-1)
                 .attr('x', function(d, i) { return x1(i); });
                 if (anim){
-                    bars.transition().ease('sin').duration(600).attr('y', function(d) { 
+                    bars.transition().ease('sin').duration(this.attr.animDuration).attr('y', function(d) {
                         return y(d); 
                     })
                     .attr('height', function(d) {
                         return height - y(d);
                     }); 
-                    maxLine.attr('x2', width).transition().ease('sin').duration(600)
+                    maxLine.attr('x2', width).transition().ease('sin').duration(this.attr.animDuration)
                     .attr('y1', y(topValue))
                     .attr('y2', y(topValue));
                 }else{
-                    bars.transition().ease('sin').duration(25).attr('y', function(d) { 
+                    bars.attr('y', function(d) { 
                         return (d>maxValuePeriod)? y(maxValuePeriod): y(d); 
                     })
                     .attr('height', function(d) {
@@ -214,9 +248,10 @@ function(ComponentManager) {
                 //Update axes location and dimension
                 if (axisX && axisY) {
                     axisY.attr('transform', 'translate('+width+', 0)');
-                    axisX.attr('transform', 'translate(0, '+height+')').call(xAxis);
+                    axisX.attr('transform', 'translate(0, '+(height)+')').call(xAxis);
+                    axisX.selectAll('rect').attr('width', width);
                     if (anim){         
-                        axisY.transition().ease('sin').duration(600).call(yAxis);
+                        axisY.transition().ease('sin').duration(this.attr.animDuration).call(yAxis);
                     }else{
                         axisY.call(yAxis);
                     }     
@@ -232,10 +267,10 @@ function(ComponentManager) {
                     var count = self.values[i][lastIndex];
 
                     var val = {
-                        text1:  (self.totalCount === 0)? 0 +' %': round(count/self.totalCount*100)+' %',
-                        caption1: self.modelData.caption1,
-                        text2: ((self.modelData.unit)? self.modelData.unit: '')+' '+round(count),
-                        caption2: self.modelData.caption2
+                        topValue:  (self.totalCount === 0)? 0 +' %': round(count/self.totalCount*100)+' %',
+                        topCaption: self.modelData.caption1,
+                        bottomValue: ((self.modelData.unit)? self.modelData.unit: '')+' '+round(count),
+                        bottomCaption: self.modelData.caption2
                     };
                     $(panel).trigger('valueChange', val);
                 });
@@ -257,7 +292,10 @@ function(ComponentManager) {
 			};
 
 			this.on('resize', function(e, chartSize) {
-				this.width = chartSize.width;
+
+                var labelWidth = (this.attr.labels)? this.attr.labels.width: 0;
+
+				this.width = chartSize.width-labelWidth;
 				this.height = chartSize.height;
                 //Update axe ranges
 				x0.rangeRoundBands([0, this.width], 0);
@@ -276,11 +314,11 @@ function(ComponentManager) {
                 e.stopPropagation();
 
                 if (!this.attr.model || !this.attr.aggregation) { return; }
-
                 var fixRange = options.value.fixRange;
-                var roundDate = d3.time.day.round(new Date(options.range[0])).getTime();
+                var roundDate = options.range[0].getTime();
 
                 this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
+
                 this.attr.daysBar = (fixRange === 7)? 1 : 7;
                 var rawValues = this.modelData.values[roundDate];
                 this.totalCount = this.modelData.totalCount[roundDate];
@@ -311,7 +349,7 @@ function(ComponentManager) {
 
                 //Check if aggregation mode has changed
                 var newKeys = getObjKeys(rawValues);
-                if (newKeys.join(',') !== keys.join(',')) {
+                if (newKeys.join(',') !== keys.join(',') || !options.value.brush) {
                     keys = newKeys;
                     this.createChart();
                 }
@@ -328,7 +366,9 @@ function(ComponentManager) {
                 }
                 if (value.aggregation){
                     this.attr.aggregation = value.aggregation;
+                    this.options.value.brush = null;
                 }
+                
                 this.trigger('valueChange', this.options);
             });
 
@@ -341,7 +381,7 @@ function(ComponentManager) {
         }
 
         function round(val){
-            return Math.round(val*100)/100;
+            return Math.round(val*10)/10;
         }
 
         function getMaxPeriodValue(vals){
@@ -360,8 +400,8 @@ function(ComponentManager) {
                     if (d>0 && d<min){
                         min = d;
                     }
-                })
-            };
+                });
+            }
 
             return min;
         }

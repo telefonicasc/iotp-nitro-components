@@ -41,6 +41,9 @@ define(
                     // Add marker
                     if (typeof this.attr.markerModel === 'object') {
                         this.markerLayer.features([this.attr.markerModel]);
+                        if( $.isFunction(this.attr.markerModel.properties.customMarkerBuilder) ){
+                            this.markerLayer.factory(this.attr.markerModel.properties.customMarkerBuilder);
+                        }
                         this.attr.center = {
                             lat: this.attr.markerModel.geometry.coordinates[1],
                             lon: this.attr.markerModel.geometry.coordinates[0]
@@ -50,7 +53,12 @@ define(
                     this.mapM.centerzoom(this.attr.center, this.attr.zoomValue);
 
                     this.updateValue = function(markerModel) {
+                        var customMarkerBuilder = markerModel.properties.customMarkerBuilder;
                         this.markerLayer = mapbox.markers.layer().features([markerModel]);
+                        if( $.isFunction(customMarkerBuilder) ){
+                            this.markerLayer.factory(customMarkerBuilder);
+                        }
+
                         this.mapM.removeLayer('markers');
                         this.mapM.addLayer(this.markerLayer);
                         this.attr.center = {
@@ -85,8 +93,9 @@ define(
                         }
                         var markerModel = o.value.markerModel === undefined ? null : o.value.markerModel;
                         var values = o.value;
-                        if (markerModel !== null)
+                        if (markerModel !== null){
                             this.updateValue(markerModel);
+                        }
                         else if ($.isPlainObject(values) && values.location.longitude !== "") {
                             // Create marker model from asset
                             var f = {
@@ -107,6 +116,10 @@ define(
                             this.updateValue(f);
 
                         }
+                    });
+
+                    this.on('draw', function(){
+                        this.mapM.draw();
                     });
                 });
             }

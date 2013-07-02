@@ -18,7 +18,7 @@ define(
                 subModelsSufix: [],
                 autoscale: false,
                 tooltip: true,
-                tooltip2: false,
+                tooltip2: false
             });
 
             this.after('initialize', function() {
@@ -26,6 +26,7 @@ define(
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     data = this.$node.data('value') || [],
+                    layers = [],
                     context = d3.select(this.node);
                 var svg = context.append('g');
                 var axisY = context.append('g').attr('class', 'axis y');
@@ -35,6 +36,7 @@ define(
 
                 this.maxRangeValue = 0;
                 this.initialized = null;
+                this.range = [0,0];
 
                 var stack = d3.layout.stack()
                   .offset('zero')
@@ -53,7 +55,7 @@ define(
                   .x(function(d) { return x(d.date); })
                   .y(function(d) { return y(d.y0 + d.value); });
 
-
+                //Patterns
                 var areaColor = this.attr.colorArea;
                 var self = this;
                 if (this.attr.colorPattern){
@@ -76,82 +78,73 @@ define(
                     });           
                 }
 
+                //Tooltip lines
                 var hLine = d3.select(this.node).append('line')
                 .attr('class', 'maxLine').attr('x1', 0)
                 .attr('stroke', '#ffffff')
                 .attr('stroke-width', 2);
-
                 var vLine = d3.select(this.node).append('line')
                 .attr('class', 'maxLine').attr('y1', 0)
                 .attr('stroke', '#ffffff')
                 .attr('stroke-width', 2);
 
-                if (this.attr.tooltip2){
-                   this.tooltip2 = $('<div>').addClass('tooltip').addClass('tooltip-2')
+                if (this.attr.tooltip2){ //Second tooltip
+                    this.tooltip2 = $('<div>').addClass('tooltip').addClass('tooltip-2')
                         .appendTo($('body'));
                 }
                 
-
                 this.createChart = function(){
 
-                  var attrib = this.attr; 
-                  var self = this;       
-                  if (data && data.length > 0){
+                    var attrib = this.attr; 
+                    var self = this;       
+                    if (layers && layers.length > 0){
 
-                      var layers = stack(data);
+                        svg.selectAll('.layer').remove();
+                        var l1 = svg.selectAll('.layer').data(layers);
+                        l1.enter().append('svg:path')
+                        .attr('class', function(d, i){
+                            return 'layer '+attrib.cssClass[i];
+                        })
+                        .style('fill', function(d, i){
+                            return areaColor[i];
+                        })
+                        .style('fill-opacity', attrib.fillOpacity);
 
-                      svg.selectAll('.layer').remove();
-                      var l1 = svg.selectAll('.layer').data(layers);
-                      l1.enter().append('svg:path')
-                      .attr('class', function(d, i){
-                          return 'layer '+attrib.cssClass[i];
-                      })
-                      .style('fill', function(d, i){
-                          return areaColor[i];
-                      })
-                      .style('fill-opacity', attrib.fillOpacity)
-                      .attr('d', function(d) { return area(d.values); });
-
-
-                      svg.selectAll('.line').remove();
-                      var l2 = svg.selectAll('.line').data(layers);
-                      l2.enter().append('svg:path')
-                      .attr('class', function(d){
-                        return 'line '+d.key;
-                      })
-                      .style('stroke', function(d, i){
-                        return attrib.colorLine[i];
-                      })
-                      .attr('d', function(d) { return line(d.values); });
-                  }     
+                        svg.selectAll('.line').remove();
+                        var l2 = svg.selectAll('.line').data(layers);
+                        l2.enter().append('svg:path')
+                        .attr('class', 'line')
+                        .style('stroke', function(d, i){
+                            return attrib.colorLine[i];
+                        });
+                    }     
                 };
 
                 this.updateChart = function() {
 
-                    var attrib = this.attr;
                     svg.attr('width', this.width).attr('height', this.height);
                     axisY.attr('transform', 'translate('+this.width+', 0)');
-                    var self = this;
-                    if (data && data.length > 0){
 
-                        var layers = stack(data);
+                    if (layers && layers.length > 0){                        
                         
                         var areas = svg.selectAll('.layer').data(layers);
                         var lines = svg.selectAll('.line').data(layers);
 
                         if (this.anim){
-                            lines.transition().ease('linear').duration(200).attr('d', function(d) { return line(d.values); });
-                            areas.transition().ease('linear').duration(200).attr('d', function(d) { return area(d.values); }); 
-                            axisY.transition().ease('linear').duration(200).call(yAxis);  
+                            lines.transition().ease('linear').duration(200)
+                            .attr('d', function(d) { return line(d.values); });
+                            areas.transition().ease('linear').duration(200)
+                            .attr('d', function(d) { return area(d.values); }); 
+                            axisY.transition().ease('linear').duration(200).call(yAxis);
                         }else{
                             lines.attr('d', function(d) { return line(d.values); });
-                            areas.attr('d', function(d) { return area(d.values); }); 
+                            areas.attr('d', function(d) { return area(d.values); });
                         }
 
                         if (this.attr.tooltip) {
                             svg.selectAll('.hoverCircle').remove();
                             this.setTooltip(); 
-                        }  
+                        }
                     }
                 };
 
@@ -166,7 +159,7 @@ define(
                         .attr('r', 6)
                         .attr('opacity', 0)
                         .attr('class', function(d){
-                          return 'hoverCircle '+val.key;
+                            return 'hoverCircle '+val.key;
                         })
                         .attr('transform', function (d, i){
                             return 'translate('+x(d.date)+','+y(d.y0 + d.value)+')';
@@ -174,14 +167,13 @@ define(
                         .on('mouseover', function(d) {
                             self.showTooltip(this, d);
                         });
-                       
+
                     hoverCircle.exit().remove();
-                     
                 };
 
                 this.on('resize', function(e, chartSize) {
                     e.stopPropagation();
-                    
+
                     if (e.target === this.node){
                         this.width = chartSize.width;
                         this.height = chartSize.height;
@@ -189,56 +181,65 @@ define(
                         y.range([this.height, 0]);
                         this.updateChart();
                     }
-                   
                 });
 
                 this.on('valueChange', function(e, options) {
                     e.stopPropagation();
 
+                    if (e.target !== this.node ||
+                        (this.range[0] === options.range[0].getTime() && this.range[1] === options.range[1].getTime()) ){
+                        return;
+                    }
+
+                    this.range[0] = options.range[0].getTime();
+                    this.range[1] = options.range[1].getTime();
+
                     var valueField = this.attr.model;
                     data = [];
                     var maxValue = 0;
                     $.each(this.attr.subModelsSufix, function (i, submodel){
+                        var modelData = 0;
                         var values = $.map(options.value[valueField+submodel], function(val, i) {
                             if (val.date >= options.range[0] &&
                                 val.date <= options.range[1]) {
-                                if ((val.value+val.y0) > maxValue) {
-                                  maxValue = (val.value+val.y0);
+                                if (val.value > modelData) {
+                                    modelData = val.value;
                                 }
                                 return val;
                             }
                         });
-
+                        maxValue += modelData; 
                         data.push({key: valueField+submodel, values: values});
                     });
+                    layers = stack(data);
 
                     this.anim = false;
                     var valueRange = options.valueRange;
                     if (this.attr.autoscale){
                         if (this.maxRangeValue !== maxValue){
-                          this.maxRangeValue = maxValue;
-                          this.anim = true;
+                            this.maxRangeValue = maxValue;
+                            this.anim = true;
                         }
                         valueRange = [0, this.maxRangeValue*1.15];
-                    };
-                    
+                    }
+
                     x.domain(options.range);
                     y.domain(valueRange);
 
                     this.options = options;
-
                     if (!this.initialized){
                         this.initialized = true;
                         this.createChart();
-                    }else{
-                        this.updateChart();
-                    }       
+                    }
+                    this.updateChart();
+
                 });
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
                     if (value.newModel){
                         this.attr.model = value.newModel;
+                        this.range = [0,0];
                     }
                     this.attr.tooltip.caption = value.caption;
                     this.trigger('valueChange', this.options);
@@ -246,8 +247,8 @@ define(
 
                 this.showTooltip = function(elem, d) {
 
-                    if (!this.attr.tooltip.caption) this.attr.tooltip.caption = '';  
-                    
+                    if (!this.attr.tooltip.caption) { this.attr.tooltip.caption = ''; }
+
                     d3.select(elem).attr('opacity', 1);
                     var offset = $(elem).width() / 2;
                     var hide = function(){
@@ -255,8 +256,8 @@ define(
                         hLine.attr('x1',0).attr('x2',0).attr('y1',0).attr('y2', 0);
                         vLine.attr('x1',0).attr('x2',0).attr('y1',0).attr('y2', 0);
                     };
-                    var html = '<div class"value">'+(d.value+d.y0)
-                              +'</div><div class="caption">'+this.attr.tooltip.caption+'</div>'; 
+                    var html = '<div class"value">'+(d.value+d.y0)+
+                               '</div><div class="caption">'+this.attr.tooltip.caption+'</div>';
                     var triggerObj = {'html': html, 'elem': elem, 'offset': offset, 'fnHide':  hide, 'value': d};
                     this.trigger('showTooltip', triggerObj);
 
@@ -277,8 +278,8 @@ define(
                         var v1 = (total>0)? Math.round(d.value/total*100*100)/100 : 0;
                         var v2 = (total>0)? Math.round(d.y0/total*100*100)/100 : 0;
                         var pos = $(elem).offset();
-                        var html2 = '<div class"value">'+v1+'% Time</div>'
-                                    +'<br /><div class"value">'+v2+'% Data</div>'; 
+                        var html2 = '<div class"value">'+v1+'% Time</div>'+
+                                    '<br /><div class"value">'+v2+'% Data</div>';
                         var css = { top: pos.top+90, left: pos.left };
                         this.tooltip2.html(html2);
                         this.tooltip2.css(css);

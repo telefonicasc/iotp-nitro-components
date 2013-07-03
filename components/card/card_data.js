@@ -180,6 +180,9 @@ function() {
             return card;
         },
         'threshold': function(card) {
+            var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
+            var phenomenonValue = (card.sensorData && card.sensorData.phenomenonApp) ? card.sensorData.phenomenonApp : "";
+            
             card.front = {
                 items: [{
                     component: 'CardFrontThreshold'
@@ -188,11 +191,13 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackThreshold',
-                    phenomenonData: card.configData
+                    phenomenonData: card.configData,
+                    levelVal: parameterValue,
+                    phenomenonVal: phenomenonValue
                 }]
-            };        
-            card.header = 'Umbral';
-       
+            };  
+            card.header = 'Umbral';      
+
             return card;
         }
     }; 
@@ -281,8 +286,12 @@ function() {
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
             name, phenomenon;
+   
         if(cardConfig.type === cardType.SENSOR_CARD ){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
+            var patt = /^\$/g;
+        
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';
@@ -294,7 +303,7 @@ function() {
                 name = 'angle';
             } else if (phenomenon === 'alarm') {
                 name = 'alarm';
-            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold') {
+            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
                name = 'threshold';
             } else if (phenomenon === 'electricPotential') {
                 name = 'battery';

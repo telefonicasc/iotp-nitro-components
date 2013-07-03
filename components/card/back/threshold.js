@@ -11,7 +11,9 @@ define(
 
         function CardBackThreshold() {
             this.defaultAttrs({
-                phenomenonData: []
+                phenomenonData: [],
+                levelVal: "",
+                phenomenonVal: ""
             });
            
             tpl = '<div class="m2m-card-threshold">' + 
@@ -31,6 +33,10 @@ define(
 
                 Dropdown.attachTo(this.$node.find('.m2m-card-threshold-level'), {
                     options: [
+                     {
+                        label: '',
+                        value: ''
+                    },
                     {
                         label: 'Nivel grave',
                         value: '${device.asset.userProps.umbral.major}'
@@ -42,7 +48,7 @@ define(
                 
                 var phenomenonEl = this.$node.find('.m2m-card-threshold-phenomenon> select');
                 var levelEl = this.$node.find('.m2m-card-threshold-level> select');
-                
+               
                 phenomenonEl.on('change', $.proxy(function() {
                     this.trigger('phenomenonChange', { 
                         phenomenon: phenomenonEl.find(':selected').attr('attr'),
@@ -53,8 +59,20 @@ define(
                 }, this));
                 
                 levelEl.on('change', $.proxy(function() {
-                     levelEl.trigger('levelChange', {level: levelEl.find(':selected').text()});
+                     this.trigger('levelChange', {level: levelEl.find(':selected').text()});
                 }, this));
+                
+                if (this.attr.phenomenonVal && this.attr.levelVal) {
+                    // Load card level and card phenomenon in back
+                    phenomenonEl.val(this.attr.phenomenonVal);
+                    levelEl.val(this.attr.levelVal);
+                    
+                    // Trigger phenomenon and level dropdowns change, to paint front card
+                    setTimeout(function() {
+                        phenomenonEl.trigger('change');
+                        levelEl.trigger('change');
+                    }, 0);
+                }
             }); 
             
             function _phenomenonOptions (pheData) {
@@ -68,8 +86,14 @@ define(
                     }
                     options.push(opt);
                 }); 
+                options.unshift({
+                        label: '',
+                        value: '',
+                        attr: ''
+                    }) 
                 return options;
             }
+            
         }
 
         return ComponentManager.create('CardBackThreshold', DataBinding, Template, CardBackThreshold);

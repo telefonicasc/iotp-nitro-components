@@ -127,6 +127,11 @@ define(
                         var jsonPhen = JSON.parse(o.phenomenon);
                         this.attr.model = jsonPhen.model;
                         this.attr.sensorData = jsonPhen.sensorData;
+                        
+                        if(!this.attr.__cardConfig){
+                            this.attr.__cardConfig = {};
+                        }
+                        
                         this.attr.__cardConfig.model = jsonPhen.model;
                         this.attr.__cardConfig.sensorData = jsonPhen.sensorData;
                         this.$node.find('.body > *' ).trigger('updatePhenomenon', {phenomenon: jsonPhen.sensorData.measureName});

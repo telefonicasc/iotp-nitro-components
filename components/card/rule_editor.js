@@ -241,11 +241,15 @@ define(
                             if (o.cards.conditions) {
                                 cards = o.cards.conditions.cards || [];
                                 cards.unshift( _makeCardNoSensorSignal(cards) );
+                                this.attr.cards.conditions = cards;
+                                
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
                             }
                             if (o.cards.actions) {
                                 cards = o.cards.actions.cards || [];
+                                this.attr.cards.actions = cards;
                                 this.loadToolboxCards(this.$actionsToolbox, cards);
+                                
                             }
                         }
                         if (o.editable !== undefined) {
@@ -433,6 +437,12 @@ define(
             this.loadToolboxCards = function(toolbox, cards) {
                 var parsedCards = [];
                 $.each(cards, $.proxy(function(i, card) {
+                    // If card is a threshold card, put phenomenons in configData parameter
+                   if(card.sensorCardType && card.sensorCardType === 'threshold'){
+                       var phenomenons = _getPhenomenons(cards);
+                       card.configData = phenomenons;
+                    }
+                    
                     var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
                     // esta variable es importante porque se usa en card_toolbox.js para asignar
@@ -460,7 +470,17 @@ define(
                 $.each(rule.cards, $.proxy(function(i, card) {
                     var cardConfig = $.extend({}, card);
                     var cardEl = $('<div>').data('cardConfig', cardConfig );
+                    
+                    // If card is a threshold card, put phenomenons in configData parameter
+                    var parameterValue = (cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue) ? cardConfig.conditionList[0].parameterValue : "";
+                    var patt = /^\$/g;
+                    if(patt.test(parameterValue)){
+                        var phenomenons = _getPhenomenons(this.attr.cards.conditions);
+                        card['configData'] = phenomenons;
+                    }
+                    
                     var data = CardData.encode(card);
+                    
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
                     var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
@@ -671,6 +691,21 @@ define(
                 measureNames.push( { label: measureName, value: measureName } );
             }
             return measureNames;
+        }
+        
+        function _getPhenomenons(cards){
+            var phenomenons = [];
+            
+            $.each(cards, function(i, card){
+                var parameterValue = ( card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue)? card.conditionList[0].parameterValue : "";
+                var patt = /^\$/g;
+                if (card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+                    return;
+                }
+                phenomenons.push(card);
+            });
+            
+            return phenomenons;
         }
     }
 );

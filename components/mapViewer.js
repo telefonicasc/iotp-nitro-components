@@ -496,15 +496,24 @@ function(ComponentManager, DataBinding) {
         // Returns: GeoJson object of the feature if found, null otherwise.
         // Notes: Uses 'alt' attribute to query, corresponding to feature title.
         this.getFeatureByTitle = function (obj) {
-
+            var title='';
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-            var feature = null;
+          
             var features = this.attr.private.markerLayer.features();
-            $.each(features, function (k,v) {
-                feature = (v.properties.title === title) ? v : feature;
-            });
-            return feature;
+            var getFeature = function(features){
+                var feature = null;
+                for(var v, i=features.length;i--;){
+                    v = features[i];
+                    if(v.properties.submarkers.length){
+                        feature = getFeature(v.properties.submarkers);
+                    }else{
+                        feature = (v.properties.title === title) ? v : feature;
+                    }
+                }
+                return feature;
+            };
+            return getFeature(features);
         };
 
         // Receives: Latitude and longitude.
@@ -559,7 +568,6 @@ function(ComponentManager, DataBinding) {
                     this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
-
             this.attr.private.selected = ft;
         };
 
@@ -591,41 +599,47 @@ function(ComponentManager, DataBinding) {
         this.updateOffscreenIndicators = function () {
             var data = this.attr.private.markerLayer.features();
             var extent = this.attr.private.map.getExtent();
+            var markers = this.attr.private.markerLayer.markers();
+            var dimensions = this.attr.private.map.dimensions;
 
             $.each(this.select('selectOffscreenIndicator'), function(key, value) {
                 $(value).hide();
                 $(value).html('0');
                 $(value).attr('title');
+                $(value).data('locations', []);
             });
 
-            for (x in data) {
-                var el = data[x];
-                var lat = el.geometry.coordinates[1];
-                var lon = el.geometry.coordinates[0];
+            $.each(markers, $.proxy(function(i, markerData){
+                var marker = markerData.data;
+                var element = $(markerData.element);
                 var locator = '.';
+                var position = element.position();
+                var markerDimesion = {w:element.width()};
+                var count = 1;
 
-                if (lat > extent.north) locator += 'n';
-                else if (lat < extent.south) locator += 's';
+                if (position.top < markerDimesion.w) locator += 'n';
+                else if (position.top > dimensions.y) locator += 's';
 
-                if (lon > extent.east) locator += 'e';
-                else if (lon < extent.west) locator += 'w';
+                if (position.left > dimensions.x) locator += 'e';
+                else if (position.left < markerDimesion.w) locator += 'w';
 
                 locator += 'markers';
-                var count = 1;
-                if (data[x].properties.isGroup === true) {
-                    count = data[x].properties.submarkers.length;
+
+                if (marker.properties.isGroup === true) {
+                    count = marker.properties.submarkers.length;
                     count = count === 0 ? 1 : count;
                 }
 
                 if (locator !== '.markers') {
                     this.attr.selectOffscreen = locator;
-                    this.select('selectOffscreen');
-                    var count = parseInt(this.select('selectOffscreen').html()) + count;
-                    this.select('selectOffscreen').html(count);
-                    this.select('selectOffscreen').show();
-                    this.select('selectOffscreen').attr('last', el.properties.title);
+                    count += parseInt(this.select('selectOffscreen').html());
+                    this.select('selectOffscreen').
+                        html(count).
+                        show().
+                        attr('last', marker.properties.title).
+                        data('locations').push(markerData.location);
                 }
-            }
+            }, this));
         };
 
         //</editor-fold>
@@ -656,8 +670,21 @@ function(ComponentManager, DataBinding) {
                 this.$nodeMap = $(this.offscreenIndicatorsHtml).appendTo(this.$node);
 
                 this.select('selectOffscreenIndicator').on('click', function(event) {
-                    self.select('selectMapbox').trigger('center-on-feature', $(event.target).attr('last'));
-                    self.updateOffscreenIndicators();
+                    var locations = $.merge([], $(this).data('locations'));
+                    var location = locations.pop();
+                    var updater = function(){
+                        self.updateOffscreenIndicators();
+                    };
+                    var panLimits;
+                    if(locations.length){
+                        //MM está defindo en MapBox
+                        panLimits = new MM.Extent(location, locations.pop());
+                        panLimits.encloseLocations(locations);
+                        self.attr.private.map.setExtent(panLimits);
+                    }else if(location){
+                        self.attr.private.map.center(location, false);
+                    }
+                    window.setTimeout(updater,100);
                 });
             }
 

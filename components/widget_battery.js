@@ -143,10 +143,7 @@ function (ComponentManager, Template, Data_binding) {
         };
         
         this.drawBatteryLevel = function (batteryLevel) {
-            if (batteryLevel == null) {
-                console.log('Battery Status Level is: NULL');
-            }
-            else {
+            if (batteryLevel !== null) {
                 var batteryStatus;
                 switch (batteryLevel) {
                     case "full":

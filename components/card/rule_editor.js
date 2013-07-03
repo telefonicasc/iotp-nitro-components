@@ -470,7 +470,6 @@ define(
                 $.each(rule.cards, $.proxy(function(i, card) {
                     var cardConfig = $.extend({}, card);
                     var cardEl = $('<div>').data('cardConfig', cardConfig );
-                    
                     // If card is a threshold card, put phenomenons in configData parameter
                     var parameterValue = (cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue) ? cardConfig.conditionList[0].parameterValue : "";
                     var patt = /^\$/g;
@@ -548,6 +547,7 @@ define(
                                     cardConfig.timeData.context = 'ASSET';
                                 }
                             }
+                            cardConfig['configData'] = {};
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
@@ -558,7 +558,6 @@ define(
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
                 //data.name = "";
                 data.cards = cardsData;
-
                 return data;
             };
 

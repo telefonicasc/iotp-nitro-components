@@ -39,10 +39,10 @@ define(
                     },
                     {
                         label: 'Nivel grave',
-                        value: '${device.asset.userProps.umbral.major}'
+                        value: '${device.asset.UserProps.umbral.major}'
                     },{
                         label: 'Nivel crítico',
-                        value: '${device.asset.userProps.umbral.critical}'
+                        value: '${device.asset.UserProps.umbral.critical}'
                     }]
                 });
                 

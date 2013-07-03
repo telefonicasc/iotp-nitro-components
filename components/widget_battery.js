@@ -75,7 +75,6 @@ function (ComponentManager, Template, Data_binding) {
                     value = value[0];
                 }
 
-                this.attr.widgetChart = this.createBatteryChart();
                 if (value.voltage !== undefined) {
                     this.drawBatteryVoltage(o.value.voltage);
                 }
@@ -144,11 +143,7 @@ function (ComponentManager, Template, Data_binding) {
         };
         
         this.drawBatteryLevel = function (batteryLevel) {
-            this.attr.widgetGraph = this.createBatteryGraph(); 
-            if (batteryLevel == null) {
-                console.log('Battery Status Level is: NULL');
-            }
-            else {
+            if (batteryLevel !== null) {
                 var batteryStatus;
                 switch (batteryLevel) {
                     case "full":

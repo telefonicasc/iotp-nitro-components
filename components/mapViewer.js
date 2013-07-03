@@ -677,7 +677,8 @@ function(ComponentManager, DataBinding) {
                     };
                     var panLimits;
                     if(locations.length){
-                        panLimits = new window.MM.Extent(location, locations.pop());
+                        //MM está defindo en MapBox
+                        panLimits = new MM.Extent(location, locations.pop());
                         panLimits.encloseLocations(locations);
                         self.attr.private.map.setExtent(panLimits);
                     }else if(location){

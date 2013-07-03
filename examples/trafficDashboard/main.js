@@ -219,7 +219,6 @@ define(
                         var cls = (hasErrors ?
                             'marker-red-selected-large' : 'marker-blue-selected-large');
                         div.addClass(cls);
-
                         return div[0];
                     };
                     sel.properties['marker-size'] = 'large';

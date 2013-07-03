@@ -382,11 +382,14 @@ function(ComponentManager, DataBinding) {
                 var dom = null;
                 if (typeof feature.properties.customMarkerBuilder === 'function') {
                     dom = feature.properties.customMarkerBuilder(feature);
+                    $(dom).addClass('marker-custom');
                 }
                 // Use default feature builder
                 else {
                     dom = mapbox.markers.simplestyle_factory(feature);
                 }
+                feature.isGroup = (feature.properties.submarkers.length>0);
+                feature.isSelected = false;
 
                 $(dom).click($.proxy(function () {
                     _tooltip.hide(true);
@@ -394,23 +397,24 @@ function(ComponentManager, DataBinding) {
                         this.trigger('itemselected', { item: feature.item });
                     }
                     this.trigger('marker-clicked', [this, feature]);
+                    feature.isSelected = true;
                 }, this));
 
                 if(this.attr.map.showTooltip){
                     var customTooltip = this.attr.customTooltip;
                     $(dom).hover($.proxy(function(){
-
+                        console.log(feature);
                         var content = feature.properties.title;
                         var currentSelectedMarker = this.attr.private.selected;
                         var isSelected = (currentSelectedMarker &&
                             (content === currentSelectedMarker.properties.title) );
-                        var isGroup = (feature.properties.submarkers.length > 0);
+                        
                         if( $.isFunction(customTooltip) ){
                             content = customTooltip(feature, isSelected);
                         }else if( customTooltip ){
                             content = customTooltip;
                         }
-                        _tooltip.show(dom, content, (isSelected && isGroup));
+                        _tooltip.show(dom, content, (isSelected && feature.isGroup));
 
                     },this), $.proxy(function(){
                         _tooltip.hide();

@@ -131,7 +131,7 @@ define(
                     x.domain(options.range);
 
                     var rangeMillis = options.range[1].getTime()-options.range[0].getTime();
-                    var newColumnsNumber = Math.floor(rangeMillis/getTimeIntervalMillis(data));
+                    var newColumnsNumber = rangeMillis/getTimeIntervalMillis(data);
 
                     if (newColumnsNumber !== columns){
                         columns = newColumnsNumber;

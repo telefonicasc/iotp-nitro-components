@@ -75,6 +75,8 @@ function (ComponentManager, Template, Data_binding) {
                     value = value[0];
                 }
 
+                this.attr.widgetGraph = this.createBatteryGraph(); 
+                this.attr.widgetChart = this.createBatteryChart();
                 if (value.voltage !== undefined) {
                     this.drawBatteryVoltage(o.value.voltage);
                 }

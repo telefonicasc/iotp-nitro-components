@@ -1,12 +1,13 @@
 define(
     [
-        'components/component_manager'
+        'components/component_manager',
+        'components/chart/mixin/tooltip'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, Tooltip) {
 
         return ComponentManager.create('barChart',
-            BarChart);
+            BarChart, Tooltip);
 
         function BarChart() {
 
@@ -23,10 +24,6 @@ define(
 
                 context.attr('class', 'chart barchart ' + this.attr.cssClass);
 
-                if (this.attr.tooltip) {
-                    this.tooltip = $('<div>').addClass('tooltip')
-                        .appendTo($('body'));
-                }
 
                 var anim = false;
 
@@ -36,17 +33,20 @@ define(
                             this.width / (data.length + 1),
                         halfBarWidth = barWidth / 2;
 
-                    bars.enter().append('rect').attr('class', 'bar');
+                    bars.enter().append('rect').attr('class', function(d){
+                        return 'bar';
+                    });
                     var self = this;
                     bars.attr('x', function(d) {
                         return x(d.date) - halfBarWidth;
                     })
+                    .attr('id', function(d){
+                        return d.date;
+                    })
                     .attr('width', barWidth);
                     bars.on('mouseover', function(d) {
-                        self.showTooltip(this, d.value, barWidth);
-                    })
-                    .on('mouseout', function(d) {
-                        self.hideTooltip();
+                        console.log('mouseover');
+                        self.showTooltip(this, d.value, barWidth/2-6);
                     });
                     bars.exit().remove();
                     
@@ -100,18 +100,12 @@ define(
 
                 });
 
-                this.showTooltip = function(rect, d, barWidth) {
-                    var pos = $(rect).offset();
-                    this.tooltip.html('<div class="value">'+d+' €</div><div class="caption">'+this.attr.tooltip.caption+'</div>');
-                    this.tooltip.css({
-                        top: pos.top,
-                        left: pos.left + barWidth/2
-                    });
-                    this.tooltip.show();
-                };
-
-                this.hideTooltip = function() {
-                    this.tooltip.hide();
+                this.showTooltip = function(elem, d, offset) {
+                    if (d === 0){
+                        return;
+                    }
+                    var html = '<div class="value">'+d+' €</div><div class="caption">'+this.attr.tooltip.caption+'</div>';                        
+                    this.trigger('showTooltip', {'elem':elem, 'html': html, 'offset': offset} );
                 };
 
             });

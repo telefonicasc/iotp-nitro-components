@@ -491,17 +491,18 @@ define(
                 $('.dashboard').on('click', '.group-tooltip li', function(){
                     var ele = $(this);
                     var title = ele.text();
-                    $('.mapbox').trigger('select-feature', [title, function(f){
+                    $('.mapbox').trigger('select-feature', [title, function(f, previus){
                         if(f){
                             $('.dashboard').trigger('itemselected', { item: f.item });
                         }
+                        markerClicked(f, previus);
                     }]);
                     $('.dashboard .group-tooltip .selected').removeClass('selected');
                     ele.addClass('selected');
                 });
                 $('.dashboard').on('itemselected', '.panel-list', function(e, data, cb){
-                    $('.m2m-mapviewer')
-                        .trigger('select-feature', [data.item.asset.name, markerClicked]).
+                    $('.m2m-mapviewer').
+                        trigger('select-feature', [data.item.asset.name, markerClicked]).
                         trigger('center-on-feature', [data.item.asset.name]);
                 });
 

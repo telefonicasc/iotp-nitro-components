@@ -191,36 +191,56 @@ define(
                                 return content.html();
                             }
                             else {
-                                var html = '<h2>';
+                                var html = '<ul>';
                                 $.each(submarkers, function (k,v) {
-                                    var selClass;
-                                    if (v.properties['marker-color'] === markerColorWarn) {
-                                        selClass += ' tooltip-selected-error';
-                                    }
-                                    else {
-                                        selClass += ' tooltip-selected-ok';
-                                    }
-                                    var elem = $('<h3>')
+                                    var selClass = 'tooltip-';
+                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
+                                    var elem = $('<li>')
                                             .addClass('tooltip-selector')
                                             .addClass(selClass)
                                             .html(v.properties.title);
+                                    if(k===0){
+                                        elem.addClass('selected');
+                                    }
                                     html = $(html).append(elem);
                                 });
-                                return '<h2>'+html.html()+'</h2>';
+                                return '<ul>'+html.html()+'</ul>';
                             }
                         }
                     }
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
 
+                var makeCustomMarker = function(sel){
+                    var currentColor = sel.properties['marker-color'];
+                    var hasErrors = sel.item.errors.length > 0;
+                    sel.properties['customMarkerBuilder'] = function(a, b){
+                        var div = $('<div />').addClass('marker');
+                        var cls = (hasErrors ?
+                            'marker-red-selected-large' : 'marker-blue-selected-large');
+                        div.addClass(cls);
+
+                        return div[0];
+                    };
+                    sel.properties['marker-size'] = 'large';
+
+                    return sel;
+                };
+
                 var markerClicked = function (f, previous, dom) {
+                    var itemSelected = f;
                     // Change marker size
                     if (f !== previous) {
-                        $('.mapbox-mini').trigger('itemselected',f);
-                        f.properties['marker-size'] = 'large';
+                        if(f.properties.submarkers.length){
+                            f = f.properties.submarkers[0];
+                        }
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
+                            delete previous.properties['customMarkerBuilder'];
                         }
+
+                        f = makeCustomMarker(f);
+                        $('.mapbox-mini').trigger('valueChange',{ 'value': { 'markerModel': f } });
                     }
                 };
                 // =============================================================
@@ -412,35 +432,13 @@ define(
                                     $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
                                 }
                             };
-                            var selectFeature = function(errors){
-                                return function (sel, prev) {
-                                    if (sel !== prev) {
-                                        var currentColor = sel.properties['marker-color'];
-                                        sel.properties['customMarkerBuilder'] = function(a, b){
-                                            var div = $('<div />').addClass('marker');
-                                            var cls = (errors.length ?
-                                                'marker-red-selected-large' : 'marker-blue-selected-large');
-                                            div.addClass(cls);
-
-                                            return div[0];
-                                        };
-
-                                        $('.mapbox-mini').trigger('itemselected',sel);
-                                        if (prev !== null) {
-                                            prev.properties['marker-size'] = 'medium';
-                                            delete sel.properties['customMarkerBuilder'];
-                                        }
-                                    }
-                                };
-                            };
-
+                            
                             requestApiData('data/AssetSemaphore.json', function(data){
                                 data.data.errors = getErrors(data.data.sensorData);
                                 $('.panel-detail').show();
                                 $('.panel-list').hide();
                                 $('.panel-detail').trigger('update-view');
                                 updateAssetInfoFn(data);
-                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature( data.data.errors)]);
                                 $('.detail-element-header .icon').
                                     removeClass('marker-red-selected').
                                     removeClass('marker-blue-selected');
@@ -489,6 +487,11 @@ define(
                 $('.dashboard-details-panel').on('expanded', function(){
                     $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
+                });
+                $('.dashboard').on('itemselected', '.panel-list', function(e, data, cb){
+                    $('.m2m-mapviewer')
+                        .trigger('select-feature', [data.item.asset.name, markerClicked]).
+                        trigger('center-on-feature', [data.item.asset.name]);
                 });
 
             }); // requirejs

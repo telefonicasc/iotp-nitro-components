@@ -521,6 +521,13 @@ define(
                             if( $.isArray(conditionList) ){
                                 cardConfig.conditionList = conditionList;
                             }
+                            if (cardConfig.configData &&
+                                    cardConfig.configData.timeType) {
+                                cardConfig.timeData.interval = cardValue;
+                                if (cardConfig.configData.timeType === 'timeElapsed') {
+                                    cardConfig.timeData.context = 'ASSET';
+                                }
+                            }
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
@@ -666,9 +673,11 @@ define(
             var emptyPhenomenon = { label: '', value: '' };
             var measureNames = [emptyPhenomenon];
             for(var n = cards.length;n--;){
-                measureName = cards[n].sensorData.measureName;
-                phenomenon = cards[n].sensorData.phenomenon;
-                measureNames.push( { label: measureName, value: measureName } );
+                if (cards[n].type === "SensorCard" && cards[n].sensorData) {
+                    measureName = cards[n].sensorData.measureName;
+                    phenomenon = cards[n].sensorData.phenomenon;
+                    measureNames.push( { label: measureName, value: measureName } );
+                }
             }
             return measureNames;
         }

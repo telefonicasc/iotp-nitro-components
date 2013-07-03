@@ -21,7 +21,8 @@ function() {
     
     var cardType = {
         'SENSOR_CARD': 'SensorCard',
-        'ACTION_CARD': 'ActionCard'
+        'ACTION_CARD': 'ActionCard',
+        'TIME_CARD': 'timeCard'
     }; 
 
     var component = {
@@ -118,40 +119,6 @@ function() {
             };
             return card;
         },
-        'timeElapsed': function(card){
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['after'],
-                    units: card.sensorData.uom
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType:card.sensorData.dataType
-                }]
-            };
-            return card;
-        },
-        'timeInterval': function(card){
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['every'],
-                    units: card.sensorData.uom
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType:card.sensorData.dataType
-                }]
-            };
-            return card;
-        },
         'noSensorSignal':function(card){
             card.front = {
                 items: [{
@@ -181,6 +148,43 @@ function() {
         }
         
     };
+
+    var encodeTime = {
+        'timeElapsed': function(card){
+            card.header = 'Elapsed';
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['after']
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value']
+                }]
+            };
+            card.timeCard = true;
+            return card;
+        },
+        'timeInterval': function(card){
+            card.header = 'Interval';
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['every']
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value']
+                }]
+            };
+            card.timeCard = true;
+            return card;
+        }
+    };
     
     var encodeAction = {
         'SendEmailAction': function(card) {
@@ -208,6 +212,8 @@ function() {
     };
     
     var decodeSensor = {};
+
+    var decodeTime = {};
     
     var decodeAction = {
         'SendEmailAction': function(cardConfig, cardData) {
@@ -225,7 +231,7 @@ function() {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
         card = $.extend({}, card);
-
+    
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
                 card.header = card.sensorData.measureName;
@@ -236,6 +242,9 @@ function() {
         }else if(card.type === cardType.ACTION_CARD){
             card = $.extend(card, card.actionData);
             adapterMethod = encodeAction[adapterMethodName];
+        }else if(card.type === cardType.TIME_CARD) {
+            adapterMethodName = card.configData.timeType;
+            adapterMethod = encodeTime[adapterMethodName];
         }
         if( $.isFunction(adapterMethod) ){
             card = adapterMethod(card);
@@ -251,6 +260,9 @@ function() {
 
         }else if(cardConfig.type === cardType.ACTION_CARD){
             adapterMethod = decodeAction[adapterMethodName];
+        }else if(cardConfig.type === cardType.TIME_CARD) {
+            adapterMethodName = cardConfig.timeType;
+            adpaterMethod = decodeTime[adapterMethodName];
         }
         if( $.isFunction(adapterMethod) ){
             cardConfig = adapterMethod(cardConfig, cardData);

@@ -137,7 +137,8 @@ define(
             }
 
             function _isSensorCard(instance){
-                return instance.attr.actionCard !== true;
+                return instance.attr.actionCard !== true &&
+                    instance.attr.timeCard !== true;
             }
         }
     }

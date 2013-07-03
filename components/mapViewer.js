@@ -171,6 +171,9 @@ function(ComponentManager, DataBinding) {
                     _tooltip._updateContainerPositon($groupTooltip, markerElementOfGroup);
                 }
             },
+            updateMarkerElementOfGroup:function(markerElement){
+                $groupTooltip.data('markerElement', markerElement);
+            },
             _updateContainerPositon: function(tooltipContainer, markerElement){
                 var position = $(markerElement).position();
                 position.left -= (tooltipContainer.outerWidth() / 2);
@@ -389,7 +392,11 @@ function(ComponentManager, DataBinding) {
                     dom = mapbox.markers.simplestyle_factory(feature);
                 }
                 feature.isGroup = (feature.properties.submarkers.length>0);
-                feature.isSelected = false;
+                feature.isSelected = this.isSelected(feature);
+
+                if(feature.isGroup && feature.isSelected){
+                    _tooltip.updateMarkerElementOfGroup(dom);
+                };
 
                 $(dom).click($.proxy(function () {
                     _tooltip.hide(true);
@@ -397,25 +404,24 @@ function(ComponentManager, DataBinding) {
                         this.trigger('itemselected', { item: feature.item });
                     }
                     this.trigger('marker-clicked', [this, feature]);
-                    feature.isSelected = true;
                 }, this));
 
                 if(this.attr.map.showTooltip){
                     var customTooltip = this.attr.customTooltip;
                     $(dom).hover($.proxy(function(){
-                        console.log(feature);
-                        var content = feature.properties.title;
-                        var currentSelectedMarker = this.attr.private.selected;
-                        var isSelected = (currentSelectedMarker &&
-                            (content === currentSelectedMarker.properties.title) );
-                        
-                        if( $.isFunction(customTooltip) ){
-                            content = customTooltip(feature, isSelected);
-                        }else if( customTooltip ){
-                            content = customTooltip;
+                        if( ! ( feature.isSelected && feature.isGroup) ){
+                            var content = feature.properties.title;
+                            var currentSelectedMarker = this.attr.private.selected;
+                            var isSelected = (currentSelectedMarker &&
+                                (content === currentSelectedMarker.properties.title) );
+                            
+                            if( $.isFunction(customTooltip) ){
+                                content = customTooltip(feature, isSelected);
+                            }else if( customTooltip ){
+                                content = customTooltip;
+                            }
+                            _tooltip.show(dom, content, (isSelected && feature.isGroup));
                         }
-                        _tooltip.show(dom, content, (isSelected && feature.isGroup));
-
                     },this), $.proxy(function(){
                         _tooltip.hide();
                     },this));
@@ -644,6 +650,24 @@ function(ComponentManager, DataBinding) {
                         data('locations').push(markerData.location);
                 }
             }, this));
+        };
+
+        this.isSelected = function(feature){
+            var currentSelected = this.attr.private.selected;
+            var isSelected = false;
+            if(currentSelected){
+                if(feature.isGroup){
+                    $.each(feature.properties.submarkers, function(index, f){
+                        var tmpSelected = (f.properties.title === currentSelected.properties.title);
+                        if(tmpSelected){
+                            isSelected = true;
+                        }
+                    });
+                }else{
+                    isSelected = (feature.properties.title === currentSelected.properties.title);
+                }
+            }
+            return isSelected;
         };
 
         //</editor-fold>

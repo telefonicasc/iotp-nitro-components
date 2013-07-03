@@ -477,6 +477,7 @@ define(
                         feature.properties['marker-size'] = 'medium';
                         delete feature.properties['customMarkerBuilder'];
                     });
+                    $('.m2m-mapviewer').trigger('tooltip-group-hide');
 
                 });
                 $('.dashboard').on('valueChange', function(e,data){
@@ -486,6 +487,17 @@ define(
                 $('.dashboard-details-panel').on('expanded', function(){
                     $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
+                });
+                $('.dashboard').on('click', '.group-tooltip li', function(){
+                    var ele = $(this);
+                    var title = ele.text();
+                    $('.mapbox').trigger('select-feature', [title, function(f){
+                        if(f){
+                            $('.dashboard').trigger('itemselected', { item: f.item });
+                        }
+                    }]);
+                    $('.dashboard .group-tooltip .selected').removeClass('selected');
+                    ele.addClass('selected');
                 });
                 $('.dashboard').on('itemselected', '.panel-list', function(e, data, cb){
                     $('.m2m-mapviewer')

@@ -764,12 +764,17 @@ function(ComponentManager, DataBinding) {
                 _tooltip.hide(true);
             });
 
-            var markercolor = this.attr.markerColorOK;
+            var markerColorOK = this.attr.markerColorOK;
+            var markerColorWARN = this.attr.markerColorWARN;
             var markersimbol = this.attr.markerSimpleSymbol;
             this.dataFormats = {
                 asset: function (features) {
                     return $.map(features, function(f) {
                         var location = f.asset && f.asset.location;
+                        var markercolor = markerColorOK;
+                        if (f.errors !== undefined && f.errors.length > 0) {
+                            markercolor = markerColorWARN;
+                        }
                         if (location) {
                             return {
                                 geometry: { coordinates:

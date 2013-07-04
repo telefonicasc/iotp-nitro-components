@@ -14,7 +14,8 @@ function() {
         'deactivated': 'Deactivated',
         'sendAlarmBack': 'Send alarm',
         'subject': 'Subject',
-        'to': 'To'
+        'to': 'To',
+        'thresholdHeader': 'Threshold'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -163,7 +164,7 @@ function() {
                     phenomenonVal: phenomenonValue
                 }]
             };  
-            card.header = 'Umbral';      
+            card.header = locales['thresholdHeader'];      
 
             return card;
         }

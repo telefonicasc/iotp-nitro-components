@@ -4,14 +4,17 @@
  * @event {in} updateLevel. Listen update level value
  * @event {in} updatePhenomenon. Listen update phenomenon value
  *
+ * @mixin Template
+ * 
  */
 
 define(
     [
-        'components/component_manager'
+        'components/component_manager',
+        'components/mixin/template'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, Template) {
         
 
         function CardFrontThreshold() {
@@ -34,6 +37,6 @@ define(
             });
         }
              
-        return ComponentManager.create('CardFrontThreshold', CardFrontThreshold);
+        return ComponentManager.create('CardFrontThreshold', CardFrontThreshold, Template);
     }
 );

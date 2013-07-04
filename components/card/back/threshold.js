@@ -1,13 +1,26 @@
+/**
+ * @component CardBackThreshold
+ *
+ * @event {in} change. Listen phenomenon dropdown change
+ * @event {in} change. Listen level dropdown change
+ * 
+ * @event {out} valueChange. When phenomenon dropdown change, valueChange in level dropdown is triggered
+ * @event {out} phenomenonChange. When phenomenon dropdown change, phenomenonChange is triggered
+ * @event {out} levelChange. When level dropdown change, valueChange is levelChange
+ * 
+ * @attr {array} phenomenonData. Array with all phenomenons
+ * @attr {String} levelVal. Level value
+ * @attr {String} phenomenonVal. Phenomenon value
+ *
+ */
+
 define(
     [
         'components/component_manager',
-        'components/mixin/data_binding',
-        'components/mixin/template',
          'components/form/dropdown'
     ],
 
-    
-    function(ComponentManager, DataBinding, Template, Dropdown) {
+    function(ComponentManager, Dropdown) {
 
         function CardBackThreshold() {
             this.defaultAttrs({
@@ -96,7 +109,7 @@ define(
             
         }
 
-        return ComponentManager.create('CardBackThreshold', DataBinding, Template, CardBackThreshold);
+        return ComponentManager.create('CardBackThreshold', CardBackThreshold);
     }
 
 );

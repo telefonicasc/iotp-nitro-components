@@ -14,8 +14,9 @@ function() {
         'deactivated': 'Deactivated',
         'sendAlarmBack': 'Send alarm',
         'subject': 'Subject',
-        'to': 'To'
-    }; 
+        'to': 'To',
+        'thresholdHeader': 'Threshold'
+    };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
     
@@ -23,14 +24,14 @@ function() {
         'SENSOR_CARD': 'SensorCard',
         'ACTION_CARD': 'ActionCard',
         'TIME_CARD': 'timeCard'
-    }; 
+    };
 
     var component = {
         'ANGLE': 'AngleWidget',
         'SLIDER': 'Slider',
         'BATTERY': 'Battery',
         'SEND_EMAIL': 'SendEmail'
-    }; 
+    };
 
     var encodeSensor = {
         'angle': function(card){
@@ -145,6 +146,27 @@ function() {
             card.back = {};
             card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
             return card;
+        },
+        'threshold': function(card) {
+            var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
+            var phenomenonValue = (card.sensorData && card.sensorData.phenomenonApp) ? card.sensorData.phenomenonApp : "";
+            
+            card.front = {
+                items: [{
+                    component: 'CardFrontThreshold'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackThreshold',
+                    phenomenonData: card.configData,
+                    levelVal: parameterValue,
+                    phenomenonVal: phenomenonValue
+                }]
+            };  
+            card.header = locales['thresholdHeader'];      
+
+            return card;
         }
         
     };
@@ -225,7 +247,7 @@ function() {
             return cardConfig;
             
         }
-    }; 
+    };
 
     var encode = function (card) {
         var adapterMethodName = _getMethodNameForPase(card);
@@ -277,6 +299,9 @@ function() {
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
             name, phenomenon;
+        var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
+        var patt = /^\$/g;
+        
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
@@ -290,7 +315,9 @@ function() {
                 name = 'angle';
             } else if (phenomenon === 'alarm') {
                 name = 'alarm';
-            } else if (phenomenon === 'electricPotential') {
+            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+                name = 'threshold';
+             }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
             } else if (sensorData.dataType === 'Boolean') {
                 name = 'binary';

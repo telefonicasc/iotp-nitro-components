@@ -15,10 +15,12 @@ define(
     'components/angular_directives',
     'components/card/front/text',
     'components/card/back/text',
+     'components/card/back/threshold',
     'components/card/front/binary',
     'components/card/front/quantity_value',
     'components/card/front/off',
-      'components/card/front/alarm',
+    'components/card/front/alarm',
+    'components/card/front/threshold',
     'components/form/dropdown'
   ],
 

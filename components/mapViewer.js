@@ -398,9 +398,19 @@ function(ComponentManager, DataBinding) {
                     _tooltip.updateMarkerElementOfGroup(dom);
                 }
 
+                if(feature.isGroup){
+                    $.map(feature.properties.submarkers, $.proxy(function(f){
+                        f.isSelected = this.isSelected(f);
+                        return f;
+                    }, this) );
+                }
+
                 $(dom).click($.proxy(function () {
-                    var item = feature.properties.submarkers.length?
-                        feature.properties.submarkers[0].item : feature.item;
+                    var item = feature.item;
+                    if(feature.isGroup){
+                        item = feature.properties.submarkers[0].item;
+                        feature.properties.submarkers[0].isSelected = true;
+                    }
 
                     this.markerClicked(null, this, feature);
                     if (item) {
@@ -574,7 +584,7 @@ function(ComponentManager, DataBinding) {
 
                 if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
                     this.attr.markerClicked.onClickFn(ft, this.attr.private.selected, dom);
-                    
+
                     this.attr.private.selected = ft;
                     this.setFeatures(this.attr.private.markerLayer.features(), skipPreprocessor);
                 }

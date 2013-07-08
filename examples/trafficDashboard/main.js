@@ -182,9 +182,8 @@ define(
                                             .addClass('tooltip-selector')
                                             .addClass(selClass)
                                             .html(v.properties.title);
-                                    if(k===0){
+                                    if( v.isSelected ){
                                         elem.addClass('selected');
-                                        //$('.dashboard').trigger('itemselected', { item: v.item });
                                     }
                                     html = $(html).append(elem);
                                 });

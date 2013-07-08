@@ -173,7 +173,23 @@ define(
                         else {
                             var submarkers = feature.properties.submarkers;
                             // cool things go here
-                            if (!isSelected) {
+                            if (isSelected) {
+                                var html = '<ul>';
+                                $.each(submarkers, function (k,v) {
+                                    var selClass = 'tooltip-';
+                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
+                                    var elem = $('<li>')
+                                            .addClass('tooltip-selector')
+                                            .addClass(selClass)
+                                            .html(v.properties.title);
+                                    if(k===0){
+                                        elem.addClass('selected');
+                                        //$('.dashboard').trigger('itemselected', { item: v.item });
+                                    }
+                                    html = $(html).append(elem);
+                                });
+                                return '<ul>'+html.html()+'</ul>';
+                            } else {
                                 var warns = 0;
                                 $.each(submarkers, function (k,v) {
                                     if (v.properties['marker-color'] === markerColorWarn) warns += 1;
@@ -189,23 +205,6 @@ define(
 
                                 var content = $('<div>').append(errors).append(ok);
                                 return content.html();
-                            }
-                            else {
-                                var html = '<ul>';
-                                $.each(submarkers, function (k,v) {
-                                    var selClass = 'tooltip-';
-                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
-                                    var elem = $('<li>')
-                                            .addClass('tooltip-selector')
-                                            .addClass(selClass)
-                                            .html(v.properties.title);
-                                    if(k===0){
-                                        elem.addClass('selected');
-                                        $('.dashboard').trigger('itemselected', { item: v.item });
-                                    }
-                                    html = $(html).append(elem);
-                                });
-                                return '<ul>'+html.html()+'</ul>';
                             }
                         }
                     }
@@ -234,7 +233,6 @@ define(
                 };
 
                 var markerClicked = function (f, previous, dom) {
-                    var itemSelected = f;
                     // Change marker size
                     if (f !== previous) {
                         if(f.properties.submarkers.length){

@@ -518,6 +518,9 @@ function(ComponentManager, DataBinding) {
                     }else{
                         feature = (v.properties.title === title) ? v : feature;
                     }
+                    if(feature){
+                        break;
+                    }
                 }
                 return feature;
             };
@@ -764,8 +767,15 @@ function(ComponentManager, DataBinding) {
             this.on('update-feature-property', this.updateFeatureProperty);
             // (feature.properties.title)
             this.on('center-on-feature', function (event, title) {
-                var f = this.getFeatureByTitle(title).geometry.coordinates;
-                this.centerMap(f[1],f[0]);
+
+                var coordinate;
+                var f = this.getFeatureByTitle(title);
+                if(f){
+                    coordinate = f.geometry.coordinates;
+                    this.centerMap(coordinate[1],coordinate[0]);
+                }else{
+                    throw 'Event center-on-feature / Feature not found: '+title;
+                }
             });
             this.on('reload-features', function () {
                 this.setFeatures(this.attr.private.markerLayer.features());

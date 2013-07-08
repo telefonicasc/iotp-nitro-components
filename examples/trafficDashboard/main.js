@@ -201,6 +201,7 @@ define(
                                             .html(v.properties.title);
                                     if(k===0){
                                         elem.addClass('selected');
+                                        $('.dashboard').trigger('itemselected', { item: v.item });
                                     }
                                     html = $(html).append(elem);
                                 });
@@ -226,6 +227,12 @@ define(
                     return sel;
                 };
 
+                var deleteCustomMarker = function(asset){
+                    asset.properties['marker-size'] = 'medium';
+                    delete asset.properties['customMarkerBuilder'];
+                    return asset;
+                };
+
                 var markerClicked = function (f, previous, dom) {
                     var itemSelected = f;
                     // Change marker size
@@ -233,9 +240,10 @@ define(
                         if(f.properties.submarkers.length){
                             f = f.properties.submarkers[0];
                         }
-                        if (previous !== null) {
-                            previous.properties['marker-size'] = 'medium';
-                            delete previous.properties['customMarkerBuilder'];
+                        if(previous && previous.isGroup){
+                            $.map(previous.properties.submarkers, deleteCustomMarker);
+                        }else if(previous){
+                            previous = deleteCustomMarker(previous);
                         }
 
                         f = makeCustomMarker(f);

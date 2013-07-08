@@ -708,7 +708,7 @@ define(
                 if (card.type === 'SensorCard') {
                     var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
                     var patt = /^\$/g;
-                    if (card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+                    if ((card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) || card.model==='NoSensorSignal' || card.model==='Alarm') {
                         return;
                     }
                     phenomenons.push(card);

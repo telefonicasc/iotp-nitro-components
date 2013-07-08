@@ -171,6 +171,9 @@ function(ComponentManager, DataBinding) {
                     _tooltip._updateContainerPositon($groupTooltip, markerElementOfGroup);
                 }
             },
+            updateMarkerElementOfGroup:function(markerElement){
+                $groupTooltip.data('markerElement', markerElement);
+            },
             _updateContainerPositon: function(tooltipContainer, markerElement){
                 var position = $(markerElement).position();
                 position.left -= (tooltipContainer.outerWidth() / 2);
@@ -382,11 +385,18 @@ function(ComponentManager, DataBinding) {
                 var dom = null;
                 if (typeof feature.properties.customMarkerBuilder === 'function') {
                     dom = feature.properties.customMarkerBuilder(feature);
+                    $(dom).addClass('marker-custom');
                 }
                 // Use default feature builder
                 else {
                     dom = mapbox.markers.simplestyle_factory(feature);
                 }
+                feature.isGroup = (feature.properties.submarkers.length>0);
+                feature.isSelected = this.isSelected(feature);
+
+                if(feature.isGroup && feature.isSelected){
+                    _tooltip.updateMarkerElementOfGroup(dom);
+                };
 
                 $(dom).click($.proxy(function () {
                     _tooltip.hide(true);
@@ -399,19 +409,19 @@ function(ComponentManager, DataBinding) {
                 if(this.attr.map.showTooltip){
                     var customTooltip = this.attr.customTooltip;
                     $(dom).hover($.proxy(function(){
-
-                        var content = feature.properties.title;
-                        var currentSelectedMarker = this.attr.private.selected;
-                        var isSelected = (currentSelectedMarker &&
-                            (content === currentSelectedMarker.properties.title) );
-                        var isGroup = (feature.properties.submarkers.length > 0);
-                        if( $.isFunction(customTooltip) ){
-                            content = customTooltip(feature, isSelected);
-                        }else if( customTooltip ){
-                            content = customTooltip;
+                        if( ! ( feature.isSelected && feature.isGroup) ){
+                            var content = feature.properties.title;
+                            var currentSelectedMarker = this.attr.private.selected;
+                            var isSelected = (currentSelectedMarker &&
+                                (content === currentSelectedMarker.properties.title) );
+                            
+                            if( $.isFunction(customTooltip) ){
+                                content = customTooltip(feature, isSelected);
+                            }else if( customTooltip ){
+                                content = customTooltip;
+                            }
+                            _tooltip.show(dom, content, (isSelected && feature.isGroup));
                         }
-                        _tooltip.show(dom, content, (isSelected && isGroup));
-
                     },this), $.proxy(function(){
                         _tooltip.hide();
                     },this));
@@ -599,41 +609,65 @@ function(ComponentManager, DataBinding) {
         this.updateOffscreenIndicators = function () {
             var data = this.attr.private.markerLayer.features();
             var extent = this.attr.private.map.getExtent();
+            var markers = this.attr.private.markerLayer.markers();
+            var dimensions = this.attr.private.map.dimensions;
 
             $.each(this.select('selectOffscreenIndicator'), function(key, value) {
                 $(value).hide();
                 $(value).html('0');
                 $(value).attr('title');
+                $(value).data('locations', []);
             });
 
-            for (x in data) {
-                var el = data[x];
-                var lat = el.geometry.coordinates[1];
-                var lon = el.geometry.coordinates[0];
+            $.each(markers, $.proxy(function(i, markerData){
+                var marker = markerData.data;
+                var element = $(markerData.element);
                 var locator = '.';
+                var position = element.position();
+                var markerDimesion = {w:element.width()};
+                var count = 1;
 
-                if (lat > extent.north) locator += 'n';
-                else if (lat < extent.south) locator += 's';
+                if (position.top < markerDimesion.w) locator += 'n';
+                else if (position.top > dimensions.y) locator += 's';
 
-                if (lon > extent.east) locator += 'e';
-                else if (lon < extent.west) locator += 'w';
+                if (position.left > dimensions.x) locator += 'e';
+                else if (position.left < markerDimesion.w) locator += 'w';
 
                 locator += 'markers';
-                var count = 1;
-                if (data[x].properties.isGroup === true) {
-                    count = data[x].properties.submarkers.length;
+
+                if (marker.properties.isGroup === true) {
+                    count = marker.properties.submarkers.length;
                     count = count === 0 ? 1 : count;
                 }
 
                 if (locator !== '.markers') {
                     this.attr.selectOffscreen = locator;
-                    this.select('selectOffscreen');
-                    var count = parseInt(this.select('selectOffscreen').html()) + count;
-                    this.select('selectOffscreen').html(count);
-                    this.select('selectOffscreen').show();
-                    this.select('selectOffscreen').attr('last', el.properties.title);
+                    count += parseInt(this.select('selectOffscreen').html());
+                    this.select('selectOffscreen').
+                        html(count).
+                        show().
+                        attr('last', marker.properties.title).
+                        data('locations').push(markerData.location);
+                }
+            }, this));
+        };
+
+        this.isSelected = function(feature){
+            var currentSelected = this.attr.private.selected;
+            var isSelected = false;
+            if(currentSelected){
+                if(feature.isGroup){
+                    $.each(feature.properties.submarkers, function(index, f){
+                        var tmpSelected = (f.properties.title === currentSelected.properties.title);
+                        if(tmpSelected){
+                            isSelected = true;
+                        }
+                    });
+                }else{
+                    isSelected = (feature.properties.title === currentSelected.properties.title);
                 }
             }
+            return isSelected;
         };
 
         //</editor-fold>
@@ -664,8 +698,21 @@ function(ComponentManager, DataBinding) {
                 this.$nodeMap = $(this.offscreenIndicatorsHtml).appendTo(this.$node);
 
                 this.select('selectOffscreenIndicator').on('click', function(event) {
-                    self.select('selectMapbox').trigger('center-on-feature', $(event.target).attr('last'));
-                    self.updateOffscreenIndicators();
+                    var locations = $.merge([], $(this).data('locations'));
+                    var location = locations.pop();
+                    var updater = function(){
+                        self.updateOffscreenIndicators();
+                    };
+                    var panLimits;
+                    if(locations.length){
+                        //MM está defindo en MapBox
+                        panLimits = new MM.Extent(location, locations.pop());
+                        panLimits.encloseLocations(locations);
+                        self.attr.private.map.setExtent(panLimits);
+                    }else if(location){
+                        self.attr.private.map.center(location, false);
+                    }
+                    window.setTimeout(updater,100);
                 });
             }
 

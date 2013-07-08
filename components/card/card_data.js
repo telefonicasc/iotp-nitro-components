@@ -14,22 +14,26 @@ function() {
         'deactivated': 'Deactivated',
         'sendAlarmBack': 'Send alarm',
         'subject': 'Subject',
-        'to': 'To'
-    }; 
+        'to': 'To',
+        'thresholdHeader': 'Threshold',
+        'criticalLevel': 'Critical level',
+        'majorLevel': 'Major level'
+    };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
     
     var cardType = {
         'SENSOR_CARD': 'SensorCard',
-        'ACTION_CARD': 'ActionCard'
-    }; 
+        'ACTION_CARD': 'ActionCard',
+        'TIME_CARD': 'timeCard'
+    };
 
     var component = {
         'ANGLE': 'AngleWidget',
         'SLIDER': 'Slider',
         'BATTERY': 'Battery',
         'SEND_EMAIL': 'SendEmail'
-    }; 
+    };
 
     var encodeSensor = {
         'angle': function(card){
@@ -118,40 +122,6 @@ function() {
             };
             return card;
         },
-        'timeElapsed': function(card){
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['after'],
-                    units: card.sensorData.uom
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType:card.sensorData.dataType
-                }]
-            };
-            return card;
-        },
-        'timeInterval': function(card){
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['every'],
-                    units: card.sensorData.uom
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType:card.sensorData.dataType
-                }]
-            };
-            return card;
-        },
         'noSensorSignal':function(card){
             card.front = {
                 items: [{
@@ -178,8 +148,68 @@ function() {
             card.back = {};
             card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
             return card;
+        },
+        'threshold': function(card) {
+            var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
+            var phenomenonValue = (card.sensorData && card.sensorData.phenomenonApp) ? card.sensorData.phenomenonApp : "";
+            
+            card.front = {
+                items: [{
+                    component: 'CardFrontThreshold'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackThreshold',
+                    phenomenonData: card.configData,
+                    levelVal: parameterValue,
+                    phenomenonVal: phenomenonValue,
+                    labelCritical: locales['criticalLevel'],
+                    labelMajor: locales['majorLevel']
+                }]
+            };  
+            card.header = locales['thresholdHeader'];      
+
+            return card;
         }
         
+    };
+
+    var encodeTime = {
+        'timeElapsed': function(card){
+            card.header = 'Elapsed';
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['after']
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value']
+                }]
+            };
+            card.timeCard = true;
+            return card;
+        },
+        'timeInterval': function(card){
+            card.header = 'Interval';
+            card.front = {
+                items: [{
+                    component: 'CardFrontQuantityValue',
+                    label: locales['every']
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    label: locales['value']
+                }]
+            };
+            card.timeCard = true;
+            return card;
+        }
     };
     
     var encodeAction = {
@@ -208,6 +238,8 @@ function() {
     };
     
     var decodeSensor = {};
+
+    var decodeTime = {};
     
     var decodeAction = {
         'SendEmailAction': function(cardConfig, cardData) {
@@ -219,13 +251,13 @@ function() {
             return cardConfig;
             
         }
-    }; 
+    };
 
     var encode = function (card) {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
         card = $.extend({}, card);
-
+    
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
                 card.header = card.sensorData.measureName;
@@ -236,6 +268,9 @@ function() {
         }else if(card.type === cardType.ACTION_CARD){
             card = $.extend(card, card.actionData);
             adapterMethod = encodeAction[adapterMethodName];
+        }else if(card.type === cardType.TIME_CARD) {
+            adapterMethodName = card.configData.timeType;
+            adapterMethod = encodeTime[adapterMethodName];
         }
         if( $.isFunction(adapterMethod) ){
             card = adapterMethod(card);
@@ -251,6 +286,9 @@ function() {
 
         }else if(cardConfig.type === cardType.ACTION_CARD){
             adapterMethod = decodeAction[adapterMethodName];
+        }else if(cardConfig.type === cardType.TIME_CARD) {
+            adapterMethodName = cardConfig.timeType;
+            adpaterMethod = decodeTime[adapterMethodName];
         }
         if( $.isFunction(adapterMethod) ){
             cardConfig = adapterMethod(cardConfig, cardData);
@@ -265,6 +303,9 @@ function() {
     var _getMethodNameForPase = function(cardConfig){
         var sensorData = cardConfig.sensorData,
             name, phenomenon;
+        var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
+        var patt = /^\$/g;
+        
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
@@ -278,7 +319,9 @@ function() {
                 name = 'angle';
             } else if (phenomenon === 'alarm') {
                 name = 'alarm';
-            } else if (phenomenon === 'electricPotential') {
+            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+                name = 'threshold';
+             }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
             } else if (sensorData.dataType === 'Boolean') {
                 name = 'binary';

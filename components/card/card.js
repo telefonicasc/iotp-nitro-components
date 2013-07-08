@@ -117,10 +117,37 @@ define(
                             this.$node.data('conditionList', [condition]);
                         }
                     });
+                    
                     this.on('valueChange', function(e, o) {
                         condition.parameterValue = o.value;
                         this.$node.data('conditionList', [condition]);
                     });
+                    
+                    this.on('phenomenonChange', $.proxy(function(e, o) { 
+                        if (o.phenomenon) {
+                            var jsonPhen = JSON.parse(o.phenomenon);
+                            this.attr.model = jsonPhen.model;
+                            this.attr.sensorData = jsonPhen.sensorData;
+                            this.attr.type = jsonPhen.type;
+
+                            if (!this.attr.__cardConfig) {
+                                this.attr.__cardConfig = {};
+                            }
+
+                            this.attr.__cardConfig.model = jsonPhen.model;
+                            this.attr.__cardConfig.sensorData = jsonPhen.sensorData;
+                            this.attr.__cardConfig.type = jsonPhen.type;
+
+                            this.$node.data('cardConfig', this.attr.__cardConfig);
+                            this.$node.find('.body > *').trigger('updatePhenomenon', {
+                                phenomenon: jsonPhen.sensorData.measureName
+                            });
+                        }
+                    }, this)); 
+                    
+                    this.on('levelChange', $.proxy(function(e, o) { 
+                        this.$node.find('.body > *' ).trigger('updateLevel', o);
+                    }, this)); 
 
                     if(condition.parameterValue !== null ){
                         this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
@@ -137,7 +164,8 @@ define(
             }
 
             function _isSensorCard(instance){
-                return instance.attr.actionCard !== true;
+                return instance.attr.actionCard !== true &&
+                    instance.attr.timeCard !== true;
             }
         }
     }

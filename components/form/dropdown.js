@@ -18,10 +18,14 @@ define(
                 this.$select = $('<select>').appendTo(this.$node);
                 
                 $.each(this.attr.options, $.proxy(function(i, option) {
-                    $('<option>')
+                    var optionEl = $('<option>')
                         .attr('value', option.value)
                         .html(option.label)
                         .appendTo(this.$select);
+                        
+                   if (option.attr){
+                       optionEl.attr('attr', option.attr)
+                   }
                 }, this));
 
                 this.$select.on('change', $.proxy(function(e, o) {

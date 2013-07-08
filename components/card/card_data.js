@@ -17,7 +17,8 @@ function() {
         'to': 'To',
         'thresholdHeader': 'Threshold',
         'criticalLevel': 'Critical level',
-        'majorLevel': 'Major level'
+        'majorLevel': 'Major level',
+        'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -144,8 +145,12 @@ function() {
                     component: 'CardFrontAlarm'
                 }]
             };
-            card.flippable = false;
-            card.back = {};
+            card.back = {
+                items: [{
+                    component: 'CardBackLabel',
+                    labelTxt:  locales['alarmConditionTxt']
+                }]
+            };
             card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
             return card;
         },

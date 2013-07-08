@@ -702,6 +702,7 @@ function(ComponentManager, DataBinding) {
                     var location = locations.pop();
                     var updater = function(){
                         self.updateOffscreenIndicators();
+                        _tooltip.updatePositon();
                     };
                     var panLimits;
                     if(locations.length){

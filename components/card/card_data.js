@@ -15,7 +15,9 @@ function() {
         'sendAlarmBack': 'Send alarm',
         'subject': 'Subject',
         'to': 'To',
-        'thresholdHeader': 'Threshold'
+        'thresholdHeader': 'Threshold',
+        'criticalLevel': 'Critical level',
+        'majorLevel': 'Major level'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -161,7 +163,9 @@ function() {
                     component: 'CardBackThreshold',
                     phenomenonData: card.configData,
                     levelVal: parameterValue,
-                    phenomenonVal: phenomenonValue
+                    phenomenonVal: phenomenonValue,
+                    labelCritical: locales['criticalLevel'],
+                    labelMajor: locales['majorLevel']
                 }]
             };  
             card.header = locales['thresholdHeader'];      

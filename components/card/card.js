@@ -52,6 +52,7 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
+                    CardData.addLocales(this.attr.locales.CardData);
                     $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 

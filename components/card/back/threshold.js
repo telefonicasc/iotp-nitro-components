@@ -11,6 +11,8 @@
  * @attr {array} phenomenonData. Array with all phenomenons
  * @attr {String} levelVal. Level value
  * @attr {String} phenomenonVal. Phenomenon value
+ * @attr {String} labelCritical.
+ * @attr {String} labelMajor.
  *
  */
 
@@ -26,10 +28,12 @@ define(
             this.defaultAttrs({
                 phenomenonData: [],
                 levelVal: "",
-                phenomenonVal: ""
+                phenomenonVal: "",
+                labelCritical: "",
+                labelMajor: ""
             });
            
-            tpl = '<div class="m2m-card-threshold">' + 
+            var tpl = '<div class="m2m-card-threshold">' + 
                 '<div class="m2m-card-threshold-phenomenon"></div>' + 
                 '<div class="m2m-card-threshold-level"></div>' + 
                 '</div>';
@@ -51,10 +55,10 @@ define(
                         value: ''
                     },
                     {
-                        label: 'Nivel grave',
+                        label: this.attr.labelCritical,
                         value: '${device.asset.UserProps.umbral.major}'
                     },{
-                        label: 'Nivel crítico',
+                        label: this.attr.labelMajor,
                         value: '${device.asset.UserProps.umbral.critical}'
                     }]
                 });

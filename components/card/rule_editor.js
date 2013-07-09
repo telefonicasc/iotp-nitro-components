@@ -705,12 +705,14 @@ define(
             var phenomenons = [];
             
             $.each(cards, function(i, card){
-                var parameterValue = ( card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue)? card.conditionList[0].parameterValue : "";
-                var patt = /^\$/g;
-                if (card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) {
-                    return;
+                if (card.type === 'SensorCard') {
+                    var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
+                    var patt = /^\$/g;
+                    if (card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+                        return;
+                    }
+                    phenomenons.push(card);
                 }
-                phenomenons.push(card);
             });
             
             return phenomenons;

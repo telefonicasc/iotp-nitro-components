@@ -433,6 +433,13 @@ function(ComponentManager, DataBinding) {
                     },this), $.proxy(function(){
                         _tooltip.hide();
                     },this));
+                    var forceHover = function(){
+                        $(dom).trigger('mouseover');
+                    };
+
+                    if(feature.isGroup && feature.isSelected){
+                        window.setTimeout(forceHover,100);
+                    }
                 }
 
                 return dom;
@@ -517,7 +524,7 @@ function(ComponentManager, DataBinding) {
             var title='';
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-          
+
             var features = this.attr.private.markerLayer.features();
             var getFeature = function(features){
                 var feature = null;

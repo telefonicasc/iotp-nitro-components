@@ -367,6 +367,7 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
+                                alwaysVisible:[1,2],
                                 items: compList
                             }
                         ]
@@ -492,6 +493,7 @@ define(
                 $('.dashboard-details-panel').on('expanded', function(){
                     $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
+                    $('.mapbox-mini').trigger('draw');
                 });
                 $('.dashboard').on('click', '.group-tooltip li', function(){
                     var ele = $(this);

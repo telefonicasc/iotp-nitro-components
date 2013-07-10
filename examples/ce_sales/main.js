@@ -20,7 +20,7 @@ define(
   
   function() {
   
-    requirejs(['dashce.js','components/jquery_plugins'], function() {
+    requirejs(['commons.js','dashce.js','components/jquery_plugins'], function() {
       
       $('.dashboard').m2mdashboard(DashCE_sales.config);
     

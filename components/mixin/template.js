@@ -14,6 +14,8 @@ define(
         updateOnValueChange: true
       });
 
+      this.template = function(){};
+
       this.after('initialize', function() {
         if (this.attr.tpl) {
           this.compiledTpl = Hogan.compile(this.attr.tpl);
@@ -34,6 +36,7 @@ define(
             });
             if (this.attr.updateOnValueChange) {
               this.$node.html(this.compiledTpl.render(data));
+              this.template();
             }
           });
         }

@@ -2,34 +2,61 @@ define(
   [
     'components/component_manager',
     'components/mixin/data_binding',
-    'components/mixin/template'
+    'components/mixin/template',
+    'components/context_menu_indicator'
   ],
 
-  function(ComponentManager, DataBinding, Template) {
+  function(ComponentManager, DataBinding, Template, ContextMenuIndicator) {
 
     return ComponentManager.create('OverviewSubpanel',
         OverviewSubpanel, DataBinding, Template);
 
     function OverviewSubpanel() {
 
-      this.defaultAttrs({
-        tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
-          '<div class="overview-subpanel-body">' +
-            '<h2>'+
-              '<span class="text">{{text}}{{value.text}}</span>'+
-              '<span class="text1">{{text1}}{{value.text1}}</span>'+
-            '</h2>' +
-            '<div class="caption">{{{caption}}}{{{value.caption}}}</div>'+
-          '</div>',
-        iconClass:'',
-        text: '',
-        text1: '',
-        caption: ''
-      });
+        this.defaultAttrs({
+          tpl: '<div class="icon {{iconClass}}{{value.iconClass}}"></div>' +
+            '<div class="overview-subpanel-body">' +
+              '<h2>'+
+                '<span class="text">{{text}}{{value.text}}</span>'+
+                '<span class="text1">{{text1}}{{value.text1}}</span>'+
+              '</h2>' +
+              '<div class="caption">{{{caption}}}{{{value.caption}}}</div>'+
+            '</div>',
+          iconClass:'',
+          text: '',
+          text1: '',
+          caption: '',
+          nodes: {
+              contextMenu: '#spanContextMenu',
+          },
+          classNode: 'overview-subpanel'  
+        });
 
-      this.after('initialize', function() {
-        this.$node.addClass('overview-subpanel');
-      });
+        this.after('initialize', function() {
+          this.$node.addClass();
+
+        });
+
+        this.after('initialize', function() {
+            this.$node.addClass(this.attr.classNode);                
+
+            this.on('render', function() {
+                if (this.attr.contextMenu) {
+                  this.appendContextMenu(this.$contextMenu);
+                }
+            });
+
+            this.after('template', function() {
+                if (this.attr.contextMenu) {
+                    this.appendContextMenu(this.attr.nodes.contextMenu);
+                }
+            });         
+        });
+
+        this.appendContextMenu = function(node){
+            var cmIndicator = $('<div>').appendTo(node);
+            ContextMenuIndicator.attachTo(cmIndicator, this.attr);
+      }
     }
   }
 );

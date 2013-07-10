@@ -146,7 +146,7 @@ function() {
         'alarm' : function (card) {
             card.front = {
                 items: [{
-                    component: 'CardFrontAlarm',
+                    component: 'CardFrontIcon',
                     iconClass: 'm2m-card-alarm-img'
                 }]
             };
@@ -244,7 +244,7 @@ function() {
             };*/
            card.front = {
                 items: [{
-                    component: 'CardFrontAlarm',
+                    component: 'CardFrontIcon',
                     iconClass: 'm2m-card-alarm-img'
                 }]
             };
@@ -261,7 +261,7 @@ function() {
             card.header = locales.turnOffAlarmHeader;
             card.front = {
                 items: [{
-                    component: 'CardFrontAlarm',
+                    component: 'CardFrontIcon',
                     iconClass: 'm2m-card-alarm-with-x-img'
                 }]
             };

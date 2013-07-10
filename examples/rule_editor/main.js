@@ -19,7 +19,7 @@ define(
     'components/card/front/binary',
     'components/card/front/quantity_value',
     'components/card/front/off',
-    'components/card/front/alarm',
+    'components/card/front/icon',
     'components/card/front/threshold',
     'components/form/dropdown'
   ],

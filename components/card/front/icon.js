@@ -6,7 +6,7 @@ define(
     ],
 
     function(ComponentManager, DataBinding, Template) {
-        function CardFrontAlarm() {
+        function CardFrontIcon() {
             this.defaultAttrs({
                 iconClass: "",
                 tpl: '<div class="m2m-card-icon">' +
@@ -18,8 +18,8 @@ define(
             });
         }
         
-        return ComponentManager.create('CardFrontAlarm', DataBinding,
-            Template, CardFrontAlarm);
+        return ComponentManager.create('CardFrontIcon', DataBinding,
+            Template, CardFrontIcon);
 
     }
 );

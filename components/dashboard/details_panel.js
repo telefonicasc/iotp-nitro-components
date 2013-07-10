@@ -30,9 +30,10 @@ define(
                     } else {
                         animProps = { height: this.height };
                     }
-                   
+                    $('.paged-container .navigation', this.$node).hide();
                     this.$node.animate(animProps, duration, 'swing', $.proxy(function () {
                         this.trigger('expanded');
+                        $('.paged-container', this.$node).trigger('update');
                     },this));
                     this.expanded = true;
                 });

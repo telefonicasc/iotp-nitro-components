@@ -118,8 +118,7 @@ define(
                         .attr('height', chartSize.height);
                 });
 
-                this.on('valueChange', function(e, options) {
-                    if (options.value) {
+                this.on('valueChange', function(e, options) {                    
                         var model = options.value,
                             value = model[this.attr.valueField],
                             rangeField = this.attr.rangeField,
@@ -174,7 +173,6 @@ define(
                                 range: range, valueRange: valueRange
                             });
                         }
-                    } 
                 });
 
                 this.on('rangeSelected', function(e, value){

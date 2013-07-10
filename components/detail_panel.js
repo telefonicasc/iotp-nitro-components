@@ -1,44 +1,39 @@
-
-define (
-    [ 
+define(
+    [
         'components/component_manager',
         'components/mixin/template',
-        'components/mixin/container'
-    ],  
+        'components/mixin/container',
+        'components/context_menu_indicator'
+    ],
 
-    function (ComponentManager, Template, ContainerMixin) {
+    function (ComponentManager, Template, Container, ContextMenuIndicator) {
 
-        return ComponentManager.create('detailPanel', DetailPanel, Template, ContainerMixin);
+        return ComponentManager.create('detailPanel', Component, Template, Container);
 
-        function DetailPanel () {
+        function Component() {
 
             this.defaultAttrs({
-                selectHeader: '.detail-panel-header',
-                selectContent: '.detail-panel-content',
-                insertionPoint: '.detail-panel-content',
                 header: '',
-                tpl: '<div class="detail-panel-header">{{header}}{{value.header}}</div>'+
-                        '<div class="detail-panel-content"/>',
-                items: []
+                insertionPoint: '.detail-panel-content',                
+                tpl: '<div class="detail-panel-header">{{header}}</div>' +
+                     '<div class="detail-panel-content"></div>',
+                nodes: {
+                    header: '.detail-panel-header',
+                    content: '.detail-panel-content'
+                }
             });
 
-            this.after('initialize', function () {
-
+            this.after('initialize', function() {
                 this.$node.addClass('detail-panel');
-                
-                this.select('selectHeader').html(this.attr.header);
 
-                this.on('update-header', $.proxy(function (event, header) {
-                    this.select('selectHeader').html(header);
-                }, this));
-                
-                this.on('render', function () {
-                    this.select('selectHeader').click(function () {
-                        $(this).trigger('detailPanelClick');
-                    });
+                this.on('render', function() {
+                    var cmIndicator;
+                    if (this.attr.contextMenu) {
+                        cmIndicator = $('<div>').appendTo(this.$header);
+                        ContextMenuIndicator.attachTo(cmIndicator, this.attr);
+                    }
                 });
-                                
             });
-        }
+        }   
     }
 );

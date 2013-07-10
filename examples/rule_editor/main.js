@@ -61,7 +61,9 @@ define(
                             'activated': 'Activado',
                             'to': 'Para',
                             'subject': 'Asunto',
-                            'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.'
+                            'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
+                            'turnOffAlarmHeader': 'Apagar alarma',
+                            'turnOffAlarmTxt': 'Esta acción apagará todas las alarmas activas para los asset que cumplan las condiciones establecidas y no requieran configuración.'
                         }
                     },
                     actionsLabel: 'Acciones',

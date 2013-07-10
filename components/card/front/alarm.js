@@ -8,9 +8,13 @@ define(
     function(ComponentManager, DataBinding, Template) {
         function CardFrontAlarm() {
             this.defaultAttrs({
-                tpl: '<div class="m2m-card-alarm">' +
-                        '<div class="m2m-card-alarm-img"></div>' +
+                iconClass: "",
+                tpl: '<div class="m2m-card-icon">' +
+                        '<div class="icon"></div>' +
                      '</div>'
+            });
+            this.after('initialize', function(){
+                this.$node.find('.icon').addClass(this.attr.iconClass);
             });
         }
         

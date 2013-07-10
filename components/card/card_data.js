@@ -11,9 +11,6 @@ function() {
         'sendAlarmHeader': 'Create alarm',
         'turnOffAlarmHeader': 'Turn off alarm',
         'sendEmailHeader': 'Send email',
-        'activated': 'Activated',
-        'deactivated': 'Deactivated',
-        'sendAlarmBack': 'Send alarm',
         'subject': 'Subject',
         'to': 'To',
         'thresholdHeader': 'Threshold',
@@ -237,12 +234,7 @@ function() {
         'SendAlarmAction': function(card){
             card.cssClass = 'm2m-card-action m2m-card-alarm-action';
             card.header = locales.sendAlarmHeader;
-            /*card.locales = {
-                deactivated: locales.deactivated,
-                activated: locales.activated,
-                sendAlarmBack: locales.sendAlarmBack
-            };*/
-           card.front = {
+            card.front = {
                 items: [{
                     component: 'CardFrontIcon',
                     iconClass: 'm2m-card-alarm-img'

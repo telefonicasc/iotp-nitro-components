@@ -55,7 +55,7 @@ function (ComponentManager, Template, Data_binding) {
        
             this.on('drawBattery', function (event, batteryLevel, voltage) {
                 this.drawBatteryVoltage(voltage);
-                this.drawBatteryVoltage(batteryLevel);
+                this.drawBatteryLevel(batteryLevel);
             });
             
             this.on('drawBattery-voltage', function (event, voltage) {
@@ -63,6 +63,7 @@ function (ComponentManager, Template, Data_binding) {
             });
             
             this.on('drawBattery-level', function (event, batteryLevel) {
+                batteryLevel = batteryLevel || 'empty';
                 this.drawBatteryLevel(batteryLevel);
             });
 

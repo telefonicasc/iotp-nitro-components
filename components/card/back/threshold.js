@@ -106,8 +106,9 @@ define(
                 options.unshift({
                         label: '',
                         value: '',
-                        attr: ''
-                    }) 
+                        attr: '{"type": "SensorCard","model": "","sensorData": {"measureName": "","phenomenonApp": "","phenomenon": "","dataType": "","uom": ""}}'
+                 });
+                 
                 return options;
             }
             

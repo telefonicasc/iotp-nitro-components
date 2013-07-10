@@ -367,6 +367,7 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
+                                alwaysVisible:[1,2],
                                 items: compList
                             }
                         ]

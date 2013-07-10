@@ -54,12 +54,14 @@ define(
                             'after': 'Después de',
                             'every': 'Repite cada',
                             'sendEmailHeader': 'Enviar email',
-                            'sendAlarmHeader': 'Enviar alarma',
+                            'sendAlarmHeader': 'Crear alarma',
+                            'sendAlarmTxt': 'Esta acción creará todas las alarmas activas para los asset que cumplan las condiciones establecidas y no requieran configuración.',
                             'sendAlarmBack': 'Envío de alarma',
                             'deactivated': 'Desactivado',
                             'activated': 'Activado',
                             'to': 'Para',
-                            'subject': 'Asunto'
+                            'subject': 'Asunto',
+                            'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.'
                         }
                     },
                     actionsLabel: 'Acciones',

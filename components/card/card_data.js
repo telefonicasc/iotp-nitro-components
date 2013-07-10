@@ -8,7 +8,7 @@ function() {
         'value': 'Value',
         'after': 'After',
         'every': 'Every',
-        'sendAlarmHeader': 'Send alarm',
+        'sendAlarmHeader': 'Create alarm',
         'sendEmailHeader': 'Send email',
         'activated': 'Activated',
         'deactivated': 'Deactivated',
@@ -18,7 +18,8 @@ function() {
         'thresholdHeader': 'Threshold',
         'criticalLevel': 'Critical level',
         'majorLevel': 'Major level',
-        'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.'
+        'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
+        'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -38,6 +39,7 @@ function() {
 
     var encodeSensor = {
         'angle': function(card){
+            
             card.front = {
                 items: [{
                     component: component.ANGLE
@@ -230,14 +232,24 @@ function() {
             return card;
         },
         'SendAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-send-email';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
             card.header = locales.sendAlarmHeader;
             card.locales = {
                 deactivated: locales.deactivated,
                 activated: locales.activated,
                 sendAlarmBack: locales.sendAlarmBack
             };
-            card.component = 'SendAlarm';
+           card.front = {
+                items: [{
+                    component: 'CardFrontAlarm'
+                }]
+            };
+            card.back = {
+                items: [{
+                     component: 'CardBackLabel',
+                     labelTxt: locales.sendAlarmTxt
+                }]
+            };
             return card;
         }
     };

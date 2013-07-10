@@ -262,15 +262,17 @@ function(ComponentManager) {
             this.updateSubpanel = function(){
                 var self = this;
                 //Propagate valueChange to each subpanel
-                $('.cell-barchart-subpanel').each(function(i, panel){
-                    var val = {
-                        topValue: self.panelData[i].topValue,
-                        topCaption: self.modelData.caption1,
-                        bottomValue: self.panelData[i].bottomValue+'',
-                        bottomCaption: self.modelData.caption2
-                    };
-                    $(panel).trigger('valueChange', val);
-                });
+                if (this.panelData){
+                    $('.cell-barchart-subpanel').each(function(i, panel){
+                        var val = {
+                            topValue: self.panelData[i].topValue,
+                            topCaption: self.modelData.caption1,
+                            bottomValue: self.panelData[i].bottomValue+'',
+                            bottomCaption: self.modelData.caption2
+                        };
+                        $(panel).trigger('valueChange', val);
+                    });
+                }  
             };
 
             this.showTooltip = function(rect, d, i) {
@@ -319,8 +321,12 @@ function(ComponentManager) {
 
                 this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
                 var rawValues = this.modelData.values[roundDate];
-                this.panelData = this.modelData.panelData[roundDate];
-                this.tooltipCaption = this.modelData.tooltipCaption[roundDate];
+                if (this.modelData.panelData){
+                    this.panelData = this.modelData.panelData[roundDate];
+                }
+                if (this.modelData.tooltipCaption){
+                    this.tooltipCaption = this.modelData.tooltipCaption[roundDate]; 
+                }   
                 this.options = options;
 
                 //Aggregate data by 'group'

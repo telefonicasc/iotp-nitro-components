@@ -88,9 +88,11 @@ define(
 
             this.on('rangeSelected', function(e, item){
                 this.attr.fixRange = item.fixRange;
-
+              
+                var ext = this.brush.extent();
+                                
                 if (this.attr.fixRange > 0){
-                    var ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                    ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
                     this.value['fixRange'] = item.fixRange;
                     this.updateExtent(ext);
@@ -105,7 +107,15 @@ define(
                 var ext = [d3.time.day.round(start), d3.time.day.round(end)];
                 this.value['brush'] = state;
                 
-                if (state === 'end' && this.attr.jump){
+                ext = this.setExtend(state, ext);
+
+                this.updateExtent(ext);
+                this.value[this.attr.selectedRangeField] = ext;
+                this.trigger('valueChange', { value: this.value });
+            };
+
+            this.setExtend = function(state, ext){
+                if (!state || (state === 'end' && this.attr.jump)){
                     var offset = (ext[0].getTimezoneOffset() !== 0)? 1 : 0 ;
                     var dayOfMonth = ext[0].getUTCDate();
                     var month = ext[0].getMonth();
@@ -132,10 +142,9 @@ define(
                     ext = getFixExtent(ext, days);
                 }
 
-                this.updateExtent(ext);
-                this.value[this.attr.selectedRangeField] = ext;
-                this.trigger('valueChange', { value: this.value });
+                return ext;
             };
+
         });
 
         function getFixExtent(currentExtent, range){

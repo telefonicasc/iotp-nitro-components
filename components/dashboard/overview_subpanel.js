@@ -2,10 +2,11 @@ define(
   [
     'components/component_manager',
     'components/mixin/data_binding',
-    'components/mixin/template'
+    'components/mixin/template',
+    'components/context_menu_indicator'
   ],
 
-  function(ComponentManager, DataBinding, Template) {
+  function(ComponentManager, DataBinding, Template, ContextMenuIndicator) {
 
     return ComponentManager.create('OverviewSubpanel',
         OverviewSubpanel, DataBinding, Template);

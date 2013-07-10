@@ -8,7 +8,6 @@ define(
   [
     'components/card/rule_editor',
     'components/card/action/send_email',
-    'components/card/action/send_alarm',
     'components/sensor_widget/battery',
     'components/sensor_widget/angle',
     'components/slider',

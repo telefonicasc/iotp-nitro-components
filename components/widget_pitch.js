@@ -27,19 +27,20 @@ function (ComponentManager) {
 
             //var obj = this.createTemperatureChart();
             this.on('drawPitch', function (event, angle) {
-                if (angle != null) this.attr.angle = angle;
+                var text = $.isNumeric(angle) ? (angle + 'º') : '-';
+                this.attr.angle = angle || 0;
                 this.$node.empty();
                 this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);
                 this.attr.widget = this.createPitchChart();
                 this.drawPitch(this.attr.widget, this.attr.angle);
-                $(this.attr.pitchLabel).html(this.attr.angle + 'º');
+                $(this.attr.pitchLabel).html( text );
             });
         });
 
 
         this.createPitchChart = function() {
-            var paper = Raphael(this.attr.id, 100, 60)
-                        , arm; 
+            var paper = Raphael(this.attr.id, 100, 60),
+                arm;
 
             arm = paper.rect(11.5,37, 4, 15.5);
             smph = paper.rect(8,10,11,27,3);

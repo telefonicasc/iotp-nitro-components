@@ -36,7 +36,7 @@ define(
                 this.$input = this.makeInput(this.attr.dataType).appendTo(this.$node);
 
 
-                this.$input.on('keyup, change', $.proxy(function(e) {
+                this.$input.on('keyup change', $.proxy(function(e) {
                     var value = this.$input.val();
                     if(isIE8){
                         if(!this.isValid(this.attr.dataType, value)){

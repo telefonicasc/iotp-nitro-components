@@ -231,7 +231,7 @@ function() {
             card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;
         },
-        'SendAlarmAction': function(card){
+        'CreateAlarmAction': function(card){
             card.cssClass = 'm2m-card-action m2m-card-alarm-action';
             card.header = locales.sendAlarmHeader;
             card.front = {
@@ -276,7 +276,12 @@ function() {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         },
-         'SendAlarmAction': function(cardConfig, cardData){
+         'CreateAlarmAction': function(cardConfig, cardData){
+            cardConfig.actionData.userParams = cardData.userParams;
+            return cardConfig;
+            
+        },
+        'TurnOffAlarmAction': function(cardConfig, cardData){
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
             

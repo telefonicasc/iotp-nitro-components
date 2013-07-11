@@ -31,12 +31,16 @@
             "actionData": {
                 "userParams": [
                     {
-                        "name": "alarm.status",
-                        "value": "dca_support@tid.es"
+                        "name": "property.name",
+                        "value": "${device.asset.UserProps.histeresis}"
+                    },
+                    {
+                        "name": "property.value",
+                        "value": "true"
                     }
                 ],
                 "name": "alarm",
-                "type": "SendAlarmAction"
+                "type": "CreateAlarmAction"
             },
             "id": "alarm"
         },
@@ -44,9 +48,13 @@
             "type": "ActionCard",
             "actionData": {
                 "userParams": [
+                   {
+                        "name": "property.name",
+                        "value": "${device.asset.UserProps.histeresis}"
+                    },
                     {
-                        "name": "alarm.status",
-                        "value": "dca_support@tid.es"
+                        "name": "property.value",
+                        "value": "false"
                     }
                 ],
                 "name": "alarm",

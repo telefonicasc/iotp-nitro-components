@@ -142,24 +142,6 @@ define(
                         }
                     });
 
-                    function setValueRange(model, chartModel, valueRange){
-                        var chartMin, chartMax;
-                        if (model[chartModel]) {
-                            chartMin = d3.min(model[chartModel], function(d) {
-                                return d.value;
-                            }) * 1.2;
-                            chartMax = d3.max(model[chartModel], function(d) {
-                                return d.value;
-                            }) * 1.2;
-                            if (!valueRange[0] || chartMin < valueRange[0]) {
-                                valueRange[0] = chartMin;
-                            }
-                            if (!valueRange[1] || chartMax > valueRange[1]) {
-                                valueRange[1] = chartMax;
-                            }
-                        }
-                    }
-
                     valueRange[0] = Math.min(valueRange[0], 0);
                     
                     y.domain(valueRange);
@@ -173,11 +155,40 @@ define(
                             range: range, valueRange: valueRange
                         });
                     }
+                    this.options = options;
                 });
 
                 this.on('rangeSelected', function(e, value){
                     $(rangeSelection.node()).trigger('rangeSelected', value);
                 });
+             
+                this.on('actionSelected', function(e, value){
+                    for (var i = this.attr.charts.length - 1; i >= 0; i--) {
+                        this.attr.charts[i].model = value.newModel;
+                    };
+                  
+                    this.trigger('valueChange', this.options);
+
+                });
+
+                function setValueRange(model, chartModel, valueRange){
+                    var chartMin, chartMax;
+                    if (model[chartModel]) {
+                        chartMin = d3.min(model[chartModel], function(d) {
+                            return d.value;
+                        }) * 1.2;
+                        chartMax = d3.max(model[chartModel], function(d) {
+                            return d.value;
+                        }) * 1.2;
+                        if (!valueRange[0] || chartMin < valueRange[0]) {
+                            valueRange[0] = chartMin;
+                        }
+                        if (!valueRange[1] || chartMax > valueRange[1]) {
+                            valueRange[1] = chartMax;
+                        }
+                    }
+                }
+
 
             });
         }

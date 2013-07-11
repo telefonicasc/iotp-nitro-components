@@ -234,6 +234,7 @@ function() {
         'CreateAlarmAction': function(card){
             card.cssClass = 'm2m-card-action m2m-card-alarm-action';
             card.header = locales.sendAlarmHeader;
+            card.actionCard = true;
             card.front = {
                 items: [{
                     component: 'CardFrontIcon',
@@ -251,6 +252,7 @@ function() {
         'TurnOffAlarmAction': function(card){
             card.cssClass = 'm2m-card-action m2m-card-alarm-action';
             card.header = locales.turnOffAlarmHeader;
+            card.actionCard = true;
             card.front = {
                 items: [{
                     component: 'CardFrontIcon',
@@ -275,16 +277,6 @@ function() {
         'SendEmailAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
-        },
-         'CreateAlarmAction': function(cardConfig, cardData){
-            cardConfig.actionData.userParams = cardData.userParams;
-            return cardConfig;
-            
-        },
-        'TurnOffAlarmAction': function(cardConfig, cardData){
-            cardConfig.actionData.userParams = cardData.userParams;
-            return cardConfig;
-            
         }
     };
 

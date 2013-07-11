@@ -118,44 +118,62 @@ define(
                         .attr('height', chartSize.height);
                 });
 
-                this.on('valueChange', function(e, options) {
-                    var model = options.value,
-                        value = model[this.attr.valueField],
-                        rangeField = this.attr.rangeField,
-                        range = rangeField && model[rangeField],
-                        valueRange = [];
-                    if (!range) {
-                        range = d3.extent(value, function(d) {
-                            return new Date(d.date);
-                        });
-                    }
-
-                    x.domain(range);
-
-                    $.each(this.attr.charts, function(i, chart) {
-                        var chartModel = chart.model;
-                        if (chart.modelTotalSufix){
-                            chartModel = chart.model + chart.modelTotalSufix;
-                            setValueRange(model, chartModel, valueRange);
-                        }else{
-                            setValueRange(model, chartModel, valueRange);
+                this.on('valueChange', function(e, options) {                    
+                        var model = options.value,
+                            value = model[this.attr.valueField],
+                            rangeField = this.attr.rangeField,
+                            range = rangeField && model[rangeField],
+                            valueRange = [];
+                        if (!range) {
+                            range = d3.extent(value, function(d) {
+                                return new Date(d.date);
+                            });
                         }
-                    });
 
-                    valueRange[0] = Math.min(valueRange[0], 0);
-                    
-                    y.domain(valueRange);
-                    this.$node.find('g.chart, g.grid, g.axis.y')
-                        .trigger('valueChange', $.extend({
-                                range: range, valueRange: valueRange
-                            }, options));
+                        x.domain(range);
 
-                    if (this.attr.axisx) {
-                        $(axisx.node()).trigger('rangeChange', {
-                            range: range, valueRange: valueRange
+                        $.each(this.attr.charts, function(i, chart) {
+                            var chartModel = chart.model;
+                            if (chart.modelTotalSufix){
+                                chartModel = chart.model + chart.modelTotalSufix;
+                                setValueRange(model, chartModel, valueRange);
+                            }else{
+                                setValueRange(model, chartModel, valueRange);
+                            }
                         });
-                    }
-                    this.options = options;
+
+                        function setValueRange(model, chartModel, valueRange){
+                            var chartMin, chartMax;
+                            if (model[chartModel]) {
+                                chartMin = d3.min(model[chartModel], function(d) {
+                                    return d.value;
+                                }) * 1.2;
+                                chartMax = d3.max(model[chartModel], function(d) {
+                                    return d.value;
+                                }) * 1.2;
+                                if (!valueRange[0] || chartMin < valueRange[0]) {
+                                    valueRange[0] = chartMin;
+                                }
+                                if (!valueRange[1] || chartMax > valueRange[1]) {
+                                    valueRange[1] = chartMax;
+                                }
+                            }
+                        }
+
+                        valueRange[0] = Math.min(valueRange[0], 0);
+                        
+                        y.domain(valueRange);
+                        this.$node.find('g.chart, g.grid, g.axis.y')
+                            .trigger('valueChange', $.extend({
+                                    range: range, valueRange: valueRange
+                                }, options));
+
+                        if (this.attr.axisx) {
+                            $(axisx.node()).trigger('rangeChange', {
+                                range: range, valueRange: valueRange
+                            });
+                        }
+
                 });
 
                 this.on('rangeSelected', function(e, value){

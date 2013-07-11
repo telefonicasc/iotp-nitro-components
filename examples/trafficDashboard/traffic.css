@@ -230,27 +230,23 @@
     font-size: 28px;
     margin-left: 20px;
 }
-
+/*
 .battery-widget {
-    /*    width: 50%;*/
     display : inline-block;
     position: relative;
 }
 
 .battery-graph {
-    /*    position: relative;*/
     float:left;
     max-width: 20%;
 }
 
 .battery-chart {
-    /*    position: relative;*/
     float:left;
     max-width: 50%;
 }
 
 .battery-label {
-    /*    position: relative;*/
     float:left;
     max-width: 25%;
     margin-top: 5%;
@@ -269,7 +265,7 @@
     margin-top: -12%;
     color: #ADC0C4;
 }
-
+*/
 .lights-widget {
     width: 320px;
     height: 90px;

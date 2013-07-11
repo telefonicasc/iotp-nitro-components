@@ -27,21 +27,21 @@ define(
 
                 this.$node.addClass('m2m-card-text');
 
-                if (this.attr.label) {
-                    $('<label>')
-                        .html(this.attr.label)
-                        .appendTo(this.$node);
+                if( $.isArray(this.attr.imputs) ){
+                    $.each(this.attr.imputs, $.proxy(this.addInput, this) );
+                }else{
+                    this.addInput(null, this.attr);
                 }
+                
 
-                this.$input = this.makeInput(this.attr.dataType).appendTo(this.$node);
 
-
-                this.$input.on('keyup change', $.proxy(function(e) {
-                    var value = this.$input.val();
+                this.$node.on('keyup change', 'input', $.proxy(function(e) {
+                    var $ele = $(e.currentTarget);
+                    var value = this.getData();
                     if(isIE8){
                         if(!this.isValid(this.attr.dataType, value)){
                             value = '';
-                            this.$input.val(value);
+                            $ele.val(value);
                         }
                     }
 
@@ -50,15 +50,53 @@ define(
                 }, this));
 
                 this.on('valueChange', function(e,o) {
-                    this.$input.val(o.value);
+                    if( $.isPlainObject(o.value) ){
+                        for(name in o.value){
+                            $('input[name='+name+']', this.$node).val(o.value[name]);
+                        }
+                    }else{
+                        $('input', this.$node).val(o.value);
+                    }
+
                 });
             });
+            
+            this.getData = function(){
+                var $inputs = $('input', this.$node);
+                var out;
+                if($inputs.length===1){
+                    out = $inputs.val();
+                }else{
+                    out = {};
+                    $.each($inputs, function(e){
+                        var name = $(this).attr('name');
+                        var val = $(this).val();
+                        out[name] = val;
+                    });
+                }
+                console.log(out);
+                return out;
+            }
+            
+            this.addInput = function(index, data){
+                if (data.label) {
+                    this.makeLabel(data).appendTo(this.$node);;
+                }
+                this.makeInput(data).appendTo(this.$node);
+            }
 
-            this.makeInput = function(type){
+            this.makeLabel = function(data){
+                var ele = $('<label>')
+                    .html(data.label);
+                return ele;
+            };
+
+            this.makeInput = function(data){
                 var ele = $('<input type="text" />');
-                if(!isIE8 && type === dataType.QUANTITY){
+                if(!isIE8 && data.dataType === dataType.QUANTITY){
                     ele.attr('type', 'number');
                 }
+                ele.attr('name', data.name || data.label);
                 return ele;
             };
             this.isValid = function(type, value){

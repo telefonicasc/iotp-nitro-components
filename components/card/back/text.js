@@ -37,15 +37,15 @@ define(
 
                 this.$node.on('keyup change', 'input', $.proxy(function(e) {
                     var $ele = $(e.currentTarget);
-                    var value = this.getData();
+                    var value = $ele.val();
+                    var dataType = $ele.data('dataType');
                     if(isIE8){
-                        if(!this.isValid(this.attr.dataType, value)){
-                            value = '';
+                        if(!this.isValid(dataType, value)){
                             $ele.val(value);
                         }
                     }
 
-                    this.trigger('valueChange', { value: value });
+                    this.trigger('valueChange', { value: this.getData() });
 
                 }, this));
 
@@ -96,6 +96,7 @@ define(
                 if(!isIE8 && data.dataType === dataType.QUANTITY){
                     ele.attr('type', 'number');
                 }
+                ele.data('dataType', data.dataType);
                 ele.attr('name', data.name || data.label);
                 return ele;
             };

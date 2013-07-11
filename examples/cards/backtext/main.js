@@ -4,7 +4,7 @@ requirejs.config({
 
 define(
 [
-    'components/card/back/text',
+    'components/card/back/text'
 ],
 function() { requirejs(['components/jquery_plugins'], function() {
     var $ele1 = $('.example1');
@@ -19,7 +19,7 @@ function() { requirejs(['components/jquery_plugins'], function() {
 
     var $ele2 = $('.example2');
     var opt2 = {
-        imputs : [
+        inputs : [
             {label:'testA', value:'hello', name:'a'},
             {label:'testB', value:'hello', name:'b'}
         ]
@@ -29,7 +29,7 @@ function() { requirejs(['components/jquery_plugins'], function() {
         console.log('.example2', 'valueChange', o.value);
     });
     $('#btn2').on('click', function(){
-        $ele2.trigger('valueChange', {value:{a:'a', b:'b'}})
+        $ele2.trigger('valueChange', {value:{a:'a', b:'b'}});
     });
 
 });});

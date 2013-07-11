@@ -27,8 +27,8 @@ define(
 
                 this.$node.addClass('m2m-card-text');
 
-                if( $.isArray(this.attr.imputs) ){
-                    $.each(this.attr.imputs, $.proxy(this.addInput, this) );
+                if( $.isArray(this.attr.inputs) ){
+                    $.each(this.attr.inputs, $.proxy(this.addInput, this) );
                 }else{
                     this.addInput(null, this.attr);
                 }
@@ -63,7 +63,7 @@ define(
             this.getData = function(){
                 var $inputs = $('input', this.$node);
                 var out;
-                if($.isArray(this.attr.imputs)){
+                if($.isArray(this.attr.inputs)){
                     out = {};
                     $.each($inputs, function(e){
                         var name = $(this).attr('name');

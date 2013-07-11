@@ -64,7 +64,7 @@ define(
             this.getData = function(){
                 var $inputs = $('input', this.$node);
                 var out;
-                if($inputs.length===1){
+                if(!$.isArray(this.attr.imputs)){
                     out = $inputs.val();
                 }else{
                     out = {};

@@ -243,8 +243,6 @@ function() {
     };
     
     var decodeSensor = {};
-
-    var decodeTime = {};
     
     var decodeAction = {
         'SendEmailAction': function(cardConfig, cardData) {
@@ -254,7 +252,19 @@ function() {
          'SendAlarmAction': function(cardConfig, cardData){
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
-            
+        }
+    };
+
+    var decodeTime = {
+        'timeElapsed': function(cardConfig, cardData){
+            cardConfig.timeData.interval = cardData;
+            timeData.context =  'ASSET';
+            return cardConfig;
+        },
+        'timeInterval':function(cardConfig, cardData){
+            cardConfig.timeData.interval = cardData;
+            cardConfig.timeData.repeat = cardData;
+            return cardConfig;
         }
     };
 
@@ -262,7 +272,7 @@ function() {
         var adapterMethodName = _getMethodNameForPase(card);
         var adapterMethod;
         card = $.extend({}, card);
-    
+
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
                 card.header = card.sensorData.measureName;
@@ -282,25 +292,25 @@ function() {
         }
         return card;
     };
-    
+
     var decode = function(cardConfig, cardData){
         var adapterMethodName = _getMethodNameForPase(cardConfig);
         var adapterMethod;
+        cardConfig = $.extend({}, cardConfig);
         if(cardConfig.type === cardType.SENSOR_CARD){
             adapterMethod = decodeSensor[adapterMethodName];
 
         }else if(cardConfig.type === cardType.ACTION_CARD){
             adapterMethod = decodeAction[adapterMethodName];
         }else if(cardConfig.type === cardType.TIME_CARD) {
-            adapterMethodName = cardConfig.timeType;
-            adpaterMethod = decodeTime[adapterMethodName];
+            adapterMethod = decodeTime[adapterMethodName];
         }
         if( $.isFunction(adapterMethod) ){
             cardConfig = adapterMethod(cardConfig, cardData);
         }
         return cardConfig;
     };
-    
+
     var addLocales = function(newLocales){
         $.extend(locales, newLocales);
     };
@@ -316,10 +326,6 @@ function() {
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';
-            } else if (phenomenon === 'timeInterval') {
-                name = 'timeInterval';
-            } else if (phenomenon === 'timeElapsed') {
-                name = 'timeElapsed';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
             } else if (phenomenon === 'alarm') {
@@ -337,6 +343,13 @@ function() {
             }
         }else if(cardConfig.type === cardType.ACTION_CARD){
             name = cardConfig.actionData.type;
+        }else if(cardConfig.type === cardType.TIME_CARD){
+            phenomenon = cardConfig.configData.timeType;
+            if (phenomenon === 'timeInterval') {
+                name = 'timeInterval';
+            } else if (phenomenon === 'timeElapsed') {
+                name = 'timeElapsed';
+            }
         }
         return name;
     };

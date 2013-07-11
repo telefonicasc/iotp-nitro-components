@@ -540,20 +540,14 @@ define(
                             if( $.isArray(conditionList) ){
                                 cardConfig.conditionList = conditionList;
                             }
-                            if (cardConfig.configData &&
-                                    cardConfig.configData.timeType) {
-                                cardConfig.timeData.interval = cardValue;
-                                if (cardConfig.configData.timeType === 'timeElapsed') {
-                                    cardConfig.timeData.context = 'ASSET';
-                                }
-                            }
-                            cardConfig['configData'] = {};
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
                         }
                     }
                 }, this));
+                cardsData.map(_cleanCardData);
+                cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
                 //data.name = "";
@@ -712,6 +706,19 @@ define(
             });
             
             return phenomenons;
+        }
+
+        function _orderCards(a, b){
+            var out = 0;
+            if(b.type === 'timeCard'){
+                out = b.timeData.context?-1:1;
+            }
+            return out;
+        }
+
+        function _cleanCardData(card){
+            delete card.configData;
+            return card;
         }
     }
 );

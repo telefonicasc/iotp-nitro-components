@@ -396,35 +396,50 @@ function(ComponentManager, DataBinding) {
 
                 if(feature.isGroup && feature.isSelected){
                     _tooltip.updateMarkerElementOfGroup(dom);
-                };
+                }
+
+                if(feature.isGroup){
+                    $.map(feature.properties.submarkers, $.proxy(function(f){
+                        f.isSelected = this.isSelected(f);
+                        return f;
+                    }, this) );
+                }
 
                 $(dom).click($.proxy(function () {
-                    _tooltip.hide(true);
-                    if (feature.item && (feature.properties.submarkers.length === 0) ) {
-                        this.trigger('itemselected', { item: feature.item });
+                    var item = feature.item;
+                    if(feature.isGroup){
+                        item = feature.properties.submarkers[0].item;
+                        feature.properties.submarkers[0].isSelected = true;
                     }
-                    this.trigger('marker-clicked', [this, feature]);
+
+                    this.markerClicked(null, this, feature);
+                    if (item) {
+                        this.trigger('itemselected', { item: item });
+                    }
+                    _tooltip.hide(true);
                 }, this));
 
                 if(this.attr.map.showTooltip){
                     var customTooltip = this.attr.customTooltip;
                     $(dom).hover($.proxy(function(){
-                        if( ! ( feature.isSelected && feature.isGroup) ){
-                            var content = feature.properties.title;
-                            var currentSelectedMarker = this.attr.private.selected;
-                            var isSelected = (currentSelectedMarker &&
-                                (content === currentSelectedMarker.properties.title) );
-                            
-                            if( $.isFunction(customTooltip) ){
-                                content = customTooltip(feature, isSelected);
-                            }else if( customTooltip ){
-                                content = customTooltip;
-                            }
-                            _tooltip.show(dom, content, (isSelected && feature.isGroup));
+                        var content = feature.properties.title;
+
+                        if( $.isFunction(customTooltip) ){
+                            content = customTooltip(feature, feature.isSelected);
+                        }else if( customTooltip ){
+                            content = customTooltip;
                         }
+                        _tooltip.show(dom, content, (feature.isSelected && feature.isGroup));
                     },this), $.proxy(function(){
                         _tooltip.hide();
                     },this));
+                    var forceHover = function(){
+                        $(dom).trigger('mouseover');
+                    };
+
+                    if(feature.isGroup && feature.isSelected){
+                        window.setTimeout(forceHover,100);
+                    }
                 }
 
                 return dom;
@@ -509,7 +524,7 @@ function(ComponentManager, DataBinding) {
             var title='';
             if (typeof obj === 'object') title = $(obj).attr('alt');
             else title = obj;
-          
+
             var features = this.attr.private.markerLayer.features();
             var getFeature = function(features){
                 var feature = null;
@@ -519,6 +534,9 @@ function(ComponentManager, DataBinding) {
                         feature = getFeature(v.properties.submarkers);
                     }else{
                         feature = (v.properties.title === title) ? v : feature;
+                    }
+                    if(feature){
+                        break;
                     }
                 }
                 return feature;
@@ -566,11 +584,15 @@ function(ComponentManager, DataBinding) {
         //  * This method passes the feature, the corresponding dom node and the
         //    previously selected feature to the onClickFn, if any.
         this.markerClicked = function (event, dom, ft) {
-            if ((typeof ft !== 'undefined') && (ft !== null)) {
+            // Skips preprocessor, not to recalculate groups
+            var skipPreprocessor = true;
+            if (ft) {
+                ft = ft.properties.submarkers[0] || ft;
+
                 if (typeof this.attr.markerClicked.onClickFn !== 'undefined') {
                     this.attr.markerClicked.onClickFn(ft, this.attr.private.selected, dom);
-                    // Skips preprocessor, not to recalculate groups
-                    var skipPreprocessor = true;
+
+                    this.attr.private.selected = ft;
                     this.setFeatures(this.attr.private.markerLayer.features(), skipPreprocessor);
                 }
                 if (this.attr.markerClicked.center) {
@@ -578,7 +600,6 @@ function(ComponentManager, DataBinding) {
                     this.centerMap(ft.geometry.coordinates[1], ft.geometry.coordinates[0]);
                 }
             }
-            this.attr.private.selected = ft;
         };
 
         // Receives: The markerTitle to use as finder (optional), the property
@@ -702,6 +723,7 @@ function(ComponentManager, DataBinding) {
                     var location = locations.pop();
                     var updater = function(){
                         self.updateOffscreenIndicators();
+                        _tooltip.updatePositon();
                     };
                     var panLimits;
                     if(locations.length){
@@ -762,8 +784,15 @@ function(ComponentManager, DataBinding) {
             this.on('update-feature-property', this.updateFeatureProperty);
             // (feature.properties.title)
             this.on('center-on-feature', function (event, title) {
-                var f = this.getFeatureByTitle(title).geometry.coordinates;
-                this.centerMap(f[1],f[0]);
+
+                var coordinate;
+                var f = this.getFeatureByTitle(title);
+                if(f){
+                    coordinate = f.geometry.coordinates;
+                    this.centerMap(coordinate[1],coordinate[0]);
+                }else{
+                    throw 'Event center-on-feature / Feature not found: '+title;
+                }
             });
             this.on('reload-features', function () {
                 this.setFeatures(this.attr.private.markerLayer.features());

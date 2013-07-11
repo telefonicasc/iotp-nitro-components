@@ -33,7 +33,7 @@ define(
                 labelMajor: ""
             });
            
-            tpl = '<div class="m2m-card-threshold">' + 
+            var tpl = '<div class="m2m-card-threshold">' + 
                 '<div class="m2m-card-threshold-phenomenon"></div>' + 
                 '<div class="m2m-card-threshold-level"></div>' + 
                 '</div>';
@@ -106,8 +106,9 @@ define(
                 options.unshift({
                         label: '',
                         value: '',
-                        attr: ''
-                    }) 
+                        attr: '{"type": "SensorCard","model": "","sensorData": {"measureName": "","phenomenonApp": "","phenomenon": "","dataType": "","uom": ""}}'
+                 });
+                 
                 return options;
             }
             

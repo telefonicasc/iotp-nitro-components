@@ -63,6 +63,7 @@ function (ComponentManager, Template, Data_binding) {
             });
             
             this.on('drawBattery-level', function (event, batteryLevel) {
+                batteryLevel = batteryLevel || 'empty';
                 this.drawBatteryLevel(batteryLevel);
             });
 

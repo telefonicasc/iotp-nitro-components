@@ -173,6 +173,123 @@ select {
 .bold {
   font-weight: bold;
 }
+.dashboard-overview-panel .overview-header {
+  background-color: #64737b;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  height: 36px;
+}
+.dashboard-overview-panel .overview-header > * {
+  display: inline-block;
+}
+.dashboard-overview-panel .overview-count {
+  text-align: center;
+  background-color: #CA3430;
+  height: 36px;
+  line-height: 36px;
+  margin-right: 10px;
+  width: 40px;
+}
+.dashboard-overview-panel .overview-content {
+  background: #E9EFF0;
+  position: absolute;
+  top: 36px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+.overview-subpanel {
+  cursor: pointer;
+  border-bottom: 1px solid #D6DEE0;
+  padding: 7px 0;
+}
+.overview-subpanel .icon,
+.overview-subpanel .overview-subpanel-body {
+  display: inline-block;
+  vertical-align: top;
+}
+.overview-subpanel .icon {
+  width: 50px;
+  height: 43px;
+  background-repeat: no-repeat;
+  background-position: center top;
+}
+.overview-subpanel .icon.purple {
+  border-color: #8e44ad;
+}
+.overview-subpanel .icon.blue {
+  border-color: #2980b9;
+}
+.overview-subpanel .icon.green {
+  border-color: #27ae60;
+}
+.overview-subpanel .icon.red {
+  border-color: #c0392b;
+}
+.overview-subpanel .icon.orange {
+  border-color: #f39c12;
+}
+.overview-subpanel .icon.cyan {
+  border-color: #afc6d8;
+}
+.overview-subpanel .icon.purple {
+  background-color: rgba(142, 68, 173, 0.5);
+}
+.overview-subpanel .icon.blue {
+  background-color: rgba(41, 128, 185, 0.5);
+}
+.overview-subpanel .icon.green {
+  background-color: rgba(39, 174, 96, 0.5);
+}
+.overview-subpanel .icon.red {
+  background-color: rgba(192, 57, 43, 0.5);
+}
+.overview-subpanel .icon.orange {
+  background-color: rgba(243, 156, 18, 0.5);
+}
+.overview-subpanel .icon.cyan {
+  background-color: rgba(175, 198, 216, 0.5);
+}
+.overview-subpanel .icon.dot {
+  width: 18px;
+  height: 18px;
+  border-style: solid;
+  border-width: 4px;
+  border-radius: 13px;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 15px;
+}
+.overview-subpanel .icon.arrow-down {
+  background-image: url("../../img/nitro-components/arrow-down.png");
+}
+.overview-subpanel .icon.arrow-up {
+  background-image: url("../../img/nitro-components/arrow-up.png");
+}
+.overview-subpanel .overview-subpanel-body {
+  width: 80%;
+  line-height: 110%;
+}
+.overview-subpanel h2 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.overview-subpanel .text {
+  font-weight: bold;
+  color: #61777F;
+  padding-top: 10px;
+}
+.overview-subpanel .text1 {
+  padding-left: 20px;
+  color: #768e99;
+}
+.overview-subpanel .caption {
+  margin: 0px;
+  color: #999;
+  font-size: 13px;
+}
 .dashboard {
   font-family: Helvetica, Arial, sans-serif;
   background-color: #E7E7E7;
@@ -216,13 +333,6 @@ select {
   width: 330px;
   top: auto;
 }
-.dashboard .overview-content {
-  position: absolute;
-  top: 30px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-}
 .dashboard .overview-content .last-section-panel {
   border-bottom: 1px solid #9ea3a5;
 }
@@ -253,110 +363,6 @@ select {
 .dashboard .mapbox {
   width: 100%;
   height: 100%;
-}
-.dashboard .overview-subpanel {
-  border-bottom: 1px solid #D6DEE0;
-  min-height: 55px;
-}
-.dashboard .overview-subpanel .icon {
-  width: 50px;
-  height: 43px;
-  display: inline-block;
-}
-.dashboard .overview-subpanel .icon.purple {
-  border-color: #8e44ad;
-}
-.dashboard .overview-subpanel .icon.blue {
-  border-color: #2980b9;
-}
-.dashboard .overview-subpanel .icon.green {
-  border-color: #27ae60;
-}
-.dashboard .overview-subpanel .icon.red {
-  border-color: #c0392b;
-}
-.dashboard .overview-subpanel .icon.orange {
-  border-color: #f39c12;
-}
-.dashboard .overview-subpanel .icon.cyan {
-  border-color: #afc6d8;
-}
-.dashboard .overview-subpanel .icon.purple {
-  background-color: rgba(142, 68, 173, 0.5);
-}
-.dashboard .overview-subpanel .icon.blue {
-  background-color: rgba(41, 128, 185, 0.5);
-}
-.dashboard .overview-subpanel .icon.green {
-  background-color: rgba(39, 174, 96, 0.5);
-}
-.dashboard .overview-subpanel .icon.red {
-  background-color: rgba(192, 57, 43, 0.5);
-}
-.dashboard .overview-subpanel .icon.orange {
-  background-color: rgba(243, 156, 18, 0.5);
-}
-.dashboard .overview-subpanel .icon.cyan {
-  background-color: rgba(175, 198, 216, 0.5);
-}
-.dashboard .overview-subpanel .icon.dot {
-  width: 18px;
-  height: 18px;
-  border-style: solid;
-  border-width: 4px;
-  border-radius: 13px;
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-top: 15px;
-}
-.dashboard .overview-subpanel .icon.arrow-down {
-  background: url("../../img/nitro-components/arrow-down.png") no-repeat center center;
-}
-.dashboard .overview-subpanel .icon.arrow-up {
-  background: url("../../img/nitro-components/arrow-up.png") no-repeat center center;
-}
-.dashboard .overview-subpanel .overview-subpanel-body {
-  display: inline-block;
-}
-.dashboard .overview-subpanel .overview-subpanel-body .text {
-  display: block;
-  font-size: 18px;
-  font-weight: bold;
-  color: #313a3f;
-  display: inline-block;
-}
-.dashboard .overview-subpanel .overview-subpanel-body .text1 {
-  padding-left: 20px;
-  display: block;
-  font-size: 18px;
-  color: #768e99;
-  display: inline-block;
-}
-.dashboard .overview-subpanel .overview-subpanel-body .caption {
-  margin: 0px;
-  color: #999;
-  font-size: 13px;
-  font-weight: normal;
-}
-.dashboard .overview-header {
-  height: 30px;
-  width: 100%;
-  background-color: #64737b;
-  color: white;
-  font-weight: bold;
-}
-.dashboard .overview-header .overview-count {
-  text-align: center;
-  padding-top: 6px;
-  display: inline-block;
-  background-color: #4a95de;
-  min-width: 27px;
-  height: 24px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-.dashboard .overview-header .overview-title {
-  padding-left: 10px;
 }
 .dashboard .detail-panel-header {
   text-align: left;
@@ -446,6 +452,12 @@ select {
   fill: none;
   stroke: #B3B8BE;
   stroke-width: 1px;
+}
+.chart .chart-labels div {
+  color: #64737b;
+  font-weight: bold;
+  font-size: 12px;
+  padding-bottom: 26px;
 }
 .range-selection-chart svg {
   position: absolute;
@@ -574,11 +586,12 @@ select {
 }
 .cell-barchart-subpanel .content {
   background-color: #bfcecf;
-  padding: 10px;
+  padding: 15px 10px;
   text-align: center;
 }
 .cell-barchart-subpanel .content .value {
-  font-size: 22px;
+  font-size: 20px;
+  white-space: nowrap;
   color: #525f65;
 }
 .cell-barchart-subpanel .content .caption {
@@ -1513,6 +1526,14 @@ li.delimiter-value {
 .back .m2m-card-threshold-level {
   margin-top: 30px;
 }
+.back .m2m-card-label {
+  color: #596c73;
+  font-size: 14px;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 20px;
+}
 .borderradius .m2m-card-text input {
   padding: 8px;
   border: 1px solid #bcc0c1;
@@ -2385,10 +2406,98 @@ li.delimiter-value {
   margin-top: -12%;
   color: #ADC0C4;
 }
-/* ========================================================================== */
-/* Marker tooltip css */
-/* ========================================================================== */
-.marker-popup {
+.jspContainer {
+  overflow: hidden;
+  position: relative;
+}
+.jspPane {
+  position: absolute;
+}
+.jspVerticalBar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 5px;
+  height: 100%;
+}
+.jspHorizontalBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 16px;
+}
+.jspVerticalBar *,
+.jspHorizontalBar * {
+  margin: 0;
+  padding: 0;
+}
+.jspCap {
+  display: none;
+}
+.jspHorizontalBar .jspCap {
+  float: left;
+}
+.jspTrack {
+  background: #c8dde3;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  position: relative;
+}
+.jspDrag {
+  background: #60777e;
+  position: relative;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+.jspHorizontalBar .jspTrack,
+.jspHorizontalBar .jspDrag {
+  float: left;
+  height: 100%;
+}
+.jspArrow {
+  background: #50506d;
+  text-indent: -20000px;
+  display: block;
+  cursor: pointer;
+}
+.jspArrow.jspDisabled {
+  cursor: default;
+  background: #80808d;
+}
+.jspVerticalBar .jspArrow {
+  height: 16px;
+}
+.jspHorizontalBar .jspArrow {
+  width: 5px;
+  float: left;
+  height: 100%;
+}
+.jspVerticalBar .jspArrow:focus {
+  outline: none;
+}
+.jspCorner {
+  background: #eeeef4;
+  float: left;
+  height: 100%;
+}
+.m2m-mapviewer {
+  overflow: hidden;
+  /* Zoom buttons css */
+
+  /* ========================================================================== */
+
+}
+.m2m-mapviewer .marker-custom {
+  cursor: pointer;
+  pointer-events: all;
+}
+.m2m-mapviewer .marker-popup {
   position: relative;
   left: -50%;
   max-width: 400px;
@@ -2406,11 +2515,9 @@ li.delimiter-value {
   -webkit-border-radius: 8px;
   border-radius: 8px;
 }
-.marker-popup:after,
-.marker-popup:before {
+.m2m-mapviewer .marker-popup:after,
+.m2m-mapviewer .marker-popup:before {
   top: 100%;
-  /*bottom: 100%;*/
-
   border: solid transparent;
   content: '';
   height: 0;
@@ -2419,20 +2526,17 @@ li.delimiter-value {
   position: absolute;
   pointer-events: none;
 }
-.marker-popup:after {
+.m2m-mapviewer .marker-popup:after {
   border-top-color: #e9eff0;
   border-width: 15px;
   margin-left: -15px;
 }
-.marker-popup:before {
+.m2m-mapviewer .marker-popup:before {
   border-top-color: #ccc;
   border-width: 18px;
   margin-left: -18px;
 }
-/* ========================================================================== */
-/* Zoom buttons css */
-/* ========================================================================== */
-.zoomer {
+.m2m-mapviewer .zoomer {
   background-color: #FFF;
   border-color: #202020;
   -webkit-border-radius: 10%;
@@ -2448,19 +2552,101 @@ li.delimiter-value {
   top: 20px;
   z-index: 100;
 }
-.zoomer:hover {
+.m2m-mapviewer .zoomer:hover {
   background-color: #C0C0C0;
 }
-.zoomin {
+.m2m-mapviewer .zoomin {
   left: 51px;
 }
-.zoomout {
+.m2m-mapviewer .zoomout {
   left: 20px;
 }
-/* ========================================================================== */
-/* Offscreen indicators */
-/* ========================================================================== */
-.offscreen-indicator {
+.m2m-mapviewer .tooltip-content .warning-count {
+  display: inline-block;
+  color: #CA3430;
+  background-image: url('../images/rojo-off-tooltip.png');
+  background-repeat: no-repeat;
+  height: 17px;
+  padding-left: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.m2m-mapviewer .tooltip-content {
+  margin-bottom: 6px;
+}
+.m2m-mapviewer .tooltip-content .normal-count {
+  display: inline-block;
+  color: #5e91a0;
+  background-image: url('../images/azul-off-tooltip.png');
+  background-repeat: no-repeat;
+  height: 17px;
+  padding-left: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.m2m-mapviewer .tooltip-arrow-border {
+  border-left: 13px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 14px solid #A7C0C7;
+  position: relative;
+  top: -23px;
+  width: 0px;
+  left: 50%;
+  margin-left: -13px;
+  margin-bottom: -14px;
+}
+.m2m-mapviewer .tooltip-arrow {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 12px solid #E8F1F3;
+  position: relative;
+  top: -20px;
+  width: 0px;
+  height: 0px;
+  left: 50%;
+  margin-left: -10px;
+  margin-bottom: -12px;
+}
+.m2m-mapviewer .marker-tooltip {
+  margin-top: 23px;
+  position: absolute;
+  display: none;
+  border: 2px solid #a7c0c7;
+  border-radius: 6px;
+  padding-top: 6px;
+  background-color: #e8f1f3;
+  color: #60777e;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 8px 0px 8px;
+}
+.m2m-mapviewer .hover-tooltip {
+  z-index: 4;
+}
+.m2m-mapviewer .group-tooltip {
+  z-index: 3;
+}
+.m2m-mapviewer .tooltip-content .scroll-container {
+  max-height: 72px;
+  margin-top: 6px;
+  outline: none;
+}
+.m2m-mapviewer .marker-tooltip ul {
+  list-style: none;
+  margin: 0px;
+  padding-left: 0px;
+  padding-right: 16px;
+}
+.m2m-mapviewer .marker-tooltip li {
+  height: 24px;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 20px;
+  line-height: 24px;
+}
+.m2m-mapviewer .offscreen-indicator {
   position: absolute;
   width: 71px;
   height: 60px;
@@ -2477,50 +2663,50 @@ li.delimiter-value {
   text-indent: -9999px;
   cursor: pointer;
 }
-.offscreen-indicator:hover {
+.m2m-mapviewer .offscreen-indicator:hover {
   opacity: 1;
   filter: alpha(opacity=100);
   text-indent: 0px;
 }
-.nwmarkers {
+.m2m-mapviewer .nwmarkers {
   top: 37px;
   left: 37px;
   background-image: url('../../img/nitro-components/mapViewer/NW.png');
 }
-.nmarkers {
+.m2m-mapviewer .nmarkers {
   top: 8px;
   left: 50%;
   margin-left: -30px;
   background-image: url('../../img/nitro-components/mapViewer/N.png');
 }
-.nemarkers {
+.m2m-mapviewer .nemarkers {
   top: 37px;
   right: 37px;
   background-image: url('../../img/nitro-components/mapViewer/NE.png');
 }
-.emarkers {
+.m2m-mapviewer .emarkers {
   top: 50%;
   right: 8px;
   margin-top: -30px;
   background-image: url('../../img/nitro-components/mapViewer/E.png');
 }
-.semarkers {
+.m2m-mapviewer .semarkers {
   bottom: 25px;
   right: 37px;
   background-image: url('../../img/nitro-components/mapViewer/E.png');
 }
-.smarkers {
+.m2m-mapviewer .smarkers {
   bottom: 0px;
   left: 50%;
   margin-left: -30px;
   background-image: url('../../img/nitro-components/mapViewer/S.png');
 }
-.swmarkers {
+.m2m-mapviewer .swmarkers {
   bottom: 25px;
   left: 37px;
   background-image: url('../../img/nitro-components/mapViewer/SW.png');
 }
-.wmarkers {
+.m2m-mapviewer .wmarkers {
   left: 8px;
   top: 50%;
   margin-top: -30px;

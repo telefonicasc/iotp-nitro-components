@@ -45,7 +45,6 @@ define(
                     })
                     .attr('width', barWidth);
                     bars.on('mouseover', function(d) {
-                        console.log('mouseover');
                         self.showTooltip(this, d.value, barWidth/2-6);
                     });
                     bars.exit().remove();
@@ -90,13 +89,15 @@ define(
 
                 this.on('actionSelected', function(e, value){
                     e.stopPropagation();
+
                     if (value.newModel){
                         this.attr.model = value.newModel;
                     }
                     if (this.attr.tooltip)
                         this.attr.tooltip.caption = (value.caption)? value.caption: '';
+                    
                     anim = true;
-                    this.trigger('valueChange', this.options);
+                    this.$node.parent().trigger('actionSelected', value);
 
                 });
 

@@ -701,16 +701,12 @@ define(
             return measureNames;
         }
         
+        // _getPhenomenons returns phenomenons with dataType quantity
         function _getPhenomenons(cards){
             var phenomenons = [];
             
             $.each(cards, function(i, card){
-                if (card.type === 'SensorCard') {
-                    var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
-                    var patt = /^\$/g;
-                    if (card.sensorCardType && card.sensorCardType === 'threshold' || patt.test(parameterValue)) {
-                        return;
-                    }
+                if (card.type === 'SensorCard' && card.sensorData && card.sensorData.dataType === 'Quantity') {
                     phenomenons.push(card);
                 }
             });

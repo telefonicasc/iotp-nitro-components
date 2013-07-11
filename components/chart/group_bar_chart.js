@@ -37,7 +37,8 @@ function(ComponentManager) {
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
                 axisX = context.append('g').attr('class', 'axis_x');
-                axisX.append('rect').attr('width',this.width).attr('height', this.attr.axisXheight).attr('fill', '#e0e0db');
+                axisX.append('rect').attr('width',this.width)
+                .attr('height', this.attr.axisXheight).attr('fill', '#e0e0db');
                 axisY = context.append('g').attr('class', 'axis_y');
                 xAxis = d3.svg.axis().scale(x0).orient('bottom');
                 yAxis = d3.svg.axis().scale(y).orient('right');
@@ -237,8 +238,8 @@ function(ComponentManager) {
                     var self = this;
                     bars = barGroups.selectAll('.chartbar')
                     .data(function(d) { return d; });
-                    bars.on('mouseover', function(d) {
-                        self.showTooltip(this, d);
+                    bars.on('mouseover', function(d, i) {
+                        self.showTooltip(this, d, i);
                     })
                     .on('mouseout', function(d) {
                         self.hideTooltip();
@@ -259,27 +260,28 @@ function(ComponentManager) {
             };
 
             this.updateSubpanel = function(){
-
                 var self = this;
                 //Propagate valueChange to each subpanel
-                $('.cell-barchart-subpanel').each(function(i, panel){
-                    var lastIndex = self.values[0].length-1;
-                    var count = self.values[i][lastIndex];
-
-                    var val = {
-                        topValue:  (self.totalCount === 0)? 0 +' %': round(count/self.totalCount*100)+' %',
-                        topCaption: self.modelData.caption1,
-                        bottomValue: ((self.modelData.unit)? self.modelData.unit: '')+' '+round(count),
-                        bottomCaption: self.modelData.caption2
-                    };
-                    $(panel).trigger('valueChange', val);
-                });
-
+                if (this.panelData){
+                    $('.cell-barchart-subpanel').each(function(i, panel){
+                        var val = {
+                            topValue: self.panelData[i].topValue,
+                            topCaption: self.modelData.caption1,
+                            bottomValue: self.panelData[i].bottomValue+'',
+                            bottomCaption: self.modelData.caption2
+                        };
+                        $(panel).trigger('valueChange', val);
+                    });
+                }  
             };
 
-            this.showTooltip = function(rect, d) {
+            this.showTooltip = function(rect, d, i) {
                 var pos = $(rect).offset();
-                this.tooltip.html('<div class="value">'+((this.modelData.unit)? this.modelData.unit: '')+' '+round(d)+'</div><div class="caption">('+this.attr.daysBar+' days/bar)</div>');
+                if ( this.tooltipCaption && $.isFunction(this.tooltipCaption) ){
+                    this.tooltip.html(this.tooltipCaption(d, i));
+                }else{
+                    this.tooltip.html('<div>'+d+'</div>');
+                }     
                 this.tooltip.css({
                     top: pos.top,
                     left: pos.left + x1.rangeBand()/3
@@ -318,10 +320,13 @@ function(ComponentManager) {
                 var roundDate = options.range[0].getTime();
 
                 this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
-
-                this.attr.daysBar = (fixRange === 7)? 1 : 7;
                 var rawValues = this.modelData.values[roundDate];
-                this.totalCount = this.modelData.totalCount[roundDate];
+                if (this.modelData.panelData){
+                    this.panelData = this.modelData.panelData[roundDate];
+                }
+                if (this.modelData.tooltipCaption){
+                    this.tooltipCaption = this.modelData.tooltipCaption[roundDate]; 
+                }   
                 this.options = options;
 
                 //Aggregate data by 'group'
@@ -380,9 +385,6 @@ function(ComponentManager) {
             return keys;
         }
 
-        function round(val){
-            return Math.round(val*10)/10;
-        }
 
         function getMaxPeriodValue(vals){
             var maxValue = d3.max(vals, function(d) {

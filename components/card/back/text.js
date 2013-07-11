@@ -32,8 +32,6 @@ define(
                 }else{
                     this.addInput(null, this.attr);
                 }
-                
-
 
                 this.$node.on('keyup change', 'input', $.proxy(function(e) {
                     var $ele = $(e.currentTarget);
@@ -50,6 +48,7 @@ define(
                 }, this));
 
                 this.on('valueChange', function(e,o) {
+                    var name;
                     if( $.isPlainObject(o.value) ){
                         for(name in o.value){
                             $('input[name='+name+']', this.$node).val(o.value[name]);
@@ -60,30 +59,29 @@ define(
 
                 });
             });
-            
+
             this.getData = function(){
                 var $inputs = $('input', this.$node);
                 var out;
-                if(!$.isArray(this.attr.imputs)){
-                    out = $inputs.val();
-                }else{
+                if($.isArray(this.attr.imputs)){
                     out = {};
                     $.each($inputs, function(e){
                         var name = $(this).attr('name');
                         var val = $(this).val();
                         out[name] = val;
                     });
+                }else{
+                    out = $inputs.val();
                 }
-                console.log(out);
                 return out;
-            }
-            
+            };
+
             this.addInput = function(index, data){
                 if (data.label) {
                     this.makeLabel(data).appendTo(this.$node);;
                 }
                 this.makeInput(data).appendTo(this.$node);
-            }
+            };
 
             this.makeLabel = function(data){
                 var ele = $('<label>')

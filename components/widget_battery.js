@@ -131,8 +131,6 @@ function (ComponentManager, Template, Data_binding) {
                 }
                 return xlabels;
             };
-	
-
         }); // </after>
 
 

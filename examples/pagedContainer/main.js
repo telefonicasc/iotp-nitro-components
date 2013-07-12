@@ -8,7 +8,8 @@ define(
         'components/minimap',
         'components/dashboard/overview_subpanel',
         'components/paged_container',
-        'components/detail_panel'
+        'components/detail_panel',
+        'components/widget_gauge'
     ],
   
     function() {
@@ -41,6 +42,10 @@ define(
                                             caption: 'Subpanel comp2'
                                         }
                                     ]
+                                },
+                                {
+                                    component: 'gaugeWidget',
+                                    value: 25
                                 },
                                 {
                                     component: 'OverviewSubpanel',

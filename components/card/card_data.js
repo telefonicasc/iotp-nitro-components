@@ -18,7 +18,9 @@ function() {
         'majorLevel': 'Major level',
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
-        'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.'
+        'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
+        'repeat': 'repeat',
+        'interval': 'interval'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -188,7 +190,8 @@ function() {
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',
-                    label: locales['after']
+                    label: locales['after'],
+                    unit:'min'
                 }]
             };
             card.back = {
@@ -201,7 +204,7 @@ function() {
             return card;
         },
         'timeInterval': function(card){
-            card.header = 'Interval';
+            card.header = 'Interval',
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',
@@ -211,7 +214,10 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: locales['value']
+                    inputs:[
+                        {label: locales['repeat'], name:'repeat'},
+                        {label: locales['interval']+'(min)', name:'interval'}
+                    ]
                 }]
             };
             card.timeCard = true;
@@ -289,8 +295,8 @@ function() {
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData;
-            cardConfig.timeData.repeat = cardData;
+            cardConfig.timeData.interval = cardData.interval;
+            cardConfig.timeData.repeat = cardData.repeat;
             return cardConfig;
         }
     };

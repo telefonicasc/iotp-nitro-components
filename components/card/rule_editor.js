@@ -35,13 +35,13 @@ define(
                 },
                 actionsLabel: 'Actions',
                 conditionsLabel: 'Conditions',
-                delimiterLabels: { 
+                delimiterLabels: {
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE',
                     'IS_OFF': 'IS_OFF',
-                    'IS_ON': 'IS_ON' 
+                    'IS_ON': 'IS_ON'
                 },
                 locales: {
                     Card:{
@@ -242,14 +242,14 @@ define(
                                 cards = o.cards.conditions.cards || [];
                                 cards.unshift( _makeCardNoSensorSignal(cards) );
                                 this.attr.cards.conditions = cards;
-                                
+
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
                             }
                             if (o.cards.actions) {
                                 cards = o.cards.actions.cards || [];
                                 this.attr.cards.actions = cards;
                                 this.loadToolboxCards(this.$actionsToolbox, cards);
-                                
+
                             }
                         }
                         if (o.editable !== undefined) {
@@ -442,7 +442,7 @@ define(
                        var phenomenons = _getPhenomenons(cards);
                        card.configData = phenomenons;
                     }
-                    
+
                     var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
                     // esta variable es importante porque se usa en card_toolbox.js para asignar
@@ -477,9 +477,9 @@ define(
                         var phenomenons = _getPhenomenons(this.attr.cards.conditions);
                         card['configData'] = phenomenons;
                     }
-                    
+
                     var data = CardData.encode(card);
-                    
+
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
                     var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
@@ -546,7 +546,7 @@ define(
                         }
                     }
                 }, this));
-                cardsData.map(_cleanCardData);
+                //cardsData.map(_cleanCardData);
                 cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
@@ -694,17 +694,17 @@ define(
             }
             return measureNames;
         }
-        
+
         // _getPhenomenons returns phenomenons with dataType quantity
         function _getPhenomenons(cards){
             var phenomenons = [];
-            
+
             $.each(cards, function(i, card){
                 if (card.type === 'SensorCard' && card.sensorData && card.sensorData.dataType === 'Quantity') {
                     phenomenons.push(card);
                 }
             });
-            
+
             return phenomenons;
         }
 

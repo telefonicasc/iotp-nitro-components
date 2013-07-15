@@ -1,3 +1,36 @@
+/*
+
+### Config
+```
+this.defaultAttrs({            
+    value: 0,   // Initial value
+    unit: '',   // Unit to show with label
+    maxValue: 100, // Maximum allowed value
+    minValue: 0,   // Minimum allowed value
+    id: 'gauge',   // Id to attach the svg
+    selector: '.gauge-widget',     // Internal use (flight selector)
+    labelSelector: '.gauge-label', // Internal use (flight selector)
+    size: 76, // Sgv size 
+    gaugeBackground: '#f2f2f2', // Gauge background color
+    sphereBorder: '000', // none // Sphere stroke color
+    opts: { // Threshold color options
+        threshold: {
+            "0":"green",
+            "60":"#D7DF01",
+            "80":"#B40404"
+        }
+    }
+});
+
+```
+
+### API
+* **'setValue'** _(float value)_: Sets the gauge value.
+* **'valueChange'** _({value: <float>})_: Sets the gauge value.
+
+### Generated events
+* None
+*/
 
 define (
 [

@@ -113,7 +113,7 @@ function (ComponentManager, Data_binding) {
                                         .attr({ "fill": highlight, "stroke": this.attr.sphereBorder })
                                         .rotate(180 * (1 + (percent / 100)), hvpos, hvpos);
             this.indicator.rotation = 180 * (1 + (percent / 100));
-            this.indicatorCircle    = canvas.circle(hvpos,hvpos, 6)
+            this.indicatorCircle    = canvas.circle(hvpos,hvpos, 3)
                                         .attr({ "fill": highlight, "stroke": this.attr.sphereBorder });
 
             return {

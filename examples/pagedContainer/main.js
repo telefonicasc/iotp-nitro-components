@@ -45,7 +45,11 @@ define(
                                 },
                                 {
                                     component: 'gaugeWidget',
-                                    value: 25
+                                    value: 25,
+                                    unit: 'hps',
+                                    maxValue: 50,
+                                    minValue: 10,
+                                    size: 46,
                                 },
                                 {
                                     component: 'OverviewSubpanel',

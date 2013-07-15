@@ -77,13 +77,13 @@ function (ComponentManager, Data_binding) {
             
 
             this.on('setValue', function (e,o) {
-                this.attr.value = o && typeof o === 'number' ? o : 0;
+                this.attr.value = $.isNumeric(o) ? o : 0;
                 this.attr.gauge.update(this.calculatePercent(this.attr.value));
                 this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
             });
 
             this.on('valueChange', function (e,o) {
-                this.attr.value = o && typeof o === 'number' ? o.value : this.attr.value;
+                this.attr.value = (o && o.value && $.isNumeric(o.value)) ? o.value : this.attr.value;
                 this.attr.gauge.update(this.calculatePercent(this.attr.value));
                 this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
             });

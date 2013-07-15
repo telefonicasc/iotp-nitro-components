@@ -20,8 +20,8 @@ function (ComponentManager, Template, Data_binding) {
             sphereBorder: '000', // none
             opts: {
                 threshold: {
-                    "0":"blue",
-                    "40":"yellow", 
+                    "1":"green",
+                    "60":"yellow", 
                     "80":"red"
                 }
             }
@@ -30,7 +30,7 @@ function (ComponentManager, Template, Data_binding) {
         this.after('initialize', function () {
 
             this.on('render', function () {
-                this.attr.gauge = this.gauge(this.attr.value, "#BED54E", "#063743", this.attr.opts);
+                this.attr.gauge = this.gauge(this.attr.value, "green", "#063743", this.attr.opts);
             });
 
             this.on('setGaugeValue', function (e,o) {

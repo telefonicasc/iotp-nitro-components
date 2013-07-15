@@ -205,7 +205,7 @@ function() {
         },
         'timeInterval': function(card){
             card.header = 'Interval';
-            card.cssClass = 'm2m-card-time';
+            card.cssClass = 'm2m-card-time m2m-card-interval';
             card.front = {
                 items: [{
                     component: 'CardFrontValues',

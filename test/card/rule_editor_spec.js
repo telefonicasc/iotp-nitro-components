@@ -55,7 +55,7 @@ describeComponent('components/card/rule_editor.js', function () {
 
     // initialize the component and attach it to the DOM
     beforeEach(function(){
-        setupComponent();
+        setupComponent($.extend(true, {}, mock));
         this.component.trigger('optionsChange', $.extend(true, {}, mock));
     });
 
@@ -68,7 +68,8 @@ describeComponent('components/card/rule_editor.js', function () {
         it('Draw Toolbox', function(){
             expect(toolBox).toBeDefined();
             var cards = toolBox.find('.m2m-card-condition');
-            expect(cards.length).toEqual(mock.cards.conditions.cards.length);
+            // VR crea una CardCondition
+            expect(cards.length).toEqual(mock.cards.conditions.cards.length+1);
         });
 
         it('Toggle', function(){

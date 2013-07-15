@@ -18,7 +18,8 @@ function() {
         'majorLevel': 'Major level',
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
-        'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.'
+        'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
+        'alarmHeader': 'Alarm'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -153,7 +154,16 @@ function() {
                     labelTxt:  locales['alarmConditionTxt']
                 }]
             };
-            card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+            card.defaultCondition = {
+                    scope: 'USER_PROP',
+                    parameterValue: null,
+                    not: false,
+                    operator: null,
+                    userProp: '${device.asset.UserProps.histeresis}'
+            };
+            card.defaultValue = true;
+            card.header = locales['alarmHeader'];    
             return card;
         },
         'threshold': function(card) {
@@ -334,7 +344,10 @@ function() {
         var patt = /^\$/g;
         
         if(cardConfig.type === cardType.SENSOR_CARD){
-            phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            phenomenon = (sensorData && sensorData.phenomenon && 
+                sensorData.phenomenon.replace(PHENOMENON_PREFIX, ''))? 
+                sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
+
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';
@@ -344,7 +357,7 @@ function() {
                 name = 'timeElapsed';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
-            } else if (phenomenon === 'alarm') {
+            } else if (!sensorData){
                 name = 'alarm';
             } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
                 name = 'threshold';

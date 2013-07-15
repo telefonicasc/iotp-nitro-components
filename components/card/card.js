@@ -38,7 +38,7 @@ define(
                     'not': false,
                     'operator': null
                 },
-                delimiterList:false,
+                delimiterList: false,
                 defaultValue : '',
                 locales: {
                     'sensor_name':'Sensor Name'

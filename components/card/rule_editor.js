@@ -378,6 +378,17 @@ define(
                 return connectedTo;
             };
 
+            this.getConnectedToLeft = function(card) {
+                var connectedTo = $([]);
+                debugger
+                $.each(this.connections, function(i, connection) {
+                    if (connection.end.is(card)) {
+                        connectedTo = connectedTo.add(connection.start);
+                    }
+                });
+                return connectedTo;
+            };
+
             this.getConnectedToId = function(card){
                 var connections = this.getConnectedTo(card);
                 var ids = [];

@@ -187,6 +187,7 @@ function() {
     var encodeTime = {
         'timeElapsed': function(card){
             card.header = 'Elapsed';
+            card.cssClass = 'm2m-card-time m2m-card-elapsed';
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',

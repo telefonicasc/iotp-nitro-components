@@ -1,10 +1,10 @@
 describeComponent('components/card/front/values.js', function () {
     var data = {
-        value:{
-            'opt1':1,
-            'opt2':'A',
-            'opt3': [1,3,5]
-        }
+        value:[
+            {name:'opt1', label: 'option', value:0},
+            {name:'opt2', label: 'option', value:0},
+            {name:'opt3', label: 'option', value:0}
+        ]
     };
 
     // initialize the component and attach it to the DOM

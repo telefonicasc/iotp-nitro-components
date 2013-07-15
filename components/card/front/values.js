@@ -3,8 +3,6 @@
  *
  * @event {in} valueChange. Update values
  *
- * @mixin Template
- *
  */
 
 define(
@@ -19,8 +17,7 @@ define(
 
             this.defaultAttrs({
                 tpl:'<dl></dl>',
-                updateOnValueChange:false,
-                value:{}
+                value:[]
             });
 
             this.after('initialize', function() {
@@ -33,13 +30,21 @@ define(
             });
 
             this.onValueChange = function(event, data){
-                this.$dl.empty();
-                $.each(data.value, $.proxy(this._draw, this));
+                $.each(data.value, $.proxy(this._setValues, this));
             };
 
-            this._draw = function(name, value){
+            this._draw = function(index, data){
+                var name = data.name || data.label || 'value'+index;
+                var value = data.value;
                 $('<dt/>').text(name).appendTo(this.$dl);
-                $('<dd/>').text(value).appendTo(this.$dl);
+                $('<dd/>').text(value).attr('name', name).appendTo(this.$dl);
+            };
+
+            this._setValues = function(name, value){
+                var $ele = $('dd[name='+name+']', this.$node);
+                if($ele.length){
+                    $ele.text( value );
+                }
             };
         }
 

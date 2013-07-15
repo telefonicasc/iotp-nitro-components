@@ -3,14 +3,16 @@
  *
  * @event {in} valueChange. Update values
  *
+ * @mixin DataBinding
  */
 
 define(
     [
-        'components/component_manager'
+        'components/component_manager',
+        'components/mixin/data_binding'
     ],
 
-    function(ComponentManager) {
+    function(ComponentManager, DataBinding) {
 
 
         function CardFrontValues() {
@@ -48,6 +50,6 @@ define(
             };
         }
 
-        return ComponentManager.create('CardFrontValues', CardFrontValues);
+        return ComponentManager.create('CardFrontValues', CardFrontValues, DataBinding);
     }
 );

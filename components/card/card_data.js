@@ -207,8 +207,11 @@ function() {
             card.header = 'Interval',
             card.front = {
                 items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['every']
+                    component: 'CardFrontValues',
+                    value:[
+                        {label:locales['repeat'],name:'repeat'},
+                        {label: locales['interval']+'(min)', name:'interval'}
+                    ]
                 }]
             };
             card.back = {

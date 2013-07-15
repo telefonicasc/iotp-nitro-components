@@ -2,12 +2,11 @@
 define (
 [
     'components/component_manager',
-    'components/mixin/template',
     'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
                                 
-function (ComponentManager, Template, Data_binding) {
+function (ComponentManager, Data_binding) {
     
     function Component () {
         
@@ -17,8 +16,6 @@ function (ComponentManager, Template, Data_binding) {
             maxValue: 100,
             minValue: 0,
             id: 'gauge',
-            tpl: '<div class="gauge"><div class="gauge-widget" id="gauge"></div>' +
-                '<span class="gauge-label">{{value}}{{value.value}} {{unit}}{{value.unit}}</span></div>',
             selector: '.gauge-widget',
             labelSelector: '.gauge-label',
             size: 76,
@@ -27,7 +24,7 @@ function (ComponentManager, Template, Data_binding) {
             opts: {
                 threshold: {
                     "0":"green",
-                    "60":"#D7DF01", 
+                    "60":"#D7DF01",
                     "80":"#B40404"
                 }
             }
@@ -35,18 +32,25 @@ function (ComponentManager, Template, Data_binding) {
                                                                                         
         this.after('initialize', function () {
 
+            var initialText = this.attr.value + ' ' + this.attr.unit;
+
+            this.$node.addClass('gauge');
+            this.$nodeMap = $('<div>').addClass('gauge-widget').attr('id',this.attr.id).appendTo(this.$node);
+            this.$nodeMap = $('<span>').addClass('gauge-label').html(initialText).appendTo(this.$node);
+           
             this.on('render', function () {
                 this.attr.gauge = this.gauge(this.attr.value, "green", "#063743", this.attr.opts);
             });
+            
 
             this.on('setValue', function (e,o) {
-                this.attr.value = o ? o : 0;
+                this.attr.value = o && typeof o === 'number' ? o : 0;
                 this.attr.gauge.update(this.calculatePercent(this.attr.value));
                 this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
             });
 
             this.on('valueChange', function (e,o) {
-                this.attr.value = o ? o.value : this.attr.value;
+                this.attr.value = o && typeof o === 'number' ? o.value : this.attr.value;
                 this.attr.gauge.update(this.calculatePercent(this.attr.value));
                 this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
             });
@@ -141,6 +145,6 @@ function (ComponentManager, Template, Data_binding) {
 
     };
 
-    return ComponentManager.create('gaugeWidget', Template, Data_binding, Component);
+    return ComponentManager.create('gaugeWidget', Data_binding, Component);
 });
 

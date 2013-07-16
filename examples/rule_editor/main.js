@@ -21,6 +21,7 @@ define(
     'components/card/front/off',
     'components/card/front/icon',
     'components/card/front/threshold',
+    'components/card/front/values',
     'components/form/dropdown'
   ],
 
@@ -90,7 +91,7 @@ define(
 
 
                 $scope.$watch('ruleData', function() {
-                    console.log('RuleData change', $scope.ruleData);
+                    //console.log('RuleData change', $scope.ruleData);
                 });
             }
         );

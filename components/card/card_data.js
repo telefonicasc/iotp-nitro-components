@@ -312,7 +312,7 @@ function() {
         'timeInterval':function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData.interval;
             cardConfig.timeData.repeat = cardData.repeat;
-            timeData.context =  'ASSET';//no debería ser necesario pero BE lo neces
+            cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
             return cardConfig;
         }
     };

@@ -94,7 +94,7 @@ define(
 
 
                 $scope.$watch('ruleData', function() {
-                    //console.log('RuleData change', $scope.ruleData);
+                    console.log('RuleData change', $scope.ruleData);
                 });
             }
         );

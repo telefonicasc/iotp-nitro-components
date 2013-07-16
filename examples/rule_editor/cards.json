@@ -28,11 +28,11 @@
             "configData": {}
         },
         {
-            "id": "003","type": "timeCard",
+            "id": "003","type": "TimeCard",
             "timeData":{},
             "configData": { "timeType": "timeInterval" }
         },
-        {"id": "004","type": "timeCard",
+        {"id": "004","type": "TimeCard",
             "timeData":{ "context": "ASSET" },
             "configData": { "timeType": "timeElapsed" }
         },

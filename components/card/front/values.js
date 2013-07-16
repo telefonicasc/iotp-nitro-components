@@ -37,8 +37,9 @@ define(
 
             this._draw = function(index, data){
                 var name = data.name || data.label || 'value'+index;
+                var label = data.label || name;
                 var value = data.value;
-                $('<dt/>').text(name).appendTo(this.$dl);
+                $('<dt/>').text(label).appendTo(this.$dl);
                 $('<dd/>').text(value).attr('name', name).appendTo(this.$dl);
             };
 

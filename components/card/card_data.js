@@ -19,8 +19,8 @@ function() {
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
         'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
-        'repeat': 'repeat',
-        'interval': 'interval'
+        'repeat': 'Repeat',
+        'interval': 'Interval'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -28,7 +28,7 @@ function() {
     var cardType = {
         'SENSOR_CARD': 'SensorCard',
         'ACTION_CARD': 'ActionCard',
-        'TIME_CARD': 'timeCard'
+        'TIME_CARD': 'TimeCard'
     };
 
     var component = {
@@ -211,8 +211,8 @@ function() {
                 items: [{
                     component: 'CardFrontValues',
                     value:[
-                        {label:locales['repeat'],name:'repeat'},
-                        {label: locales['interval']+'(min)', name:'interval'}
+                        {label: locales['repeat'], name:'repeat', value:'-'},
+                        {label: locales['interval'], name:'interval', value:'-'}
                     ]
                 }]
             };
@@ -302,6 +302,7 @@ function() {
         'timeInterval':function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData.interval;
             cardConfig.timeData.repeat = cardData.repeat;
+            timeData.context =  'ASSET';//no debería ser necesario pero BE lo neces
             return cardConfig;
         }
     };

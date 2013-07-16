@@ -164,7 +164,7 @@ function() {
                     operator: null,
                     userProp: '${device.asset.UserProps.histeresis}'
             };
-            card.defaultValue = true;
+            card.defaultValue = 'true';
             card.header = locales['alarmHeader'];    
             return card;
         },

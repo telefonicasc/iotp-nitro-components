@@ -180,7 +180,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackThreshold',
-                    phenomenonData: card.configData,
+                    phenomenonData: card.configData.phenomenons,
                     levelVal: parameterValue,
                     phenomenonVal: phenomenonValue,
                     labelCritical: locales['criticalLevel'],

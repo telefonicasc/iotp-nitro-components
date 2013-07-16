@@ -722,8 +722,8 @@ define(
 
         function _orderCards(a, b){
             var out = 0;
-            if(b.type === 'timeCard'){
-                out = b.timeData.context?-1:1;
+            if(b.type === 'TimeCard'){
+                out = b.configData.timeType === 'timeInterval'?1:-1;
             }
             return out;
         }

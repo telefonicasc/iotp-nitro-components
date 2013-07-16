@@ -296,7 +296,7 @@ function() {
     var decodeTime = {
         'timeElapsed': function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData;
-            timeData.context =  'ASSET';
+            cardConfig.timeData.context =  'ASSET';
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){

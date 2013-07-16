@@ -717,7 +717,7 @@ define(
                 }
             });
 
-            return phenomenons;
+            return {phenomenons: phenomenons};
         }
 
         function _orderCards(a, b){

@@ -96,8 +96,9 @@ define(
                 var options = [];
                  
                 $.each(pheData, function(i, data) {
+                    var unit = (data.sensorData.uom && data.sensorData.uom != "Unknown") ? ' (' + data.sensorData.uom + ')': '';
                     var opt = {
-                        label: data.sensorData.measureName,
+                        label: data.sensorData.measureName + unit,
                         value: data.sensorData.phenomenonApp,
                         attr: JSON.stringify(data)
                     }

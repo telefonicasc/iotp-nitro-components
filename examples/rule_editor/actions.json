@@ -39,7 +39,7 @@
                         "value": "true"
                     }
                 ],
-                "name": "alarm",
+                "name": "mongodb",
                 "type": "CreateAlarmAction"
             },
             "id": "alarm"
@@ -57,7 +57,7 @@
                         "value": "false"
                     }
                 ],
-                "name": "alarm",
+                "name": "mongodb",
                 "type": "TurnOffAlarmAction"
             },
             "id": "alarm"

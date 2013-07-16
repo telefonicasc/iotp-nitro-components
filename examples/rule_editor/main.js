@@ -21,6 +21,7 @@ define(
     'components/card/front/off',
     'components/card/front/icon',
     'components/card/front/threshold',
+    'components/card/front/values',
     'components/form/dropdown'
   ],
 
@@ -74,7 +75,7 @@ define(
                         'GREATER_THAN': 'MAYOR',
                         'IS_OFF': 'APAGADO',
                         'ACTIVATED': 'ACTIVADA',
-                        'DEACTIVATED': 'DESACTIVADA' 
+                        'DEACTIVATED': 'DESACTIVADA'
                     }
                 };
                 $http.get('actions.json').success(function(data) {
@@ -93,7 +94,7 @@ define(
 
 
                 $scope.$watch('ruleData', function() {
-                    console.log('RuleData change', $scope.ruleData);
+                    //console.log('RuleData change', $scope.ruleData);
                 });
             }
         );

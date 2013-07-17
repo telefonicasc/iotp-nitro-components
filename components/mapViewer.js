@@ -808,6 +808,15 @@ function(ComponentManager, DataBinding) {
                 }
             });
 
+            this.on('update-selected-feature', function (event, callback) {
+                if (this.attr.private.selected) {
+                    var cur = this.attr.private.selected;
+                    callback(cur);
+                    this.selected = null;
+                    this.setFeatures(this.attr.private.markerLayer.features()); 
+                }
+            });
+
             this.on('autocenter', function () {
                 var feature = this.attr.private.markerLayer.features[0];
                 if (typeof feature !== 'undefined') {

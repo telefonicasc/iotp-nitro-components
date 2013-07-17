@@ -75,7 +75,6 @@ function (ComponentManager, Data_binding) {
                 var percent = this.attr.value ? this.calculatePercent(this.attr.value) : -1;
                 this.attr.gauge = this.gauge(percent, "green", "#063743", this.attr.opts);
             });
-            
 
             this.on('setValue', function (e,o) {
                 this.attr.value = $.isNumeric(o) ? o : 0;

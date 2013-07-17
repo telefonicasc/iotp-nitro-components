@@ -207,24 +207,21 @@ function() {
         'timeInterval': function(card){
             card.header = 'Interval';
             card.cssClass = 'm2m-card-time m2m-card-interval';
+
             card.front = {
                 items: [{
-                    component: 'CardFrontValues',
-                    value:[
-                        {label: locales['repeat'], name:'repeat', value:'-'},
-                        {label: locales['interval'], name:'interval', value:'-'}
-                    ]
+                    component: 'CardFrontQuantityValue',
+                    label: locales['interval'],
+                    unit:'min'
                 }]
             };
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    inputs:[
-                        {label: locales['repeat'], name:'repeat'},
-                        {label: locales['interval']+'(min)', name:'interval'}
-                    ]
+                    label: locales['value']
                 }]
             };
+
             card.timeCard = true;
             return card;
         }
@@ -300,8 +297,8 @@ function() {
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData.interval;
-            cardConfig.timeData.repeat = cardData.repeat;
+            cardConfig.timeData.interval = cardData;
+            cardConfig.timeData.repeat = 0;
             cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
             return cardConfig;
         }

@@ -547,7 +547,7 @@ define(
                         }
                     }
                 }, this));
-                //cardsData.map(_cleanCardData);
+                cardsData = _setScopeInSensorCards(cardsData);
                 cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
@@ -717,8 +717,28 @@ define(
             return out;
         }
 
-        function _cleanCardData(card){
-            delete card.configData;
+        function _setScopeInSensorCards(cards){
+            var hasTimeInterval = false;
+            for(var i =cards.length; i--;){
+                if( cards[i].timeData && cards[i].configData.timeType === 'timeInterval' ){
+                    hasTimeInterval=true;
+                    break;
+                }
+            }
+            if(hasTimeInterval){
+                $.each(cards, function(i, card){
+                    card = _setScope(card, 'LAST_MEASURE');
+                });
+            }
+
+            return cards;
+        }
+        function _setScope(card, scope){
+            if( $.isArray(card.conditionList) ){
+                $.each(card.conditionList, function(i, condition){
+                    condition.scope = scope;
+                });
+            }
             return card;
         }
     }

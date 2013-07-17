@@ -852,12 +852,19 @@ function(ComponentManager, DataBinding) {
             var markerColorOK = this.attr.markerColorOK;
             var markerColorWARN = this.attr.markerColorWARN;
             var markersimbol = this.attr.markerSimpleSymbol;
+            var getMarkerColor
+            if (this.attr.getMarkerColor && $.isFunction(this.attr.getMarkerColor)) {
+                getMarkerColor = this.attr.getMarkerColor;
+            };
+
             this.dataFormats = {
                 asset: function (features) {
                     return $.map(features, function(f) {
                         var location = f.asset && f.asset.location;
                         var markercolor = markerColorOK;
-                        if (f.errors !== undefined && f.errors.length > 0) {
+                        
+                        if (getMarkerColor) markercolor = getMarkerColor(f);
+                        else if (f.errors !== undefined && f.errors.length > 0) {
                             markercolor = markerColorWARN;
                         }
                         if (location) {

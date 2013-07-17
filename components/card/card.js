@@ -158,6 +158,12 @@ define(
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
                 }
+
+                if(this.attr.timeCard){
+                    var timeCardValue = this.attr.value || this.attr.defaultValue || 0;
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: timeCardValue, silent: true });
+                    this.$node.data('cardValue', timeCardValue);
+                }
             });
 
             function _stopPropagation(e){

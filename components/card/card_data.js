@@ -165,7 +165,7 @@ function() {
                     userProp: '${device.asset.UserProps.histeresis}'
             };
             card.defaultValue = 'true';
-            card.header = locales['alarmHeader'];    
+            card.header = locales['alarmHeader'];
             return card;
         },
         'threshold': function(card) {
@@ -202,7 +202,7 @@ function() {
                 items: [{
                     component: 'CardFrontQuantityValue',
                     label: locales['after'],
-                    unit:'min'
+                    units:'seg'
                 }]
             };
             card.back = {
@@ -211,30 +211,35 @@ function() {
                     label: locales['value']
                 }]
             };
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         },
         'timeInterval': function(card){
             card.header = 'Interval';
             card.cssClass = 'm2m-card-time m2m-card-interval';
+
             card.front = {
                 items: [{
-                    component: 'CardFrontValues',
-                    value:[
-                        {label: locales['repeat'], name:'repeat', value:'-'},
-                        {label: locales['interval'], name:'interval', value:'-'}
-                    ]
+                    component: 'CardFrontQuantityValue',
+                    label: locales['interval'],
+                    units:'min'
                 }]
             };
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    inputs:[
-                        {label: locales['repeat'], name:'repeat'},
-                        {label: locales['interval']+'(min)', name:'interval'}
-                    ]
+                    label: locales['value']
                 }]
             };
+
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         }
@@ -297,7 +302,7 @@ function() {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         },
-         'SendAlarmAction': function(cardConfig, cardData){
+        'SendAlarmAction': function(cardConfig, cardData){
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }
@@ -307,11 +312,12 @@ function() {
         'timeElapsed': function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData;
             cardConfig.timeData.context =  'ASSET';
+            cardConfig.timeData.repeat = '0';
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData.interval;
-            cardConfig.timeData.repeat = cardData.repeat;
+            cardConfig.timeData.interval = cardData;
+            cardConfig.timeData.repeat = '0';
             cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
             return cardConfig;
         }
@@ -369,12 +375,9 @@ function() {
             name, phenomenon;
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
-
         if(cardConfig.type === cardType.SENSOR_CARD){
-            phenomenon = (sensorData && sensorData.phenomenon && 
-                sensorData.phenomenon.replace(PHENOMENON_PREFIX, ''))? 
+            phenomenon = (sensorData && sensorData.phenomenon) ?
                 sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
-
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';
@@ -386,9 +389,9 @@ function() {
                 name = 'threshold';
              }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
-            } else if (sensorData.dataType === 'Boolean') {
+            } else if (sensorData && sensorData.dataType === 'Boolean') {
                 name = 'binary';
-            } else if (sensorData.dataType === 'Quantity') {
+            } else if (sensorData && sensorData.dataType === 'Quantity') {
                 name = 'quantityValue';
             } else {
                 name = 'text';

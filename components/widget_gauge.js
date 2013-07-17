@@ -72,9 +72,9 @@ function (ComponentManager, Data_binding) {
             this.$nodeMap = $('<span>').addClass('gauge-label').html(initialText).appendTo(this.$node);
            
             this.on('render', function () {
-                this.attr.gauge = this.gauge(this.attr.value, "green", "#063743", this.attr.opts);
+                var percent = this.attr.value ? this.calculatePercent(this.attr.value) : -1;
+                this.attr.gauge = this.gauge(percent, "green", "#063743", this.attr.opts);
             });
-            
 
             this.on('setValue', function (e,o) {
                 this.attr.value = $.isNumeric(o) ? o : 0;
@@ -83,7 +83,7 @@ function (ComponentManager, Data_binding) {
             });
 
             this.on('valueChange', function (e,o) {
-                this.attr.value = (o && o.value && $.isNumeric(o.value)) ? o.value : this.attr.value;
+                this.attr.value = (o && o.value && $.isNumeric(o.value)) ? o.value : 0;
                 this.attr.gauge.update(this.calculatePercent(this.attr.value));
                 this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
             });
@@ -122,6 +122,8 @@ function (ComponentManager, Data_binding) {
         };
 
         this.gauge = function (percent, fill, highlight, opts) {
+            if (percent < 0) percent = 0;
+
             var canvasHeight = this.attr.size + 10;
             var canvasWidth = this.attr.size * 2 + 20;
             // 300,100

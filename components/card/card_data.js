@@ -378,9 +378,9 @@ function() {
                 name = 'threshold';
              }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
-            } else if (sensorData.dataType === 'Boolean') {
+            } else if (sensorData && sensorData.dataType === 'Boolean') {
                 name = 'binary';
-            } else if (sensorData.dataType === 'Quantity') {
+            } else if (sensorData && sensorData.dataType === 'Quantity') {
                 name = 'quantityValue';
             } else {
                 name = 'text';

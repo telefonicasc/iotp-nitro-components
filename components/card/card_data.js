@@ -192,7 +192,7 @@ function() {
                 items: [{
                     component: 'CardFrontQuantityValue',
                     label: locales['after'],
-                    unit:'min'
+                    units:'min'
                 }]
             };
             card.back = {
@@ -212,7 +212,7 @@ function() {
                 items: [{
                     component: 'CardFrontQuantityValue',
                     label: locales['interval'],
-                    unit:'min'
+                    units:'min'
                 }]
             };
             card.back = {
@@ -357,7 +357,7 @@ function() {
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
 
-        if(cardConfig.type === cardType.SENSOR_CARD){
+        if(sensorData && cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {

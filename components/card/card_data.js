@@ -221,6 +221,10 @@ function() {
                     label: locales['value']
                 }]
             };
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+
 
             card.timeCard = true;
             return card;
@@ -298,7 +302,7 @@ function() {
         },
         'timeInterval':function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData;
-            cardConfig.timeData.repeat = 0;
+            cardConfig.timeData.repeat = '0';
             cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
             return cardConfig;
         }
@@ -356,8 +360,7 @@ function() {
             name, phenomenon;
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
-
-        if(sensorData && cardConfig.type === cardType.SENSOR_CARD){
+        if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {

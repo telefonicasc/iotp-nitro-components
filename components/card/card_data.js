@@ -19,6 +19,7 @@ function() {
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
         'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
+        'alarmHeader': 'Alarm',
         'repeat': 'Repeat',
         'interval': 'Interval'
     };
@@ -155,7 +156,16 @@ function() {
                     labelTxt:  locales['alarmConditionTxt']
                 }]
             };
-            card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+            card.defaultCondition = {
+                    scope: 'USER_PROP',
+                    parameterValue: null,
+                    not: false,
+                    operator: null,
+                    userProp: '${device.asset.UserProps.histeresis}'
+            };
+            card.defaultValue = 'true';
+            card.header = locales['alarmHeader'];
             return card;
         },
         'threshold': function(card) {
@@ -237,7 +247,7 @@ function() {
 
     var encodeAction = {
         'SendEmailAction': function(card) {
-            card.cssClass = 'm2m-card-action m2m-card-send-email';
+            card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
             card.header = locales.sendEmailHeader;
             card.locales = {
                 subject: locales.subject,
@@ -248,7 +258,7 @@ function() {
             return card;
         },
         'CreateAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.sendAlarmHeader;
             card.actionCard = true;
             card.front = {
@@ -266,7 +276,7 @@ function() {
             return card;
         },
         'TurnOffAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.turnOffAlarmHeader;
             card.actionCard = true;
             card.front = {
@@ -366,13 +376,14 @@ function() {
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
         if(cardConfig.type === cardType.SENSOR_CARD){
-            phenomenon = sensorData && sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            phenomenon = (sensorData && sensorData.phenomenon) ?
+                sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
-            } else if (phenomenon === 'alarm') {
+            } else if (!sensorData){
                 name = 'alarm';
             } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
                 name = 'threshold';

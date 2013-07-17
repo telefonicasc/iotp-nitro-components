@@ -17,14 +17,7 @@
         }, {
             "id": "002",
             "type": "SensorCard",
-            "model": "Alarm",
-            "sensorData": {
-                "measureName": "Alarm",
-                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:alarm",
-                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:alarm",
-                "dataType": "Text",
-                "uom": "Unknown"
-            },
+           	"sensorCardType": "alarm",
             "configData": {}
         },
         {

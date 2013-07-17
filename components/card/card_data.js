@@ -242,7 +242,7 @@ function() {
 
     var encodeAction = {
         'SendEmailAction': function(card) {
-            card.cssClass = 'm2m-card-action m2m-card-send-email';
+            card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
             card.header = locales.sendEmailHeader;
             card.locales = {
                 subject: locales.subject,
@@ -253,7 +253,7 @@ function() {
             return card;
         },
         'CreateAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.sendAlarmHeader;
             card.actionCard = true;
             card.front = {
@@ -271,7 +271,7 @@ function() {
             return card;
         },
         'TurnOffAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.turnOffAlarmHeader;
             card.actionCard = true;
             card.front = {

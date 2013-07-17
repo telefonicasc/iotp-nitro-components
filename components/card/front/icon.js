@@ -1,3 +1,9 @@
+/*
+ * @component CardFrontIcon
+ *
+ * @attr {iconClass} labelTxt. Text showed in the card.
+ *
+ */
 define(
     [
         'components/component_manager',

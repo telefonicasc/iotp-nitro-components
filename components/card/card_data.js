@@ -192,7 +192,7 @@ function() {
                 items: [{
                     component: 'CardFrontQuantityValue',
                     label: locales['after'],
-                    units:'min'
+                    units:'seg'
                 }]
             };
             card.back = {
@@ -201,6 +201,10 @@ function() {
                     label: locales['value']
                 }]
             };
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         },
@@ -221,11 +225,11 @@ function() {
                     label: locales['value']
                 }]
             };
+
             if( card.timeData && card.timeData.interval ){
                 card.value = card.timeData.interval;
             }
-
-
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         }
@@ -288,7 +292,7 @@ function() {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         },
-         'SendAlarmAction': function(cardConfig, cardData){
+        'SendAlarmAction': function(cardConfig, cardData){
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }
@@ -298,6 +302,7 @@ function() {
         'timeElapsed': function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData;
             cardConfig.timeData.context =  'ASSET';
+            cardConfig.timeData.repeat = '0';
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){
@@ -361,7 +366,7 @@ function() {
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
         if(cardConfig.type === cardType.SENSOR_CARD){
-            phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            phenomenon = sensorData && sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
             //@TODO este nombre de phenomenon es temporal
             if (phenomenon === 'off') {
                 name = 'noSensorSignal';

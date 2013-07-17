@@ -532,7 +532,7 @@ define(
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
                         conditionList = $(card).data('conditionList');
-                        if(cardConfig && cardValue){
+                        if(cardConfig && (cardValue !== undefined) ){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){

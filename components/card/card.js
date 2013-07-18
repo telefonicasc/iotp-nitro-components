@@ -104,6 +104,13 @@ define(
                     this.$node.data('cardValue', o.value);
                 });
 
+                var value = this.attr.value || this.attr.defaultValue || undefined;
+
+                if(value){
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                    this.$node.data('cardValue', value);
+                }
+
                 if(_isSensorCard(this)){
                     var condition;
                     if(this.attr.conditionList.length){
@@ -157,12 +164,6 @@ define(
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
-                }
-
-                if(this.attr.timeCard){
-                    var timeCardValue = this.attr.value || this.attr.defaultValue || 0;
-                    this.$node.find('.body > *' ).trigger('valueChange', { value: timeCardValue, silent: true });
-                    this.$node.data('cardValue', timeCardValue);
                 }
             });
 

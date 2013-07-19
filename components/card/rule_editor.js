@@ -671,29 +671,17 @@ define(
                     'measureName': 'noSensorSignal',
                     'phenomenonApp': 'urnx-ogc:def:phenomenon:semaphoresFrankfurt:1.0:noSensorSignal',
                     'phenomenon':    'urn:x-ogc:def:phenomenon:IDAS:1.0:off',
-                    'dataType': 'Text',
-                    'uom': 'Unknown'
+                    'dataType': 'Quantity',
+                    'uom': 'min'
                 },
-                'configData': []
+                'conditionList':[{
+                       'scope':'LAST_MEASURE',
+                       'not':false,
+                       'operator':'GREATER_THAN',
+                       'parameterValue':'${device.asset.UserProps.reportInterval}'
+                    }]
             };
-
-            data.configData = _getPhenomenonList(sensorCards);
             return data;
-        }
-
-        function _getPhenomenonList(cards){
-            var measureName;
-            var phenomenon;
-            var emptyPhenomenon = { label: '', value: '' };
-            var measureNames = [emptyPhenomenon];
-            for(var n = cards.length;n--;){
-                if (cards[n].type === "SensorCard" && cards[n].sensorData) {
-                    measureName = cards[n].sensorData.measureName;
-                    phenomenon = cards[n].sensorData.phenomenon;
-                    measureNames.push( { label: measureName, value: measureName } );
-                }
-            }
-            return measureNames;
         }
 
         // _getPhenomenons returns phenomenons with dataType quantity

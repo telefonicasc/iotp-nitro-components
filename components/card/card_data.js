@@ -157,6 +157,19 @@ function() {
                 }]
             };
             card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+            
+            // delimiter options with custom labels
+            card.delimiterCustomLabels = [
+                {
+                    valueKey: 'EQUAL_TO',
+                    labelKey: 'IS_ON'
+                },
+                {
+                    valueKey: 'DIFFERENT_TO',
+                    labelKey: 'IS_OFF'
+                }
+            ];
+            
             card.defaultCondition = {
                     scope: 'USER_PROP',
                     parameterValue: null,

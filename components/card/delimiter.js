@@ -22,6 +22,7 @@ define(
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE'
                 },
+                delimiterCustomLabels: [],
                 cardConfig : {'conditionList':[]}
             });
 
@@ -30,7 +31,8 @@ define(
                 var cardConfig = this.attr.cardConfig;
                 var delimiterList = cardElement.data('delimiterList');
                 var delimiterValue;
-
+                this.attr.delimiterCustomLabels = cardElement.data('delimiterCustomLabels');
+               
                 if(!$.isArray(delimiterList)){
                     delimiterList = this.attr.delimiterList;
                 }
@@ -48,6 +50,7 @@ define(
                         .appendTo(this.$node);
 
                 $.each(delimiterList, $.proxy(function(i, del) {
+                   
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
                             .data('value', del)
@@ -96,7 +99,15 @@ define(
             });
 
             this.getDelimiterLabel = function(del) {
-                return this.attr.delimiterLabels[del] || del;
+                var delimiterKeyLabel = del;
+                if (this.attr.delimiterCustomLabels && this.attr.delimiterCustomLabels.length > 0) {
+                        $.each(this.attr.delimiterCustomLabels, function(i, o) {
+                            if(del == o.valueKey){
+                                delimiterKeyLabel = o.labelKey;
+                            }
+                        });
+                    }
+                return this.attr.delimiterLabels[delimiterKeyLabel] || delimiterKeyLabel;
             };
 
             this.setDelimiterValue = function(del) {

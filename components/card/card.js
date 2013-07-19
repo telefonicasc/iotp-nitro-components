@@ -101,6 +101,9 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
+                    if( $.isFunction(this.attr.validator) ){
+                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    }
                     this.$node.data('cardValue', o.value);
                 });
 

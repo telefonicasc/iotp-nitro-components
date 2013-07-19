@@ -72,4 +72,30 @@ describeComponent('components/card/card.js', function () {
             expect($nodeValue).toHaveValue(MOCK_CARD.defaultValue);
         });
     });
+
+    describe('Validate value', function(){
+        var MOCK_CARD = {
+            header:'Test',
+            validator: function(value){
+                return value ? true : false;
+            }
+        };
+        beforeEach(function(){
+            setupComponent(MOCK_CARD);
+        });
+
+        it('spy on validator', function(){
+            spyOn(MOCK_CARD, 'validator');
+            this.$node.trigger('valueChange', {value:1});
+            expect(MOCK_CARD.validator).toHaveBeenCalled();
+        });
+
+        it('define "isValid" data', function(){
+            this.$node.trigger('valueChange', {value:1});
+            expect(this.$node).toHaveData('isValid', true);
+
+            this.$node.trigger('valueChange', {value:null});
+            expect(this.$node).toHaveData('isValid', false);
+        });
+    });
 });

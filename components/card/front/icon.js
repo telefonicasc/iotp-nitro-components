@@ -1,7 +1,7 @@
 /*
  * @component CardFrontIcon
  *
- * @attr {iconClass} labelTxt. Text showed in the card.
+ * @attr {iconClass} class of the icon showed in the card.
  *
  */
 define(
@@ -16,11 +16,8 @@ define(
             this.defaultAttrs({
                 iconClass: "",
                 tpl: '<div class="m2m-card-icon">' +
-                        '<div class="icon"></div>' +
+                        '<div class="icon {{iconClass}}"></div>' +
                      '</div>'
-            });
-            this.after('initialize', function(){
-                this.$node.find('.icon').addClass(this.attr.iconClass);
             });
         }
         

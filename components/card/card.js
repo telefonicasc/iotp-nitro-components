@@ -157,6 +157,7 @@ define(
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
 
                 if(this.attr.timeCard){

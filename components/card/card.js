@@ -101,8 +101,18 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
+                    if( $.isFunction(this.attr.validator) ){
+                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    }
                     this.$node.data('cardValue', o.value);
                 });
+
+                var value = this.attr.value || this.attr.defaultValue || undefined;
+
+                if(value){
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                    this.$node.data('cardValue', value);
+                }
 
                 if(_isSensorCard(this)){
                     var condition;
@@ -158,12 +168,6 @@ define(
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
                     this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
-                }
-
-                if(this.attr.timeCard){
-                    var timeCardValue = this.attr.value || this.attr.defaultValue || 0;
-                    this.$node.find('.body > *' ).trigger('valueChange', { value: timeCardValue, silent: true });
-                    this.$node.data('cardValue', timeCardValue);
                 }
             });
 

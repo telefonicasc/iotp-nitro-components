@@ -137,10 +137,10 @@ function() {
                 items: [{
                     component: 'Dropdown',
                     defaultValue: '',
-                    options: card.configData
+                    options: [{'label':'UserProps.reportInterval', 'value':'${device.asset.UserProps.reportInterval}'}]
                 }]
             };
-            card.delimiterList = ['IS_OFF'];
+            card.delimiterList = ['GREATER_THAN'];
             return card;
         },
         'alarm' : function (card) {

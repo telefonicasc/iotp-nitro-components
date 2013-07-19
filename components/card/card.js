@@ -161,7 +161,7 @@ define(
                     }, this));
 
                     if(condition.parameterValue !== null ){
-                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
+                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
                     }else{
                         condition.parameterValue = this.attr.defaultValue;
                     }

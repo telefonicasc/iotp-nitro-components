@@ -16,6 +16,7 @@ function() {
         'thresholdHeader': 'Threshold',
         'criticalLevel': 'Critical level',
         'majorLevel': 'Major level',
+        'alarmOffLevel':  'Alarm off level',
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
         'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
@@ -197,7 +198,8 @@ function() {
                     levelVal: parameterValue,
                     phenomenonVal: phenomenonValue,
                     labelCritical: locales['criticalLevel'],
-                    labelMajor: locales['majorLevel']
+                    labelMajor: locales['majorLevel'],
+                    labelAlarmOff: locales ['alarmOffLevel']
                 }]
             };
             card.header = locales['thresholdHeader'];

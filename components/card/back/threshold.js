@@ -13,6 +13,7 @@
  * @attr {String} phenomenonVal. Phenomenon value
  * @attr {String} labelCritical.
  * @attr {String} labelMajor.
+ * @attr {String} labelAlarmOff.
  *
  */
 
@@ -30,7 +31,8 @@ define(
                 levelVal: "",
                 phenomenonVal: "",
                 labelCritical: "",
-                labelMajor: ""
+                labelMajor: "",
+                labelAlarmOff: ""
             });
            
             var tpl = '<div class="m2m-card-threshold">' + 
@@ -60,6 +62,9 @@ define(
                     },{
                         label: this.attr.labelMajor,
                         value: '${device.asset.UserProps.umbral.critical}'
+                    },{
+                        label: this.attr.labelAlarmOff,
+                        value: '${device.asset.UserProps.umbral.alarmOff}'
                     }]
                 });
                 

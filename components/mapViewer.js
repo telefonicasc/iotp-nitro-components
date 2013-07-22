@@ -746,7 +746,6 @@ function(ComponentManager, DataBinding) {
             this.attr.private.map.addCallback('zoomed', function () {
                 _tooltip.hide(true);
                 var map = self.attr.private.map;
-                if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 // Auto group markers?
                 if (self.attr.map.groupMarkers) {
                     var features = self.attr.private.markerLayer.features();
@@ -757,9 +756,14 @@ function(ComponentManager, DataBinding) {
             });
             this.attr.private.map.addCallback('panned', function () {
                 _tooltip.updatePositon();
-                if (self.attr.createOffscreenIndicators) self.updateOffscreenIndicators();
                 self.attr.whenPanned(features);
             });
+            if (this.attr.createOffscreenIndicators){
+                this.attr.private.map.addCallback('resized', $.proxy(this.updateOffscreenIndicators,this));
+                this.attr.private.map.addCallback('zoomed', $.proxy(this.updateOffscreenIndicators,this));
+                this.attr.private.map.addCallback('panned', $.proxy(this.updateOffscreenIndicators,this));
+            }
+
             //</editor-fold>
 
         };
@@ -813,7 +817,7 @@ function(ComponentManager, DataBinding) {
                     var cur = this.attr.private.selected;
                     callback(cur);
                     this.selected = null;
-                    this.setFeatures(this.attr.private.markerLayer.features()); 
+                    this.setFeatures(this.attr.private.markerLayer.features());
                 }
             });
 
@@ -862,7 +866,7 @@ function(ComponentManager, DataBinding) {
                     return $.map(features, function(f) {
                         var location = f.asset && f.asset.location;
                         var markercolor = markerColorOK;
-                        
+
                         if (getMarkerColor) markercolor = getMarkerColor(f);
                         else if (f.errors !== undefined && f.errors.length > 0) {
                             markercolor = markerColorWARN;

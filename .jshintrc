@@ -28,6 +28,7 @@
     "beforeEach": true,
     "setupComponent" : true,
     "expect": true,
-    "it": true
+    "it": true,
+    "describe":true
   }
 }

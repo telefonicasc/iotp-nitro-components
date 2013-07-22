@@ -8,17 +8,18 @@ define(
         'components/card/mixin/interactions',
         'components/card/mixin/and_interaction',
         'components/card/mixin/action_drop_interaction',
+        'components/card/mixin/time_drop_interaction',
         'components/mixin/data_binding',
         'components/card/rule_editor_toolbar',
         'components/card/delimiter'
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, CardData, Interactions, AndInteraction, ActionDropInteraction,
+            Card, CardData, Interactions, AndInteraction, ActionDropInteraction,TimeDropInteraction,
             DataBinding, RuleEditorToolbar, Delimiter) {
 
         return ComponentManager.create('RuleEditor', RuleEditor,
-                Interactions, AndInteraction, ActionDropInteraction);
+                Interactions, AndInteraction, ActionDropInteraction, TimeDropInteraction);
 
         function RuleEditor() {
 
@@ -35,13 +36,13 @@ define(
                 },
                 actionsLabel: 'Actions',
                 conditionsLabel: 'Conditions',
-                delimiterLabels: { 
+                delimiterLabels: {
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
                     'GREATER_THAN': 'ABOVE',
                     'IS_OFF': 'IS_OFF',
-                    'IS_ON': 'IS_ON' 
+                    'IS_ON': 'IS_ON'
                 },
                 locales: {
                     Card:{
@@ -242,14 +243,14 @@ define(
                                 cards = o.cards.conditions.cards || [];
                                 cards.unshift( _makeCardNoSensorSignal(cards) );
                                 this.attr.cards.conditions = cards;
-                                
+
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
                             }
                             if (o.cards.actions) {
                                 cards = o.cards.actions.cards || [];
                                 this.attr.cards.actions = cards;
                                 this.loadToolboxCards(this.$actionsToolbox, cards);
-                                
+
                             }
                         }
                         if (o.editable !== undefined) {
@@ -442,7 +443,7 @@ define(
                        var phenomenons = _getPhenomenons(cards);
                        card.configData = phenomenons;
                     }
-                    
+
                     var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
                     // esta variable es importante porque se usa en card_toolbox.js para asignar
@@ -477,9 +478,9 @@ define(
                         var phenomenons = _getPhenomenons(this.attr.cards.conditions);
                         card['configData'] = phenomenons;
                     }
-                    
+
                     var data = CardData.encode(card);
-                    
+
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
                     var cardCmp = ComponentManager.get(attrCard.component);
                     var node = {
@@ -531,7 +532,7 @@ define(
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
                         conditionList = $(card).data('conditionList');
-                        if(cardConfig && cardValue){
+                        if(cardConfig && (cardValue !== undefined) ){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
@@ -540,20 +541,14 @@ define(
                             if( $.isArray(conditionList) ){
                                 cardConfig.conditionList = conditionList;
                             }
-                            if (cardConfig.configData &&
-                                    cardConfig.configData.timeType) {
-                                cardConfig.timeData.interval = cardValue;
-                                if (cardConfig.configData.timeType === 'timeElapsed') {
-                                    cardConfig.timeData.context = 'ASSET';
-                                }
-                            }
-                            cardConfig['configData'] = {};
                             cardsData.push(cardConfig);
                         }else{
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
                         }
                     }
                 }, this));
+                cardsData = _setScopeInSensorCards(cardsData);
+                cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
                 //data.name = "";
@@ -676,42 +671,63 @@ define(
                     'measureName': 'noSensorSignal',
                     'phenomenonApp': 'urnx-ogc:def:phenomenon:semaphoresFrankfurt:1.0:noSensorSignal',
                     'phenomenon':    'urn:x-ogc:def:phenomenon:IDAS:1.0:off',
-                    'dataType': 'Text',
-                    'uom': 'Unknown'
+                    'dataType': 'Quantity',
+                    'uom': 'min'
                 },
-                'configData': []
+                'conditionList':[{
+                       'scope':'LAST_MEASURE',
+                       'not':false,
+                       'operator':'GREATER_THAN',
+                       'parameterValue':'${device.asset.UserProps.reportInterval}'
+                    }]
             };
-
-            data.configData = _getPhenomenonList(sensorCards);
             return data;
         }
 
-        function _getPhenomenonList(cards){
-            var measureName;
-            var phenomenon;
-            var emptyPhenomenon = { label: '', value: '' };
-            var measureNames = [emptyPhenomenon];
-            for(var n = cards.length;n--;){
-                if (cards[n].type === "SensorCard" && cards[n].sensorData) {
-                    measureName = cards[n].sensorData.measureName;
-                    phenomenon = cards[n].sensorData.phenomenon;
-                    measureNames.push( { label: measureName, value: measureName } );
-                }
-            }
-            return measureNames;
-        }
-        
         // _getPhenomenons returns phenomenons with dataType quantity
         function _getPhenomenons(cards){
             var phenomenons = [];
-            
+
             $.each(cards, function(i, card){
                 if (card.type === 'SensorCard' && card.sensorData && card.sensorData.dataType === 'Quantity') {
                     phenomenons.push(card);
                 }
             });
-            
-            return phenomenons;
+
+            return {phenomenons: phenomenons};
+        }
+
+        function _orderCards(a, b){
+            var out = 0;
+            if(b.type === 'TimeCard'){
+                out = b.configData.timeType === 'timeInterval'?1:-1;
+            }
+            return out;
+        }
+
+        function _setScopeInSensorCards(cards){
+            var hasTimeInterval = false;
+            for(var i =cards.length; i--;){
+                if( cards[i].timeData && cards[i].configData.timeType === 'timeInterval' ){
+                    hasTimeInterval=true;
+                    break;
+                }
+            }
+            if(hasTimeInterval){
+                $.each(cards, function(i, card){
+                    card = _setScope(card, 'LAST_MEASURE');
+                });
+            }
+
+            return cards;
+        }
+        function _setScope(card, scope){
+            if( $.isArray(card.conditionList) ){
+                $.each(card.conditionList, function(i, condition){
+                    condition.scope = scope;
+                });
+            }
+            return card;
         }
     }
 );

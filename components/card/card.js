@@ -38,7 +38,7 @@ define(
                     'not': false,
                     'operator': null
                 },
-                delimiterList:false,
+                delimiterList: false,
                 defaultValue : '',
                 locales: {
                     'sensor_name':'Sensor Name'
@@ -101,8 +101,18 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
+                    if( $.isFunction(this.attr.validator) ){
+                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    }
                     this.$node.data('cardValue', o.value);
                 });
+
+                var value = this.attr.value || this.attr.defaultValue || undefined;
+
+                if(value){
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                    this.$node.data('cardValue', value);
+                }
 
                 if(_isSensorCard(this)){
                     var condition;
@@ -118,13 +128,13 @@ define(
                             this.$node.data('conditionList', [condition]);
                         }
                     });
-                    
+
                     this.on('valueChange', function(e, o) {
                         condition.parameterValue = o.value;
                         this.$node.data('conditionList', [condition]);
                     });
-                    
-                    this.on('phenomenonChange', $.proxy(function(e, o) { 
+
+                    this.on('phenomenonChange', $.proxy(function(e, o) {
                         if (o.phenomenon) {
                             var jsonPhen = JSON.parse(o.phenomenon);
                             this.attr.model = jsonPhen.model;
@@ -144,19 +154,20 @@ define(
                                 phenomenon: jsonPhen.sensorData.measureName
                             });
                         }
-                    }, this)); 
-                    
-                    this.on('levelChange', $.proxy(function(e, o) { 
+                    }, this));
+
+                    this.on('levelChange', $.proxy(function(e, o) {
                         this.$node.find('.body > *' ).trigger('updateLevel', o);
-                    }, this)); 
+                    }, this));
 
                     if(condition.parameterValue !== null ){
-                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
+                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
                     }else{
                         condition.parameterValue = this.attr.defaultValue;
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
             });
 

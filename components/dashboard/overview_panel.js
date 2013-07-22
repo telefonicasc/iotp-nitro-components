@@ -20,19 +20,24 @@ define(
       });
 
       this.createOverviewHeader = function() {
-        this.$headerNode = $('<div>').addClass('overview-header');
 
-        this.$countNode = $('<span>')
-            .addClass('overview-count')
-            .appendTo(this.$headerNode)
-            .html(this.attr.count);
+        console.log('ATTR', this.attr);
 
-        this.$titleNode = $('<span>')
-            .addClass('overview-title')
-            .appendTo(this.$headerNode)
-            .html(this.attr.title);
+        if (this.attr.title && this.attr.count){
+            this.$headerNode = $('<div>').addClass('overview-header');
 
-        this.$headerNode.appendTo(this.$node);
+            this.$countNode = $('<span>')
+                .addClass('overview-count')
+                .appendTo(this.$headerNode)
+                .html(this.attr.count);
+
+            this.$titleNode = $('<span>')
+                .addClass('overview-title')
+                .appendTo(this.$headerNode)
+                .html(this.attr.title);
+
+            this.$headerNode.appendTo(this.$node);
+        }
 
         this.$contentNode = $('<div>')
             .addClass('overview-content')

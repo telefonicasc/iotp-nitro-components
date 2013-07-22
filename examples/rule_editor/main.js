@@ -8,7 +8,6 @@ define(
   [
     'components/card/rule_editor',
     'components/card/action/send_email',
-    'components/card/action/send_alarm',
     'components/sensor_widget/battery',
     'components/sensor_widget/angle',
     'components/slider',
@@ -20,8 +19,9 @@ define(
     'components/card/front/binary',
     'components/card/front/quantity_value',
     'components/card/front/off',
-    'components/card/front/alarm',
+    'components/card/front/icon',
     'components/card/front/threshold',
+    'components/card/front/values',
     'components/form/dropdown'
   ],
 
@@ -54,12 +54,15 @@ define(
                             'after': 'Después de',
                             'every': 'Repite cada',
                             'sendEmailHeader': 'Enviar email',
-                            'sendAlarmHeader': 'Enviar alarma',
+                            'sendAlarmHeader': 'Crear alarma',
+                            'sendAlarmTxt': 'Esta acción creará todas las alarmas activas para los asset que cumplan las condiciones establecidas y no requieran configuración.',
                             'sendAlarmBack': 'Envío de alarma',
-                            'deactivated': 'Desactivado',
-                            'activated': 'Activado',
                             'to': 'Para',
-                            'subject': 'Asunto'
+                            'subject': 'Asunto',
+                            'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
+                            'turnOffAlarmHeader': 'Apagar alarma',
+                            'turnOffAlarmTxt': 'Esta acción apagará todas las alarmas activas para los asset que cumplan las condiciones establecidas y no requieran configuración.',
+                            'alarmHeader': 'Alarma'
                         }
                     },
                     actionsLabel: 'Acciones',
@@ -69,9 +72,7 @@ define(
                         'DIFFERENT_TO': 'DIFERENTE',
                         'MINOR_THAN': 'MENOR',
                         'GREATER_THAN': 'MAYOR',
-                        'IS_OFF': 'APAGADO',
-                        'ACTIVATED': 'ACTIVADA',
-                        'DEACTIVATED': 'DESACTIVADA' 
+                        'IS_OFF': 'APAGADO'
                     }
                 };
                 $http.get('actions.json').success(function(data) {

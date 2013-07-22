@@ -16,9 +16,12 @@ function() { requirejs(['components/jquery_plugins'], function() {
        $ele.trigger('drawBattery-voltage', 100);
     });
     $('#action3').on('click', function(){
-        $ele.trigger('drawBattery-level', 'empty'); 
+        $ele.trigger('drawBattery-level', 'empty');
     });
     $('#action4').on('click', function(){
         $ele.trigger('valueChange', {value:{voltage:35, charge:'low'}});
+    });
+    $('#action5').on('click', function(){
+        $ele.trigger('refresh');
     });
 });});

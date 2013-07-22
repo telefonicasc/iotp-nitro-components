@@ -53,9 +53,6 @@ define(
                     .attr('height', function() { y.range()[0]; });
 
                 context.selectAll('.resize rect')
-                    .attr('width', 10)
-                    .attr('rx', 4)
-                    .attr('ry', 4)
                     .style('visibility', 'inherit');
             }  
 

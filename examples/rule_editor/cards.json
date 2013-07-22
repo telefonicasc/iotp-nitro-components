@@ -2,7 +2,7 @@
     "count": 21,
     "data": [
         {
-            "id": "000",
+            "id": "001",
             "type": "SensorCard",
             "model": "Threshold",
             "sensorCardType": "threshold",
@@ -15,42 +15,21 @@
             },
             "configData": {}
         }, {
-            "id": "000",
+            "id": "002",
             "type": "SensorCard",
-            "model": "Alarm",
-            "sensorData": {
-                "measureName": "Alarm",
-                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:alarm",
-                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:alarm",
-                "dataType": "Text",
-                "uom": "Unknown"
-            },
+           	"sensorCardType": "alarm",
             "configData": {}
-        }, {
-            "id": "000",
-            "type": "SensorCard",
-            "model": "TimeInterval",
-            "sensorData": {
-                "measureName": "TimeInterval",
-                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeInterval",
-                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeInterval",
-                "dataType": "Quantity",
-                "uom": "hrs"
-            },
-            "configData": {}
-        }, {
-            "id": "000",
-            "type": "SensorCard",
-            "model": "TimeElapsed",
-            "sensorData": {
-                "measureName": "TimeElapsed",
-                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:TimeElapsed",
-                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:timeElapsed",
-                "dataType": "Quantity",
-                "uom": "sec"
-            },
-            "configData": {}
-        }, {
+        },
+        {
+            "id": "003","type": "TimeCard",
+            "timeData":{},
+            "configData": { "timeType": "timeInterval" }
+        },
+        {"id": "004","type": "TimeCard",
+            "timeData":{ "context": "ASSET" },
+            "configData": { "timeType": "timeElapsed" }
+        },
+        {
             "id": "1b4c0bd1-c868-40ee-96c7-015573da030a",
             "type": "SensorCard",
             "model": "SemaphoresModel",

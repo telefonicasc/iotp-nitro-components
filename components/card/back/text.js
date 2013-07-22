@@ -27,38 +27,75 @@ define(
 
                 this.$node.addClass('m2m-card-text');
 
-                if (this.attr.label) {
-                    $('<label>')
-                        .html(this.attr.label)
-                        .appendTo(this.$node);
+                if( $.isArray(this.attr.inputs) ){
+                    $.each(this.attr.inputs, $.proxy(this.addInput, this) );
+                }else{
+                    this.addInput(null, this.attr);
                 }
 
-                this.$input = this.makeInput(this.attr.dataType).appendTo(this.$node);
-
-
-                this.$input.on('keyup, change', $.proxy(function(e) {
-                    var value = this.$input.val();
+                this.$node.on('keyup change', 'input', $.proxy(function(e) {
+                    var $ele = $(e.currentTarget);
+                    var value = $ele.val();
+                    var dataType = $ele.data('dataType');
                     if(isIE8){
-                        if(!this.isValid(this.attr.dataType, value)){
-                            value = '';
-                            this.$input.val(value);
+                        if(!this.isValid(dataType, value)){
+                            $ele.val(value);
                         }
                     }
 
-                    this.trigger('valueChange', { value: value });
+                    this.trigger('valueChange', { value: this.getData() });
 
                 }, this));
 
                 this.on('valueChange', function(e,o) {
-                    this.$input.val(o.value);
+                    var name;
+                    if( $.isPlainObject(o.value) ){
+                        for(name in o.value){
+                            $('input[name='+name+']', this.$node).val(o.value[name]);
+                        }
+                    }else{
+                        $('input', this.$node).val(o.value);
+                    }
+
                 });
             });
 
-            this.makeInput = function(type){
+            this.getData = function(){
+                var $inputs = $('input', this.$node);
+                var out;
+                if($.isArray(this.attr.inputs)){
+                    out = {};
+                    $.each($inputs, function(e){
+                        var name = $(this).attr('name');
+                        var val = $(this).val();
+                        out[name] = val;
+                    });
+                }else{
+                    out = $inputs.val();
+                }
+                return out;
+            };
+
+            this.addInput = function(index, data){
+                if (data.label) {
+                    this.makeLabel(data).appendTo(this.$node);;
+                }
+                this.makeInput(data).appendTo(this.$node);
+            };
+
+            this.makeLabel = function(data){
+                var ele = $('<label>')
+                    .html(data.label);
+                return ele;
+            };
+
+            this.makeInput = function(data){
                 var ele = $('<input type="text" />');
-                if(!isIE8 && type === dataType.QUANTITY){
+                if(!isIE8 && data.dataType === dataType.QUANTITY){
                     ele.attr('type', 'number');
                 }
+                ele.data('dataType', data.dataType);
+                ele.attr('name', data.name || data.label);
                 return ele;
             };
             this.isValid = function(type, value){

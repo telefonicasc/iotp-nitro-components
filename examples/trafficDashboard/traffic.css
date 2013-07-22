@@ -230,42 +230,7 @@
     font-size: 28px;
     margin-left: 20px;
 }
-/*
-.battery-widget {
-    display : inline-block;
-    position: relative;
-}
 
-.battery-graph {
-    float:left;
-    max-width: 20%;
-}
-
-.battery-chart {
-    float:left;
-    max-width: 50%;
-}
-
-.battery-label {
-    float:left;
-    max-width: 25%;
-    margin-top: 5%;
-    font-weight: bold;
-    color: #6F8388;
-    font-size: 28px;
-}
-
-.battery-legend {
-    float:left;
-    min-width: 30%;
-    max-width: 50%;
-    font-size: 12px;
-    position: relative;
-    margin-left: 20%;
-    margin-top: -12%;
-    color: #ADC0C4;
-}
-*/
 .lights-widget {
     width: 320px;
     height: 90px;

@@ -1,0 +1,38 @@
+.m2m-dashboardmap .marker {
+    background-image: url('@{image-path}/markers/blue-marker.png');
+    width: 29px;
+    height: 39px;
+    margin-left: -15px;
+    margin-top: -28px;
+    position: absolute;    
+    -webkit-transition: -webkit-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -moz-transition: -moz-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -o-transition: -o-transform 0.2s ease-out, opacity 0.2s ease-in;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-in;
+}
+
+.m2m-dashboardmap .marker.red {
+    background-image: url('@{image-path}/markers/red-marker.png');
+}
+
+.m2m-dashboardmap .marker.group {
+    background-image: url('@{image-path}/markers/blue-marker-group.png');
+    color: white;
+    text-align: center;
+    height: 35px;
+    padding-top: 4px;
+    width: 26px;
+    font-size: 11px;
+}
+
+.m2m-dashboardmap .marker.red.group {
+    background-image: url('@{image-path}/markers/red-marker-group.png');
+}
+
+.m2m-dashboardmap .marker.selected {
+    background-image: url('@{image-path}/markers/blue-marker-selected.png');
+    margin-left: -22px;
+    margin-top: -32px;
+    width: 43px;
+    height: 43px;
+}

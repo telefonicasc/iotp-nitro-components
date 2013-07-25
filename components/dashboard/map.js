@@ -18,7 +18,8 @@ define(
     [
         'components/component_manager',
         'components/mixin/data_binding',
-        'libs/leaflet.markercluster-src'
+        'libs/leaflet.markercluster-src',
+        'libs/leaflet.offscreen-src'
     ],
 
     function(ComponentManager, DataBinding) {

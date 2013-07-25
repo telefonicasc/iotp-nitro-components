@@ -34,6 +34,9 @@ define(
                 /** Maximum distance to group markers */
                 maxGroupRadius: 20,
 
+                /** fit bounds of markers when update **/
+                fitBound:true,
+
                 /**
                  *  Factory function to translate from input data items to
                  *  the format the marker is specting.
@@ -133,8 +136,7 @@ define(
                     }, this));
                     this.markers.push(marker);
                 }, this));
-                //
-                this.map.fitBounds(bounds);
+                if(this.attr.fitBound) this.map.fitBounds(bounds);
                 this.offscreen.update(this.markers);
             };
 

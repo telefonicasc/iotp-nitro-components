@@ -34,6 +34,9 @@ define(
                 /** Maximum distance to group markers */
                 maxGroupRadius: 20,
 
+                /** fit bounds of markers when update **/
+                fitBounds:true,
+
                 /**
                  *  Factory function to translate from input data items to
                  *  the format the marker is specting.
@@ -117,7 +120,7 @@ define(
                 this.removeMarkers();
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
-                        position = [markerItem.latitude, markerItem.longitude],
+                    position = [markerItem.latitude, markerItem.longitude],
                         icon = L.divIcon({
                                 className: 'marker ' + markerItem.cssClass,
                                 iconSize: null
@@ -133,17 +136,13 @@ define(
                     }, this));
                     this.markers.push(marker);
                 }, this));
-                //
-                this.map.fitBounds(bounds);
+                if(this.attr.fitBounds) this.map.fitBounds(bounds);
                 this.offscreen.update(this.markers);
             };
 
             // Remove all the markers from the map
             this.removeMarkers = function() {
-                var map = this.map;
-                $.each(this.markers, function(i, marker) {
-                    map.removeLayer(marker);
-                });
+                this.markersLayer.clearLayers();
                 this.markers = [];
             };
 

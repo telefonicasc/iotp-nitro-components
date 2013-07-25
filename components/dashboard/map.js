@@ -35,7 +35,7 @@ define(
                 maxGroupRadius: 20,
 
                 /** fit bounds of markers when update **/
-                fitBound:true,
+                fitBounds:true,
 
                 /**
                  *  Factory function to translate from input data items to
@@ -136,7 +136,7 @@ define(
                     }, this));
                     this.markers.push(marker);
                 }, this));
-                if(this.attr.fitBound) this.map.fitBounds(bounds);
+                if(this.attr.fitBounds) this.map.fitBounds(bounds);
                 this.offscreen.update(this.markers);
             };
 

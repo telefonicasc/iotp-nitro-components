@@ -57,14 +57,14 @@ define(
                 iconFunction: function(marker) {
                     return L.divIcon({
                         className: 'marker ' + marker.cssClass,
-                        iconSize: null 
+                        iconSize: null
                     });
                 },
                 /**
                  *  Function to create the icon for a marker group
                  *  By default it creates a div with css classes
                  *  'marker', 'group', and all the child item css classes.
-                 *  The content of the div is the number of markers in 
+                 *  The content of the div is the number of markers in
                  *  the group
                  */
                 groupIconFunction: function(cluster) {
@@ -97,6 +97,8 @@ define(
             // Create mapbox components and layers
             this.createMap = function() {
                 this.map = L.mapbox.map(this.$mapbox[0], this.attr.mapboxId);
+                this.offscreen = new L.Control.Offscreen();
+                this.map.addControl(this.offscreen);
 
                 this.markersLayer = L.markerClusterGroup({
                     maxClusterRadius: this.attr.maxGroupRadius,
@@ -115,11 +117,11 @@ define(
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
                         position = [markerItem.latitude, markerItem.longitude],
-                        icon = L.divIcon({ 
+                        icon = L.divIcon({
                                 className: 'marker ' + markerItem.cssClass,
                                 iconSize: null
                             }),
-                        marker = L.marker(position, { 
+                        marker = L.marker(position, {
                             icon: icon, item: item, marker: markerItem
                         });
 
@@ -128,10 +130,11 @@ define(
                     marker.on('click', $.proxy(function(e) {
                         this.onMarkerClick(e, e.target.options.item);
                     }, this));
-                    this.markers.push(marker);                    
+                    this.markers.push(marker);
                 }, this));
-
+                //
                 this.map.fitBounds(bounds);
+                this.offscreen.update(this.markers);
             };
 
             // Remove all the markers from the map

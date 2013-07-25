@@ -9,17 +9,11 @@
             var dumyContainer = L.DomUtil.create('div', 'offscreen-indicator');
             var keyMarkers = ['e', 'w', 'n', 'ne', 'nw', 's', 'se', 'sw'];
             var key;
-            var show = function(e){
-                    var key = e.toElement.getAttribute('keyBound');
-                    var bound = this._bound[key];
-                    if(bound && bound.isValid()){
-                        map.fitBounds(bound);
-                    }
-                    e.preventDefault();
-                };
             while(key = keyMarkers.shift()){
-                this['$'+key] = L.DomUtil.create('div', 'offscreen-indicator '+key+'markers', $mapContainer);
+                this['$'+key] = L.DomUtil.create('div', 'offscreen-indicator offscreen-'+key, $mapContainer);
+                this['$'+key].setAttribute('keyBound', key);
                 L.DomEvent.addListener(this['$'+key], 'click', this._show, this);
+
             }
             map.on('zoomend drag resize', function(){
                 this.update();
@@ -79,7 +73,7 @@
                 this._bound[key] = this._toBounds(values[key]);
                 this['$'+key].innerHTML = n;
                 this['$'+key].style.display = n ? 'block':'none';
-                this['$'+key].setAttribute('keyBound', key);
+
             }
         },
         _toBounds : function(arr){

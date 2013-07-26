@@ -18,6 +18,7 @@ define(
     [
         'components/component_manager',
         'components/mixin/data_binding',
+        'components/tooltip',
         'libs/leaflet.markercluster-src',
         'libs/leaflet.offscreen-src'
     ],
@@ -61,6 +62,7 @@ define(
                         iconSize: null
                     });
                 },
+
                 /**
                  *  Function to create the icon for a marker group
                  *  By default it creates a div with css classes
@@ -81,6 +83,33 @@ define(
                         className: 'marker group ' + classes.join(' '),
                         iconSize: null
                     });
+                },
+
+                /**
+                 * Default tooltip component
+                 */
+                tooltip: {
+                    component: 'Tooltip',
+                    items: [{
+                        tpl: '{{value.marker.title}}'
+                    }]
+                },
+
+                /**
+                 * Tooltip for marker groups
+                 */
+                groupTooltip: {
+                    component: 'Tooltip',
+                    items: [{
+                        tpl: ''
+                    }]
+                },
+
+                /**
+                 * Tooltip displayed when you
+                 */
+                groupClickTooltip: {
+                    component: 'MapMarkerGroupTooltip'
                 }
             });
 
@@ -91,6 +120,7 @@ define(
 
                 this.markers = [];
                 this.createMap();
+                this.createTooltip();
                 this.on('valueChange', this.updateData);
                 this.on('itemselected', this.onItemSelected);
             });
@@ -107,6 +137,41 @@ define(
                     showCoverageOnHover: false,
                     zoomToBoundsOnClick: false
                 }).addTo(this.map);
+
+                this.markersLayer.on('click', $.proxy(function(e) {
+                    this.onMarkerClick(e, e.layer.options.item);
+                }, this));
+
+                this.markersLayer.on('clusterclick', $.proxy(function() {
+
+                }, this));
+
+                this.markersLayer.on('mouseover', $.proxy(function(e) {
+                    var position = $(e.layer._icon).offset();
+                    this.$tooltip.trigger('valueChange', {
+                        value: e.layer.options
+                    });
+                    this.$tooltip.css({
+                        left: position.left - this.$tooltip.width() / 2,
+                        top: position.top + $(e.layer._icon).height()
+                    });
+                    this.$tooltip.trigger('show');
+                }, this));
+
+                this.markersLayer.on('mouseout', $.proxy(function(e) {
+                    this.$tooltip.trigger('hide');
+                }, this));
+
+                this.markersLayer.on('clustermouseover', $.proxy(function() {
+
+                }, this));
+            };
+
+            this.createTooltip = function() {
+                var tooltipCmp = this.attr.tooltip.component || 'component';
+                this.$tooltip = $('<div>').appendTo(this.$node);
+                tooltipCmp = ComponentManager.get(tooltipCmp);
+                tooltipCmp.attachTo(this.$tooltip, this.attr.tooltip);
             };
 
             // Updates markers with the data comming from a valueChange
@@ -118,19 +183,13 @@ define(
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
                         position = [markerItem.latitude, markerItem.longitude],
-                        icon = L.divIcon({
-                                className: 'marker ' + markerItem.cssClass,
-                                iconSize: null
-                            }),
+                        icon = this.attr.iconFunction(markerItem),
                         marker = L.marker(position, {
                             icon: icon, item: item, marker: markerItem
                         });
 
                     bounds.push(position);
                     marker.addTo(this.markersLayer);
-                    marker.on('click', $.proxy(function(e) {
-                        this.onMarkerClick(e, e.target.options.item);
-                    }, this));
                     this.markers.push(marker);
                 }, this));
                 //
@@ -157,6 +216,7 @@ define(
             this.onItemSelected = function(e, o) {
                 var item = o.item,
                     marker = this.getMarkerForItem(item);
+
                 this.$node.find('.marker.selected').removeClass('selected');
                 if (marker) {
                     $(marker._icon).addClass('selected');

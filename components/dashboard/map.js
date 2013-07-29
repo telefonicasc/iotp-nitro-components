@@ -19,6 +19,7 @@ define(
         'components/component_manager',
         'components/mixin/data_binding',
         'components/tooltip',
+        'components/dashboard/map_marker_group_tooltip',
         'libs/leaflet.markercluster-src',
         'libs/leaflet.offscreen-src'
     ],
@@ -34,6 +35,12 @@ define(
 
                 /** Maximum distance to group markers */
                 maxGroupRadius: 20,
+
+                /** fit bounds of markers when update **/
+                fitBounds: true,
+
+                /** Show zoom control */
+                zoomControl: true,
 
                 /**
                  *  Factory function to translate from input data items to
@@ -91,6 +98,12 @@ define(
                 tooltip: {
                     component: 'Tooltip',
                     items: [{
+                        html: '',
+                        className: 'tooltip-arrow-border'
+                    }, {
+                        html: '',
+                        className: 'tooltip-arrow'
+                    }, {
                         tpl: '{{value.marker.title}}'
                     }]
                 },
@@ -100,8 +113,35 @@ define(
                  */
                 groupTooltip: {
                     component: 'Tooltip',
+                    model: function(data) {
+                        var byClass = {};
+                        $.each(data.markers || [], function(i, marker) {
+                            var className = marker.options.marker.cssClass;
+                            className = className || 'default';
+                            byClass[className] = byClass[className] || 0;
+                            byClass[className]++;
+                        });
+                        return {
+                            classes: $.map(byClass, function(count, className) {
+                                return {
+                                    count: count,
+                                    className: 'group-count ' +
+                                        (className === 'default' ?
+                                        '' : className)
+                                };
+                            })
+                        };
+                    },
                     items: [{
-                        tpl: ''
+                        html: '',
+                        className: 'tooltip-arrow-border'
+                    }, {
+                        html: '',
+                        className: 'tooltip-arrow'
+                    }, {
+                        tpl: '{{#value.classes}}' +
+                                '<div class="{{className}}">{{count}}</div>' +
+                             '{{/value.classes}}'
                     }]
                 },
 
@@ -127,7 +167,11 @@ define(
 
             // Create mapbox components and layers
             this.createMap = function() {
-                this.map = L.mapbox.map(this.$mapbox[0], this.attr.mapboxId);
+                var options = {
+                        zoomControl: this.attr.zoomControl
+                    };
+                this.map = L.mapbox.map(this.$mapbox[0],
+                    this.attr.mapboxId, options);
                 this.offscreen = new L.Control.Offscreen();
                 this.map.addControl(this.offscreen);
 
@@ -138,6 +182,12 @@ define(
                     zoomToBoundsOnClick: false
                 }).addTo(this.map);
 
+                this.map.on('move', $.proxy(function(e) {
+                    this.$tooltip.trigger('hide');
+                    this.$groupTooltip.trigger('hide');
+                    this.$groupClickTooltip.trigger('hide');
+                }, this));
+
                 this.markersLayer.on('click', $.proxy(function(e) {
                     this.onMarkerClick(e, e.layer.options.item);
                 }, this));
@@ -147,31 +197,55 @@ define(
                 }, this));
 
                 this.markersLayer.on('mouseover', $.proxy(function(e) {
-                    var position = $(e.layer._icon).offset();
-                    this.$tooltip.trigger('valueChange', {
-                        value: e.layer.options
-                    });
-                    this.$tooltip.css({
-                        left: position.left - this.$tooltip.width() / 2,
-                        top: position.top + $(e.layer._icon).height()
-                    });
-                    this.$tooltip.trigger('show');
+                    this.showTooltip('tooltip', e.layer._icon, e.layer.options);
                 }, this));
 
                 this.markersLayer.on('mouseout', $.proxy(function(e) {
                     this.$tooltip.trigger('hide');
                 }, this));
 
-                this.markersLayer.on('clustermouseover', $.proxy(function() {
+                this.markersLayer.on('clustermouseover', $.proxy(function(e) {
+                    if (!this.$groupClickTooltip.is(':visible')) {
+                        this.showTooltip('groupTooltip', e.layer._icon,
+                                { markers: e.layer.getAllChildMarkers() });
+                    }
+                }, this));
 
+                this.markersLayer.on('clustermouseout', $.proxy(function(e) {
+                    this.$groupTooltip.trigger('hide');
+                }, this));
+
+                this.markersLayer.on('clusterclick', $.proxy(function(e) {
+                    this.showTooltip('groupClickTooltip', e.layer._icon,
+                            { markers: e.layer.getAllChildMarkers() });
                 }, this));
             };
 
             this.createTooltip = function() {
-                var tooltipCmp = this.attr.tooltip.component || 'component';
-                this.$tooltip = $('<div>').appendTo(this.$node);
-                tooltipCmp = ComponentManager.get(tooltipCmp);
-                tooltipCmp.attachTo(this.$tooltip, this.attr.tooltip);
+                var tooltips = ['tooltip', 'groupTooltip', 'groupClickTooltip'];
+                $(tooltips).each($.proxy(function(i, tooltipName) {
+                    var attr = this.attr[tooltipName],
+                        tooltipCmp = attr.component || 'component';
+                    this['$' + tooltipName] = $('<div>').appendTo(this.$node);
+                    tooltipCmp = ComponentManager.get(tooltipCmp);
+                    if (tooltipCmp) {
+                        tooltipCmp.attachTo(this['$' + tooltipName], attr);
+                    }
+                }, this));
+            };
+
+            this.showTooltip = function(tooltipName, marker, data) {
+                var tooltip = this['$' + tooltipName],
+                    position = $(marker).offset();
+
+                tooltip.trigger('parentChange', {
+                    value: data
+                });
+                tooltip.css({
+                    left: position.left - tooltip.width() / 2,
+                    top: position.top + $(marker).height()
+                });
+                tooltip.trigger('show');
             };
 
             // Updates markers with the data comming from a valueChange
@@ -179,6 +253,9 @@ define(
                 var data = o.value || [],
                     bounds = [];
 
+                if (!$.isArray(data)) {
+                    data = [data];
+                }
                 this.removeMarkers();
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
@@ -192,17 +269,13 @@ define(
                     marker.addTo(this.markersLayer);
                     this.markers.push(marker);
                 }, this));
-                //
-                this.map.fitBounds(bounds);
+                if (this.attr.fitBounds) this.map.fitBounds(bounds);
                 this.offscreen.update(this.markers);
             };
 
             // Remove all the markers from the map
             this.removeMarkers = function() {
-                var map = this.map;
-                $.each(this.markers, function(i, marker) {
-                    map.removeLayer(marker);
-                });
+                this.markersLayer.clearLayers();
                 this.markers = [];
             };
 

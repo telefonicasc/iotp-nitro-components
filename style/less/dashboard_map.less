@@ -40,3 +40,86 @@
 .m2m-dashboardmap .marker.red.selected {
     background-image: url('@{image-path}/markers/red-marker-selected.png');
 }
+
+.m2m-dashboardmap .tooltip {
+    width: auto;
+    border: 2px solid #a7c0c7;
+    border-radius: 6px;
+    padding-top: 6px;
+    background-color: #e8f1f3;
+    color: #60777e;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 8px 0 8px;
+    margin-top: -50px;
+
+    &:after {
+        display: none;
+    }
+
+    .group-count {
+        display: inline-block;
+        background-image: url('@{image-path}/markers/blue-marker-tooltip.png');
+        color: #5e91a0;
+        background-repeat: no-repeat;
+        height: 17px;
+        padding-left: 20px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    .group-count.red {
+        color: #CA3430;
+        background-image: url('@{image-path}/markers/red-marker-tooltip.png');
+    }
+}
+
+.m2m-dashboardmap .tooltip-arrow-border {
+    border-left: 13px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 14px solid #A7C0C7;
+    position: relative;
+    top: -23px;
+    width: 0;
+    left: 50%;
+    margin-left: -13px;
+    margin-bottom: -14px;
+}
+
+.m2m-dashboardmap .tooltip-arrow {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid #E8F1F3;
+    position: relative;
+    top: -20px;
+    width: 0;
+    left: 50%;
+    margin-left: -10px;
+    margin-bottom: -12px;
+    top: -20px;
+    height: 0px;
+}
+
+.m2m-dashboardmap .group-tooltip-marker {
+    background-image: url('@{image-path}/markers/blue-marker-tooltip.png');
+    height: 24px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    
+    &.selected {
+        background-image: url('@{image-path}/markers/blue-marker-selected-tooltip.png');
+    }
+    &.red {
+        background-image: url('@{image-path}/markers/red-marker-tooltip.png');
+    }
+    &.selected.red {
+        background-image: url('@{image-path}/markers/red-marker-selected-tooltip.png');
+    }
+}
+
+.detail-panel .detail-panel-content .m2m-dashboardmap.fit-minimap {
+    height: 200px;
+    position: relative;
+    width: 312px;
+}

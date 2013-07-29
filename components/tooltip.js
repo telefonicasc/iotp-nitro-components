@@ -1,13 +1,14 @@
 define(
     [
         'components/component_manager',
-        'components/container'
+        'components/container',
+        'components/mixin/data_binding'
     ],
 
-    function(ComponentManager, Container) {
+    function(ComponentManager, Container, DataBinding) {
 
         return ComponentManager.create('Tooltip',
-            Tooltip);
+            Tooltip, DataBinding);
 
         function Tooltip() {
 
@@ -36,7 +37,6 @@ define(
 
                 this.on('valueChange', function(e, o) {
                     e.stopPropagation();
-                    this.$tooltipContent.trigger('valueChange', o);
                 });
 
                 this.$tooltipContent.on('valueChange', function(e, o) {

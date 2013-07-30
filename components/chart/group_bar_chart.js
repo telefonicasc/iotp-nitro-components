@@ -14,29 +14,36 @@ function(ComponentManager) {
             colors: ['#000000'],
             carouselHeight: 100,
             animDuration: 600,
-            axisXheight: 35
+            axisXheight: 35,
+            minWidthGroup: 200
         });
 
         var marginRight = 100;
 
         this.after('initialize', function() { 
             
-            var foreign = d3.select(this.node).append('svg:foreignObject')
-                .attr('class', 'foreign');
-            var div = foreign.append('xhtml:div')
-                .style('overflow-y', 'hidden')
-                .style('overflow-x', 'scroll');
-            var minW = 1150;    
+            var div = d3.select(this.node),
+                foreign = null;
+
+            if (this.attr.minWidthGroup){
+                foreign = d3.select(this.node)
+                            .append('svg:foreignObject')
+                            .attr('class', 'foreign');
+                div = foreign.append('xhtml:div')
+                            .style('overflow-y', 'hidden')
+                            .style('overflow-x', 'scroll'); 
+            }       
+            var minW = this.width;    
             
             console.log(d3.select('.chartDIV')[0]);
             
-            var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
+            var x0 = d3.scale.ordinal().rangeRoundBands([0, minW]),
                 x1 = d3.scale.ordinal(),
                 y = d3.scale.linear().range([this.height, 0]),
                 colors = this.attr.colors,
                 context = div.append('svg')
                     .attr('class', 'group-barchart')
-                    .attr('width', 1150)
+                    .attr('width', minW)
                     .attr('height', this.height),
                 keys = [],
                 maxValuePeriod = 0,
@@ -147,17 +154,21 @@ function(ComponentManager) {
             };
 
             this.updateChart = function(anim) {
-                
-                
-                foreign.attr('width', this.width).attr('height', this.height+150);
-                context.attr('width', minW).attr('height', this.height+120);
-                div.attr('width', minW);
-                div.attr('height', this.height + this.attr.carouselHeight);
 
+                var height = this.height,
+                    width = this.width;
+                
+                if (this.attr.minWidthGroup){
+                    foreign.attr('width', width).attr('height', height+this.attr.carouselHeight+60);
+                    context.attr('width', minW).attr('height', height+this.attr.carouselHeight+30);
+                    div.attr('width', minW);
+                    x0.rangeRoundBands([0, minW]);
+                }               
+                
                 if (this.modelData.labels && this.attr.labels){
                     labelsPanel.attr('height', this.attr.carouselHeight+40)
-                    .attr('x', this.width+30)
-                    .attr('y', this.height+10); 
+                    .attr('x', width+30)
+                    .attr('y', height+10); 
                     $('.labelChart').remove(); 
                     $.each(this.modelData.labels, function(i, label){
                         $('.chart-labels').append($('<div>').attr('class', 'labelChart').html(label));
@@ -170,9 +181,6 @@ function(ComponentManager) {
                 .attr('stroke', '#9F9F9F')
                 .attr('stroke-width', 1)
                 .attr('stroke-dasharray','20,5,20');
-
-                var height = this.height,
-                    width = this.width;
 
                 var rangeGroup = d3.range(this.values[0].length);
                 x1.domain(rangeGroup).rangeRoundBands([0, x0.rangeBand()], 0);
@@ -314,8 +322,11 @@ function(ComponentManager) {
 
 				this.width = chartSize.width-labelWidth;
 				this.height = chartSize.height;
+                
+                minW = (this.attr.minWidthGroup)? this.attr.minWidthGroup*keys.length: this.width;
+                x0.rangeRoundBands([0, minW], 0);
+                
                 //Update axe ranges
-				x0.rangeRoundBands([0, 1150], 0);
 				y.range([this.height, 0]);
                 //Update
                 if (this.values){
@@ -373,6 +384,8 @@ function(ComponentManager) {
                     keys = newKeys;
                     this.createChart();
                 }
+
+                minW = (this.attr.minWidthGroup)? this.attr.minWidthGroup*keys.length: this.width;
 
                 this.updateChart(anim);
                 this.updateSubpanel();

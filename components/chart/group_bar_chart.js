@@ -20,26 +20,35 @@ function(ComponentManager) {
         var marginRight = 100;
 
         this.after('initialize', function() { 
-
+            
+            var foreign = d3.select(this.node).append('svg:foreignObject')
+                .attr('class', 'foreign');
+            var div = foreign.append('xhtml:div')
+                .style('overflow-y', 'hidden')
+                .style('overflow-x', 'scroll');
+            var minW = 1150;    
+            
+            console.log(d3.select('.chartDIV')[0]);
+            
             var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
                 x1 = d3.scale.ordinal(),
                 y = d3.scale.linear().range([this.height, 0]),
                 colors = this.attr.colors,
-                context = d3.select(this.node).append('svg')
+                context = div.append('svg')
                     .attr('class', 'group-barchart')
-                    .attr('width', this.width)
+                    .attr('width', 1150)
                     .attr('height', this.height),
                 keys = [],
                 maxValuePeriod = 0,
                 prevMaxValuePeriod = 0;
 
-
+            
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
                 axisX = context.append('g').attr('class', 'axis_x');
-                axisX.append('rect').attr('width',this.width)
+                axisX.append('rect').attr('width', minW)
                 .attr('height', this.attr.axisXheight).attr('fill', '#e0e0db');
-                axisY = context.append('g').attr('class', 'axis_y');
+                axisY =  d3.select(this.node).append('g').attr('class', 'axis_y');
                 xAxis = d3.svg.axis().scale(x0).orient('bottom');
                 yAxis = d3.svg.axis().scale(y).orient('right');
             }
@@ -138,6 +147,12 @@ function(ComponentManager) {
             };
 
             this.updateChart = function(anim) {
+                
+                
+                foreign.attr('width', this.width).attr('height', this.height+150);
+                context.attr('width', minW).attr('height', this.height+120);
+                div.attr('width', minW);
+                div.attr('height', this.height + this.attr.carouselHeight);
 
                 if (this.modelData.labels && this.attr.labels){
                     labelsPanel.attr('height', this.attr.carouselHeight+40)
@@ -166,13 +181,13 @@ function(ComponentManager) {
                 //Update carousel attributes
                 carouselGroup.attr('transform', 'translate(0, '+(this.height+this.attr.axisXheight)+')');
                 var carouselPanel = carouselGroup.selectAll('.cell-barchart-subpanel')
-                .attr('width', width/keys.length - 2)
+                .attr('width', minW/keys.length - 2)
                 .attr('x', function(key) { return  x0(key); });
 
                 //Update backgrounds attributes
                 var backgrounds = backgroundGroups.selectAll('.bg_group');
                 backgrounds.attr('x', function(key) { return x0(key); })
-                .attr('width', width/keys.length )
+                .attr('width', minW/keys.length )
                 .attr('height', height);
                
                 //Update bars location and dimensions
@@ -250,7 +265,7 @@ function(ComponentManager) {
                 if (axisX && axisY) {
                     axisY.attr('transform', 'translate('+width+', 0)');
                     axisX.attr('transform', 'translate(0, '+(height)+')').call(xAxis);
-                    axisX.selectAll('rect').attr('width', width);
+                    axisX.selectAll('rect').attr('width', minW);
                     if (anim){         
                         axisY.transition().ease('sin').duration(this.attr.animDuration).call(yAxis);
                     }else{
@@ -300,7 +315,7 @@ function(ComponentManager) {
 				this.width = chartSize.width-labelWidth;
 				this.height = chartSize.height;
                 //Update axe ranges
-				x0.rangeRoundBands([0, this.width], 0);
+				x0.rangeRoundBands([0, 1150], 0);
 				y.range([this.height, 0]);
                 //Update
                 if (this.values){

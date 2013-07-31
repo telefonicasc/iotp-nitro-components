@@ -14,20 +14,34 @@ function(ComponentManager) {
             colors: ['#000000'],
             carouselHeight: 100,
             animDuration: 600,
-            axisXheight: 35
+            axisXheight: 35,
+            minWidthGroup: 200
         });
 
         var marginRight = 100;
 
-        this.after('initialize', function() { 
+        this.after('initialize', function() {
 
-            var x0 = d3.scale.ordinal().rangeRoundBands([0, this.width]),
+            var div = d3.select(this.node),
+                foreign = null;
+
+            if (this.attr.minWidthGroup){
+                foreign = d3.select(this.node)
+                            .append('svg:foreignObject')
+                            .attr('class', 'foreign');
+                div = foreign.append('xhtml:div')
+                            .style('overflow-y', 'hidden')
+                            .style('overflow-x', 'scroll');
+            }
+            var minW = this.width;
+
+            var x0 = d3.scale.ordinal().rangeRoundBands([0, minW]),
                 x1 = d3.scale.ordinal(),
                 y = d3.scale.linear().range([this.height, 0]),
                 colors = this.attr.colors,
-                context = d3.select(this.node).append('svg')
+                context = div.append('svg')
                     .attr('class', 'group-barchart')
-                    .attr('width', this.width)
+                    .attr('width', minW)
                     .attr('height', this.height),
                 keys = [],
                 maxValuePeriod = 0,
@@ -37,9 +51,9 @@ function(ComponentManager) {
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
                 axisX = context.append('g').attr('class', 'axis_x');
-                axisX.append('rect').attr('width',this.width)
+                axisX.append('rect').attr('width', minW)
                 .attr('height', this.attr.axisXheight).attr('fill', '#e0e0db');
-                axisY = context.append('g').attr('class', 'axis_y');
+                axisY =  d3.select(this.node).append('g').attr('class', 'axis_y');
                 xAxis = d3.svg.axis().scale(x0).orient('bottom');
                 yAxis = d3.svg.axis().scale(y).orient('right');
             }
@@ -73,7 +87,7 @@ function(ComponentManager) {
                 x0.domain(keys.map(function(key) {
                     return key;
                 }));
-            
+
                 //********** Background rectangles
                 backgroundGroups.selectAll('.bg_group').remove();
                 backgroundGroups.selectAll('.bg_group')
@@ -82,7 +96,7 @@ function(ComponentManager) {
                     return (i%2 === 0)? 'bg_group odd' : 'bg_group';
                 });
 
-                //************ Carousel panels                    
+                //************ Carousel panels
                 carouselGroup.selectAll('.cell-barchart-subpanel').remove();
                 carouselGroup.selectAll('.cell-barchart-subpanel')
                 .data(keys).enter().append('foreignObject')
@@ -139,25 +153,33 @@ function(ComponentManager) {
 
             this.updateChart = function(anim) {
 
+                var height = this.height,
+                    width = this.width,
+                    rowWidth = minW/keys.length;
+
+                if (this.attr.minWidthGroup){
+                    foreign.attr('width', width).attr('height', height+this.attr.carouselHeight+60);
+                    context.attr('width', minW).attr('height', height+this.attr.carouselHeight+20);
+                    div.attr('width', minW);
+                    x0.rangeRoundBands([0, minW]);
+                }
+
                 if (this.modelData.labels && this.attr.labels){
                     labelsPanel.attr('height', this.attr.carouselHeight+40)
-                    .attr('x', this.width+30)
-                    .attr('y', this.height+10); 
-                    $('.labelChart').remove(); 
+                    .attr('x', width+30)
+                    .attr('y', height+10);
+                    $('.labelChart').remove();
                     $.each(this.modelData.labels, function(i, label){
                         $('.chart-labels').append($('<div>').attr('class', 'labelChart').html(label));
                     });
                 }
-                
+
                 context.selectAll('.minLine').remove();
                 var minLine = context.append('line')
                 .attr('class', 'minLine').attr('x1', 0)
                 .attr('stroke', '#9F9F9F')
                 .attr('stroke-width', 1)
                 .attr('stroke-dasharray','20,5,20');
-
-                var height = this.height,
-                    width = this.width;
 
                 var rangeGroup = d3.range(this.values[0].length);
                 x1.domain(rangeGroup).rangeRoundBands([0, x0.rangeBand()], 0);
@@ -166,15 +188,15 @@ function(ComponentManager) {
                 //Update carousel attributes
                 carouselGroup.attr('transform', 'translate(0, '+(this.height+this.attr.axisXheight)+')');
                 var carouselPanel = carouselGroup.selectAll('.cell-barchart-subpanel')
-                .attr('width', width/keys.length - 2)
+                .attr('width', rowWidth - 2)
                 .attr('x', function(key) { return  x0(key); });
 
                 //Update backgrounds attributes
                 var backgrounds = backgroundGroups.selectAll('.bg_group');
                 backgrounds.attr('x', function(key) { return x0(key); })
-                .attr('width', width/keys.length )
+                .attr('width', rowWidth )
                 .attr('height', height);
-               
+
                 //Update bars location and dimensions
                 var currentMax = getMaxPeriodValue(this.values);
                 var currentMin = getMinPeriodValue(this.values);
@@ -191,22 +213,22 @@ function(ComponentManager) {
                 .attr('x', function(d, i) { return x1(i); });
                 if (anim){
                     bars.transition().ease('sin').duration(this.attr.animDuration).attr('y', function(d) {
-                        return y(d); 
+                        return y(d);
                     })
                     .attr('height', function(d) {
                         return height - y(d);
-                    }); 
+                    });
                     maxLine.attr('x2', width).transition().ease('sin').duration(this.attr.animDuration)
                     .attr('y1', y(topValue))
                     .attr('y2', y(topValue));
                 }else{
-                    bars.attr('y', function(d) { 
-                        return (d>maxValuePeriod)? y(maxValuePeriod): y(d); 
+                    bars.attr('y', function(d) {
+                        return (d>maxValuePeriod)? y(maxValuePeriod): y(d);
                     })
                     .attr('height', function(d) {
                         var yd = (d>maxValuePeriod)? y(maxValuePeriod): y(d);
-                        return (height - yd);          
-                    }); 
+                        return (height - yd);
+                    });
                     /*
                     maxLine.attr('x2', width).transition().ease('sin').duration(25)
                     .attr('y1', y(topValue))
@@ -226,12 +248,12 @@ function(ComponentManager) {
                 barsEx.data(function(d) { return d; })
                 .attr('width', x1.rangeBand()-1)
                 .attr('x', function(d, i) { return x1(i); })
-                .attr('y', function(d) { 
-                    return 0; 
+                .attr('y', function(d) {
+                    return 0;
                 })
                 .attr('height', function(d) {
-                    return d;  
-                }); 
+                    return d;
+                });
 
                 //Update tooltips values for each bar
                 if (this.attr.tooltip){
@@ -250,12 +272,12 @@ function(ComponentManager) {
                 if (axisX && axisY) {
                     axisY.attr('transform', 'translate('+width+', 0)');
                     axisX.attr('transform', 'translate(0, '+(height)+')').call(xAxis);
-                    axisX.selectAll('rect').attr('width', width);
-                    if (anim){         
+                    axisX.selectAll('rect').attr('width', minW);
+                    if (anim){
                         axisY.transition().ease('sin').duration(this.attr.animDuration).call(yAxis);
                     }else{
                         axisY.call(yAxis);
-                    }     
+                    }
                 }
             };
 
@@ -272,7 +294,7 @@ function(ComponentManager) {
                         };
                         $(panel).trigger('valueChange', val);
                     });
-                }  
+                }
             };
 
             this.showTooltip = function(rect, d, i) {
@@ -281,7 +303,7 @@ function(ComponentManager) {
                     this.tooltip.html(this.tooltipCaption(d, i));
                 }else{
                     this.tooltip.html('<div>'+d+'</div>');
-                }     
+                }
                 this.tooltip.css({
                     top: pos.top,
                     left: pos.left + x1.rangeBand()/3
@@ -294,13 +316,15 @@ function(ComponentManager) {
 			};
 
 			this.on('resize', function(e, chartSize) {
-
                 var labelWidth = (this.attr.labels)? this.attr.labels.width: 0;
 
 				this.width = chartSize.width-labelWidth;
 				this.height = chartSize.height;
+                minW = this.getMinWidth();
+
+                x0.rangeRoundBands([0, minW], 0);
+
                 //Update axe ranges
-				x0.rangeRoundBands([0, this.width], 0);
 				y.range([this.height, 0]);
                 //Update
                 if (this.values){
@@ -325,8 +349,8 @@ function(ComponentManager) {
                     this.panelData = this.modelData.panelData[roundDate];
                 }
                 if (this.modelData.tooltipCaption){
-                    this.tooltipCaption = this.modelData.tooltipCaption[roundDate]; 
-                }   
+                    this.tooltipCaption = this.modelData.tooltipCaption[roundDate];
+                }
                 this.options = options;
 
                 //Aggregate data by 'group'
@@ -336,10 +360,10 @@ function(ComponentManager) {
                 }
 
                 var anim = false;
-                if (options.value.brush === 'end'){                   
+                if (options.value.brush === 'end'){
                     maxValuePeriod = getMaxPeriodValue(this.values);
-                    anim = true; 
-                    prevMaxValuePeriod = maxValuePeriod; 
+                    anim = true;
+                    prevMaxValuePeriod = maxValuePeriod;
                     this.valueEx = getValuesExeed(this.values);
                 }else if (options.value.brush === 'brush') {
                     var self = this;
@@ -348,7 +372,7 @@ function(ComponentManager) {
 
                 if ( !options.value.brush ){
                     maxValuePeriod = getMaxPeriodValue(this.values);
-                    prevMaxValuePeriod = maxValuePeriod; 
+                    prevMaxValuePeriod = maxValuePeriod;
                     this.valueEx = getValuesExeed(this.values);
                 }
 
@@ -358,6 +382,8 @@ function(ComponentManager) {
                     keys = newKeys;
                     this.createChart();
                 }
+
+                minW = this.getMinWidth();
 
                 this.updateChart(anim);
                 this.updateSubpanel();
@@ -373,9 +399,19 @@ function(ComponentManager) {
                     this.attr.aggregation = value.aggregation;
                     this.options.value.brush = null;
                 }
-                
+
                 this.trigger('valueChange', this.options);
             });
+
+            this.getMinWidth = function(){
+                var rowWidth;
+                var w = this.width;
+                if(this.attr.minWidthGroup && keys.length){
+                    rowWidth = this.width / keys.length;
+                    w = (this.attr.minWidthGroup > rowWidth) ? (this.attr.minWidthGroup * keys.length):(this.width);
+                }
+                return w;
+            };
 
         });
 
@@ -414,9 +450,9 @@ function(ComponentManager) {
                 var r = [];
                 d.forEach(function(value){
                     if (!max){
-                        r.push(0);  
+                        r.push(0);
                     }else{
-                        r.push( (value > max)? 20: 0 );  
+                        r.push( (value > max)? 20: 0 );
                     }
                 });
                 exeed.push(r);

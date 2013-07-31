@@ -35,8 +35,6 @@ function(ComponentManager) {
             }
             var minW = this.width;
 
-            console.log(d3.select('.chartDIV')[0]);
-
             var x0 = d3.scale.ordinal().rangeRoundBands([0, minW]),
                 x1 = d3.scale.ordinal(),
                 y = d3.scale.linear().range([this.height, 0]),

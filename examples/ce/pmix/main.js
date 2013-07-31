@@ -1,6 +1,5 @@
 requirejs.config({
-  baseUrl: '../../',
-  hostUrl: './'
+  baseUrl: '../../../'
 });
 
 define(
@@ -9,6 +8,7 @@ define(
     'components/chart/bar_chart',
     'components/chart/area_chart',
     'components/chart/area_stacked_chart',
+    'components/chart/group_bar_chart',
     'components/chart/column_chart',
     'components/chart/radar_chart',
     'components/chart/range_selection_chart',
@@ -20,9 +20,9 @@ define(
   
   function() {
   
-    requirejs(['commons.js','dashce.js','components/jquery_plugins'], function() {
+    requirejs(['../commons.js','dashce.js','components/jquery_plugins'], function() {
       
-      $('.dashboard').m2mdashboard(DashCE_users.config);
+      $('.dashboard').m2mdashboard(DashCE_pmix.config);
     
     });
   }

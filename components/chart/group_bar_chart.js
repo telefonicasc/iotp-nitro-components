@@ -161,7 +161,7 @@ function(ComponentManager) {
 
                 if (this.attr.minWidthGroup){
                     foreign.attr('width', width).attr('height', height+this.attr.carouselHeight+60);
-                    context.attr('width', minW).attr('height', height+this.attr.carouselHeight+30);
+                    context.attr('width', minW).attr('height', height+this.attr.carouselHeight+20);
                     div.attr('width', minW);
                     x0.rangeRoundBands([0, minW]);
                 }

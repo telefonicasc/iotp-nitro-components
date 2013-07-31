@@ -14,8 +14,8 @@ function(ComponentManager) {
             colors: ['#000000'],
             carouselHeight: 100,
             animDuration: 600,
-            axisXheight: 35,
-            minWidthGroup: 200
+            axisXheight: 35
+            //minWidthGroup: 200
         });
 
         var marginRight = 100;

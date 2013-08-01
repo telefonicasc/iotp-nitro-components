@@ -31,7 +31,7 @@ function(ComponentManager) {
                             .attr('class', 'foreign');
                 div = foreign.append('xhtml:div')
                             .style('overflow-y', 'hidden')
-                            .style('overflow-x', 'scroll');
+                            .style('overflow-x', 'auto');
             }
             var minW = this.width;
 

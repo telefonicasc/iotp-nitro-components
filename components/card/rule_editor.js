@@ -479,6 +479,11 @@ define(
                         card['configData'] = phenomenons;
                     }
 
+                    if( card.model === 'NoSensorSignal' ){
+                        card.value = card.sensorData;
+                        card.configData =  _getPhenomenonList(this.attr.cards.conditions);
+                    }
+
                     var data = CardData.encode(card);
 
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);

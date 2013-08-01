@@ -143,6 +143,13 @@ function() {
                 }]
             };
             card.delimiterList = ['GREATER_THAN'];
+            card.delimiterCustomLabels = [
+                {
+                    valueKey: 'GREATER_THAN',
+                    labelKey: 'IS_OFF'
+                }
+            ];
+
             return card;
         },
         'alarm' : function (card) {
@@ -320,6 +327,7 @@ function() {
                'operator':'GREATER_THAN',
                'parameterValue':'${device.asset.UserProps.reportInterval}'
             }];
+            delete cardConfig.configData;
             return cardConfig;
         }
     };

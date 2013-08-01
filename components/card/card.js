@@ -114,7 +114,7 @@ define(
                     this.$node.data('cardValue', value);
                 }
 
-                if(_isSensorCard(this)){
+                if(_isSensorCard(this) && this.attr.model !== 'NoSensorSignal'){
                     var condition;
                     if(this.attr.conditionList.length){
                         condition = this.attr.conditionList[0];
@@ -168,7 +168,11 @@ define(
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
                     this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
+                }else if(this.attr.model === 'NoSensorSignal'){
+                    this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
+
             });
 
             function _stopPropagation(e){

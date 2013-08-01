@@ -324,7 +324,7 @@ function() {
             cardConfig.conditionList = [{
                'scope':'LAST_MEASURE',
                'not':false,
-               'operator':'GREATER_THAN',
+               'operator': (cardData.dataType === 'Quantity') ? 'GREATER_THAN':'EQUAL_TO' ,
                'parameterValue':'${device.asset.UserProps.reportInterval}'
             }];
             delete cardConfig.configData;

@@ -688,9 +688,11 @@ define(
             var measureName;
             var emptyPhenomenon = { label: '', value: '' };
             var measureNames = [emptyPhenomenon];
+            var unit;
             for(var n = cards.length;n--;){
                 if (cards[n].type === "SensorCard" && cards[n].sensorData) {
-                    measureName = cards[n].sensorData.measureName;
+                    unit = (cards[n].sensorData.uom && cards[n].sensorData.uom !== "Unknown") ? ' (' + cards[n].sensorData.uom + ')': '';
+                    measureName = cards[n].sensorData.measureName + unit;
                     measureNames.push( { label: measureName, value: cards[n].sensorData } );
                 }
             }

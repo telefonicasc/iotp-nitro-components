@@ -100,7 +100,8 @@ define(
                         .trigger('resize', chartSize);
 
                     if (this.attr.axisx) {
-                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 35);
+                        axisx.select('.'+this.attr.timeAxis.className)
+                            .attr('width', chartSize.width).attr('height', 35);
                         axisx.attr('transform', 'translate(0,' +
                             (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }
@@ -174,6 +175,8 @@ define(
                             });
                         }
 
+                        this.options = options;
+
                 });
 
                 this.on('rangeSelected', function(e, value){
@@ -183,8 +186,7 @@ define(
                 this.on('actionSelected', function(e, value){
                     for (var i = this.attr.charts.length - 1; i >= 0; i--) {
                         this.attr.charts[i].model = value.newModel;
-                    };
-                  
+                    }
                     this.trigger('valueChange', this.options);
 
                 });

@@ -233,7 +233,8 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: locales['value']
+                    label: locales['value'],
+                    dataType: 'Quantity'
                 }]
             };
             if( card.timeData && card.timeData.interval ){
@@ -257,7 +258,8 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: locales['value']
+                    label: locales['value'],
+                    dataType: 'Quantity'
                 }]
             };
 

@@ -22,7 +22,9 @@ function() {
         'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
         'alarmHeader': 'Alarm',
         'repeat': 'Repeat',
-        'interval': 'Interval'
+        'interval': 'Interval',
+        'elapsed': 'Elapsed',
+        'noSensorSignal': 'No Sensor Signal'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -129,7 +131,7 @@ function() {
             return card;
         },
         'noSensorSignal':function(card){
-            card.header = card.model;
+            card.header = locales['noSensorSignal'];
             card.front = {
                 items: [{
                     component: 'CardFrontOff'
@@ -219,7 +221,7 @@ function() {
 
     var encodeTime = {
         'timeElapsed': function(card){
-            card.header = 'Elapsed';
+            card.header = locales['elapsed'];
             card.cssClass = 'm2m-card-time m2m-card-elapsed';
             card.front = {
                 items: [{
@@ -242,7 +244,7 @@ function() {
             return card;
         },
         'timeInterval': function(card){
-            card.header = 'Interval';
+            card.header = locales['interval'];
             card.cssClass = 'm2m-card-time m2m-card-interval';
 
             card.front = {

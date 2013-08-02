@@ -129,6 +129,7 @@ function() {
             return card;
         },
         'noSensorSignal':function(card){
+            card.header = card.model;
             card.front = {
                 items: [{
                     component: 'CardFrontOff'
@@ -138,10 +139,17 @@ function() {
                 items: [{
                     component: 'Dropdown',
                     defaultValue: '',
-                    options: [{'label':'UserProps.reportInterval', 'value':'${device.asset.UserProps.reportInterval}'}]
+                    options: card.configData
                 }]
             };
             card.delimiterList = ['GREATER_THAN'];
+            card.delimiterCustomLabels = [
+                {
+                    valueKey: 'GREATER_THAN',
+                    labelKey: 'IS_OFF'
+                }
+            ];
+
             return card;
         },
         'alarm' : function (card) {
@@ -158,7 +166,7 @@ function() {
                 }]
             };
             card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
-            
+
             // delimiter options with custom labels
             card.delimiterCustomLabels = [
                 {
@@ -170,7 +178,7 @@ function() {
                     labelKey: 'IS_OFF'
                 }
             ];
-            
+
             card.defaultCondition = {
                     scope: 'USER_PROP',
                     parameterValue: null,
@@ -310,7 +318,19 @@ function() {
         }
     };
 
-    var decodeSensor = {};
+    var decodeSensor = {
+        'noSensorSignal':function(cardConfig, cardData){
+            cardConfig.sensorData = cardData;
+            cardConfig.conditionList = [{
+               'scope':'LAST_MEASURE',
+               'not':false,
+               'operator': (cardData.dataType === 'Quantity') ? 'GREATER_THAN':'EQUAL_TO' ,
+               'parameterValue':'${device.asset.UserProps.reportInterval}'
+            }];
+            delete cardConfig.configData;
+            return cardConfig;
+        }
+    };
 
     var decodeAction = {
         'SendEmailAction': function(cardConfig, cardData) {
@@ -345,7 +365,7 @@ function() {
 
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
-                card.header = card.sensorData.measureName;
+                card.header = card.sensorData.measureName || '';
             }
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];
@@ -394,7 +414,7 @@ function() {
             phenomenon = (sensorData && sensorData.phenomenon) ?
                 sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
             //@TODO este nombre de phenomenon es temporal
-            if (phenomenon === 'off') {
+            if (cardConfig.model === 'NoSensorSignal') {
                 name = 'noSensorSignal';
             } else if (phenomenon === 'angle') {
                 name = 'angle';

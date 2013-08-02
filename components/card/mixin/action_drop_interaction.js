@@ -29,23 +29,30 @@ define(
                     }
                 }, this));
             }
-
             return areas;
         }
 
+        
         function activate(area, card) {
             var previousCard = this.getConnectedFrom(area.placeholder);
-            
-            if(area.placeholder.hasClass('card-placeholder')){
-                
-                if (previousCard) {
-                    this.removeConnection(previousCard, area.placeholder);
-                    this.tempRemoveCard(area.placeholder);
-                    this.addConnection(previousCard, card);
+            var nextcard = this.getConnectedTo(area.placeholder);
+
+            if (area.placeholder.hasClass('card-placeholder')) {
+                this.removeConnection(previousCard, area.placeholder);
+                this.tempRemoveCard(area.placeholder);
+                this.addConnection(previousCard, card);
+
+            } else {
+                if (nextcard.length > 0) {
+                    var previous = this.getConnectedFrom(nextcard);
+
+                    this.removeConnection(area.placeholder, nextcard);
+                    this.addConnection(card, nextcard);
+                    this.addConnection(previous, card);
+                } else {
+                    this.removeConnection(area.placeholder, card);
+                    this.addConnection(area.placeholder, card);
                 }
-            }else{
-                this.removeConnection(area.placeholder, card);
-                this.addConnection(area.placeholder, card);
             }
         }
 

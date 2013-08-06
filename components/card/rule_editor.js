@@ -57,7 +57,7 @@ define(
                     }
                 },
                 editable: true,
-                ruleValidator : function(cards){
+                ruleValidator : function(ruleData){
                     return true;
                 }
             });

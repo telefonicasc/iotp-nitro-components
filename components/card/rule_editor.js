@@ -56,7 +56,10 @@ define(
                         'value': 'Value'
                     }
                 },
-                editable: true
+                editable: true,
+                ruleValidator : function(cards){
+                    return true;
+                }
             });
 
             this.after('initialize', function() {
@@ -562,13 +565,13 @@ define(
             };
 
             this.updateValue = function() {
-                var isValid;
+                var ruleData;
                 if (!this.disableChangeEvent) {
-                    isValid = this.isValidCards();
+                    ruleData = this.getRuleData();
                     this.trigger('valueChange', {
                         value: {
-                            'rule': this.getRuleData(),
-                            'isValid': isValid
+                            'rule': ruleData,
+                            'isValid': ( this.isValidCards() && this.attr.ruleValidator(ruleData) )
                         },
                         ruleEngineUpdate: true
                     });

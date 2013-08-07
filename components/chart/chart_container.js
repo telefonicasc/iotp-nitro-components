@@ -119,7 +119,7 @@ define(
                         .attr('height', chartSize.height);
                 });
 
-                this.on('valueChange', function(e, options) {                    
+                this.on('valueChange', function(e, options) { 
                         var model = options.value,
                             value = model[this.attr.valueField],
                             rangeField = this.attr.rangeField,
@@ -190,25 +190,6 @@ define(
                     this.trigger('valueChange', this.options);
 
                 });
-
-                function setValueRange(model, chartModel, valueRange){
-                    var chartMin, chartMax;
-                    if (model[chartModel]) {
-                        chartMin = d3.min(model[chartModel], function(d) {
-                            return d.value;
-                        }) * 1.2;
-                        chartMax = d3.max(model[chartModel], function(d) {
-                            return d.value;
-                        }) * 1.2;
-                        if (!valueRange[0] || chartMin < valueRange[0]) {
-                            valueRange[0] = chartMin;
-                        }
-                        if (!valueRange[1] || chartMax > valueRange[1]) {
-                            valueRange[1] = chartMax;
-                        }
-                    }
-                }
-
 
             });
         }

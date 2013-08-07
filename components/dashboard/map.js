@@ -168,7 +168,8 @@ define(
             // Create mapbox components and layers
             this.createMap = function() {
                 var options = {
-                        zoomControl: this.attr.zoomControl
+                        zoomControl: this.attr.zoomControl,
+                        attributionControl: false
                     };
                 this.map = L.mapbox.map(this.$mapbox[0],
                     this.attr.mapboxId, options);
@@ -293,6 +294,7 @@ define(
                 this.$node.find('.marker.selected').removeClass('selected');
                 if (marker) {
                     $(marker._icon).addClass('selected');
+                    this.map.panTo(marker._latlng);
                 }
             };
 

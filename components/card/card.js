@@ -38,7 +38,7 @@ define(
                     'not': false,
                     'operator': null
                 },
-                delimiterList:false,
+                delimiterList: false,
                 defaultValue : '',
                 locales: {
                     'sensor_name':'Sensor Name'
@@ -52,6 +52,7 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
+                    CardData.addLocales(this.attr.locales.CardData);
                     $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 
@@ -100,10 +101,20 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
+                    if( $.isFunction(this.attr.validator) ){
+                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    }
                     this.$node.data('cardValue', o.value);
                 });
 
-                if(_isSensorCard(this)){
+                var value = this.attr.value || this.attr.defaultValue || undefined;
+
+                if(value){
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                    this.$node.data('cardValue', value);
+                }
+
+                if(_isSensorCard(this) && this.attr.model !== 'NoSensorSignal'){
                     var condition;
                     if(this.attr.conditionList.length){
                         condition = this.attr.conditionList[0];
@@ -117,19 +128,51 @@ define(
                             this.$node.data('conditionList', [condition]);
                         }
                     });
+
                     this.on('valueChange', function(e, o) {
                         condition.parameterValue = o.value;
                         this.$node.data('conditionList', [condition]);
                     });
 
+                    this.on('phenomenonChange', $.proxy(function(e, o) {
+                        if (o.phenomenon) {
+                            var jsonPhen = JSON.parse(o.phenomenon);
+                            this.attr.model = jsonPhen.model;
+                            this.attr.sensorData = jsonPhen.sensorData;
+                            this.attr.type = jsonPhen.type;
+
+                            if (!this.attr.__cardConfig) {
+                                this.attr.__cardConfig = {};
+                            }
+
+                            this.attr.__cardConfig.model = jsonPhen.model;
+                            this.attr.__cardConfig.sensorData = jsonPhen.sensorData;
+                            this.attr.__cardConfig.type = jsonPhen.type;
+
+                            this.$node.data('cardConfig', this.attr.__cardConfig);
+                            this.$node.find('.body > *').trigger('updatePhenomenon', {
+                                phenomenon: jsonPhen.sensorData.measureName
+                            });
+                        }
+                    }, this));
+
+                    this.on('levelChange', $.proxy(function(e, o) {
+                        this.$node.find('.body > *' ).trigger('updateLevel', o);
+                    }, this));
+
                     if(condition.parameterValue !== null ){
-                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
+                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
                     }else{
                         condition.parameterValue = this.attr.defaultValue;
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
+                }else if(this.attr.model === 'NoSensorSignal'){
+                    this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
+
             });
 
             function _stopPropagation(e){
@@ -137,7 +180,8 @@ define(
             }
 
             function _isSensorCard(instance){
-                return instance.attr.actionCard !== true;
+                return instance.attr.actionCard !== true &&
+                    instance.attr.timeCard !== true;
             }
         }
     }

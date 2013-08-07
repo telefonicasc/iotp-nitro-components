@@ -94,19 +94,23 @@ define(
                 $.each(elements, $.proxy(function (k,v) {
                         // Does this component fit?
                         var requiredHeight = $(v).outerHeight();
-                        cacheHeight += requiredHeight;
-
-                        if (cacheHeight > remaining) {
-                            cacheHeight=0;
-                            this.addPage(++page);
+                        var nextEle = $(elements[k+1]);
+                        var nextHeight = 0;
+                        if(nextEle){
+                            nextHeight = nextEle.height();
                         }
 
                         if (parseInt(k) in alwaysVisible) {
                             $(v).attr('assigned-page',0);
+                            remaining -= requiredHeight;
                         }else{
+                            cacheHeight += requiredHeight;
                             $(v).attr('assigned-page',page);
+                            if ((cacheHeight+nextHeight) > remaining && nextEle.length) {
+                                cacheHeight=0;
+                                this.addPage(++page);
+                            }
                         }
-
                     }, this));
                 // Update page count
                 cfg.pageCount = page;

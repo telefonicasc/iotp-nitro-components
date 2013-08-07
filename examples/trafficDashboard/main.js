@@ -172,7 +172,22 @@ define(
                         else {
                             var submarkers = feature.properties.submarkers;
                             // cool things go here
-                            if (!isSelected) {
+                            if (isSelected) {
+                                var html = '<ul>';
+                                $.each(submarkers, function (k,v) {
+                                    var selClass = 'tooltip-';
+                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
+                                    var elem = $('<li>')
+                                            .addClass('tooltip-selector')
+                                            .addClass(selClass)
+                                            .html(v.properties.title);
+                                    if( v.isSelected ){
+                                        elem.addClass('selected');
+                                    }
+                                    html = $(html).append(elem);
+                                });
+                                return '<ul>'+html.html()+'</ul>';
+                            } else {
                                 var warns = 0;
                                 $.each(submarkers, function (k,v) {
                                     if (v.properties['marker-color'] === markerColorWarn) warns += 1;
@@ -211,6 +226,27 @@ define(
                     else return '<h2>' + feature.properties.title + "</h2>";
                 };
 
+                var makeCustomMarker = function(sel){
+                    var currentColor = sel.properties['marker-color'];
+                    var hasErrors = sel.item.errors.length > 0;
+                    sel.properties['customMarkerBuilder'] = function(a, b){
+                        var div = $('<div />').addClass('marker');
+                        var cls = (hasErrors ?
+                            'marker-red-selected-large' : 'marker-blue-selected-large');
+                        div.addClass(cls);
+                        return div[0];
+                    };
+                    sel.properties['marker-size'] = 'large';
+
+                    return sel;
+                };
+
+                var deleteCustomMarker = function(asset){
+                    asset.properties['marker-size'] = 'medium';
+                    delete asset.properties['customMarkerBuilder'];
+                    return asset;
+                };
+
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
@@ -223,7 +259,11 @@ define(
                         f.properties['marker-size'] = 'large';
                         if (previous !== null) {
                             previous.properties['marker-size'] = 'medium';
+
                         }
+
+                        f = makeCustomMarker(f);
+                        $('.mapbox-mini').trigger('valueChange',{ 'value': { 'markerModel': f } });
                     }
                 };
                 // =============================================================
@@ -447,7 +487,6 @@ define(
                                 $('.panel-list').hide();
                                 $('.panel-detail').trigger('update-view');
                                 updateAssetInfoFn(data);
-                                $('.mapbox').trigger('select-feature', [data.data.asset.name, selectFeature( data.data.errors)]);
                                 $('.detail-element-header .icon').
                                     removeClass('marker-red-selected').
                                     removeClass('marker-blue-selected');
@@ -496,8 +535,26 @@ define(
                 $('.dashboard-details-panel').on('expanded', function(){
                     $( this ).trigger('resize');
                     $('.panel-detail').trigger('update');
+                    $('.mapbox-mini').trigger('draw');
                 });
-                
+                $('.dashboard').on('click', '.group-tooltip li', function(){
+                    var ele = $(this);
+                    var title = ele.text();
+                    $('.mapbox').trigger('select-feature', [title, function(f, previus){
+                        if(f){
+                            $('.dashboard').trigger('itemselected', { item: f.item });
+                        }
+                        markerClicked(f, previus);
+                    }]);
+                    $('.dashboard .group-tooltip .selected').removeClass('selected');
+                    ele.addClass('selected');
+                });
+                $('.dashboard').on('itemselected', '.panel-list', function(e, data, cb){
+                    $('.m2m-mapviewer').
+                        trigger('select-feature', [data.item.asset.name, markerClicked]).
+                        trigger('center-on-feature', [data.item.asset.name]);
+                });
+
                 $('.dashboard').on('pageChanged', '.panel-detail', function(){
                     $('.mapbox-mini').trigger('draw');
                 });

@@ -1,0 +1,56 @@
+/**
+ * @component CardFrontValues
+ *
+ * @event {in} valueChange. Update values
+ *
+ * @mixin DataBinding
+ */
+
+define(
+    [
+        'components/component_manager',
+        'components/mixin/data_binding'
+    ],
+
+    function(ComponentManager, DataBinding) {
+
+
+        function CardFrontValues() {
+
+            this.defaultAttrs({
+                tpl:'<dl></dl>',
+                value:[]
+            });
+
+            this.after('initialize', function() {
+                this.$dl = $( this.attr.tpl );
+                this.$dl.appendTo(this.$node);
+                this.$node.addClass('m2m-card-front-values');
+                this.on('valueChange', $.proxy(this.onValueChange,this));
+
+                $.each(this.attr.value, $.proxy(this._draw, this));
+            });
+
+            this.onValueChange = function(event, data){
+                $.each(data.value, $.proxy(this._setValues, this));
+            };
+
+            this._draw = function(index, data){
+                var name = data.name || data.label || 'value'+index;
+                var label = data.label || name;
+                var value = data.value;
+                $('<dt/>').text(label).appendTo(this.$dl);
+                $('<dd/>').text(value).attr('name', name).appendTo(this.$dl);
+            };
+
+            this._setValues = function(name, value){
+                var $ele = $('dd[name='+name+']', this.$node);
+                if($ele.length){
+                    $ele.text( value );
+                }
+            };
+        }
+
+        return ComponentManager.create('CardFrontValues', CardFrontValues, DataBinding);
+    }
+);

@@ -28,16 +28,16 @@ define(
             this.after('initialize', function() {
 
                 this.before('renderItems', function() {
+
                     this.attr.items = [{
                         component: 'container',
                         className: 'main-content',
                         items: this.attr.mainContent
-                    }, {
-                        component: 'overviewPanel',
-                        title: this.attr.overviewPanel.title,
-                        contextMenu: this.attr.overviewPanel.contextMenu,
-                        items: this.attr.overviewPanel.items
                     }];
+
+                    this.attr.items.push($.extend({
+                            component: 'overviewPanel',
+                        }, this.attr.overviewPanel));
 
                     if (this.attr.detailsPanel) {
                         this.attr.items.push($.extend({
@@ -73,6 +73,10 @@ define(
                         });
                     }
                     this.$detailsPanel.trigger('expand');
+                });
+
+                this.on('updateData', function () {
+                    this.updateData();
                 });
             });
         }

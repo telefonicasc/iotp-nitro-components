@@ -45,11 +45,11 @@ define(
                     btnCancel.text(option.buttonTextCancel || option.button.cancel.label);
                     el.btnsdiv.show();
                     el.btndiv.hide();
-                    btnOk.on('click', option.okCallback || option.button.accept.callback);
-                    btnCancel.on('click', option.button.close.callback);
+                    btnOk.one('click', option.okCallback || option.button.accept.callback);
+                    btnCancel.one('click', option.button.close.callback);
                     focusEl = btnOk;
                 } else {
-                    btnClose.on('click', option.button.close.callback);
+                    btnClose.one('click', option.button.close.callback);
                     btnClose.text(option.buttonText || option.button.close.label);
                     el.btnsdiv.hide();
                     el.btndiv.show();

@@ -58,7 +58,12 @@ module.exports = function(grunt) {
       components: {
         src: 'components/**/*.js',
         options: {
-          vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
+          vendor: [
+          'libs/es5-shim/es5-shim.js',
+          'libs/jquery/jquery.js',
+          'libs/d3/d3.js',
+          'libs/angular/angular.js',
+          'libs/raphael/raphael.js',
           'libs/test/jasmine-jquery.js',
           'libs/test/flight-jasmine.js'],
           specs: 'test/**/*_spec.js',

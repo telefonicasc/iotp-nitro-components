@@ -14,7 +14,8 @@ define(
         this.defaultAttrs({
             fixRange: -1,
             x: d3.time.scale().range([0, 0]),
-            y: d3.scale.linear().range([0, 0])
+            y: d3.scale.linear().range([0, 0]),
+            jump: false
         });
 
         this.after('initialize', function() {
@@ -52,9 +53,6 @@ define(
                     .attr('height', function() { y.range()[0]; });
 
                 context.selectAll('.resize rect')
-                    .attr('width', 10)
-                    .attr('rx', 4)
-                    .attr('ry', 4)
                     .style('visibility', 'inherit');
             }  
 
@@ -63,9 +61,12 @@ define(
                 var start = this.attr.x(extent[0]),
                     end = this.attr.x(extent[1]);
 
-                context.select('.w').attr('transform', 'translate(' + start + ',0)').style('display', 'block');
-                context.select('.e').attr('transform', 'translate(' + end + ',0)').style('display', 'block');
-                context.select('.extent').attr('x', start).attr('width', end - start);
+                context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
+                .style('display', 'block');
+                context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
+                .style('display', 'block');
+                context.select('.extent').transition().attr('x', start)
+                .attr('width', end - start);
 
             };
 
@@ -84,9 +85,11 @@ define(
 
             this.on('rangeSelected', function(e, item){
                 this.attr.fixRange = item.fixRange;
-
+              
+                var ext = this.brush.extent();
+                                
                 if (this.attr.fixRange > 0){
-                    var ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
+                    ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
                     this.value['fixRange'] = item.fixRange;
                     this.updateExtent(ext);
@@ -97,21 +100,59 @@ define(
             });
 
             this.brushing = function(state){
-                var ext = [start, end];
-                if (this.attr.fixRange > 0){
-                  ext = getFixExtent(this.brush.extent(), this.attr.fixRange);
-                }
+                
+                var ext = [d3.time.day.round(start), d3.time.day.round(end)];
+                this.value['brush'] = state;
+                
+                ext = this.setExtend(state, ext);
+
                 this.updateExtent(ext);
                 this.value[this.attr.selectedRangeField] = ext;
-                this.value['brush'] = state;
                 this.trigger('valueChange', { value: this.value });
             };
+
+            this.setExtend = function(state, ext){
+                if (!state || (state === 'end' && this.attr.jump)){
+                    var offset = (ext[0].getTimezoneOffset() !== 0)? 1 : 0 ;
+                    var dayOfMonth = ext[0].getUTCDate();
+                    var month = ext[0].getMonth();
+                    var dayOfWeek = ext[0].getUTCDay();
+                    if (this.attr.fixRange == 35){ //Month
+                        if (dayOfMonth > 15){
+                            ext[0].setMonth(month+1);
+                        }  
+                        ext[0].setUTCDate(1-offset);
+                    }else if (this.attr.fixRange == 7){
+                        if (dayOfWeek<=3){
+                            ext[0].setDate(ext[0].getDate() - (dayOfWeek-1) - offset);
+                        }else{
+                            ext[0].setDate(ext[0].getDate() + (7+1-dayOfWeek) - offset);
+                        }      
+                    }
+                }
+
+                if (this.attr.fixRange > 0){
+                    var days = 7;
+                    if (this.attr.fixRange === 35){
+                        days = daysInMonth(ext[0]); 
+                    } 
+                    ext = getFixExtent(ext, days);
+                }
+
+                return ext;
+            };
+
         });
 
         function getFixExtent(currentExtent, range){
             var endDate = new Date( d3.time.day.round(currentExtent[0]).getTime() + (range)*24*60*60*1000 );
             var ext = [d3.time.day.round(currentExtent[0]), endDate];
             return ext;
+        }
+
+        function daysInMonth(date){
+            var d = new Date(date.getFullYear(), date.getMonth()+1, 0);
+            return d.getDate();
         }
 
     }

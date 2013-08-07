@@ -22,8 +22,9 @@ define(
         function RepeatContainer() {
 
             this.defaultAttrs({
-                item: { component: 'container' }
-                //, filter: function(elementOfArray, indexInArray){ return true }
+                item: { component: 'container' },
+                //, filter: function(element, index){ return true }
+                emptyContent: ''
             });
 
             this.updateContent = function(dataItems) {
@@ -49,12 +50,16 @@ define(
                 this.$node.addClass('repeat-container');
                 this.on('valueChange', function(e, o) {
                     if (o.value && o.value.length) {
-                        if( this.attr.filter && $.isFunction(this.attr.filter) ){
+                        if (this.attr.filter &&
+                                $.isFunction(this.attr.filter)) {
                             o.value = $.grep(o.value, this.attr.filter);
                         }
                         this.updateContent(o.value);
                     } else {
                         this.$node.empty();
+                        $('<div>').addClass('repeat-container-empty')
+                            .html(this.attr.emptyContent)
+                            .appendTo(this.$node);
                     }
                 });
             });

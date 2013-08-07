@@ -231,45 +231,6 @@
     margin-left: 20px;
 }
 
-.battery-widget {
-    /*    width: 50%;*/
-    display : inline-block;
-    position: relative;
-}
-
-.battery-graph {
-    /*    position: relative;*/
-    float:left;
-    max-width: 20%;
-}
-
-.battery-chart {
-    /*    position: relative;*/
-    float:left;
-    max-width: 50%;
-}
-
-.battery-label {
-    /*    position: relative;*/
-    float:left;
-    max-width: 25%;
-    margin-top: 5%;
-    font-weight: bold;
-    color: #6F8388;
-    font-size: 28px;
-}
-
-.battery-legend {
-    float:left;
-    min-width: 30%;
-    max-width: 50%;
-    font-size: 12px;
-    position: relative;
-    margin-left: 20%;
-    margin-top: -12%;
-    color: #ADC0C4;
-}
-
 .lights-widget {
     width: 320px;
     height: 90px;
@@ -297,64 +258,6 @@
     border-top: 1px solid #C6DADC;
 }
 
-
-/* ========================*\
-Paged panel :: Navigation   |
-===========================*/
-
-.navigation {
-    padding-top: 3px;
-    text-align: center;
-    background: #9EB9BF;
-    position: absolute;
-    bottom: 0;
-    width: 103%;
-}
-
-.navigation .page-left {
-    border-width: 5px 8px 5px 8px;
-    border-style: solid;
-    background: 0px;
-    height: 0px;
-    display: inline-block;
-    margin-right: 7px;
-    border-color: transparent #5A6568 transparent transparent;
-    cursor: pointer;
-}
-
-.navigation .page-right {
-    border-width: 5px 8px 5px 8px;
-    border-style: solid;
-    background: 0px;
-    height: 0px;
-    display: inline-block;
-    margin-left: 4px;
-    border-color: transparent transparent transparent #5A6568;
-    cursor: pointer;
-}
-
-.navigation .page-chooser {
-
-    cursor: pointer;
-    background-color: #BDD0D5;
-    display: inline-block;
-    width: 21px;
-    height: 18px;
-    margin-top: 6px;
-    margin-right: 3px;
-    margin-bottom: 6px;
-    border: 1px solid #98AAB0;
-    font-size: 11px;
-    color: #64737B;
-    font-weight: bold;
-    padding-top: 3px;
-}
-
-.navigation .selected {
-    background-color: #798b95;
-    border: 1px solid #758690;
-    color: #bdd0d5;
-}
 .marker {
     width: 43px;
     height: 43px;

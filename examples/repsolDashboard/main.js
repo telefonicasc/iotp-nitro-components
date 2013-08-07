@@ -51,7 +51,8 @@ function() {
             assetsDetailedURL = assetsURL + '?detailed=1';
         }
         else {
-            var service = Kermit.$injector.get('$user').credential.serviceName;
+//            var service = Kermit.$injector.get('$user').credential.serviceName;
+            var service = API.user.getOrganizationData().id;
             assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
             assetsDetailedURL = assetsURL + '?detailed=1';
         }
@@ -444,6 +445,7 @@ function() {
                     marginBottom: 8,
                     grid: true,
                     axisy: true,
+                    axisx: true,
                     model: modelFillLevel,
                     charts: [{
                         type: 'areaChart',
@@ -457,6 +459,8 @@ function() {
         
         //</editor-fold>
                 
+        // when moved to kermit:
+        // dashboard.m2mdashboard({
         $('.dashboard').m2mdashboard({
             mainContent: [mainMap,window],
             overviewPanel: {
@@ -472,7 +476,7 @@ function() {
                 ]
             },
             detailsPanel: {
-                marginTop: 16,
+                marginTop: 36,
                 items: [{
                     component: 'pagedContainer',
                     className: 'panel-detail',
@@ -521,8 +525,8 @@ function() {
                 else i++;
             }
             if (value !== null) {
-                updateAssetView(value);
                 $('.dashboard').trigger('itemselected',value);
+                updateAssetView(value);
             }
         });
 
@@ -543,6 +547,8 @@ function() {
             $('.chart-window').trigger('valueChange', {
                 value: historic, silent: true
             });
+            $('.chart').trigger('updateSize');
+            $('.chart-window').trigger('updateSize');
         });
         
         //</editor-fold>

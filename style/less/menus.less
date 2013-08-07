@@ -32,6 +32,27 @@
     text-decoration: none;
     color: #A0A4A5;
   }
+
+}
+
+.application-menu-tooltip.tooltip {
+  margin-left: 8px;
+  margin-top: 0px;
+  width: auto;
+  min-width: 0px;
+  padding-top: 9px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #31323a;
+  border-color: #31323a;
+  color: #e8e8e8;
+
+  &:after {
+    border-color: transparent #31323a transparent transparent;
+    top: 50%;
+    left: -22px;
+    margin-top: -9px;
+  }
 }
 
 .application-content {
@@ -43,7 +64,7 @@
 .tooltip {
   font-family: Helvetica, Arial;
   position: absolute;
-  width: 100px;
+  min-width: 100px;
   margin-left: -50px;
   min-height: 20px;
   margin-top: -60px;

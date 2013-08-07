@@ -100,7 +100,8 @@ define(
                         .trigger('resize', chartSize);
 
                     if (this.attr.axisx) {
-                        axisx.select('.'+this.attr.timeAxis.className).attr('width', chartSize.width).attr('height', 35);
+                        axisx.select('.'+this.attr.timeAxis.className)
+                            .attr('width', chartSize.width).attr('height', 35);
                         axisx.attr('transform', 'translate(0,' +
                             (chartSize.height + this.attr.timeAxis.margin) + ')');
                     }
@@ -118,66 +119,96 @@ define(
                         .attr('height', chartSize.height);
                 });
 
-                this.on('valueChange', function(e, options) {
-                    var model = options.value,
-                        value = model[this.attr.valueField],
-                        rangeField = this.attr.rangeField,
-                        range = rangeField && model[rangeField],
-                        valueRange = [];
-                    if (!range) {
-                        range = d3.extent(value, function(d) {
-                            return new Date(d.date);
+                this.on('valueChange', function(e, options) {                    
+                        var model = options.value,
+                            value = model[this.attr.valueField],
+                            rangeField = this.attr.rangeField,
+                            range = rangeField && model[rangeField],
+                            valueRange = [];
+                        if (!range) {
+                            range = d3.extent(value, function(d) {
+                                return new Date(d.date);
+                            });
+                        }
+
+                        x.domain(range);
+
+                        $.each(this.attr.charts, function(i, chart) {
+                            var chartModel = chart.model;
+                            if (chart.modelTotalSufix){
+                                chartModel = chart.model + chart.modelTotalSufix;
+                                setValueRange(model, chartModel, valueRange);
+                            }else{
+                                setValueRange(model, chartModel, valueRange);
+                            }
                         });
-                    }
 
-                    x.domain(range);
-
-                    $.each(this.attr.charts, function(i, chart) {
-                        var chartModel = chart.model;
-                        if (chart.modelTotalSufix){
-                            chartModel = chart.model + chart.modelTotalSufix;
-                            setValueRange(model, chartModel, valueRange);
-                        }else{
-                            setValueRange(model, chartModel, valueRange);
-                        }
-                    });
-
-                    function setValueRange(model, chartModel, valueRange){
-                        var chartMin, chartMax;
-                        if (model[chartModel]) {
-                            chartMin = d3.min(model[chartModel], function(d) {
-                                return d.value;
-                            }) * 1.2;
-                            chartMax = d3.max(model[chartModel], function(d) {
-                                return d.value;
-                            }) * 1.2;
-                            if (!valueRange[0] || chartMin < valueRange[0]) {
-                                valueRange[0] = chartMin;
-                            }
-                            if (!valueRange[1] || chartMax > valueRange[1]) {
-                                valueRange[1] = chartMax;
+                        function setValueRange(model, chartModel, valueRange){
+                            var chartMin, chartMax;
+                            if (model[chartModel]) {
+                                chartMin = d3.min(model[chartModel], function(d) {
+                                    return d.value;
+                                }) * 1.2;
+                                chartMax = d3.max(model[chartModel], function(d) {
+                                    return d.value;
+                                }) * 1.2;
+                                if (!valueRange[0] || chartMin < valueRange[0]) {
+                                    valueRange[0] = chartMin;
+                                }
+                                if (!valueRange[1] || chartMax > valueRange[1]) {
+                                    valueRange[1] = chartMax;
+                                }
                             }
                         }
-                    }
 
-                    valueRange[0] = Math.min(valueRange[0], 0);
-                    
-                    y.domain(valueRange);
-                    this.$node.find('g.chart, g.grid, g.axis.y')
-                        .trigger('valueChange', $.extend({
+                        valueRange[0] = Math.min(valueRange[0], 0);
+                        
+                        y.domain(valueRange);
+                        this.$node.find('g.chart, g.grid, g.axis.y')
+                            .trigger('valueChange', $.extend({
+                                    range: range, valueRange: valueRange
+                                }, options));
+
+                        if (this.attr.axisx) {
+                            $(axisx.node()).trigger('rangeChange', {
                                 range: range, valueRange: valueRange
-                            }, options));
+                            });
+                        }
 
-                    if (this.attr.axisx) {
-                        $(axisx.node()).trigger('rangeChange', {
-                            range: range, valueRange: valueRange
-                        });
-                    }
+                        this.options = options;
+
                 });
 
                 this.on('rangeSelected', function(e, value){
                     $(rangeSelection.node()).trigger('rangeSelected', value);
                 });
+             
+                this.on('actionSelected', function(e, value){
+                    for (var i = this.attr.charts.length - 1; i >= 0; i--) {
+                        this.attr.charts[i].model = value.newModel;
+                    }
+                    this.trigger('valueChange', this.options);
+
+                });
+
+                function setValueRange(model, chartModel, valueRange){
+                    var chartMin, chartMax;
+                    if (model[chartModel]) {
+                        chartMin = d3.min(model[chartModel], function(d) {
+                            return d.value;
+                        }) * 1.2;
+                        chartMax = d3.max(model[chartModel], function(d) {
+                            return d.value;
+                        }) * 1.2;
+                        if (!valueRange[0] || chartMin < valueRange[0]) {
+                            valueRange[0] = chartMin;
+                        }
+                        if (!valueRange[1] || chartMax > valueRange[1]) {
+                            valueRange[1] = chartMax;
+                        }
+                    }
+                }
+
 
             });
         }

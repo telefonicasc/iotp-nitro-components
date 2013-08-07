@@ -157,7 +157,7 @@
       font-size: 12px;
       padding-bottom: 26px;
     }
-    
+
   }
 }
 
@@ -213,9 +213,11 @@
   }
 
   .resize rect {
-    width: 10px;
+    rx: 1,
+    ry: 1,
+    width: 4px;
     fill: #d6dce2;
-    stroke-width: 2px;
+    stroke-width: 1px;
     stroke: #788d9a;
   }
 }
@@ -239,6 +241,17 @@
     text{
       fill: #7F8C8D;
       font-size: 12px;
+    }
+  }
+
+  .axis_y {
+    fill: #7F8C8D;
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+    .domain {
+      display:none;
     }
   }
 }
@@ -353,12 +366,6 @@
     fill: #ecebe7;
   }
   .axis_x {
-    text {
-      fill: #7F8C8D;
-      font-size: 12px;
-    }
-  }
-  .axis_y {
     text {
       fill: #7F8C8D;
       font-size: 12px;

@@ -126,6 +126,14 @@ function(ComponentManager) {
                 .enter().append('rect')
                 .attr('class', 'chartbar');
 
+                var bars = barGroups.selectAll('.groupAxis')
+                .data(function(d) { return d; })
+                .enter().append('line')
+                .attr('class', 'groupAxis')
+                .attr('stroke', 'black')
+                .attr('stroke-width', 0.5);
+
+
                 //************ Bars Excedent
                 context.selectAll('.groupEx').remove();
                 var barGroupsEx = context.selectAll('.groupEx')
@@ -207,6 +215,14 @@ function(ComponentManager) {
                 .attr('transform', function(d, i) {
                     return 'translate(' + (x0(keys[i])) + ',0)';
                 });
+
+                var groupAxis = barGroups.selectAll('.groupAxis');
+                groupAxis.data(function(d) { return d; })
+                .attr('x1', function(d, i) { return x1(i)-0.5; })
+                .attr('x2', function(d, i) { return x1(i)-0.5; })
+                .attr('y1', height)
+                .attr('y2', height-3);    
+
                 var bars = barGroups.selectAll('.chartbar');
                 bars.data(function(d) { return d; })
                 .attr('width', x1.rangeBand()-1)
@@ -306,7 +322,7 @@ function(ComponentManager) {
                 }
                 this.tooltip.css({
                     top: pos.top,
-                    left: pos.left + x1.rangeBand()/3
+                    left: pos.left
                 });
                 this.tooltip.show();
             };

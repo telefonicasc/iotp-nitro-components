@@ -115,7 +115,7 @@ define(
                     component: 'Tooltip',
                     model: function(data) {
                         var byClass = {};
-                        $.each(data.markers || [], function(i, marker) {
+                        $.each( (data && data.markers) || [], function(i, marker) {
                             var className = marker.options.marker.cssClass;
                             className = className || 'default';
                             byClass[className] = byClass[className] || 0;
@@ -270,7 +270,7 @@ define(
                     marker.addTo(this.markersLayer);
                     this.markers.push(marker);
                 }, this));
-                if (this.attr.fitBounds) this.map.fitBounds(bounds);
+                if (this.attr.fitBounds && bounds.length) this.map.fitBounds(bounds);
                 this.offscreen.update(this.markers);
             };
 
@@ -295,6 +295,7 @@ define(
                 if (marker) {
                     $(marker._icon).addClass('selected');
                     this.map.panTo(marker._latlng);
+                    this.offscreen.update();
                 }
             };
 

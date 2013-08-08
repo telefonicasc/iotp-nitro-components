@@ -51,12 +51,20 @@ define(
                         this.$node);
                     this.$detailsPanel.trigger('collapse', { duration: 0 });
                     this.$overviewPanel = $('.dashboard-overview-panel', this.$node);
+                    this.$mainContent =  $('.main-content', this.$node);
                     this.updateData();
 
                     this.$node.on('click', '.overview-header',
                         $.proxy(function() {
                             this.$detailsPanel.trigger('collapse');
                         }, this));
+
+                    this.$overviewPanel.on('itemselected',
+                        $.proxy(function(e, data){
+                            data.silent = true;
+                            this.$mainContent.children().trigger('itemselected', data)
+                        }, this));
+
                 });
 
                 this.on('itemselected', function(e, o) {

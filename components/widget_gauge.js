@@ -83,9 +83,9 @@ function (ComponentManager, Data_binding) {
             });
 
             this.on('valueChange', function (e,o) {
-                this.attr.value = (o && o.value && $.isNumeric(o.value)) ? o.value : 0;
-                this.attr.gauge.update(this.calculatePercent(this.attr.value));
-                this.select('labelSelector').html(this.attr.value + ' ' + this.attr.unit);
+                this.attr.value = (o && o.value && $.isNumeric(o.value)) ? o.value : -1;
+                this.attr.gauge.update(this.calculatePercent(this.attr.value >= 0 ? this.attr.value : 0));
+                this.select('labelSelector').html(this.attr.value >= 0 ? this.attr.value : '-' + ' ' + this.attr.unit);
             });
         });
 

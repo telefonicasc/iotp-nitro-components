@@ -38,7 +38,7 @@ define(
                     'not': false,
                     'operator': null
                 },
-                delimiterList:false,
+                delimiterList: false,
                 defaultValue : '',
                 locales: {
                     'sensor_name':'Sensor Name'
@@ -101,10 +101,20 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
+                    if( $.isFunction(this.attr.validator) ){
+                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    }
                     this.$node.data('cardValue', o.value);
                 });
 
-                if(_isSensorCard(this)){
+                var value = this.attr.value || this.attr.defaultValue || undefined;
+
+                if(value){
+                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                    this.$node.data('cardValue', value);
+                }
+
+                if(_isSensorCard(this) && this.attr.model !== 'NoSensorSignal'){
                     var condition;
                     if(this.attr.conditionList.length){
                         condition = this.attr.conditionList[0];
@@ -151,13 +161,18 @@ define(
                     }, this));
 
                     if(condition.parameterValue !== null ){
-                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue });
+                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
                     }else{
                         condition.parameterValue = this.attr.defaultValue;
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
+                }else if(this.attr.model === 'NoSensorSignal'){
+                    this.$node.data('delimiterList', this.attr.delimiterList);
+                    this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
+
             });
 
             function _stopPropagation(e){

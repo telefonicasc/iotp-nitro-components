@@ -16,11 +16,15 @@ function() {
         'thresholdHeader': 'Threshold',
         'criticalLevel': 'Critical level',
         'majorLevel': 'Major level',
+        'alarmOffLevel':  'Alarm off level',
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
         'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
+        'alarmHeader': 'Alarm',
         'repeat': 'Repeat',
-        'interval': 'Interval'
+        'interval': 'Interval',
+        'elapsed': 'Elapsed',
+        'noSensorSignal': 'No Sensor Signal'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -127,6 +131,7 @@ function() {
             return card;
         },
         'noSensorSignal':function(card){
+            card.header = locales['noSensorSignal'];
             card.front = {
                 items: [{
                     component: 'CardFrontOff'
@@ -139,7 +144,14 @@ function() {
                     options: card.configData
                 }]
             };
-            card.delimiterList = ['IS_OFF'];
+            card.delimiterList = ['GREATER_THAN'];
+            card.delimiterCustomLabels = [
+                {
+                    valueKey: 'GREATER_THAN',
+                    labelKey: 'IS_OFF'
+                }
+            ];
+
             return card;
         },
         'alarm' : function (card) {
@@ -155,7 +167,29 @@ function() {
                     labelTxt:  locales['alarmConditionTxt']
                 }]
             };
-            card.delimiterList = ['ACTIVATED', 'DEACTIVATED'];
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+
+            // delimiter options with custom labels
+            card.delimiterCustomLabels = [
+                {
+                    valueKey: 'EQUAL_TO',
+                    labelKey: 'IS_ON'
+                },
+                {
+                    valueKey: 'DIFFERENT_TO',
+                    labelKey: 'IS_OFF'
+                }
+            ];
+
+            card.defaultCondition = {
+                    scope: 'USER_PROP',
+                    parameterValue: null,
+                    not: false,
+                    operator: null,
+                    userProp: '${device.asset.UserProps.histeresis}'
+            };
+            card.defaultValue = 'true';
+            card.header = locales['alarmHeader'];
             return card;
         },
         'threshold': function(card) {
@@ -174,7 +208,8 @@ function() {
                     levelVal: parameterValue,
                     phenomenonVal: phenomenonValue,
                     labelCritical: locales['criticalLevel'],
-                    labelMajor: locales['majorLevel']
+                    labelMajor: locales['majorLevel'],
+                    labelAlarmOff: locales ['alarmOffLevel']
                 }]
             };
             card.header = locales['thresholdHeader'];
@@ -186,45 +221,52 @@ function() {
 
     var encodeTime = {
         'timeElapsed': function(card){
-            card.header = 'Elapsed';
+            card.header = locales['elapsed'];
             card.cssClass = 'm2m-card-time m2m-card-elapsed';
             card.front = {
                 items: [{
                     component: 'CardFrontQuantityValue',
                     label: locales['after'],
-                    unit:'min'
+                    units:'seg'
                 }]
             };
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    label: locales['value']
+                    label: locales['value'],
+                    dataType: 'Quantity'
                 }]
             };
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         },
         'timeInterval': function(card){
-            card.header = 'Interval';
+            card.header = locales['interval'];
             card.cssClass = 'm2m-card-time m2m-card-interval';
+
             card.front = {
                 items: [{
-                    component: 'CardFrontValues',
-                    value:[
-                        {label: locales['repeat'], name:'repeat', value:'-'},
-                        {label: locales['interval'], name:'interval', value:'-'}
-                    ]
+                    component: 'CardFrontQuantityValue',
+                    label: locales['interval'],
+                    units:'min'
                 }]
             };
             card.back = {
                 items: [{
                     component: 'CardBackText',
-                    inputs:[
-                        {label: locales['repeat'], name:'repeat'},
-                        {label: locales['interval']+'(min)', name:'interval'}
-                    ]
+                    label: locales['value'],
+                    dataType: 'Quantity'
                 }]
             };
+
+            if( card.timeData && card.timeData.interval ){
+                card.value = card.timeData.interval;
+            }
+            card.defaultValue = '1';
             card.timeCard = true;
             return card;
         }
@@ -232,7 +274,7 @@ function() {
 
     var encodeAction = {
         'SendEmailAction': function(card) {
-            card.cssClass = 'm2m-card-action m2m-card-send-email';
+            card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
             card.header = locales.sendEmailHeader;
             card.locales = {
                 subject: locales.subject,
@@ -243,7 +285,7 @@ function() {
             return card;
         },
         'CreateAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.sendAlarmHeader;
             card.actionCard = true;
             card.front = {
@@ -261,7 +303,7 @@ function() {
             return card;
         },
         'TurnOffAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action';
+            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
             card.header = locales.turnOffAlarmHeader;
             card.actionCard = true;
             card.front = {
@@ -280,14 +322,26 @@ function() {
         }
     };
 
-    var decodeSensor = {};
+    var decodeSensor = {
+        'noSensorSignal':function(cardConfig, cardData){
+            cardConfig.sensorData = cardData;
+            cardConfig.conditionList = [{
+               'scope':'LAST_MEASURE',
+               'not':false,
+               'operator': (cardData.dataType === 'Quantity') ? 'GREATER_THAN':'EQUAL_TO' ,
+               'parameterValue':'${device.asset.UserProps.reportInterval}'
+            }];
+            delete cardConfig.configData;
+            return cardConfig;
+        }
+    };
 
     var decodeAction = {
         'SendEmailAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         },
-         'SendAlarmAction': function(cardConfig, cardData){
+        'SendAlarmAction': function(cardConfig, cardData){
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }
@@ -297,11 +351,12 @@ function() {
         'timeElapsed': function(cardConfig, cardData){
             cardConfig.timeData.interval = cardData;
             cardConfig.timeData.context =  'ASSET';
+            cardConfig.timeData.repeat = '0';
             return cardConfig;
         },
         'timeInterval':function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData.interval;
-            cardConfig.timeData.repeat = cardData.repeat;
+            cardConfig.timeData.interval = cardData;
+            cardConfig.timeData.repeat = '0';
             cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
             return cardConfig;
         }
@@ -314,7 +369,7 @@ function() {
 
         if(card.type === cardType.SENSOR_CARD){
             if (!card.header && card.sensorData) {
-                card.header = card.sensorData.measureName;
+                card.header = card.sensorData.measureName || '';
             }
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];
@@ -359,23 +414,23 @@ function() {
             name, phenomenon;
         var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
         var patt = /^\$/g;
-
         if(cardConfig.type === cardType.SENSOR_CARD){
-            phenomenon = sensorData.phenomenon.replace(PHENOMENON_PREFIX, '');
+            phenomenon = (sensorData && sensorData.phenomenon) ?
+                sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
             //@TODO este nombre de phenomenon es temporal
-            if (phenomenon === 'off') {
+            if (cardConfig.model === 'NoSensorSignal') {
                 name = 'noSensorSignal';
             } else if (phenomenon === 'angle') {
                 name = 'angle';
-            } else if (phenomenon === 'alarm') {
+            } else if (!sensorData){
                 name = 'alarm';
             } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
                 name = 'threshold';
              }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
-            } else if (sensorData.dataType === 'Boolean') {
+            } else if (sensorData && sensorData.dataType === 'Boolean') {
                 name = 'binary';
-            } else if (sensorData.dataType === 'Quantity') {
+            } else if (sensorData && sensorData.dataType === 'Quantity') {
                 name = 'quantityValue';
             } else {
                 name = 'text';

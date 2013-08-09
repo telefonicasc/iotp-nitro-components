@@ -11,10 +11,9 @@ function(ComponentManager, DataBinding, Template) {
         this.defaultAttrs({
             tpl: '<div class="m2m-card-off">' +
                     '<div class="m2m-card-off-img">&nbsp;</div>' +
-                    '<div class="m2m-card-off-value">{{value}}</div>' +
+                    '<div class="m2m-card-off-value">{{value.measureName}}</div>' +
                  '</div>'
         });
-
         this.after('initialize', _initialize);
     }
 

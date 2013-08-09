@@ -34,6 +34,19 @@ describeComponent('components/chart/area_chart', function () {
   	 expect(this.component.height).toEqual(size.height);
   });
 
+  it('show tooltip on mouseover', function(){
+    setupComponent( {model: 'modelField', tooltip: true} );
+    this.component.trigger('valueChange', options);
+    this.component.showTooltip($('.hoverCircle'), 8);
+    expect(this.component.tooltip.css('display')).toEqual('block');
+  });
+
+  it('hide tooltip on mouseout', function(){
+    setupComponent( {model: 'modelField', tooltip: true} );
+    this.component.hideTooltip();
+    expect(this.component.tooltip.css('display')).toEqual('none');
+  });
+
 });
 
 

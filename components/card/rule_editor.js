@@ -56,7 +56,10 @@ define(
                         'value': 'Value'
                     }
                 },
-                editable: true
+                editable: true,
+                ruleValidator : function(ruleData){
+                    return true;
+                }
             });
 
             this.after('initialize', function() {
@@ -378,17 +381,6 @@ define(
                 return connectedTo;
             };
 
-            this.getConnectedToLeft = function(card) {
-                var connectedTo = $([]);
-                debugger
-                $.each(this.connections, function(i, connection) {
-                    if (connection.end.is(card)) {
-                        connectedTo = connectedTo.add(connection.start);
-                    }
-                });
-                return connectedTo;
-            };
-
             this.getConnectedToId = function(card){
                 var connections = this.getConnectedTo(card);
                 var ids = [];
@@ -490,6 +482,11 @@ define(
                         card['configData'] = phenomenons;
                     }
 
+                    if( card.model === 'NoSensorSignal' ){
+                        card.value = card.sensorData;
+                        card.configData =  _getPhenomenonList(this.attr.cards.conditions);
+                    }
+
                     var data = CardData.encode(card);
 
                     var attrCard = $.extend({}, this.attr.cardDefaults, data);
@@ -543,7 +540,7 @@ define(
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
                         conditionList = $(card).data('conditionList');
-                        if(cardConfig && cardValue){
+                        if(cardConfig && (cardValue !== undefined) ){
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
                         if(cardConfig){
@@ -558,7 +555,7 @@ define(
                         }
                     }
                 }, this));
-                //cardsData.map(_cleanCardData);
+                cardsData = _setScopeInSensorCards(cardsData);
                 cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
@@ -568,13 +565,13 @@ define(
             };
 
             this.updateValue = function() {
-                var isValid;
+                var ruleData;
                 if (!this.disableChangeEvent) {
-                    isValid = this.isValidCards();
+                    ruleData = this.getRuleData();
                     this.trigger('valueChange', {
                         value: {
-                            'rule': this.getRuleData(),
-                            'isValid': isValid
+                            'rule': ruleData,
+                            'isValid': ( this.isValidCards() && this.attr.ruleValidator(ruleData) )
                         },
                         ruleEngineUpdate: true
                     });
@@ -678,30 +675,28 @@ define(
                 'id': '0',
                 'type': 'SensorCard',
                 'model': 'NoSensorSignal',
-                'sensorData':{
-                    'measureName': 'noSensorSignal',
-                    'phenomenonApp': 'urnx-ogc:def:phenomenon:semaphoresFrankfurt:1.0:noSensorSignal',
-                    'phenomenon':    'urn:x-ogc:def:phenomenon:IDAS:1.0:off',
-                    'dataType': 'Text',
-                    'uom': 'Unknown'
-                },
-                'configData': []
+                'sensorData':{},
+                'conditionList':[{
+                       'scope':'LAST_MEASURE',
+                       'not':false,
+                       'operator':'GREATER_THAN',
+                       'parameterValue':'${device.asset.UserProps.reportInterval}'
+                    }],
+                'configData': _getPhenomenonList(sensorCards)
             };
-
-            data.configData = _getPhenomenonList(sensorCards);
             return data;
         }
 
         function _getPhenomenonList(cards){
             var measureName;
-            var phenomenon;
             var emptyPhenomenon = { label: '', value: '' };
             var measureNames = [emptyPhenomenon];
+            var unit;
             for(var n = cards.length;n--;){
                 if (cards[n].type === "SensorCard" && cards[n].sensorData) {
-                    measureName = cards[n].sensorData.measureName;
-                    phenomenon = cards[n].sensorData.phenomenon;
-                    measureNames.push( { label: measureName, value: measureName } );
+                    unit = (cards[n].sensorData.uom && cards[n].sensorData.uom !== "Unknown") ? ' (' + cards[n].sensorData.uom + ')': '';
+                    measureName = cards[n].sensorData.measureName + unit;
+                    measureNames.push( { label: measureName, value: cards[n].sensorData } );
                 }
             }
             return measureNames;
@@ -728,8 +723,28 @@ define(
             return out;
         }
 
-        function _cleanCardData(card){
-            delete card.configData;
+        function _setScopeInSensorCards(cards){
+            var hasTimeInterval = false;
+            for(var i =cards.length; i--;){
+                if( cards[i].timeData && cards[i].configData.timeType === 'timeInterval' ){
+                    hasTimeInterval=true;
+                    break;
+                }
+            }
+            if(hasTimeInterval){
+                $.each(cards, function(i, card){
+                    card = _setScope(card, 'LAST_MEASURE');
+                });
+            }
+
+            return cards;
+        }
+        function _setScope(card, scope){
+            if( $.isArray(card.conditionList) ){
+                $.each(card.conditionList, function(i, condition){
+                    condition.scope = scope;
+                });
+            }
             return card;
         }
     }

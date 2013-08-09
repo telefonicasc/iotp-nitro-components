@@ -92,7 +92,8 @@ define(
             this.makeInput = function(data){
                 var ele = $('<input type="text" />');
                 if(!isIE8 && data.dataType === dataType.QUANTITY){
-                    ele.attr('type', 'number');
+                    ele.attr('type', 'number').
+                        attr('min', '0');
                 }
                 ele.data('dataType', data.dataType);
                 ele.attr('name', data.name || data.label);

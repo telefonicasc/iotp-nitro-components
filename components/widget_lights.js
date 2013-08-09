@@ -1,15 +1,16 @@
 define (
 [
     'components/component_manager',
+    'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
-                                
-function (ComponentManager) {
-    
-    return ComponentManager.create('lightsWidget', LightsWidget);
-                                                        
+
+function (ComponentManager, Data_binding) {
+
+    return ComponentManager.create('lightsWidget', LightsWidget, Data_binding);
+
     function LightsWidget () {
-        
+
         this.defaultAttrs({
             lightsChart: '.lights-chart',
             lightsLabel: '.lights-label',
@@ -22,31 +23,38 @@ function (ComponentManager) {
             greyLightURL: 'url(res/images/greyLight.png)',
             imageBaseURL: 'url(res/images/'
         });
-                                                                                        
+
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
-            
+
             this.$nodeMap = $('<div>').addClass('lights-label').appendTo(this.$node);
 
             this.on('drawLights', function () {
-                this.attr.lightsChartWidget = this.createLightsChart(); 
+                this.attr.lightsChartWidget = this.createLightsChart();
                 //this.drawLights(this.attr.widget, this.attr.angle);
                 $(this.attr.lightsLabel).html(
                     "On (30 seconds) &nbsp &nbsp &nbsp&nbspError&nbsp &nbsp  "
                 );
             });
-            
+
             /* To use in local mode */
             this.on('updateLights', function (event, data) {
                 this.drawLights(data);
             });
-            
+
             /* To use with kermit */
             this.on('paintLights', function (event, red, yellow, green) {
                 this.requestDataCallback(red,yellow,green);
             });
+
+            this.on('valueChange', function(e, opt){
+                var value = ($.isPlainObject(opt.value) && opt.value)  || {};
+                if(value.red && value.yellow && value.green){
+                    this.trigger('updateLights', [value.red, value.yellow, value.green]);
+                }
+            });
         });
-        
+
         this.formatData = function (lightArray) {
             var array = [];
             for(var i= 0; i < lightArray.data.length; i++) {
@@ -69,7 +77,7 @@ function (ComponentManager) {
             }
             return array;
         };
-        
+
         this.requestDataCallback = function(redLight, yellowLight, greenLight) {
 
             var result = this.formatData(greenLight);
@@ -116,7 +124,7 @@ function (ComponentManager) {
             }
             this.updating = false;
         };
-        
+
         this.requestApiData = function (url, callback, useKermit) {
             if (useKermit) {
                 API.http.request({method:'GET', url:url})
@@ -141,9 +149,9 @@ function (ComponentManager) {
                 });
             }
         };
-        
-        
-        
+
+
+
         this.drawLights = function (urls) {
             // Get lights data
             var self = this;
@@ -152,27 +160,27 @@ function (ComponentManager) {
                 data.push(response);
                 if (data.length === 3) self.requestDataCallback(data[0],data[1],data[2]);
             };
-            
+
             $.each(urls, function (k,v) {
                 self.requestApiData(v,fn,self.attr.useKermit);
             });
-            
+
         };
 
         this.createLightsChart = function(options) {
             var paper = Raphael(this.attr.id, 300, 120),
-            bars = []; 
+            bars = [];
             var arrow = paper.rect(-50, 75, 12, 10);
             arrow.attr({
                 'stroke-width': 0,
                 fill: this.attr.arrowURL
             });
-            
+
             var style = {
                 'stroke-width': 0,
                 fill: this.attr.greyLightURL
             };
-            
+
             for (var i=0; i<20; i++) {
                 var bar = paper.rect(14*i, 0, 14, 70);
                 bar.attr(style);
@@ -182,14 +190,14 @@ function (ComponentManager) {
             var error = paper.circle(118,84,5);
             on.attr({fill: this.attr.fillColor, stroke: this.attr.borderColor});
             error.attr({stroke: this.attr.borderColor, "stroke-width":1,'fill-opacity':0});
-         
+
             return {
                 paper: paper,
                 bars: bars,
                 arrow: arrow
             };
         };
-        
+
 
     } // </LightsWidget>
 });

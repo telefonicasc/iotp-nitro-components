@@ -1,15 +1,16 @@
 define (
 [
     'components/component_manager',
+    'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
-                                
-function (ComponentManager) {
-    
-    return ComponentManager.create('pitchWidget', PitchWidget);
-                                                        
+
+function (ComponentManager, Data_binding) {
+
+    return ComponentManager.create('pitchWidget', PitchWidget, Data_binding);
+
     function PitchWidget () {
-        
+
         this.defaultAttrs({
             pitchChart: '.pitch-chart',
             pitchLabel: '.pitch-label',
@@ -19,10 +20,10 @@ function (ComponentManager) {
             id: 'pitch-widget',
             angle: 75
         });
-                                                                                        
+
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
-            
+
             //this.$nodeMap = $('<div>').addClass('pitch-label').appendTo(this.$node);
 
             //var obj = this.createTemperatureChart();
@@ -34,6 +35,11 @@ function (ComponentManager) {
                 this.attr.widget = this.createPitchChart();
                 this.drawPitch(this.attr.widget, this.attr.angle);
                 $(this.attr.pitchLabel).html( text );
+            });
+
+            this.on('valueChange', function(e,opt){
+                var value = opt.value;
+                this.trigger('drawPitch', value);
             });
         });
 
@@ -54,7 +60,7 @@ function (ComponentManager) {
 
             base.attr({stroke: this.attr.borderColor, "stroke-width":0,'fill-opacity':0});
             arm.attr({stroke: this.attr.borderColor,'fill-opacity':0});
-            smph.attr({stroke: this.attr.borderColor,'fill-opacity':0}); 
+            smph.attr({stroke: this.attr.borderColor,'fill-opacity':0});
             redLight.attr({fill: this.attr.fillColor,stroke: this.attr.fillColor});
             yellowLight.attr({fill: this.attr.fillColor,stroke: this.attr.fillColor});
             greenLight.attr({fill: this.attr.fillColor,stroke: this.attr.fillColor});
@@ -95,7 +101,7 @@ function (ComponentManager) {
         this.drawPitch = function(pitchChart, angle) {
             xmin = 15.5;
             ymax = 52.5;
-            r = 27; 
+            r = 27;
 
             if (angle > 90){
                 angle = abs(angleSmph-180);
@@ -103,7 +109,7 @@ function (ComponentManager) {
             if (angle < 10) {
                 angle = 10;
             }
-            
+
             angleSmph = -angle + 90;
 
             x1 = xmin + r * Math.cos(-0 * Math.PI / 180),
@@ -138,7 +144,7 @@ function (ComponentManager) {
               path: ["M", x1, y1, "A", r, r, 0, 0, 0, x2, y2],
               stroke: this.attr.borderColor
             },500);
-            
+
             //Show elements
             pitchChart.smph.show();
             pitchChart.base.show();

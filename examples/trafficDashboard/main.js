@@ -164,7 +164,6 @@ define(
 
                     updateOffscreenIndicators();
                 };
-
                 var createTooltip = function (feature, isSelected) {
                     if (typeof feature.properties.submarkers !== 'undefined') {
                         if (feature.properties.submarkers.length === 0) {
@@ -205,6 +204,23 @@ define(
                                 var content = $('<div>').append(errors).append(ok);
                                 return content.html();
                             }
+                            else {
+                                var html = '<ul>';
+                                $.each(submarkers, function (k,v) {
+                                    var selClass = 'tooltip-';
+                                    selClass += (v.properties['marker-color'] === markerColorWarn ? 'error':'ok');
+
+                                    var elem = $('<li>')
+                                            .addClass('tooltip-selector')
+                                            .addClass(selClass)
+                                            .html(v.properties.title);
+                                    if(k===0){
+                                        elem.addClass('selected');
+                                    }
+                                    html = $(html).append(elem);
+                                });
+                                return '<ul>'+html.html()+'</ul>';
+                            }
                         }
                     }
                     else return '<h2>' + feature.properties.title + "</h2>";
@@ -234,13 +250,16 @@ define(
                 var markerClicked = function (f, previous, dom) {
                     // Change marker size
                     if (f !== previous) {
+                        var itemSelected = f;
                         if(f.properties.submarkers.length){
                             f = f.properties.submarkers[0];
                         }
-                        if(previous && previous.isGroup){
-                            $.map(previous.properties.submarkers, deleteCustomMarker);
-                        }else if(previous){
-                            previous = deleteCustomMarker(previous);
+
+                        $('.mapbox-mini').trigger('itemselected',f);
+                        f.properties['marker-size'] = 'large';
+                        if (previous !== null) {
+                            previous.properties['marker-size'] = 'medium';
+
                         }
 
                         f = makeCustomMarker(f);
@@ -367,7 +386,7 @@ define(
                             {
                                 component: 'pagedContainer',
                                 className: 'panel-detail',
-                                alwaysVisible:[1,2],
+                                alwaysVisible:[0,1],
                                 items: compList
                             }
                         ]
@@ -437,7 +456,31 @@ define(
                                     $('.lights-widget').trigger('paintLights', [results[0], results[1], results[2]]);
                                 }
                             };
-                            
+                            var selectFeature = function(errors){
+                                return function (sel, prev) {
+                                    if (sel !== prev) {
+                                        var currentColor = sel.properties['marker-color'];
+                                        sel.properties['customMarkerBuilder'] = function(a, b){
+                                            var div = $('<div />').addClass('marker');
+                                            var cls = (errors.length ?
+                                                'marker-red-selected-large' : 'marker-blue-selected-large');
+                                            div.addClass(cls);
+
+                                            return div[0];
+                                        };
+                                        $('.mapbox-mini').trigger('valueChange',{
+                                            value: {
+                                                markerModel:sel
+                                            }
+                                        });
+                                        if (prev !== null) {
+                                            prev.properties['marker-size'] = 'medium';
+                                            delete prev.properties['customMarkerBuilder'];
+                                        }
+                                    }
+                                };
+                            };
+
                             requestApiData('data/AssetSemaphore.json', function(data){
                                 data.data.errors = getErrors(data.data.sensorData);
                                 $('.panel-detail').show();
@@ -483,8 +526,7 @@ define(
                         feature.properties['marker-size'] = 'medium';
                         delete feature.properties['customMarkerBuilder'];
                     });
-                    $('.m2m-mapviewer').trigger('tooltip-group-hide');
-
+                    $('.mapbox').trigger('tooltip-group-hide');
                 });
                 $('.dashboard').on('valueChange', function(e,data){
                     var count = data.value.length;
@@ -511,6 +553,17 @@ define(
                     $('.m2m-mapviewer').
                         trigger('select-feature', [data.item.asset.name, markerClicked]).
                         trigger('center-on-feature', [data.item.asset.name]);
+                });
+
+                $('.dashboard').on('pageChanged', '.panel-detail', function(){
+                    $('.mapbox-mini').trigger('draw');
+                });
+                $('.dashboard .group-tooltip').on('click', ' li', function(){
+                    var ele = $(this);
+                    var title = ele.text();
+                    $('.dashbaord').trigger('select-feature', [title]);
+                    $('.dashboard .group-tooltip .selected').removeClass('selected');
+                    ele.addClass('selected');
                 });
 
             }); // requirejs

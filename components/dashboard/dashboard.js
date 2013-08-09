@@ -25,6 +25,22 @@ define(
                 }, this));
             };
 
+            this.sendItemSelectedToDetail = function(e, o){
+                var item = o.item;
+                if (item && this.attr.itemData) {
+                    this.attr.itemData(item, $.proxy(function(data) {
+                        this.$detailsPanel.trigger('valueChange', {
+                            value: data, silent: true
+                        });
+                    }, this));
+                } else {
+                    this.$detailsPanel.trigger('valueChange', {
+                        value: item, silent: true
+                    });
+                }
+                this.$detailsPanel.trigger(item?'expand':'collapse');
+            };
+
             this.after('initialize', function() {
 
                 this.before('renderItems', function() {
@@ -51,28 +67,26 @@ define(
                         this.$node);
                     this.$detailsPanel.trigger('collapse', { duration: 0 });
                     this.$overviewPanel = $('.dashboard-overview-panel', this.$node);
+                    this.$mainContent =  $('.main-content', this.$node);
                     this.updateData();
 
                     this.$node.on('click', '.overview-header',
                         $.proxy(function() {
-                            this.$detailsPanel.trigger('collapse');
+                            //$mainContent send trigger to $detailsPanel
+                            this.$mainContent.children().trigger('itemselected', {item:null});
                         }, this));
-                });
 
-                this.on('itemselected', function(e, o) {
-                    var item = o.item;
-                    if (this.attr.itemData) {
-                        this.attr.itemData(item, $.proxy(function(data) {
-                            this.$detailsPanel.trigger('valueChange', {
-                                value: data, silent: true
-                            });
+                    this.$overviewPanel.on('itemselected',
+                        $.proxy(function(e, data){
+                            this.$mainContent.children().trigger('itemselected', data);
                         }, this));
-                    } else {
-                        this.$detailsPanel.trigger('valueChange', {
-                            value: item, silent: true
-                        });
-                    }
-                    this.$detailsPanel.trigger('expand');
+
+                    this.$overviewPanel.on('itemselected',
+                        $.proxy(this.sendItemSelectedToDetail, this));
+
+                    this.$mainContent.on('itemselected',
+                        $.proxy(this.sendItemSelectedToDetail, this));
+
                 });
 
                 this.on('updateData', function () {

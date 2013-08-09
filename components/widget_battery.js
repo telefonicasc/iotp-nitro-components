@@ -35,6 +35,9 @@ function (ComponentManager, Template, Data_binding) {
             borderColor: '#6F8388',
             baseColor: '#DDEAEC',
             id: 'battery-widget',
+            widgetWidth: 320,
+            widgetHeight: 100,
+            drawChart: true,
             value: 0,
             tpl: '<div class="battery-graph" id="battery-graph"/>' +
                 '<div class="battery-chart" id="battery-chart"/>' + 
@@ -50,7 +53,7 @@ function (ComponentManager, Template, Data_binding) {
 
             this.on('render', function () {
                 this.attr.widgetGraph = this.createBatteryGraph(); 
-                this.attr.widgetChart = this.createBatteryChart();
+                //this.attr.widgetChart = this.createBatteryChart();
             });
        
             this.on('drawBattery', function (event, batteryLevel, voltage) {
@@ -75,9 +78,10 @@ function (ComponentManager, Template, Data_binding) {
                 if( Object.prototype.toString.call( value ) === '[object Array]' ) {
                     value = value[0];
                 }
-
                 this.attr.widgetGraph = this.createBatteryGraph(); 
-                this.attr.widgetChart = this.createBatteryChart();
+                if (this.attr.createBatteryChart) {
+                    this.attr.widgetChart = this.createBatteryChart();
+                }
                 if (value.voltage !== undefined) {
                     this.drawBatteryVoltage(o.value.voltage);
                 }
@@ -169,7 +173,7 @@ function (ComponentManager, Template, Data_binding) {
         };
         
         this.createBatteryGraph = function() {
-            var paper = Raphael('battery-graph', 320, 100),
+            var paper = Raphael('battery-graph', this.attr.widgetWidth, this.attr.widgetHeight),
               fill, 
               stack;
             connector = paper.rect(20,26,6,3,0.5);
@@ -191,7 +195,7 @@ function (ComponentManager, Template, Data_binding) {
         
 
         this.createBatteryChart = function(options) {
-            var paper = Raphael('battery-chart', 300, 100),
+            var paper = Raphael('battery-chart', this.attr.widgetWidth, this.attr.widgetHeight),
                         lineChart; 
             
             var maxY = 14,

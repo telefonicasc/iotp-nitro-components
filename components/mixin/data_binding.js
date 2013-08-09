@@ -10,12 +10,16 @@ define(
         function DataBinding() {
 
             this.defaultAttrs({
+                resetModel: false,
                 model: ''
             });
 
             this.after('initialize', function() {
 
                 this.$node.attr('data-bind', '');
+                if (this.attr.resetModel) {
+                    this.$node.attr('data-bind-reset', '');
+                }
 
                 // TODO: Jquery deprecated
                 this.on('changeData', function(e, attr, value) {
@@ -25,6 +29,7 @@ define(
                 });
 
                 this.on('parentChange', function(e, o) {
+
                     var model = this.attr.model,
                         value = o.value;
 
@@ -54,7 +59,7 @@ define(
                     this.$node.trigger('valueChange', {
                         value: value, silent: true
                     });
-                });                
+                });
 
                 this.on('valueChange', function(e, o) {
                     var value = o.value,
@@ -66,11 +71,12 @@ define(
                     }
 
                     this.$node.find('[data-bind]')
-                        .not(nestedDatabinds).each(function() {
+                        .not(nestedDatabinds)
+                        .not('[data-bind-reset]').each(function() {
                         $(this).trigger('parentChange', { value: value });
                     });
 
-                    if (o.silent) {
+                    if (o.silent || this.attr.resetModel) {
                         e.stopPropagation();
                     }
                 });

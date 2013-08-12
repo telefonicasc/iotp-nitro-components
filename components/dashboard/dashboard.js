@@ -27,18 +27,22 @@ define(
 
             this.sendItemSelectedToDetail = function(e, o){
                 var item = o.item;
-                if (item && this.attr.itemData) {
-                    this.attr.itemData(item, $.proxy(function(data) {
+                if (item) {
+                    if (this.attr.itemData) {
+                        this.attr.itemData(item, $.proxy(function(data) {
+                            this.$detailsPanel.trigger('valueChange', {
+                                value: data, silent: true
+                            });
+                        }, this));
+                    } else {
                         this.$detailsPanel.trigger('valueChange', {
-                            value: data, silent: true
+                            value: item, silent: true
                         });
-                    }, this));
+                    }
+                    this.$detailsPanel.trigger('expand');
                 } else {
-                    this.$detailsPanel.trigger('valueChange', {
-                        value: item, silent: true
-                    });
+                    this.$detailsPanel.trigger('collapse');
                 }
-                this.$detailsPanel.trigger(item?'expand':'collapse');
             };
 
             this.after('initialize', function() {

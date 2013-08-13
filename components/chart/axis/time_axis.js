@@ -28,6 +28,7 @@ define(
 
             this.after('initialize', function() {
                 var context = d3.select(this.node),
+                    dayStep = 86400000,
                     maxSteps = this.attr.maxSteps;
 
                 this.scale = d3.time.scale();
@@ -38,21 +39,28 @@ define(
                     .orient(this.attr.orientation)
                     .ticks(function(t0, t1) {
                         var ticks = [], // = d3.time.days(t0, t1, steps);
+                            stepTick = attribs.stepTick,
                             t = t0;
 
+                        if (maxSteps && attribs.stepType === 'day') {
+                            if ((t1-t0)/dayStep > maxSteps) {
+                                stepTick = Math.ceil((t1-t0)/dayStep/maxSteps);    
+                            }
+                        }
+                
                         var i = 0;
                         while (t <= t1) {
                             t = d3.time.day.offset(t, 1);
                             if (attribs.stepType === 'month'){
-                                if (t.getUTCDate() === 3 && i%attribs.stepTick === 0){
+                                if (t.getUTCDate() === 3 && i%stepTick === 0){
                                     ticks.push(t);
                                 }
-                            }else if (attribs.stepType === 'day' && i%attribs.stepTick === 0){
+                            }else if (attribs.stepType === 'day' && i%stepTick === 0){
                                 ticks.push(t);
                             }
                             i++;
                         }
-                        if (attribs.stepType === 'day'){
+                        if (attribs.stepType === 'day' && !maxSteps){
                             ticks.pop();
                         }
                         

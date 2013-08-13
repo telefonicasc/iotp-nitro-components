@@ -15,7 +15,8 @@ define(
             fixRange: -1,
             x: d3.time.scale().range([0, 0]),
             y: d3.scale.linear().range([0, 0]),
-            jump: false
+            jump: false,
+            animate: true
         });
 
         this.after('initialize', function() {
@@ -61,12 +62,21 @@ define(
                 var start = this.attr.x(extent[0]),
                     end = this.attr.x(extent[1]);
 
-                context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
-                .style('display', 'block');
-                context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
-                .style('display', 'block');
-                context.select('.extent').transition().attr('x', start)
-                .attr('width', end - start);
+                if (this.attr.animate) {
+                    context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
+                        .style('display', 'block');
+                    context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
+                        .style('display', 'block');
+                    context.select('.extent').transition().attr('x', start)
+                        .attr('width', end - start);
+                } else {
+                    context.select('.w').attr('transform', 'translate(' + start + ',0)')
+                        .style('display', 'block');
+                    context.select('.e').attr('transform', 'translate(' + end + ',0)')
+                        .style('display', 'block');
+                    context.select('.extent').attr('x', start)
+                        .attr('width', end - start);
+                }
 
             };
 
@@ -100,15 +110,19 @@ define(
             });
 
             this.brushing = function(state){
-                
                 var ext = [d3.time.day.round(start), d3.time.day.round(end)];
                 this.value['brush'] = state;
                 
                 ext = this.setExtend(state, ext);
 
                 this.updateExtent(ext);
-                this.value[this.attr.selectedRangeField] = ext;
-                this.trigger('valueChange', { value: this.value });
+                if (!this.selectedRange || 
+                    this.selectedRange[0].getTime() !== ext[0].getTime() || 
+                    this.selectedRange[1].getTime() !== ext[1].getTime()) {
+                    this.value[this.attr.selectedRangeField] = ext;
+                    this.selectedRange = ext;
+                    this.trigger('valueChange', { value: this.value });
+                }
             };
 
             this.setExtend = function(state, ext){

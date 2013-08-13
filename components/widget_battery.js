@@ -76,6 +76,7 @@ function (ComponentManager, Template, Data_binding) {
             baseColor: '#DDEAEC',
             id: 'battery-widget',
             height:100,
+            drawChart: true,
             value: {
                 voltage:null,
                 charge:null
@@ -97,6 +98,7 @@ function (ComponentManager, Template, Data_binding) {
             if(this.attr.id){
                 this.$node.attr('id', this.attr.id);
             }
+
 
             this.on('drawBattery', function (event, batteryLevel, voltage) {
                 this.attr.value = {
@@ -122,6 +124,7 @@ function (ComponentManager, Template, Data_binding) {
 
             // Receives and array of measures, and parses the data required
             // Requires: {value: {charge: <text>, voltage: <float>}, silent:<>bln }
+
             this.on('valueChange', this.valueChange);
 
             this.valueChange(null, this.attr);
@@ -134,7 +137,9 @@ function (ComponentManager, Template, Data_binding) {
             }
             this.attr.value = value;
             this.attr.widgetGraph = this.createBatteryGraph();
-            this.attr.widgetChart = this.createBatteryChart();
+            if (this.attr.drawChart) {
+                this.attr.widgetChart = this.createBatteryChart();
+            }
 
             this.drawBatteryVoltage(this.attr.value.voltage);
             this.drawBatteryLevel(this.attr.value.charge);
@@ -183,6 +188,7 @@ function (ComponentManager, Template, Data_binding) {
         };
 
         this.createBatteryGraph = function() {
+
             var $graph = this.select('batteryGraph')[0];
             var paper = Raphael($graph, 50, this.attr.height);
             var connector = paper.rect(20,26,6,3,0.5);
@@ -191,6 +197,7 @@ function (ComponentManager, Template, Data_binding) {
             var fill = paper.rect(19.5,48,7,0,0);
 
             connector.attr({fill: this.attr.baseColor,
+
                 stroke: this.attr.borderColor, 'stroke-width':1.5});
             stack.attr({fill: this.attr.baseColor,
                 stroke: this.attr.borderColor, 'stroke-width':1.5});
@@ -206,9 +213,11 @@ function (ComponentManager, Template, Data_binding) {
         };
 
         this.createBatteryChart = function(options) {
+
             var $chart = this.select('batteryChart')[0],
                 paper = Raphael($chart, 200, this.attr.height),
                 lineChart;
+
 
             var maxY = 14,
                 width = 180,

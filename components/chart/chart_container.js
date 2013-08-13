@@ -125,6 +125,7 @@ define(
                             rangeField = this.attr.rangeField,
                             range = rangeField && model[rangeField],
                             valueRange = [];
+                        if (!value) value = [];
                         if (!range) {
                             range = d3.extent(value, function(d) {
                                 return new Date(d.date);
@@ -161,22 +162,23 @@ define(
                             }
                         }
 
-                        valueRange[0] = Math.min(valueRange[0], 0);
-                        
-                        y.domain(valueRange);
-                        this.$node.find('g.chart, g.grid, g.axis.y')
-                            .trigger('valueChange', $.extend({
+                        if (!isNaN(valueRange[0])) {
+                            valueRange[0] = Math.min(valueRange[0], 0);
+                            
+                            y.domain(valueRange);
+                            this.$node.find('g.chart, g.grid, g.axis.y')
+                                .trigger('valueChange', $.extend({
+                                        range: range, valueRange: valueRange
+                                    }, options));
+
+                            if (this.attr.axisx) {
+                                $(axisx.node()).trigger('rangeChange', {
                                     range: range, valueRange: valueRange
-                                }, options));
+                                });
+                            }
 
-                        if (this.attr.axisx) {
-                            $(axisx.node()).trigger('rangeChange', {
-                                range: range, valueRange: valueRange
-                            });
+                            this.options = options;    
                         }
-
-                        this.options = options;
-
                 });
 
                 this.on('rangeSelected', function(e, value){

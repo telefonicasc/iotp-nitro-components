@@ -279,7 +279,6 @@ define(
                                 $(elem).addClass(model.properties['_marker_id']);
                                 
                                 var onClick = function(event) {
-//                                    debugger
                                     var modelIndex = self.findMarker($(elem).attr('class'));
                                     var model = self.attr.features[modelIndex];
                                     // Update markers

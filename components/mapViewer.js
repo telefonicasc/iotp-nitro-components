@@ -647,12 +647,13 @@ function(ComponentManager, DataBinding) {
                 var position = element.position();
                 var markerDimesion = {w:element.width()};
                 var count = 1;
+                if (position.top != 0 && position.left != 0) {
+                    if (position.top < markerDimesion.w) locator += 'n';
+                    else if (position.top > dimensions.y) locator += 's';
 
-                if (position.top < markerDimesion.w) locator += 'n';
-                else if (position.top > dimensions.y) locator += 's';
-
-                if (position.left > dimensions.x) locator += 'e';
-                else if (position.left < markerDimesion.w) locator += 'w';
+                    if (position.left > dimensions.x) locator += 'e';
+                    else if (position.left < markerDimesion.w) locator += 'w';    
+                }                
 
                 locator += 'markers';
 
@@ -754,14 +755,16 @@ function(ComponentManager, DataBinding) {
                 }
                 self.attr.whenZoomed(features);
             });
+
             this.attr.private.map.addCallback('panned', function () {
                 _tooltip.updatePositon();
                 self.attr.whenPanned(features);
             });
-            if (this.attr.createOffscreenIndicators){
+            if (this.attr.createOffscreenIndicators) {
                 this.attr.private.map.addCallback('resized', $.proxy(this.updateOffscreenIndicators,this));
-                this.attr.private.map.addCallback('zoomed', $.proxy(this.updateOffscreenIndicators,this));
-                this.attr.private.map.addCallback('panned', $.proxy(this.updateOffscreenIndicators,this));
+                //this.attr.private.map.addCallback('zoomed', $.proxy(this.updateOffscreenIndicators,this));
+                //this.attr.private.map.addCallback('panned', $.proxy(this.updateOffscreenIndicators,this));
+                this.attr.private.map.addCallback('drawn', $.proxy(this.updateOffscreenIndicators,this));
             }
 
             //</editor-fold>

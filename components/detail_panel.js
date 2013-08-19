@@ -31,7 +31,6 @@ define(
                 this.$node.addClass('detail-panel');
 
                 this.on('render', function() {
-                    var cmIndicator;
                     if (this.attr.contextMenu) {
                         ContextMenuIndicator.attachTo(this.$anchor, this.attr);
                     }

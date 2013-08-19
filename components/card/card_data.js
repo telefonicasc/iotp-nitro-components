@@ -195,6 +195,7 @@ function() {
         'threshold': function(card) {
             var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
             var phenomenonValue = (card.sensorData && card.sensorData.phenomenonApp) ? card.sensorData.phenomenonApp : "";
+            var phenomenonData = (card.configData && card.configData.phenomenons) || '';
 
             card.front = {
                 items: [{
@@ -204,7 +205,7 @@ function() {
             card.back = {
                 items: [{
                     component: 'CardBackThreshold',
-                    phenomenonData: card.configData.phenomenons,
+                    phenomenonData: phenomenonData,
                     levelVal: parameterValue,
                     phenomenonVal: phenomenonValue,
                     labelCritical: locales['criticalLevel'],

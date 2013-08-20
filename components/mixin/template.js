@@ -39,6 +39,8 @@ define(
               this.template();
             }
           });
+
+          this.template();
         }
 
         if (this.attr.nodes) {

@@ -386,7 +386,7 @@ define(
                 var ids = [];
                 $.each(connections, function(i,connection){
                     var id = $(connection).attr('id');
-                    ids.push(id);
+                    if(id) ids.push(id);
                 });
                 return ids;
             };

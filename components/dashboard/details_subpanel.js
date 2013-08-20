@@ -16,11 +16,15 @@ define(
             this.defaultAttrs({
                 header: '',
                 insertionPoint: '.detail-panel-content',                
-                tpl: '<div class="detail-panel-header">{{header}}</div>' +
+                tpl: '<div class="detail-panel-header">'+
+                        '<div class="header-text">{{header}}</div>'+
+                        '<div class="context-menu-anchor"></div>'+
+                     '</div>' +
                      '<div class="detail-panel-content"></div>',
                 nodes: {
                     header: '.detail-panel-header',
-                    content: '.detail-panel-content'
+                    content: '.detail-panel-content',
+                    anchor: '.context-menu-anchor'
                 }
             });
 
@@ -28,10 +32,8 @@ define(
                 this.$node.addClass('detail-panel');                
 
                 this.on('render', function() {
-                    var cmIndicator;
                     if (this.attr.contextMenu) {
-                        cmIndicator = $('<div>').appendTo(this.$header);
-                        ContextMenuIndicator.attachTo(cmIndicator, this.attr);
+                        ContextMenuIndicator.attachTo(this.$anchor, this.attr);
                     }
                 });
             });

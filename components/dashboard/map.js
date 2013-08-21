@@ -259,14 +259,10 @@ define(
                 tooltip.trigger('show');
             };
 
-            this.updateCount = 0;
-
             // Updates markers with the data comming from a valueChange
             this.updateData = function(e, o) {
                 var data = o.value || [],
                     bounds = [];
-
-                this.updateCount++;
 
                 if (!$.isArray(data)) {
                     data = [data];

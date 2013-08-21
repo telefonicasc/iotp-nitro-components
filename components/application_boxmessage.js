@@ -64,6 +64,8 @@ define(
                 if (option.message) {
                     el.message.html(option.message);
                     el.box.show();
+                    el.box.css('margin-left', (-0.5 * el.box.width()));
+                    el.box.css('margin-top', (-0.5 * el.box.height()));
                     el.bg.show();
                     focusEl.focus();
                 }

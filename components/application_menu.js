@@ -5,8 +5,6 @@ define(
 
   function(ComponentManager) {
 
-    ComponentManager.create('ApplicationMenu', ApplicationMenu);
-
     function ApplicationMenu() {
 
       this.defaultAttrs({
@@ -77,7 +75,15 @@ define(
 
           this.expanded = false;
         });
+
+        this.on('remove', function() {
+            if (this.$tooltip) {
+                this.$tooltip.remove();
+            }
+        });
       });
     }
+
+    return ComponentManager.create('ApplicationMenu', ApplicationMenu);
   }
 );

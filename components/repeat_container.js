@@ -16,9 +16,6 @@ define(
 
     function(ComponentManager, Container, DataBinding) {
 
-        return ComponentManager.create('RepeatContainer',
-            RepeatContainer, DataBinding);
-
         function RepeatContainer() {
 
             this.defaultAttrs({
@@ -64,5 +61,8 @@ define(
                 });
             });
         }
+
+        return ComponentManager.create('RepeatContainer',
+            RepeatContainer, DataBinding);
     }
 );

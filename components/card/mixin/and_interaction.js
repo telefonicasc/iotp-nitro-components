@@ -3,8 +3,6 @@ define(
 
     function() {
 
-        return AndInteraction;
-
         function AndInteraction() {
             this.after('initialize', function() {
                 this.registerInteraction({
@@ -52,5 +50,7 @@ define(
             }
             return out;
         }
+
+        return AndInteraction;
     }
 );

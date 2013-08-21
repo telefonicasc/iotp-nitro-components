@@ -39,6 +39,8 @@ define(
                 /** fit bounds of markers when update **/
                 fitBounds: true,
 
+                fitBoundsOnce: true,
+
                 /** Show zoom control */
                 zoomControl: true,
 
@@ -165,6 +167,8 @@ define(
                 this.on('itemselected', this.onItemSelected);
             });
 
+            this.mapIsLoaded = false;
+
             // Create mapbox components and layers
             this.createMap = function() {
                 var options = {
@@ -183,10 +187,16 @@ define(
                     zoomToBoundsOnClick: false
                 }).addTo(this.map);
 
+                if(this.attr.fitBoundsOnce) this.attr.fitBounds = false;
+
                 this.map.on('move', $.proxy(function(e) {
                     this.$tooltip.trigger('hide');
                     this.$groupTooltip.trigger('hide');
                     this.$groupClickTooltip.trigger('hide');
+                }, this));
+
+                this.map.on('load', $.proxy(function(e) {
+                    this.mapIsLoaded = true;
                 }, this));
 
                 this.markersLayer.on('click', $.proxy(function(e) {
@@ -249,10 +259,14 @@ define(
                 tooltip.trigger('show');
             };
 
+            this.updateCount = 0;
+
             // Updates markers with the data comming from a valueChange
             this.updateData = function(e, o) {
                 var data = o.value || [],
                     bounds = [];
+
+                this.updateCount++;
 
                 if (!$.isArray(data)) {
                     data = [data];
@@ -270,8 +284,12 @@ define(
                     marker.addTo(this.markersLayer);
                     this.markers.push(marker);
                 }, this));
-                if (this.attr.fitBounds && bounds.length) this.map.fitBounds(bounds);
-                this.offscreen.update(this.markers);
+                if( this.mapIsLoaded ){
+                    if ( (this.attr.fitBounds || this.attr.fitBoundsOnce) && bounds.length) this.map.fitBounds(bounds);
+                    this.offscreen.update(this.markers);
+                    this.attr.fitBoundsOnce = false;
+                }
+
             };
 
             // Remove all the markers from the map

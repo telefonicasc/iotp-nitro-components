@@ -2152,7 +2152,13 @@ li.delimiter-value {
   background: #9EB9BF;
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 103%;
+  margin-left: -12px;
+}
+.paged-container .navigation .selected {
+  background-color: #798b95;
+  border: 1px solid #758690;
+  color: #bdd0d5;
 }
 .paged-container .pages-index {
   display: inline;
@@ -2217,7 +2223,7 @@ li.delimiter-value {
   top: 50%;
   left: 50%;
   background: #fff;
-  width: 350px;
+  min-width: 350px;
   margin-left: -150px;
   margin-top: -100px;
   padding-top: 5px;
@@ -2770,6 +2776,7 @@ li.delimiter-value {
   max-height: 72px;
   margin-top: 6px;
   outline: none;
+  overflow: none;
 }
 .m2m-mapviewer .marker-tooltip ul {
   list-style: none;

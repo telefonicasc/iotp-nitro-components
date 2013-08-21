@@ -254,7 +254,7 @@ define(
                 var data = o.value || [],
                     bounds = [];
 
-                if (!$.isArray(data)) {
+                if (data && !$.isArray(data)) {
                     data = [data];
                 }
                 this.removeMarkers();

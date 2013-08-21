@@ -3,12 +3,11 @@ define(
         'components/component_manager',
         'components/panel/border_collapsable_panel',
         'components/card/card',
-        'components/draggable',
-        'components/radio_button'
+        'components/draggable'
     ],
 
     function(ComponentManager, BorderCollapsablePanel, Card,
-             Draggable, RadioButton) {
+             Draggable) {
 
         return ComponentManager.extend(BorderCollapsablePanel,
                 'CardToolbox', CardToolbox);

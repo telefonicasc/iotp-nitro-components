@@ -64,6 +64,7 @@ module.exports = function(grunt) {
           'libs/d3/d3.js',
           'libs/angular/angular.js',
           'libs/raphael/raphael.js',
+          'libs/mapbox-1.3.1.js',
           'libs/test/jasmine-jquery.js',
           'libs/test/flight-jasmine.js'],
           specs: 'test/**/*_spec.js',
@@ -82,6 +83,8 @@ module.exports = function(grunt) {
         options: {
           specs: 'test/**/*_spec.js',
           vendor: ['libs/es5-shim/es5-shim.js', 'libs/jquery/jquery.js', 'libs/d3/d3.js', 'libs/angular/angular.js',
+          'libs/raphael/raphael.js',
+          'libs/mapbox-1.3.1.js',
           'libs/test/jasmine-jquery.js',
           'libs/test/flight-jasmine.js'],
           template: require('grunt-template-jasmine-istanbul'),

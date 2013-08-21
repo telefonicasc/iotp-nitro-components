@@ -10,9 +10,6 @@ define(
 
     function(ComponentManager, ContainerMixin, DataBinding) {
 
-        return ComponentManager.create('dashboard',
-            Dashboard, ContainerMixin, DataBinding);
-
         function Dashboard() {
 
             this.defaultAttrs({
@@ -98,6 +95,10 @@ define(
                 });
             });
         }
+
+        return ComponentManager.create('dashboard',
+            Dashboard, ContainerMixin, DataBinding);
+
     }
 
 );

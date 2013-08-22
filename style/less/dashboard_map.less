@@ -29,6 +29,10 @@
     background-image: url('@{image-path}/markers/red-marker-group.png');
 }
 
+.m2m-dashboardmap .marker.grey.group {
+    background-image: url('@{image-path}/markers/grey-marker-group.png');
+}
+
 .m2m-dashboardmap .marker.selected {
     background-image: url('@{image-path}/markers/blue-marker-selected.png');
     margin-left: -22px;
@@ -39,6 +43,14 @@
 
 .m2m-dashboardmap .marker.red.selected {
     background-image: url('@{image-path}/markers/red-marker-selected.png');
+}
+
+.m2m-dashboardmap .marker.grey {
+    background-image: url('@{image-path}/markers/grey-marker.png');
+}
+
+.m2m-dashboardmap .marker.grey.selected {
+    background-image: url('@{image-path}/markers/grey-marker-selected.png');
 }
 
 .m2m-dashboardmap .tooltip {
@@ -68,9 +80,15 @@
         margin-left: 5px;
         margin-right: 5px;
     }
+
     .group-count.red {
         color: #CA3430;
         background-image: url('@{image-path}/markers/red-marker-tooltip.png');
+    }
+
+    .group-count.grey {
+        color: #555555;
+        background-image: url('@{image-path}/markers/grey-marker-tooltip.png');
     }
 }
 
@@ -115,6 +133,12 @@
     }
     &.selected.red {
         background-image: url('@{image-path}/markers/red-marker-selected-tooltip.png');
+    }
+    &.grey {
+        background-image: url('@{image-path}/markers/grey-marker-tooltip.png');
+    }
+    &.selected.grey {
+        background-image: url('@{image-path}/markers/grey-marker-selected-tooltip.png');
     }
 }
 

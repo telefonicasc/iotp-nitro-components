@@ -25,14 +25,14 @@ define(
                 start = null,
                 end = null,
                 context = d3.select(this.node);
-                
+
             this.brush = d3.svg.brush()
               .x(this.attr.x)
               .on('brush', $.proxy(function() {
-                      
+
                   start = this.brush.extent()[0];
                   end = this.brush.extent()[1];
-                  this.brushing('brush');     
+                  this.brushing('brush');
 
               }, this))
               .on('brushstart', $.proxy(function() {
@@ -42,8 +42,8 @@ define(
               }, this))
               .on('brushend', $.proxy(function(){
 
-                  this.brushing('end');     
-                  
+                  this.brushing('end');
+
               }, this));
 
             if (this.attr.x && this.attr.y){
@@ -55,7 +55,7 @@ define(
 
                 context.selectAll('.resize rect')
                     .style('visibility', 'inherit');
-            }  
+            }
 
             this.updateExtent = function(extent) {
                 this.brush.extent(extent);
@@ -95,9 +95,9 @@ define(
 
             this.on('rangeSelected', function(e, item){
                 this.attr.fixRange = item.fixRange;
-              
+
                 var ext = this.brush.extent();
-                                
+
                 if (this.attr.fixRange > 0){
                     ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
@@ -112,12 +112,12 @@ define(
             this.brushing = function(state){
                 var ext = [d3.time.day.round(start), d3.time.day.round(end)];
                 this.value['brush'] = state;
-                
+
                 ext = this.setExtend(state, ext);
 
                 this.updateExtent(ext);
-                if (!this.selectedRange || 
-                    this.selectedRange[0].getTime() !== ext[0].getTime() || 
+                if (!this.selectedRange ||
+                    this.selectedRange[0].getTime() !== ext[0].getTime() ||
                     this.selectedRange[1].getTime() !== ext[1].getTime()) {
                     this.value[this.attr.selectedRangeField] = ext;
                     this.selectedRange = ext;
@@ -132,24 +132,17 @@ define(
                     var month = ext[0].getMonth();
                     var dayOfWeek = ext[0].getUTCDay();
                     if (this.attr.fixRange == 35){ //Month
-                        if (dayOfMonth > 15){
-                            ext[0].setMonth(month+1);
-                        }  
-                        ext[0].setUTCDate(1-offset);
+                        ext[1].setMonth(month+1);
                     }else if (this.attr.fixRange == 7){
-                        if (dayOfWeek<=3){
-                            ext[0].setDate(ext[0].getDate() - (dayOfWeek-1) - offset);
-                        }else{
-                            ext[0].setDate(ext[0].getDate() + (7+1-dayOfWeek) - offset);
-                        }      
+                        ext[1].setDate(ext[0].getDate() + ( 6 - dayOfWeek) + offset  );
                     }
                 }
 
                 if (this.attr.fixRange > 0){
                     var days = 7;
                     if (this.attr.fixRange === 35){
-                        days = daysInMonth(ext[0]); 
-                    } 
+                        days = daysInMonth(ext[0]);
+                    }
                     ext = getFixExtent(ext, days);
                 }
 

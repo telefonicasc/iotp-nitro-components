@@ -42,7 +42,7 @@ define(
                             .attr('height', this.height),
                     grid, clip, rangeSelection, border;
 
-                this.$node.data('value', data);    
+                this.$node.data('value', data);
 
                 if (this.attr.grid) {
                     grid = svg.append('g').attr('class', 'grid');
@@ -119,7 +119,7 @@ define(
                         .attr('height', chartSize.height);
                 });
 
-                this.on('valueChange', function(e, options) { 
+                this.on('valueChange', function(e, options) {
                         var model = options.value,
                             value = model[this.attr.valueField],
                             rangeField = this.attr.rangeField,
@@ -164,7 +164,7 @@ define(
 
                         if (!isNaN(valueRange[0])) {
                             valueRange[0] = Math.min(valueRange[0], 0);
-                            
+
                             y.domain(valueRange);
                             this.$node.find('g.chart, g.grid, g.axis.y')
                                 .trigger('valueChange', $.extend({
@@ -177,14 +177,14 @@ define(
                                 });
                             }
 
-                            this.options = options;    
+                            this.options = options;
                         }
                 });
 
                 this.on('rangeSelected', function(e, value){
                     $(rangeSelection.node()).trigger('rangeSelected', value);
                 });
-             
+
                 this.on('actionSelected', function(e, value){
                     for (var i = this.attr.charts.length - 1; i >= 0; i--) {
                         this.attr.charts[i].model = value.newModel;

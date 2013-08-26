@@ -138,8 +138,12 @@ define(
                             var chartModel = chart.model;
                             if (chart.modelTotalSufix){
                                 chartModel = chart.model + chart.modelTotalSufix;
-                                setValueRange(model, chartModel, valueRange);
-                            }else{
+                            }
+                             
+                            if ($.isFunction(chart.valueRangeFn)) {
+                                chart.valueRangeFn(model, chartModel,
+                                    valueRange);
+                            } else {
                                 setValueRange(model, chartModel, valueRange);
                             }
                         });

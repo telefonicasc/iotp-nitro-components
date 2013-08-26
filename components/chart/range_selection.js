@@ -6,6 +6,8 @@ define(
 
   function(ComponentManager, DataBinding) {
 
+    var TIME_DAY = 1000 * 60 * 60 * 24;
+
     return ComponentManager.create('rangeSelection',
       RangeSelection, DataBinding);
 
@@ -131,10 +133,13 @@ define(
                     var dayOfMonth = ext[0].getUTCDate();
                     var month = ext[0].getMonth();
                     var dayOfWeek = ext[0].getUTCDay();
+                    var addTime = 0;
                     if (this.attr.fixRange == 35){ //Month
                         ext[1].setMonth(month+1);
                     }else if (this.attr.fixRange == 7){
-                        ext[1].setDate(ext[0].getDate() + ( 6 - dayOfWeek) + offset  );
+                        addTime = (( 6 - dayOfWeek) + offset) * TIME_DAY;
+                        addTime += ext[1].getTime();
+                        ext[1].setTime( addTime );
                     }
                 }
 

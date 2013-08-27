@@ -277,7 +277,6 @@ define(
                         });
 
                     bounds.push(position);
-                    //marker.addTo(this.markersLayer);
                     this.markers.push(marker);
                 }, this));
                 if( this.mapIsLoaded ){

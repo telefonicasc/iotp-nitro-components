@@ -132,17 +132,18 @@ function (ComponentManager, Template, Data_binding) {
 
         this.valueChange = function(event, opt){
             var value = opt.value;
-            if( $.isArray(value) ) {
-                value = value[0];
+            if (value) {
+                if( $.isArray(value) ) {
+                    value = value[0];
+                }
+                this.attr.value = value;
+                this.attr.widgetGraph = this.createBatteryGraph();
+                if (this.attr.drawChart) {
+                    this.attr.widgetChart = this.createBatteryChart();
+                }
+                this.drawBatteryVoltage(this.attr.value.voltage);
+                this.drawBatteryLevel(this.attr.value.charge);
             }
-            this.attr.value = value;
-            this.attr.widgetGraph = this.createBatteryGraph();
-            if (this.attr.drawChart) {
-                this.attr.widgetChart = this.createBatteryChart();
-            }
-
-            this.drawBatteryVoltage(this.attr.value.voltage);
-            this.drawBatteryLevel(this.attr.value.charge);
         };
 
         this.refresh = function(){

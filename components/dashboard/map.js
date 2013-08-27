@@ -277,7 +277,6 @@ define(
                         });
 
                     bounds.push(position);
-                    marker.addTo(this.markersLayer);
                     this.markers.push(marker);
                 }, this));
                 if( this.mapIsLoaded ){
@@ -285,6 +284,9 @@ define(
                     this.offscreen.update(this.markers);
                     this.attr.fitBoundsOnce = false;
                 }
+                $.each(this.markers, $.proxy(function(i,marker){
+                    marker.addTo(this.markersLayer);
+                }, this));
 
             };
 

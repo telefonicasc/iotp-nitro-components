@@ -308,6 +308,7 @@ define(
                     marker = this.getMarkerForItem(item);
 
                 this.$node.find('.marker.selected').removeClass('selected');
+                this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
                 if (marker) {
                     $(marker._icon).addClass('selected');
                     this.map.panTo(marker._latlng);

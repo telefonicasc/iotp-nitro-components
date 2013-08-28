@@ -25,10 +25,11 @@ define(
             });
 
             this.after('initialize', function() {
-                
+
                 this.on('valueChange', function(e, o) {
                     var list = this.$node.find('.group-tooltip-marker-list'),
-                        markers = (o.value && o.value.markers) || [];
+                        markers = (o.value && o.value.markers) || [],
+                        itemselected = this.$node.data('itemselected');;
 
                     list.empty();
                     $.each(markers, $.proxy(function(i, marker) {
@@ -39,7 +40,9 @@ define(
                                 .data('item', item)
                                 .addClass('group-tooltip-marker ' + cssClass)
                                 .html(title);
-                        
+                        if(itemselected && item === itemselected){
+                            el.addClass('selected');
+                        }
                         el.appendTo(list);
                         el.on('click', $.proxy(function() {
                             this.trigger('itemselected', { item: item });
@@ -51,6 +54,7 @@ define(
                     var item = o.item,
                         markers = this.$node.find('.group-tooltip-marker');
                     markers.removeClass('selected');
+                    this.$node.data('itemselected', item);
                     if (item) {
                         markers.each(function() {
                             if ($(this).data('item') === item) {
@@ -58,6 +62,7 @@ define(
                             }
                         });
                     }
+                    if(o.silent) e.stopPropagation();
                 });
             });
         }

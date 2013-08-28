@@ -29,7 +29,16 @@ define(
                 if(itemSelected){
                     this.sendItemSelectedToDetail(null, itemData);
                     this.$mainContent.children().trigger('itemselected', itemData);
+                }else{
+                    this.unselectItem();
+                    this.$detailsPanel.trigger('collapse', { duration: 0 });
                 }
+            };
+
+            this.unselectItem = function() {
+                //$mainContent send trigger to $detailsPanel
+                this.$mainContent.children().trigger('itemselected', {item:null});
+                this.$node.removeData('intemSelectedId');
             };
 
             this.updateData = function() {
@@ -89,12 +98,7 @@ define(
                     this.$mainContent =  $('.main-content', this.$node);
                     this.updateData();
 
-                    this.$node.on('click', '.overview-header',
-                        $.proxy(function() {
-                            //$mainContent send trigger to $detailsPanel
-                            this.$mainContent.children().trigger('itemselected', {item:null});
-                            this.$node.removeData('intemSelectedId');
-                        }, this));
+                    this.$node.on('click', '.overview-header', $.proxy(this.unselectItem, this));
 
                     this.$overviewPanel.on('itemselected',
                         $.proxy(function(e, data){

@@ -16,9 +16,26 @@ define(
 
             });
 
+            this.findById = function(arr, id){
+                return arr.filter(function(item){
+                    return (item.id === id);
+                }).pop();
+            };
+
+            this.updateItem = function(data){
+                var itemSelectedId = this.$node.data('intemSelectedId');
+                var itemSelected = itemSelectedId && this.findById(data, itemSelectedId);
+                var itemData = {'item':itemSelected};
+                if(itemSelected){
+                    this.sendItemSelectedToDetail(null, itemData);
+                    this.$mainContent.children().trigger('itemselected', itemData);
+                }
+            };
+
             this.updateData = function() {
                 this.attr.data($.proxy(function(data) {
                     this.$node.trigger('valueChange', { value: data });
+                    this.updateItem(data);
                 }, this));
             };
 
@@ -37,6 +54,7 @@ define(
                         });
                     }
                     this.$detailsPanel.trigger('expand');
+                    this.$node.data('intemSelectedId', item.id);
                 } else {
                     this.$detailsPanel.trigger('collapse');
                 }
@@ -75,6 +93,7 @@ define(
                         $.proxy(function() {
                             //$mainContent send trigger to $detailsPanel
                             this.$mainContent.children().trigger('itemselected', {item:null});
+                            this.$node.removeData('intemSelectedId');
                         }, this));
 
                     this.$overviewPanel.on('itemselected',

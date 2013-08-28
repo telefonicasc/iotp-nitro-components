@@ -39,7 +39,7 @@ define(
                 /** fit bounds of markers when update **/
                 fitBounds: true,
 
-                fitBoundsOnce: true,
+                fitBoundsOnce: false,
 
                 /** Show zoom control */
                 zoomControl: true,

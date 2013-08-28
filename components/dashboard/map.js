@@ -270,14 +270,20 @@ define(
                 this.removeMarkers();
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
+                        position, icon, marker;
+
+                    if (markerItem &&
+                            $.isNumeric(markerItem.latitude) &&
+                            $.isNumeric(markerItem.longitude)) {
                         position = [markerItem.latitude, markerItem.longitude],
                         icon = this.attr.iconFunction(markerItem),
                         marker = L.marker(position, {
                             icon: icon, item: item, marker: markerItem
                         });
 
-                    bounds.push(position);
-                    this.markers.push(marker);
+                        bounds.push(position);
+                        this.markers.push(marker);
+                    }
                 }, this));
                 if( this.mapIsLoaded ){
                     if ( (this.attr.fitBounds || this.attr.fitBoundsOnce) && bounds.length) this.map.fitBounds(bounds);

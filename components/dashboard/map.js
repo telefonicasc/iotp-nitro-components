@@ -189,11 +189,13 @@ define(
 
                 if(this.attr.fitBoundsOnce) this.attr.fitBounds = false;
 
-                this.map.on('move', $.proxy(function(e) {
+                this.map.on('movestart', $.proxy(function(e) {
                     this.$tooltip.trigger('hide');
                     this.$groupTooltip.trigger('hide');
-                    this.$groupClickTooltip.trigger('hide');
                 }, this));
+
+                this.map.on('move', $.proxy(this.fixGroupClickTooltip, this));
+                this.map.on('moveend', $.proxy(this.fixGroupClickTooltip, this));
 
                 this.map.on('load', $.proxy(function(e) {
                     this.mapIsLoaded = true;
@@ -203,9 +205,6 @@ define(
                     this.onMarkerClick(e, e.layer.options.item);
                 }, this));
 
-                this.markersLayer.on('clusterclick', $.proxy(function() {
-
-                }, this));
 
                 this.markersLayer.on('mouseover', $.proxy(function(e) {
                     this.showTooltip('tooltip', e.layer._icon, e.layer.options);
@@ -227,10 +226,19 @@ define(
                 }, this));
 
                 this.markersLayer.on('clusterclick', $.proxy(function(e) {
-                    this.showTooltip('groupClickTooltip', e.layer._icon,
+                    if( this.$groupClickTooltip.is(':visible') ){
+                        this.$groupClickTooltip.trigger('hide');
+                    }else{
+                        this.showTooltip('groupClickTooltip', e.layer._icon,
                             { markers: e.layer.getAllChildMarkers() });
+                    }
+
                 }, this));
             };
+
+            this.fixGroupClickTooltip = function(){
+                this.$groupClickTooltip.trigger('fix');
+            }
 
             this.createTooltip = function() {
                 var tooltips = ['tooltip', 'groupTooltip', 'groupClickTooltip'];
@@ -256,7 +264,7 @@ define(
                     left: position.left - tooltip.width() / 2,
                     top: position.top + $(marker).height()
                 });
-                tooltip.trigger('show');
+                tooltip.trigger('show', marker);
             };
 
             // Updates markers with the data comming from a valueChange
@@ -268,6 +276,7 @@ define(
                     data = [data];
                 }
                 this.removeMarkers();
+                this.$groupClickTooltip.trigger('hide');
                 $.each(data, $.proxy(function(i, item) {
                     var markerItem = this.attr.markerFactory(item),
                         position, icon, marker;
@@ -305,6 +314,7 @@ define(
             // When a marker is clicked we trigger item selected
             this.onMarkerClick = function(e, item) {
                 this.trigger('itemselected', { item: item });
+                this.$groupClickTooltip.trigger('hide');
             };
 
             // When an item is selected adds 'selected' css class to
@@ -314,6 +324,7 @@ define(
                     marker = this.getMarkerForItem(item);
 
                 this.$node.find('.marker.selected').removeClass('selected');
+                this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
                 if (marker) {
                     $(marker._icon).addClass('selected');
                     this.map.panTo(marker._latlng);

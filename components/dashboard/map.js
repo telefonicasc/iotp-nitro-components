@@ -194,6 +194,10 @@ define(
                     this.$groupTooltip.trigger('hide');
                 }, this));
 
+                this.map.on('zoomstart', $.proxy(function() {
+                    this.$groupClickTooltip.trigger('hide');
+                }, this));
+
                 this.map.on('move', $.proxy(this.fixGroupClickTooltip, this));
                 this.map.on('moveend', $.proxy(this.fixGroupClickTooltip, this));
 

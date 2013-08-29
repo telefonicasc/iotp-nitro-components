@@ -64,6 +64,26 @@ define(
                     }
                     if(o.silent) e.stopPropagation();
                 });
+
+                this.on('hide', function(){
+                    this.$node.removeData('bindto');
+                });
+                this.on('show', function(e, $ele){
+                    if($ele) this.$node.data('bindto', $ele);
+                });
+
+
+                this.on('fix', function(){
+                    var ele = this.$node.data('bindto'),
+                        position;
+                    if(ele){
+                        position = $(ele).offset();
+                        this.$node.css({
+                            left: position.left - this.$node.width() / 2,
+                            top: position.top + $(ele).height()
+                        });
+                    }
+                });
             });
         }
 

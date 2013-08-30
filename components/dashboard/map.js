@@ -194,6 +194,14 @@ define(
                     this.$groupTooltip.trigger('hide');
                 }, this));
 
+                this.map.on('zoomstart', $.proxy(function() {
+                    this.$groupClickTooltip.trigger('hide');
+                }, this));
+
+                this.map.on('zoomend',  $.proxy(this.selectedMarkerIcon, this));
+                this.map.on('moveend',  $.proxy(this.selectedMarkerIcon, this));
+
+
                 this.map.on('move', $.proxy(this.fixGroupClickTooltip, this));
                 this.map.on('moveend', $.proxy(this.fixGroupClickTooltip, this));
 
@@ -235,6 +243,14 @@ define(
 
                 }, this));
             };
+
+            this.selectedMarkerIcon = function(){
+                $.each(this.markers, function(i, marker){
+                    if(marker._icon && marker.options.item._selected){
+                        $(marker._icon).addClass('selected');
+                    }
+                });
+            }
 
             this.fixGroupClickTooltip = function(){
                 this.$groupClickTooltip.trigger('fix');
@@ -323,6 +339,7 @@ define(
                 var item = o.item,
                     marker = this.getMarkerForItem(item);
 
+                this.markersSelectItem(marker);
                 this.$node.find('.marker.selected').removeClass('selected');
                 this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
                 if (marker) {
@@ -338,6 +355,13 @@ define(
                     return marker.options.item === item;
                 })[0];
             };
+
+            this.markersSelectItem = function(markerSelected){
+                $.each(this.markers, function(i, marker){
+                    marker.options.item._selected = (markerSelected === marker);
+                });
+            }
+
         }
 
         return ComponentManager.create('DashboardMap', DashboardMap,

@@ -19,6 +19,8 @@ define(
                 tpl: '<div class="detail-panel-header">'+
                         '<div class="header-text">{{header}}</div>'+
                         '<div class="context-menu-anchor"></div>'+
+                        '{{#headerRight}}<div class="header-right">' +
+                            '{{headerRight}}</div>{{/headerRight}}' +
                      '</div>' +
                      '<div class="detail-panel-content"></div>',
                 nodes: {

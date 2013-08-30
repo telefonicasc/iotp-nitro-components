@@ -4,7 +4,7 @@
     height: 39px;
     margin-left: -15px;
     margin-top: -28px;
-    position: absolute;    
+    position: absolute;
     -webkit-transition: -webkit-transform 0.2s ease-out, opacity 0.2s ease-in;
     -moz-transition: -moz-transform 0.2s ease-out, opacity 0.2s ease-in;
     -o-transition: -o-transform 0.2s ease-out, opacity 0.2s ease-in;
@@ -66,9 +66,14 @@
     text-align: center;
     padding: 8px 8px 0 8px;
     margin-top: -50px;
+    z-index: 100;
 
     &:after {
         display: none;
+    }
+
+    &.grouplist {
+        z-index: 99;
     }
 
     .group-count {
@@ -125,7 +130,7 @@
     cursor: pointer;
     background-repeat: no-repeat;
     padding-left: 20px;
-    
+
     &.selected {
         background-image: url('@{image-path}/markers/blue-marker-selected-tooltip.png');
     }

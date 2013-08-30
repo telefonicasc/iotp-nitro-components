@@ -26,6 +26,8 @@ define(
 
             this.after('initialize', function() {
 
+                this.$node.addClass('grouplist');
+
                 this.on('valueChange', function(e, o) {
                     var list = this.$node.find('.group-tooltip-marker-list'),
                         markers = (o.value && o.value.markers) || [],

@@ -236,7 +236,10 @@ define(
                 this.markersLayer.on('clusterclick', $.proxy(function(e) {
                     if( this.$groupClickTooltip.is(':visible') ){
                         this.$groupClickTooltip.trigger('hide');
+                        this.showTooltip('groupTooltip', e.layer._icon,
+                                { markers: e.layer.getAllChildMarkers() });
                     }else{
+                        this.$groupTooltip.trigger('hide');
                         this.showTooltip('groupClickTooltip', e.layer._icon,
                             { markers: e.layer.getAllChildMarkers() });
                     }

@@ -144,6 +144,16 @@ function (ComponentManager, Template, Data_binding) {
                 this.drawBatteryVoltage(this.attr.value.voltage);
                 this.drawBatteryLevel(this.attr.value.charge);
             }
+            this.attr.value = value;
+            this.attr.widgetGraph = this.createBatteryGraph();
+            if (this.attr.drawChart) {
+                this.attr.widgetChart = this.createBatteryChart();
+            }
+
+            if (this.attr.value) {
+                this.drawBatteryVoltage(this.attr.value.voltage);
+                this.drawBatteryLevel(this.attr.value.charge);
+            }
         };
 
         this.refresh = function(){

@@ -63,6 +63,12 @@ define(
                         label: this.attr.labelMajor,
                         value: '${device.asset.UserProps.threshold.critical}'
                     },{
+                        label: this.attr.labelMax,
+                        value: '${device.asset.UserProps.threshold.max}'
+                    },{
+                        label: this.attr.labelMin,
+                        value: '${device.asset.UserProps.threshold.min}'
+                    },{
                         label: this.attr.labelAlarmOff,
                         value: '${device.asset.UserProps.threshold.alarmOff}'
                     }]

@@ -214,7 +214,7 @@ function() {
                     labelMajor: locales['majorLevel'],
                     labelAlarmOff: locales ['alarmOffLevel'],
                     labelMax: locales['maxLevel'],
-                    labelMin: locales['minLevel'],
+                    labelMin: locales['minLevel']
                 }]
             };
             card.header = locales['thresholdHeader'];

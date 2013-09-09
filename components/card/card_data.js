@@ -134,6 +134,16 @@ function() {
         },
         'noSensorSignal':function(card){
             card.header = locales['noSensorSignal'];
+            if( card.sensorData && card.sensorData.measureName && $.isArray(card.configData) ){
+                $.map(card.configData, function(option){
+                    var measureName = (option.value && option.value.measureName);
+                    if(measureName === card.sensorData.measureName){
+                        option.selected = true;
+                    }
+                    return option;
+                });
+            }
+
             card.front = {
                 items: [{
                     component: 'CardFrontOff'

@@ -14,8 +14,9 @@ define(
             });
 
             this.after('initialize', function() {
-
+                var currentValue;
                 this.$select = $('<select>').appendTo(this.$node);
+
 
                 $.each(this.attr.options, $.proxy(function(i, option) {
                     var optionEl = $('<option>')
@@ -24,17 +25,23 @@ define(
                         .html(option.label)
                         .appendTo(this.$select);
 
-                   if (option.attr){
-                       optionEl.attr('attr', option.attr)
-                   }
+                    if (option.attr){
+                        optionEl.attr('attr', option.attr)
+                    }
+                    if(option.selected){
+                        optionEl.attr('selected', 'selected');
+                        currentValue = option.value;
+                    }
                 }, this));
 
                 this.$select.on('change', $.proxy(function(e, o) {
                     var dataValue = $(':selected', this.$select).data('dataValue');
                     this.trigger('valueChange', { value: dataValue });
                 }, this));
+                if(!currentValue){
+                    this.$select.val(this.attr.defaultValue);
+                }
 
-                this.$select.val(this.attr.defaultValue);
             });
         }
     }

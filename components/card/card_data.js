@@ -161,6 +161,10 @@ function() {
                 {
                     valueKey: 'GREATER_THAN',
                     labelKey: 'IS_OFF'
+                },
+                {
+                    valueKey: 'EQUAL_TO',
+                    labelKey: 'IS_OFF'
                 }
             ];
 

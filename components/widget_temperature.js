@@ -4,13 +4,13 @@ define (
     'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
-                                
+
 function (ComponentManager, DataBinding) {
-    
+
     return ComponentManager.create('temperatureWidget', TemperatureWidget, DataBinding);
-                                                        
+
     function TemperatureWidget () {
-        
+
         this.defaultAttrs({
             detailsTitle: '.details-title',
             temperatureChart: '.temperature-chart',
@@ -23,27 +23,26 @@ function (ComponentManager, DataBinding) {
             tmax: 30,
             temp: 0.0
         });
-                                                                                        
+
         this.after('initialize', function () {
             this.$node.attr('id', this.attr.id);
             this.$node.addClass('temperature-widget');
             this.$nodeMap = $('<div>').addClass('temperature-label').appendTo(this.$node);
 
             this.on('render', function () {
-                this.attr.widget = this.createTemperatureChart(); 
+                this.attr.widget = this.createTemperatureChart();
             });
-            
+
             this.on('drawTemperature', function (event, temp) {
+                var label = '-';
                 if (temp !== undefined && temp !== null) {
+                    label = temp + 'ºC';
                     this.attr.temp = temp;
-                    this.drawTemperature(this.attr.widget, this.attr.temp);
-                    this.select('temperatureLabel').html(this.attr.temp + 'ºC');
+                } else {
+                    temp = 0;
                 }
-                else {
-                    this.attr.temp = 0;
-                    this.drawTemperature(this.attr.widget, 0);
-                    this.select('temperatureLabel').html('-');
-                }
+                if(this.attr.widget) this.drawTemperature(this.attr.widget, temp);
+                this.select('temperatureLabel').html(label);
             });
 
             this.on('valueChange', function(e,o) {
@@ -88,23 +87,23 @@ function (ComponentManager, DataBinding) {
             temperatureChart.thermoBorder.show();
             temperatureChart.thermoCircle.show();
         };
-  
+
         // ==========================
-        // [CREATE] Temperature Chart 
-        // ==========================    
+        // [CREATE] Temperature Chart
+        // ==========================
         this.createTemperatureChart = function(options) {
-            var paper = Raphael(this.attr.id,100,60)
-              , thermoBar; 
+            var paper = Raphael(this.$node[0],100,60)
+              , thermoBar;
 
             options = $.extend({
-              thermoColor: this.attr.fillColor, 
+              thermoColor: this.attr.fillColor,
               thermoLines: this.attr.borderColor
             }, options);
-            
+
             var thermoBorder = paper.set();
             thermoBorder.push(
               thermoBarBorder = paper.rect(20,21,8,22.5,4),
-              thermoCircleBorder = paper.circle(24,45,6,13), 
+              thermoCircleBorder = paper.circle(24,45,6,13),
               cover = paper.rect(20.2,40.8,7.5,8)
             );
             thermoBorder.attr({
@@ -125,7 +124,7 @@ function (ComponentManager, DataBinding) {
               fill: options.thermoColor,
               stroke: options.thermoBar
             });
-         
+
             thermoCircleBorder.toBack();
             thermoBar.toFront();
 

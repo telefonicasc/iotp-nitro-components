@@ -124,12 +124,12 @@ function(ComponentManager) {
                 .enter().append('rect')
                 .attr('class', 'chartbar');
 
-                var bars = barGroups.selectAll('.groupAxis')
-                .data(function(d) { return d; })
-                .enter().append('line')
-                .attr('class', 'groupAxis')
-                .attr('stroke', 'black')
-                .attr('stroke-width', 0.5);
+                barGroups.selectAll('.groupAxis')
+                    .data(function(d) { return d; })
+                    .enter().append('line')
+                    .attr('class', 'groupAxis')
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', 0.5);
 
 
                 //************ Bars Excedent
@@ -461,12 +461,13 @@ function(ComponentManager) {
 
         function getMinPeriodValue(vals){
             var min = getMaxPeriodValue(vals);
+            var mapVals = function(d){
+                if (d>0 && d<min){
+                    min = d;
+                }
+            };
             for (var i = vals.length - 1; i >= 0; i--) {
-                vals[i].map(function(d){
-                    if (d>0 && d<min){
-                        min = d;
-                    }
-                });
+                vals[i].map(mapVals);
             }
 
             return min;

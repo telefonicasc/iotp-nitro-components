@@ -38,5 +38,16 @@ describeComponent('components/chart/axis/time_axis', function () {
         expect(this.component.height).toEqual(456);
     });
 
+    it('adjust data in width space', function(){
+        setupComponent({stepType: 'day'});
+        this.component.trigger('rangeChange', options);
+        this.component.trigger('resize', {width: 100, height: 456});
+        expect($('.tick').length).toEqual(1);
+        this.component.trigger('resize', {width: 200, height: 456});
+        expect($('.tick').length).toEqual(3);
+        this.component.trigger('resize', {width: 1000, height: 456});
+        expect($('.tick').length).toEqual(18);
+    });
+
 
 });

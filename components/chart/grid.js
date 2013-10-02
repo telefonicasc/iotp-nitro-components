@@ -18,7 +18,7 @@ define(
 
             var dayStep = 1000 * 60 * 60 * 24,
                 maxSteps = 21;
-                
+
             function timeTicks(t0, t1) {
                 var nStep = Math.ceil((t1 - t0) / dayStep / maxSteps),
                     steps = [],
@@ -37,13 +37,18 @@ define(
             this.after('updateChart', function() {
 
                 this.context.selectAll('.'+this.attr.classGrid).remove();
-                
-                var attrib = this.attr,
-                    backgroundGrid = this.context.selectAll('.background_grid');
 
+                var attrib = this.attr,
+                    backgroundGrid = this.context.selectAll('.background_grid'),
+                    timeTicksInScale = this.scalex.ticks(timeTicks).length-1,
+                    backgroundGridWidth;
+                if(timeTicksInScale < 1){
+                    timeTicksInScale = 1;
+                }
+                backgroundGridWidth = this.width/(timeTicksInScale);
                 backgroundGrid.selectAll('.rect_bg')
                     .data(this.scalex.ticks(timeTicks))
-                    .enter().append('rect') 
+                    .enter().append('rect')
                     .attr('class', function(d, i){
                         if (i%2===0){
                             return attrib.classGrid + ' odd';
@@ -52,23 +57,23 @@ define(
                     })
                     .attr('height', this.height)
                     .attr('x', this.scalex)
-                    .attr('width', this.width/(this.scalex.ticks(timeTicks).length-1));   
-        
+                    .attr('width', backgroundGridWidth);
+
                 var xLines = this.context.selectAll('line.x')
                         .data(this.scalex.ticks(timeTicks)),
                     yLines = this.context.selectAll('line.y')
-                        .data(this.scaley.ticks(this.attr.valueTicks));        
+                        .data(this.scaley.ticks(this.attr.valueTicks));
 
 
                 yLines.enter().append('line')
-                    .attr('class', 'y');    
+                    .attr('class', 'y');
                 xLines.enter().append('line')
-                    .attr('class', 'x'); 
+                    .attr('class', 'x');
                 yLines
                     .attr('x1', 0)
                     .attr('x2', this.width)
                     .attr('y1', this.scaley)
-                    .attr('y2', this.scaley);    
+                    .attr('y2', this.scaley);
 
                 xLines
                     .attr('x1', this.scalex)

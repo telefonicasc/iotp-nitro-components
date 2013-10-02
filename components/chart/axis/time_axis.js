@@ -33,6 +33,8 @@ define(
                     _maxTicks = this._maxTicks;
                 this.scale = d3.time.scale();
                 this.axis = d3.svg.axis();
+                this.width = this.width || 0;
+                this.height = this.height || 0;
                 var attribs = this.attr;
                 this.axis
                     .scale(this.scale)

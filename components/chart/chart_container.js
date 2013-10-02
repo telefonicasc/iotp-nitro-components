@@ -77,7 +77,10 @@ define(
                 }
 
                 if (this.attr.axisy) {
-                    var axisy = svg.append('g').attr('class', 'y axis');
+                    var axisy = svg.append('g').
+                        attr('class', 'y axis').
+                        attr('width', 100).
+                        attr('height', 100);
                     //axisy.append('rect').attr('class','axis-labels').attr('width', 70).attr('height', this.height);
                     ComponentManager.get('axis').attachTo(axisy.node());
                 }

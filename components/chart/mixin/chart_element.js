@@ -23,8 +23,8 @@ define(
             this.updateChart = function() {};
 
             this.updateSize = function(size) {
-                this.width = size.width;
-                this.height = size.height;
+                this.width = size.width || 0;
+                this.height = size.height || 0;
                 this.scalex.range([0, this.width]);
                 this.scaley.range([this.height, 0]);
             };

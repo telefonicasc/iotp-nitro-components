@@ -22,7 +22,8 @@ define(
             });
 
             this.after('initialize', function() {
-
+                this.height =  this.height || 0;
+                this.width = this.width || 0;
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     data = this.$node.data('value') || [],
@@ -31,7 +32,7 @@ define(
                 var svg = context.append('g');
                 var axisY = context.append('g').attr('class', 'axis y');
                 var yAxis = d3.svg.axis().scale(y).orient('right');
-    
+
                 context.attr('class', 'chart stacked');
 
                 this.maxRangeValue = 0;
@@ -75,7 +76,7 @@ define(
                           .attr('height', 20);
 
                         areaColor.push('url(#pattern_'+pattern+')');
-                    });           
+                    });
                 }
 
                 //Tooltip lines
@@ -92,11 +93,11 @@ define(
                     this.tooltip2 = $('<div>').addClass('tooltip').addClass('tooltip-2')
                         .appendTo($('body'));
                 }
-                
+
                 this.createChart = function(){
 
-                    var attrib = this.attr; 
-                    var self = this;       
+                    var attrib = this.attr;
+                    var self = this;
                     if (layers && layers.length > 0){
 
                         svg.selectAll('.layer').remove();
@@ -117,7 +118,7 @@ define(
                         .style('stroke', function(d, i){
                             return attrib.colorLine[i];
                         });
-                    }     
+                    }
                 };
 
                 this.updateChart = function() {
@@ -125,8 +126,8 @@ define(
                     svg.attr('width', this.width).attr('height', this.height);
                     axisY.attr('transform', 'translate('+this.width+', 0)');
 
-                    if (layers && layers.length > 0){                        
-                        
+                    if (layers && layers.length > 0){
+
                         var areas = svg.selectAll('.layer').data(layers);
                         var lines = svg.selectAll('.line').data(layers);
 
@@ -134,7 +135,7 @@ define(
                             lines.transition().ease('linear').duration(200)
                             .attr('d', function(d) { return line(d.values); });
                             areas.transition().ease('linear').duration(200)
-                            .attr('d', function(d) { return area(d.values); }); 
+                            .attr('d', function(d) { return area(d.values); });
                             axisY.transition().ease('linear').duration(200).call(yAxis);
                         }else{
                             lines.attr('d', function(d) { return line(d.values); });
@@ -143,13 +144,13 @@ define(
 
                         if (this.attr.tooltip) {
                             svg.selectAll('.hoverCircle').remove();
-                            this.setTooltip(); 
+                            this.setTooltip();
                         }
                     }
                 };
 
                 this.setTooltip = function(){
-                    
+
                     var val = data[data.length-1];
                     svg.selectAll('.hoverCircle '+val.key).remove();
                     var hoverCircle = null;
@@ -208,7 +209,7 @@ define(
                                 return val;
                             }
                         });
-                        maxValue += modelData; 
+                        maxValue += modelData;
                         data.push({key: valueField+submodel, values: values});
                     });
                     layers = stack(data);

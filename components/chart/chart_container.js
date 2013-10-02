@@ -33,6 +33,8 @@ define(
             });
 
             this.after('initialize', function() {
+                this.height =  this.height || 0;
+                this.width = this.width || 0;
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     clipId = GUID.get(),
@@ -63,7 +65,7 @@ define(
                             .attr('class', 'chart').node();
                         ComponentManager.get(chart.type)
                             .attachTo(chart.node, $.extend({
-                                scalex: x, scaley: y, clipId: clipId
+                                scalex: x, scaley: y, clipId: clipId, width: 0, height: 0
                             }, chart));
                     }, this));
                 }
@@ -139,7 +141,7 @@ define(
                             if (chart.modelTotalSufix){
                                 chartModel = chart.model + chart.modelTotalSufix;
                             }
-                             
+
                             if ($.isFunction(chart.valueRangeFn)) {
                                 chart.valueRangeFn(model, chartModel,
                                     valueRange);
@@ -147,7 +149,6 @@ define(
                                 setValueRange(model, chartModel, valueRange);
                             }
                         });
-
                         function setValueRange(model, chartModel, valueRange){
                             var chartMin, chartMax;
                             if (model[chartModel]) {
@@ -183,6 +184,7 @@ define(
 
                             this.options = options;
                         }
+
                 });
 
                 this.on('rangeSelected', function(e, value){

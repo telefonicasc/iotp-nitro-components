@@ -1,5 +1,5 @@
 describeComponent('components/chart/group_bar_chart', function () {
-  
+
 var test_data = {
    "range":[
       new Date("2012-12-25T23:00:00.000Z"),
@@ -61,7 +61,7 @@ var test_data = {
    },
    "silent":true
 };
-  
+
   // initialize the component and attach it to the DOM
   beforeEach(function(){
   	setupComponent( {grid: true, model: 'Sales', incremental: true, aggregation: 'product'} );
@@ -74,13 +74,13 @@ var test_data = {
   it('When trigger "valueChange" then createChart and updateChart is called', function () {
   	spyOn(this.component, 'updateChart');
     spyOn(this.component, 'createChart');
-    this.component.$node.trigger('valueChange', test_data); 	
+    this.component.$node.trigger('valueChange', test_data);
     expect(this.component.createChart).toHaveBeenCalled();
     expect(this.component.updateChart).toHaveBeenCalled();
   });
-  
+
   it('trigger "valueChange", groups and bars are painted', function () {
-    this.component.$node.trigger('valueChange', test_data); 	
+    this.component.$node.trigger('valueChange', test_data);
     expect($('.group').length).toEqual(4); // 2 groups
     expect($('.bg_group').length).toEqual(4); // 2 groups
     expect($('rect.chartbar').length).toEqual(8); //4 bars in total
@@ -95,7 +95,7 @@ var test_data = {
 
   it('tooltip visilble when showTooltip', function(){
      setupComponent( {grid: true, model: 'Sales', incremental: true, aggregation: 'product', tooltip: true} );
-     this.component.$node.trigger('valueChange', test_data);  
+     this.component.$node.trigger('valueChange', test_data);
      this.component.showTooltip($('.chartbar:first-child'),10,1);
      expect($('.tooltip').css('display')).toEqual('block');
   });
@@ -108,4 +108,4 @@ var test_data = {
 
 
 
-});  
+});

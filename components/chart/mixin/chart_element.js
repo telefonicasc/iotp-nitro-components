@@ -37,7 +37,7 @@ define(
                 this.value = this.$node.data('value') || this.attr.value || [];
                 this.context = d3.select(this.node);
 
-                this.context.append('g').attr('class', 'background_grid'); 
+                this.context.append('g').attr('class', 'background_grid');
 
                 this.x = $.proxy(function(d) {
                     return this.scalex(d[this.attr.x.key]);
@@ -110,9 +110,9 @@ define(
                     e.stopPropagation();
                     if (value.newModel){
                         this.attr.model = value.newModel;
-                    } 
+                    }
                     this.anim = true;
-                    this.trigger('valueChange', this.options);  
+                    this.trigger('valueChange', this.options);
                 });
             });
 

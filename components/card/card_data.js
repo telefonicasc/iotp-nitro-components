@@ -16,6 +16,8 @@ function() {
         'thresholdHeader': 'Threshold',
         'criticalLevel': 'Critical level',
         'majorLevel': 'Major level',
+        'maxLevel': 'Maximum level',
+        'minLevel': 'Minimum level',
         'alarmOffLevel':  'Alarm off level',
         'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
         'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
@@ -132,6 +134,16 @@ function() {
         },
         'noSensorSignal':function(card){
             card.header = locales['noSensorSignal'];
+            if( card.sensorData && card.sensorData.measureName && $.isArray(card.configData) ){
+                $.map(card.configData, function(option){
+                    var measureName = (option.value && option.value.measureName);
+                    if(measureName === card.sensorData.measureName){
+                        option.selected = true;
+                    }
+                    return option;
+                });
+            }
+
             card.front = {
                 items: [{
                     component: 'CardFrontOff'
@@ -148,6 +160,10 @@ function() {
             card.delimiterCustomLabels = [
                 {
                     valueKey: 'GREATER_THAN',
+                    labelKey: 'IS_OFF'
+                },
+                {
+                    valueKey: 'EQUAL_TO',
                     labelKey: 'IS_OFF'
                 }
             ];
@@ -210,7 +226,9 @@ function() {
                     phenomenonVal: phenomenonValue,
                     labelCritical: locales['criticalLevel'],
                     labelMajor: locales['majorLevel'],
-                    labelAlarmOff: locales ['alarmOffLevel']
+                    labelAlarmOff: locales ['alarmOffLevel'],
+                    labelMax: locales['maxLevel'],
+                    labelMin: locales['minLevel']
                 }]
             };
             card.header = locales['thresholdHeader'];

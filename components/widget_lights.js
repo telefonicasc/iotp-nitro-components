@@ -168,7 +168,7 @@ function (ComponentManager, Data_binding) {
         };
 
         this.createLightsChart = function(options) {
-            var paper = Raphael(this.attr.id, 300, 120),
+            var paper = Raphael(this.$node[0], 300, 120),
             bars = [];
             var arrow = paper.rect(-50, 75, 12, 10);
             arrow.attr({

@@ -2,7 +2,7 @@
 
 ### Config
 ```
-this.defaultAttrs({            
+this.defaultAttrs({
     value: 0,   // Initial value
     unit: '',   // Unit to show with label
     maxValue: 100, // Maximum allowed value
@@ -10,7 +10,7 @@ this.defaultAttrs({
     id: 'gauge',   // Id to attach the svg
     selector: '.gauge-widget',     // Internal use (flight selector)
     labelSelector: '.gauge-label', // Internal use (flight selector)
-    size: 76, // Sgv size 
+    size: 76, // Sgv size
     gaugeBackground: '#f2f2f2', // Gauge background color
     sphereBorder: '000', // none // Sphere stroke color
     opts: { // Threshold color options
@@ -38,12 +38,12 @@ define (
     'components/mixin/data_binding',
     'libs/raphael/raphael'
 ],
-                                
+
 function (ComponentManager, Data_binding) {
-    
+
     function Component () {
-        
-        this.defaultAttrs({            
+
+        this.defaultAttrs({
             value: 0,
             unit: '',
             maxValue: 100,
@@ -62,7 +62,7 @@ function (ComponentManager, Data_binding) {
                 }
             }
         });
-                                                                                        
+
         this.after('initialize', function () {
 
             var initialText = this.attr.value + ' ' + this.attr.unit;
@@ -70,7 +70,7 @@ function (ComponentManager, Data_binding) {
             this.$node.addClass('gauge');
             this.$nodeMap = $('<div>').addClass('gauge-widget').attr('id',this.attr.id).appendTo(this.$node);
             this.$nodeMap = $('<span>').addClass('gauge-label').html(initialText).appendTo(this.$node);
-           
+
             this.on('render', function () {
                 var percent = this.attr.value ? this.calculatePercent(this.attr.value) : -1;
                 this.attr.gauge = this.gauge(percent, "green", "#063743", this.attr.opts);
@@ -101,9 +101,9 @@ function (ComponentManager, Data_binding) {
             var startingPoint  = startingPoint * Math.PI / 180;
             var arcCoefficient = endingPoint * Math.PI / 180;
             var endingPoint    = "M " + hPos + " " + vPos;
-            var startingPoint  = " L " + (hPos + size * Math.cos(startingPoint)) + " " + 
+            var startingPoint  = " L " + (hPos + size * Math.cos(startingPoint)) + " " +
                                 (vPos - size * Math.sin(startingPoint));
-            var curve          = " A " + [size, size, 0, 0, 1, hPos + size * Math.cos(arcCoefficient), 
+            var curve          = " A " + [size, size, 0, 0, 1, hPos + size * Math.cos(arcCoefficient),
                                 vPos - size * Math.sin(arcCoefficient)].join(" ");
 
             return endingPoint + startingPoint + curve;
@@ -127,7 +127,7 @@ function (ComponentManager, Data_binding) {
             var canvasHeight = this.attr.size + 10;
             var canvasWidth = this.attr.size * 2 + 20;
             // 300,100
-            var canvas = Raphael(this.attr.id, canvasWidth, canvasHeight);
+            var canvas = Raphael(this.$node[0], canvasWidth, canvasHeight);
             //var canvas = Raphael(this.attr.id, 100, canvasHeight);
             var arc = this.arc;
 
@@ -170,8 +170,8 @@ function (ComponentManager, Data_binding) {
                     }
 
                     this.fill.animate(
-                        { path: arc(hvpos, hvpos, size, -180, -180 * (1 + (percent / 100))) }, 
-                        canvasWidth, 
+                        { path: arc(hvpos, hvpos, size, -180, -180 * (1 + (percent / 100))) },
+                        canvasWidth,
                         "elastic"
                     ).attr({ "fill": fill, "stroke": "none" });
                 }

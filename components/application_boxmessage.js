@@ -6,9 +6,9 @@ define(
     function() {
         var el = {
             bg: $('<div class="box-message-bg"></div>'),
-            box: $('<div class="box-message-msg"></div>'),
-            title: $('<p class="box-message-title"></p>'),
-            message: $('<p class="box-message-content"></p>'),
+            box: $('<div class="box-message-msg" data-m2mid="modal" ></div>'),
+            title: $('<p class="box-message-title" data-m2mid="modal-header"></p>'),
+            message: $('<p class="box-message-content" data-m2mid="modal-message"></p>'),
             btndiv: $('<div class="box-message-buttons"><button name="close" class="m2m-btn accept"></button></div>'),
             btnsdiv: $('<div class="box-message-buttons"><button name="cancel" class="m2m-btn"></button><button name="ok" class="m2m-btn accept"></button></div>')
         };
@@ -76,6 +76,10 @@ define(
             btnClose = el.btndiv.find('[name="close"]');
             btnOk = el.btnsdiv.find('[name="ok"]');
             btnCancel = el.btnsdiv.find('[name="cancel"]');
+
+            btnClose.attr('data-m2mid', 'modal-btn-close');
+            btnOk.attr('data-m2mid', 'modal-btn-ok');
+            btnCancel.attr('data-m2mid', 'modal-btn-cancel');
 
             el.bg.hide();
             el.box.hide();

@@ -8,7 +8,6 @@ define(
         return ChartElement;
 
         function ChartElement() {
-
             this.defaultAttrs({
                 x: {
                     scaleFun: d3.time.scale,
@@ -27,6 +26,7 @@ define(
                 this.height = size.height || 0;
                 this.scalex.range([0, this.width]);
                 this.scaley.range([this.height, 0]);
+
             };
 
             this.after('initialize', function() {
@@ -77,13 +77,8 @@ define(
                         value = model[this.attr.model],
                         rangeStartx, rangeEndx;
 
-                    if (options.range && value) {
-                        this.value = $.map(value, function(item) {
-                            if (item[xkey] >= options.range[0] &&
-                                item[xkey] <= options.range[1]) {
-                                return item;
-                            }
-                        });
+                    if (options.range && options.range.length === 2 && value) {
+                        this.value = _filterDataByRangetime(xkey, value, options.range);
 
                         if (clipRange && model[this.attr.clipRange]) {
                             rangeStartx = this.scalex(
@@ -115,7 +110,57 @@ define(
                     this.trigger('valueChange', this.options);
                 });
             });
+        }
 
+        function _filterDataByRangetime(keyData, data, range){
+            //                   newData
+            // ---.---------.xxxxxxxxxxxxx.-------.---
+            //  keyA    timeStart    timeEnd    keyB
+            var newData = [],
+                timeStart = range[0],
+                timeEnd = range[1],
+                distanceA, distanceB,
+                keyA, keyB;
+
+            var setKeyA = function(time, index){
+                var a = timeStart - time;
+                if(!distanceA) {
+                    distanceA = a;
+                }
+                if(a <= distanceA ){
+                    distanceA = a;
+                    keyA = index;
+                }
+            };
+            var setKeyB = function(time, index){
+                var b = time - timeEnd;
+                if(!distanceB){
+                    distanceB = b;
+                }
+                if(b <= distanceB ){
+                    distanceB = b;
+                    keyB = index;
+                }
+            };
+            newData = $.map(data, function(item, index) {
+                var a, b, time = item[keyData];
+                if(time < timeStart){
+                    setKeyA(time, index);
+                }
+                if(time > timeEnd){
+                    setKeyB(time, index);
+                }
+                if (time >= timeStart && time <= timeEnd) {
+                    return item;
+                }
+            });
+            if(keyA && data[keyA]){
+                newData.unshift( data[keyA] );
+            }
+            if(keyB && data[keyB]){
+                newData.push( data[keyB] );
+            }
+            return newData;
         }
 
     }

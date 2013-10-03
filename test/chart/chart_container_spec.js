@@ -34,14 +34,14 @@ describeComponent('components/chart/chart_container', function () {
   	 	expect($('.x.axis')).toBeDefined();
   	});
 
-  	it('charts attached to component', function(){	 	
+  	it('charts attached to component', function(){
         setupComponent({charts:charts_conf});
-        expect($('.chart').length).toBe(2);  
+        expect($('.chart').length).toBe(2);
   	});
 
   	it('When trigger "valueChange" then setValueRange is called', function () {
   		setupComponent({valueField: 'visitors', charts:charts_conf});
-    	this.component.$node.trigger('valueChange', mock_data); 
+    	this.component.$node.trigger('valueChange', mock_data);
     	expect(this.component.options).toEqual(mock_data);
   	});
 });

@@ -1,9 +1,9 @@
 describeComponent('components/chart/area_chart', function () {
-  var test_data = { 'modelField':[ 
+  var test_data = { 'modelField':[
                    { date: 2, value:  1 },
-                   { date: 3, value: 10 }     
+                   { date: 3, value: 10 }
                   ]};
-  var options = { value: test_data,  range: [1, 10],  valueRange: [] };
+  var options = { value: test_data,  range: [ new Date(1), new Date(10) ],  valueRange: [] };
 	// initialize the component and attach it to the DOM
   beforeEach(function(){
   	setupComponent( {model: 'modelField'} );

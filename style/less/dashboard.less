@@ -140,9 +140,12 @@
   .withColors(stroke, ~' circle.hoverCircle');
 
   .hoverCircle {
-    stroke-width: 3px;
     fill: white;
     cursor: pointer;
+    stroke-width: 0;
+    &:hover{
+      stroke-width: 3px;
+    }
   }
 
   .baseline {

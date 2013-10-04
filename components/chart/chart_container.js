@@ -97,6 +97,12 @@ define(
                         width: this.width - this.attr.marginRight,
                         height: this.height - this.attr.marginBottom
                     };
+                    if(chartSize.width < 0 ){
+                        chartSize.width = 0;
+                    }
+                    if(chartSize.height < 0 ){
+                        chartSize.height = 0;
+                    }
                     svg.attr('width', this.width).attr('height', this.height);
                     //border.attr('width', this.width).attr('height', chartSize.height);
                     x.range([0, this.width]);

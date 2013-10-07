@@ -7,7 +7,7 @@ define(
 ],
 function() { requirejs(['components/jquery_plugins'], function() {
     var $ele = $('#battery');
-    $ele.m2mbatteryWidget({height:80});
+    $ele.m2mbatteryWidget({height:80, uom:'W'});
 
     $('#action1').on('click', function(){
         $ele.trigger('drawBattery', ['full', 55]);

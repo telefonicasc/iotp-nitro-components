@@ -92,7 +92,7 @@ define(
 
             this.on('valueChange', function(e, options) {
                 this.value = options.value;
-                if(this.value.totalRegistered){
+                if(this.value && this.value.totalRegistered){
                     this.maxRange = getMaxRange( this.value.totalRegistered );
                 }
             });

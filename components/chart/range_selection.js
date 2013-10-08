@@ -94,7 +94,6 @@ define(
                 this.value = options.value;
                 if(this.value.totalRegistered){
                     this.maxRange = getMaxRange( this.value.totalRegistered );
-                    console.log('maxRange', this.maxRange);
                 }
             });
 
@@ -145,14 +144,10 @@ define(
                         ext[1].setTime( addTime );
                     }
                 }
-                //--------------
                 if (this.attr.fixRange > 0){
                     var days = 7;
                     if (this.attr.fixRange === 35){
                         days = daysInMonth(ext[0]);
-                    }
-                    if( ext[1] > this.maxRange[1] ){
-                        ext[1] = this.maxRange[1];
                     }
                     ext = getFixExtent(ext, days, this.maxRange);
                 }

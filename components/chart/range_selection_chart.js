@@ -87,7 +87,6 @@ define(
                 },this));
 
                 this.on('valueChange', function(e, o) {
-                    console.log('####',o);
                     var value = this.value = o.value,
                         start, end, min, max, leftPos, rightPos;
 

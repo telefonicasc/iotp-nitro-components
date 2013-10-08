@@ -52,10 +52,6 @@ define(
 
                     this.$wholeChart.trigger('render');
                     this.$selectedChart.trigger('render');
-                    //$.getJSON('data/registered.json', $.proxy(function(data) {
-                    //    $('.dashboard').data('value', data);
-                    //}, this));
-                //}, this), 200);
 
                 this.leftHandler = $('<div>')
                     .addClass('range-selection-handler');

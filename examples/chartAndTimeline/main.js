@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: '/m2m-nitro-components'
+  baseUrl: '../../'
 });
 
 define(
@@ -10,21 +10,21 @@ define(
     'components/dashboard/dashboard_main_panel',
     'components/dashboard/overview_subpanel'
   ],
-  
+
   function() {
-  
+
     requirejs(['components/jquery_plugins'], function() {
-  
+
     //window.randomData = generateRandomData();
 
     $('.dashboard').m2mdashboard({
       mainContent: [{
-        component: 'dashboardMainPanel', 
+        component: 'dashboardMainPanel',
         title: 'Online users',
         className: 'online-users',
         contextMenu: null,
         items: [{
-          component: 'chartContainer', 
+          component: 'chartContainer',
           rangeField: 'selectedRange',
           valueField: 'totalRegistered',
           className: 'chart',
@@ -33,13 +33,13 @@ define(
           grid: true,
           axisy: true,
           axisx: true,
-          timeAxis: { stepTick: 5, margin: 0, paddingTick: 10, tickFormat: '%e-%b' }, 
+          timeAxis: { stepTick: 5, margin: 0, paddingTick: 10, tickFormat: '%e-%b' },
           charts: [{
             type: 'areaChart',
             tooltip: true,
             model: 'totalRegistered',
             rangeField: 'selectedRange',
-            cssClass: 'purple'  
+            cssClass: 'purple'
           }]
         }]
       },
@@ -47,10 +47,10 @@ define(
         component: 'dashboardMainPanel',
         title: 'Timeline',
         className: 'timeline',
-        contextMenu: null,  
+        contextMenu: null,
         axisx: true,
         items: [{
-          component: 'chartContainer', 
+          component: 'chartContainer',
           rangeField: 'range',
           valueField: 'totalRegistered',
           className: 'chart range-selection-chart',
@@ -61,14 +61,14 @@ define(
           charts: [{
             type: 'areaChart',
             model: 'totalRegistered',
-            cssClass: 'whole-chart'   
+            cssClass: 'whole-chart'
           },
           {
             type: 'areaChart',
             model: 'totalRegistered',
             cssClass: 'selected-chart',
-            clipRange: 'selectedRange', 
-          }]    
+            clipRange: 'selectedRange',
+          }]
         }]
       }],
       overviewPanel: {
@@ -78,7 +78,7 @@ define(
           tpl: '{{#value}} {{start}} to {{end}} {{/value}}',
           model: function(value) {
             var format = d3.time.format('%e-%b-%y');
-            if (value && value.selectedRange) {              
+            if (value && value.selectedRange) {
               return {
                 start: format(value.selectedRange[0]),
                 end: format(value.selectedRange[1])

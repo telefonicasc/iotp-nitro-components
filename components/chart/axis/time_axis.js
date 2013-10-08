@@ -18,7 +18,7 @@ define(
                 rangeField: 'selectedRange',
                 tickFormat: '%e-%b',            // https://github.com/mbostock/d3/wiki/Time-Formatting
                 stepType: 'day',                // day, month, year
-                stepTick: 1,                    // 
+                stepTick: 1,                    //
                 paddingTick: 0                  // Distance each tick should display away from its theorical center
             });
 
@@ -29,10 +29,12 @@ define(
             this.after('initialize', function() {
                 var context = d3.select(this.node),
                     dayStep = 86400000,
-                    maxSteps = this.attr.maxSteps;
-
+                    maxSteps = this.attr.maxSteps,
+                    _maxTicks = this._maxTicks;
                 this.scale = d3.time.scale();
                 this.axis = d3.svg.axis();
+                this.width = this.width || 0;
+                this.height = this.height || 0;
                 var attribs = this.attr;
                 this.axis
                     .scale(this.scale)
@@ -40,14 +42,15 @@ define(
                     .ticks(function(t0, t1) {
                         var ticks = [], // = d3.time.days(t0, t1, steps);
                             stepTick = attribs.stepTick,
-                            t = t0;
+                            t = t0,
+                            _maxTicks = attribs._maxTicks;
 
                         if (maxSteps && attribs.stepType === 'day') {
                             if ((t1-t0)/dayStep > maxSteps) {
-                                stepTick = Math.ceil((t1-t0)/dayStep/maxSteps);    
+                                stepTick = Math.ceil((t1-t0)/dayStep/maxSteps);
                             }
                         }
-                
+
                         var i = 0;
                         while (t <= t1) {
                             t = d3.time.day.offset(t, 1);
@@ -63,7 +66,8 @@ define(
                         if (attribs.stepType === 'day' && !maxSteps){
                             ticks.pop();
                         }
-                        
+
+                        ticks = _resumenTicks(ticks, _maxTicks);
                         return ticks;
                     })
                     .tickSize(1,1,1)
@@ -86,6 +90,7 @@ define(
                 this.on('resize', function(e, chartSize) {
                     this.width = chartSize.width;
                     this.height = chartSize.height;
+                    this.attr._maxTicks = _calculeMaxTicks(this.width, this.attr.tickFormat);
 
                     if (this.attr.orientation === 'bottom') {
                         this.scale.range([0, this.width]);
@@ -102,6 +107,36 @@ define(
                     context.call(this.axis);
                 });
             });
+        }
+        function _calculeMaxTicks(width, formatData, padding){
+            var max;
+            padding = padding || 5;
+            width = width || 0;
+            max = ( width / ( (formatData.length *  10) + padding) );
+            return Math.floor( max );
+        }
+        function _resumenTicks(ticks, maxTicks){
+            var step, first, last, newticks = [], isValid = (ticks.length > maxTicks);
+            if( isValid && maxTicks === 1 ){
+                step = Math.floor(ticks.length / 2 );
+                newticks.push( ticks[step] );
+            } else if( isValid && maxTicks === 2 ){
+                newticks.push( ticks.shift() );
+                newticks.push( ticks.pop() );
+            } else if( isValid && maxTicks === 3 ){
+                step = Math.floor(ticks.length / 2 );
+                newticks.push( ticks.shift() );
+                newticks.push( ticks[step] );
+                newticks.push( ticks.pop() );
+            } else if( maxTicks > 3 && (ticks.length) > maxTicks ){
+                step = Math.floor(ticks.length / (maxTicks-1));
+                for (var i = 0, n = ticks.length; i < n; i += step) {
+                    newticks.push( ticks[i] );
+                };
+            } else {
+                newticks = ticks;
+            }
+            return newticks;
         }
     }
 );

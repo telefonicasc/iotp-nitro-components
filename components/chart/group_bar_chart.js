@@ -21,7 +21,6 @@ function(ComponentManager) {
         var marginRight = 100;
 
         this.after('initialize', function() {
-
             var div = d3.select(this.node),
                 foreign = null;
 
@@ -33,8 +32,7 @@ function(ComponentManager) {
                             .style('overflow-y', 'hidden')
                             .style('overflow-x', 'auto');
             }
-            var minW = this.width;
-
+            var minW = this.width || 0;
             var x0 = d3.scale.ordinal().rangeRoundBands([0, minW]),
                 x1 = d3.scale.ordinal(),
                 y = d3.scale.linear().range([this.height, 0]),
@@ -47,7 +45,6 @@ function(ComponentManager) {
                 maxValuePeriod = 0,
                 prevMaxValuePeriod = 0;
 
-
             var axisX, axisY, xAxis, yAxis = null;
             if (this.attr.grid){
                 axisX = context.append('g').attr('class', 'axis_x');
@@ -57,6 +54,7 @@ function(ComponentManager) {
                 xAxis = d3.svg.axis().scale(x0).orient('bottom');
                 yAxis = d3.svg.axis().scale(y).orient('right');
             }
+
 
             this.values = null;
             this.valueEx = [];
@@ -126,12 +124,12 @@ function(ComponentManager) {
                 .enter().append('rect')
                 .attr('class', 'chartbar');
 
-                var bars = barGroups.selectAll('.groupAxis')
-                .data(function(d) { return d; })
-                .enter().append('line')
-                .attr('class', 'groupAxis')
-                .attr('stroke', 'black')
-                .attr('stroke-width', 0.5);
+                barGroups.selectAll('.groupAxis')
+                    .data(function(d) { return d; })
+                    .enter().append('line')
+                    .attr('class', 'groupAxis')
+                    .attr('stroke', 'black')
+                    .attr('stroke-width', 0.5);
 
 
                 //************ Bars Excedent
@@ -161,8 +159,8 @@ function(ComponentManager) {
 
             this.updateChart = function(anim) {
 
-                var height = this.height,
-                    width = this.width,
+                var height = this.height || 0,
+                    width = this.width || 0,
                     rowWidth = minW/keys.length;
 
                 if (this.attr.minWidthGroup){
@@ -195,8 +193,12 @@ function(ComponentManager) {
 
                 //Update carousel attributes
                 carouselGroup.attr('transform', 'translate(0, '+(this.height+this.attr.axisXheight)+')');
+                var carouselPanelWidth = rowWidth;
+                if(carouselPanelWidth > 2){
+                    carouselPanelWidth -= 2;
+                }
                 var carouselPanel = carouselGroup.selectAll('.cell-barchart-subpanel')
-                .attr('width', rowWidth - 2)
+                .attr('width', carouselPanelWidth)
                 .attr('x', function(key) { return  x0(key); });
 
                 //Update backgrounds attributes
@@ -221,11 +223,15 @@ function(ComponentManager) {
                 .attr('x1', function(d, i) { return x1(i)-0.5; })
                 .attr('x2', function(d, i) { return x1(i)-0.5; })
                 .attr('y1', height)
-                .attr('y2', height-3);    
+                .attr('y2', height-3);
 
                 var bars = barGroups.selectAll('.chartbar');
+                var x1RangeBand = x1.rangeBand();
+                if(x1RangeBand > 0){
+                    x1RangeBand -= 1;
+                }
                 bars.data(function(d) { return d; })
-                .attr('width', x1.rangeBand()-1)
+                .attr('width', x1RangeBand)
                 .attr('x', function(d, i) { return x1(i); });
                 if (anim){
                     bars.transition().ease('sin').duration(this.attr.animDuration).attr('y', function(d) {
@@ -262,7 +268,7 @@ function(ComponentManager) {
                 });
                 var barsEx = barGroupsEx.selectAll('.chartbarEx');
                 barsEx.data(function(d) { return d; })
-                .attr('width', x1.rangeBand()-1)
+                .attr('width', x1RangeBand)
                 .attr('x', function(d, i) { return x1(i); })
                 .attr('y', function(d) {
                     return 0;
@@ -295,6 +301,7 @@ function(ComponentManager) {
                         axisY.call(yAxis);
                     }
                 }
+
             };
 
             this.updateSubpanel = function(){
@@ -308,9 +315,12 @@ function(ComponentManager) {
                             bottomValue: self.panelData[i].bottomValue+'',
                             bottomCaption: self.modelData.caption2
                         };
+
                         $(panel).trigger('valueChange', val);
+
                     });
                 }
+
             };
 
             this.showTooltip = function(rect, d, i) {
@@ -353,17 +363,18 @@ function(ComponentManager) {
 			});
 
 			this.on('valueChange', function(e, options) {
+
                 e.stopPropagation();
 
                 if (!this.attr.model || !this.attr.aggregation) { return; }
                 var fixRange = options.value.fixRange;
                 var roundDate = options.range[0].getTime();
-
                 this.modelData = options.value[this.attr.aggregation+this.attr.model][fixRange];
                 var rawValues = this.modelData.values[roundDate];
                 if (this.modelData.panelData){
                     this.panelData = this.modelData.panelData[roundDate];
                 }
+
                 if (this.modelData.tooltipCaption){
                     this.tooltipCaption = this.modelData.tooltipCaption[roundDate];
                 }
@@ -399,9 +410,10 @@ function(ComponentManager) {
                     this.createChart();
                 }
 
-                minW = this.getMinWidth();
 
+                minW = this.getMinWidth();
                 this.updateChart(anim);
+
                 this.updateSubpanel();
 
             });
@@ -426,7 +438,7 @@ function(ComponentManager) {
                     rowWidth = this.width / keys.length;
                     w = (this.attr.minWidthGroup > rowWidth) ? (this.attr.minWidthGroup * keys.length):(this.width);
                 }
-                return w;
+                return w || 0;
             };
 
         });
@@ -449,12 +461,13 @@ function(ComponentManager) {
 
         function getMinPeriodValue(vals){
             var min = getMaxPeriodValue(vals);
+            var mapVals = function(d){
+                if (d>0 && d<min){
+                    min = d;
+                }
+            };
             for (var i = vals.length - 1; i >= 0; i--) {
-                vals[i].map(function(d){
-                    if (d>0 && d<min){
-                        min = d;
-                    }
-                });
+                vals[i].map(mapVals);
             }
 
             return min;

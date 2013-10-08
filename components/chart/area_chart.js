@@ -12,7 +12,12 @@ define(
         function AreaChartComponent() {
 
             this.defaultAttrs({
-                area: true
+                area: true,
+                hoverCircle: {
+                    className: 'hoverCircle',
+                    mouseout: {'r': 6, 'opacity': 0},
+                    mouseover: {'opacity': 1 }
+                }
             });
 
             this.showTooltip = function(circle, d) {
@@ -30,7 +35,7 @@ define(
             };
 
             this.after('initialize', function() {
-                
+
                 var area = d3.svg.area().x(this.x).y0(this.height).y1(this.y),
                     line = d3.svg.line().x(this.x).y(this.y),
                     pathArea, pathLine, tooltip, thresholdLine, pathLevel;
@@ -41,7 +46,7 @@ define(
                 }
 
                 this.context.attr('class', 'chart ' + this.attr.cssClass);
-                
+
                 pathArea = this.context.append('path')
                     .datum(this.value)
                     .attr('class', 'area')
@@ -60,21 +65,22 @@ define(
 
                 this.after('updateChart', function() {
                     var self = this,
-                        hoverCircle;
+                        hoverCircle, circleAttrs;
 
                     if (this.attr.tooltip) {
+                        circleAttrs = this.attr.hoverCircle;
                         hoverCircle = this.context.selectAll('.hoverCircle')
                             .data(this.value);
-                        hoverCircle.enter().append('circle')
-                            .attr('r', 6)
-                            .attr('opacity', 0)
-                            .attr('class', 'hoverCircle')
+
+                        hoverCircle.enter().append('circle').
+                            attr(circleAttrs.mouseout).
+                            attr('class', circleAttrs.className)
                             .on('mouseover', function(d) {
-                                d3.select(this).attr('opacity', 1);
+                                d3.select(this).attr(circleAttrs.mouseover);
                                 self.showTooltip(this, d);
                             })
                             .on('mouseout', function(d) {
-                                d3.select(this).attr('opacity', 0);
+                                d3.select(this).attr(circleAttrs.mouseout);
                                 self.hideTooltip();
                             });
 
@@ -91,7 +97,7 @@ define(
                     pathLine.datum(this.value);
 
                     // Show level line if required
-                    
+
                     if (this.attr.threshold) {
                         var levelValues = [];
                         var thresholdValues = [];
@@ -127,16 +133,16 @@ define(
                         }
                         else thresholdLine.datum(thresholdValues);
                         thresholdLine.attr('d', line);
-                    }                    
+                    }
 
                     if (this.attr.area){
                         (this.anim)? pathArea.transition().duration(500).attr('d', area) : pathArea.attr('d', area);
                     }
                     (this.anim)? pathLine.transition().duration(500).attr('d', line) : pathLine.attr('d', line);
-                 
-                    this.anim = false;  
+
+                    this.anim = false;
                 });
-                
+
             });
         }
     }

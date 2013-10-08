@@ -33,6 +33,8 @@ define(
             });
 
             this.after('initialize', function() {
+                this.height =  this.height || 0;
+                this.width = this.width || 0;
                 var x = d3.time.scale().range([0, this.width]),
                     y = d3.scale.linear().range([this.height, 0]),
                     clipId = GUID.get(),
@@ -63,7 +65,7 @@ define(
                             .attr('class', 'chart').node();
                         ComponentManager.get(chart.type)
                             .attachTo(chart.node, $.extend({
-                                scalex: x, scaley: y, clipId: clipId
+                                scalex: x, scaley: y, clipId: clipId, width: 0, height: 0
                             }, chart));
                     }, this));
                 }
@@ -75,7 +77,10 @@ define(
                 }
 
                 if (this.attr.axisy) {
-                    var axisy = svg.append('g').attr('class', 'y axis');
+                    var axisy = svg.append('g').
+                        attr('class', 'y axis').
+                        attr('width', 100).
+                        attr('height', 100);
                     //axisy.append('rect').attr('class','axis-labels').attr('width', 70).attr('height', this.height);
                     ComponentManager.get('axis').attachTo(axisy.node());
                 }
@@ -92,6 +97,12 @@ define(
                         width: this.width - this.attr.marginRight,
                         height: this.height - this.attr.marginBottom
                     };
+                    if(chartSize.width < 0 ){
+                        chartSize.width = 0;
+                    }
+                    if(chartSize.height < 0 ){
+                        chartSize.height = 0;
+                    }
                     svg.attr('width', this.width).attr('height', this.height);
                     //border.attr('width', this.width).attr('height', chartSize.height);
                     x.range([0, this.width]);
@@ -139,7 +150,7 @@ define(
                             if (chart.modelTotalSufix){
                                 chartModel = chart.model + chart.modelTotalSufix;
                             }
-                             
+
                             if ($.isFunction(chart.valueRangeFn)) {
                                 chart.valueRangeFn(model, chartModel,
                                     valueRange);
@@ -147,7 +158,6 @@ define(
                                 setValueRange(model, chartModel, valueRange);
                             }
                         });
-
                         function setValueRange(model, chartModel, valueRange){
                             var chartMin, chartMax;
                             if (model[chartModel]) {
@@ -183,6 +193,7 @@ define(
 
                             this.options = options;
                         }
+
                 });
 
                 this.on('rangeSelected', function(e, value){

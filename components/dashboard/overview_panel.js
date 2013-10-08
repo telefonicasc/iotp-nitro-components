@@ -23,8 +23,6 @@ define(
 
             this.createOverviewHeader = function() {
 
-                console.log('ATTR', this.attr);
-
                 if (this.attr.title && this.attr.count){
                     this.$headerNode = $('<div>').addClass('overview-header');
 

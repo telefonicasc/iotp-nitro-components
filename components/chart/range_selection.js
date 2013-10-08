@@ -92,7 +92,10 @@ define(
 
             this.on('valueChange', function(e, options) {
                 this.value = options.value;
-                //e.stopPropagation();
+                if(this.value.totalRegistered){
+                    this.maxRange = getMaxRange( this.value.totalRegistered );
+                    console.log('maxRange', this.maxRange);
+                }
             });
 
             this.on('rangeSelected', function(e, item){
@@ -142,29 +145,56 @@ define(
                         ext[1].setTime( addTime );
                     }
                 }
-
+                //--------------
                 if (this.attr.fixRange > 0){
                     var days = 7;
                     if (this.attr.fixRange === 35){
                         days = daysInMonth(ext[0]);
                     }
-                    ext = getFixExtent(ext, days);
+                    if( ext[1] > this.maxRange[1] ){
+                        ext[1] = this.maxRange[1];
+                    }
+                    ext = getFixExtent(ext, days, this.maxRange);
                 }
-
                 return ext;
             };
 
         });
 
-        function getFixExtent(currentExtent, range){
-            var endDate = new Date( d3.time.day.round(currentExtent[0]).getTime() + (range)*24*60*60*1000 );
-            var ext = [d3.time.day.round(currentExtent[0]), endDate];
+        function getFixExtent(currentExtent, dayRange, maxRange){
+            var startTime = currentExtent[0].getTime();
+            var plusTime = dayRange * TIME_DAY;
+            var endTime = currentExtent[0].getTime() + plusTime;
+            if( maxRange && maxRange.length === 2 && endTime > maxRange[1] ){
+                endTime = maxRange[1];
+                startTime = endTime - plusTime;
+            }
+            var ext = [ new Date(startTime), new Date(endTime) ];
+            $.map(ext, function(date){
+                return d3.time.day.round(date);
+            });
             return ext;
         }
 
         function daysInMonth(date){
             var d = new Date(date.getFullYear(), date.getMonth()+1, 0);
             return d.getDate();
+        }
+
+        function getMaxRange(data){
+            var start = 0;
+            var end = 0;
+            if(data.length){
+                start = data[0].date;
+            }
+            $.each(data, function(i, item){
+                if(start > item.date){
+                    start = item.date;
+                }else if(end < item.date){
+                    end = item.date;
+                }
+            });
+            return [ new Date(start) , new Date(end) ];
         }
 
     }

@@ -49,6 +49,17 @@ define(
         className: 'timeline',
         contextMenu: null,
         axisx: true,
+        contextMenu: {
+            text: 'Fixed range Data',
+            items: [
+                { text: 'Week', action: 'action-week', fixRange: 7 },
+                { text: 'Month', action: 'action-month', fixRange: 35 },
+                { text: 'Manual', fixRange: 0 },
+            ],
+            onSelect: function (item) {
+                $('.range-selection-chart').trigger('rangeSelected', item);
+            }
+        },
         items: [{
           component: 'chartContainer',
           rangeField: 'range',

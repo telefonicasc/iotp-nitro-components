@@ -85,6 +85,7 @@ function (ComponentManager, Template, Data_binding) {
                 voltage:'-',
                 charge:'-'
             },
+            uom: 'V',
             tpl: '<div class="battery-graph" id="battery-graph"/>' +
                  '<div class="battery-chart" id="battery-chart"/>' +
                  '<div class="battery-label"/>' +
@@ -158,7 +159,7 @@ function (ComponentManager, Template, Data_binding) {
             var text = this.attr.defaultValue.voltage;
             voltage = parseFloat(voltage);
             if( $.isNumeric(voltage) ){
-                text = (Math.round(voltage * 10) / 10) + 'V';
+                text = (Math.round(voltage * 10) / 10) + this.attr.uom;
             }
             this.select('batteryLabel').html( text );
         };

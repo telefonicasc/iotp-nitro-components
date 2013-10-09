@@ -6,7 +6,7 @@ define(
     function() {
         var el = {
             bg: $('<div class="box-message-bg"></div>'),
-            box: $('<div class="box-message-msg" data-m2mid="modal" ></div>'),
+            box: $('<div class="box-message-msg"></div>'),
             title: $('<p class="box-message-title" data-m2mid="modal-header"></p>'),
             message: $('<p class="box-message-content" data-m2mid="modal-message"></p>'),
             btndiv: $('<div class="box-message-buttons"><button name="close" class="m2m-btn accept"></button></div>'),
@@ -33,6 +33,7 @@ define(
 
         var BoxMessage = {
             close: function() {
+                el.box.removeAttr('data-m2mid');
                 el.box.hide();
                 el.bg.hide();
                 el.title.hide();
@@ -69,6 +70,7 @@ define(
                     el.bg.show();
                     focusEl.focus();
                 }
+                el.box.attr('data-m2mid', 'modal');
             }
         };
 

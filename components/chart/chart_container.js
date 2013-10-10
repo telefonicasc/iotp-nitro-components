@@ -166,6 +166,9 @@ define(
                                     valueRange: valueRange
                                 });
                             }
+                            if( rangeSelection ){
+                                $(rangeSelection.node()).trigger('maxRange', {value:range});
+                            }
 
                             this.options = options;
                         }
@@ -203,10 +206,10 @@ define(
         }
         // @TODO refactor!!!!!!
         function _setValueRange(model, chartModel, valueRange){
-            var chartMin, chartMax;
-            if (model[chartModel]) {
-                chartMin = d3.min(model[chartModel], _getValue) * 1.2;
-                chartMax = d3.max(model[chartModel], _getValue) * 1.2;
+            var chartMin, chartMax, data = model[chartModel] || [];
+            if (data.length) {
+                chartMin = d3.min(data, _getValue) * 1.2;
+                chartMax = d3.max(data, _getValue) * 1.2;
                 if (!valueRange[0] || chartMin < valueRange[0]) {
                     valueRange[0] = chartMin;
                 }

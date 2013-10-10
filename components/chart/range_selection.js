@@ -17,6 +17,7 @@ define(
             fixRange: -1,
             x: d3.time.scale().range([0, 0]),
             y: d3.scale.linear().range([0, 0]),
+            maxRange:[],
             jump: false,
             animate: true
         });
@@ -92,9 +93,10 @@ define(
 
             this.on('valueChange', function(e, options) {
                 this.value = options.value;
-                if(this.value && this.value.totalRegistered){
-                    this.maxRange = getMaxRange( this.value.totalRegistered );
-                }
+            });
+
+            this.on('maxRange', function(e,d){
+                this.attr.maxRange = d.value;
             });
 
             this.on('rangeSelected', function(e, item){
@@ -149,7 +151,7 @@ define(
                     if (this.attr.fixRange === 35){
                         days = daysInMonth(ext[0]);
                     }
-                    ext = getFixExtent(ext, days, this.maxRange);
+                    ext = getFixExtent(ext, days, this.attr.maxRange);
                 }
                 return ext;
             };

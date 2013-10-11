@@ -17,7 +17,7 @@ define(
             fixRange: -1,
             x: d3.time.scale().range([0, 0]),
             y: d3.scale.linear().range([0, 0]),
-            maxRange:[],
+            rangeBorder:[],
             jump: false,
             animate: true
         });
@@ -62,8 +62,8 @@ define(
 
             this.updateExtent = function(extent) {
                 this.brush.extent(extent);
-                var start = this.attr.x(extent[0]),
-                    end = this.attr.x(extent[1]);
+                var start = this.attr.x(extent[0]) || 0,
+                    end = this.attr.x(extent[1]) || 0;
 
                 if (this.attr.animate) {
                     context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
@@ -100,11 +100,20 @@ define(
                 e.stopPropagation();
             });
 
+            /*
+            item = {
+                range: [start, end],
+                fixRange: days,
+                reset: True/False
+            }
+            */
             this.on('rangeSelected', function(e, item){
-                var ext;
+                var ext = item.range;
                 this.attr.fixRange = item.fixRange;
                 if (this.attr.fixRange > 0){
-                    ext = item.reset ? this.attr.rangeBorder :  this.brush.extent();
+                    if(!ext){
+                        ext = item.reset ? this.attr.rangeBorder :  this.brush.extent();
+                    }
                     ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
                     this.value['fixRange'] = item.fixRange;

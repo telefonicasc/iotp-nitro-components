@@ -142,10 +142,14 @@ define(
                         rangeField = this.attr.rangeField,
                         range = rangeField && model[rangeField],
                         valueRange = _getValueRange ( this.attr.charts, model );
+
                     if (!range) {
                         range = d3.extent(value, function(d) {
                             return new Date(d.date);
                         });
+                    }
+                    if( rangeSelection ){
+                        $(rangeSelection.node()).trigger('rangeBorder', {value:range});
                     }
                     if (!isNaN(valueRange[0])) {
                         valueRange[0] = Math.min(valueRange[0], 0);
@@ -163,9 +167,6 @@ define(
                             });
                         }
                         this.options = options;
-                    }
-                    if( rangeSelection ){
-                        $(rangeSelection.node()).trigger('rangeBorder', {value:range});
                     }
                     x.domain(range);
                 });

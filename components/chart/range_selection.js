@@ -30,31 +30,26 @@ define(
                 context = d3.select(this.node);
 
             this.brush = d3.svg.brush()
-              .x(this.attr.x)
-              .on('brush', $.proxy(function() {
-
-                  start = this.brush.extent()[0];
-                  end = this.brush.extent()[1];
-                  this.brushing('brush');
-
-              }, this))
-              .on('brushstart', $.proxy(function() {
-
-                  this.value['brush'] = 'start';
-
-              }, this))
-              .on('brushend', $.proxy(function(){
-
-                  this.brushing('end');
-
-              }, this));
+                .x(this.attr.x)
+                .on('brush', $.proxy(function() {
+                    start = this.brush.extent()[0];
+                    end = this.brush.extent()[1];
+                    this.brushing('brush');
+                }, this))
+                .on('brushstart', $.proxy(function() {
+                    this.value['brush'] = 'start';
+                }, this))
+                .on('brushend', $.proxy(function(){
+                    this.brushing('end');
+                }, this));
 
             if (this.attr.x && this.attr.y){
-                context
-                  .call(this.brush)
-                  .selectAll('rect')
+                context.call(this.brush)
+                    .selectAll('rect')
                     .attr('y', 0)
-                    .attr('height', function() { y.range()[0]; });
+                    .attr('height', function() {
+                        return y.range()[0];
+                    });
 
                 context.selectAll('.resize rect')
                     .style('visibility', 'inherit');
@@ -112,7 +107,7 @@ define(
                 this.attr.fixRange = item.fixRange;
                 if (this.attr.fixRange > 0){
                     if(!ext){
-                        ext = item.reset ? this.attr.rangeBorder :  this.brush.extent();
+                        ext = item.reset && this.attr.rangeBorder[1] ? this.attr.rangeBorder :  this.brush.extent();
                     }
                     ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
@@ -147,9 +142,9 @@ define(
                     var month = ext[0].getMonth();
                     var dayOfWeek = ext[0].getUTCDay();
                     var addTime = 0;
-                    if (this.attr.fixRange == 35){ //Month
+                    if (this.attr.fixRange === 35){ //Month
                         ext[1].setMonth(month+1);
-                    }else if (this.attr.fixRange == 7){
+                    }else if (this.attr.fixRange === 7){
                         addTime = (( 6 - dayOfWeek) + offset) * TIME_DAY;
                         addTime += ext[1].getTime();
                         ext[1].setTime( addTime );

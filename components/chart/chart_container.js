@@ -137,42 +137,38 @@ define(
                 });
 
                 this.on('valueChange', function(e, options) {
-                        var model = options.value,
-                            value = model[this.attr.valueField] || [],
-                            rangeField = this.attr.rangeField,
-                            range = rangeField && model[rangeField],
-                            valueRange = _getValueRange ( this.attr.charts, model );
-                        if (!range) {
-                            range = d3.extent(value, function(d) {
-                                return new Date(d.date);
+                    var model = options.value,
+                        value = model[this.attr.valueField] || [],
+                        rangeField = this.attr.rangeField,
+                        range = rangeField && model[rangeField],
+                        valueRange = _getValueRange ( this.attr.charts, model );
+                    if (!range) {
+                        range = d3.extent(value, function(d) {
+                            return new Date(d.date);
+                        });
+                    }
+                    if (!isNaN(valueRange[0])) {
+                        valueRange[0] = Math.min(valueRange[0], 0);
+                        y.domain(valueRange);
+                        this.$node.find('g.chart, g.grid, g.axis.y')
+                            .trigger('valueChange', $.extend({
+                                range: range,
+                                valueRange: valueRange
+                            }, options));
+
+                        if (this.attr.axisx) {
+                            $(axisx.node()).trigger('rangeChange', {
+                                range: range,
+                                valueRange: valueRange
                             });
                         }
-
-                        x.domain(range);
-
-                        if (!isNaN(valueRange[0])) {
-                            valueRange[0] = Math.min(valueRange[0], 0);
-
-                            y.domain(valueRange);
-                            this.$node.find('g.chart, g.grid, g.axis.y')
-                                .trigger('valueChange', $.extend({
-                                    range: range,
-                                    valueRange: valueRange
-                                }, options));
-
-                            if (this.attr.axisx) {
-                                $(axisx.node()).trigger('rangeChange', {
-                                    range: range,
-                                    valueRange: valueRange
-                                });
-                            }
-                            if( rangeSelection ){
-                                $(rangeSelection.node()).trigger('maxRange', {value:range});
-                            }
-
-                            this.options = options;
-                        }
-                    });
+                        this.options = options;
+                    }
+                    if( rangeSelection ){
+                        $(rangeSelection.node()).trigger('rangeBorder', {value:range});
+                    }
+                    x.domain(range);
+                });
 
                 this.on('rangeSelected', function(e, value){
                     $(rangeSelection.node()).trigger('rangeSelected', value);
@@ -183,9 +179,7 @@ define(
                         this.attr.charts[i].model = value.newModel;
                     }
                     this.trigger('valueChange', this.options);
-
                 });
-
             });
         }
         function _getValueRange ( charts, model ){

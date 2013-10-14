@@ -28,7 +28,7 @@ define(
                 start = null,
                 end = null,
                 context = d3.select(this.node);
-
+            this.value = {};
             this.brush = d3.svg.brush()
                 .x(this.attr.x)
                 .on('brush', $.proxy(function() {

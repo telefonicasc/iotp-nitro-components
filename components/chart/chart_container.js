@@ -143,12 +143,12 @@ define(
                         range = rangeField && model[rangeField],
                         valueRange = _getValueRange ( this.attr.charts, model );
 
-                    if (!range) {
+                    if (!range && value.length) {
                         range = d3.extent(value, function(d) {
                             return new Date(d.date);
                         });
                     }
-                    if( rangeSelection ){
+                    if( rangeSelection && range ){
                         $(rangeSelection.node()).trigger('rangeBorder', {value:range});
                     }
                     if (!isNaN(valueRange[0])) {
@@ -168,7 +168,10 @@ define(
                         }
                         this.options = options;
                     }
-                    x.domain(range);
+                    if(range){
+                        x.domain(range);
+                    }
+
                 });
 
                 this.on('rangeSelected', function(e, value){

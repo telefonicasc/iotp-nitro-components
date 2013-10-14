@@ -57,23 +57,29 @@ define(
 
             this.updateExtent = function(extent) {
                 this.brush.extent(extent);
-                var start = this.attr.x(extent[0]) || 0,
-                    end = this.attr.x(extent[1]) || 0;
-
-                if (this.attr.animate) {
-                    context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
-                        .style('display', 'block');
-                    context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
-                        .style('display', 'block');
-                    context.select('.extent').transition().attr('x', start)
-                        .attr('width', end - start);
-                } else {
-                    context.select('.w').attr('transform', 'translate(' + start + ',0)')
-                        .style('display', 'block');
-                    context.select('.e').attr('transform', 'translate(' + end + ',0)')
-                        .style('display', 'block');
-                    context.select('.extent').attr('x', start)
-                        .attr('width', end - start);
+                var start = this.attr.x(extent[0]),
+                    end = this.attr.x(extent[1]);
+                if( !$.isNumeric(start) && $.isNumeric(end) ){
+                    start = 0;
+                }
+                if($.isNumeric(start) && $.isNumeric(end) ){
+                    if (this.attr.animate) {
+                        context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
+                            .style('display', 'block');
+                        context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
+                            .style('display', 'block');
+                        context.select('.extent').transition().attr('x', start)
+                            .attr('width', end - start);
+                    } else {
+                        context.select('.w').attr('transform', 'translate(' + start + ',0)')
+                            .style('display', 'block');
+                        context.select('.e').attr('transform', 'translate(' + end + ',0)')
+                            .style('display', 'block');
+                        context.select('.extent').attr('x', start)
+                            .attr('width', end - start);
+                    }
+                }else{
+                    console.log('error al pintar las barritas', extent, start, end, this.attr.rangeBorder);
                 }
 
             };
@@ -103,11 +109,13 @@ define(
             }
             */
             this.on('rangeSelected', function(e, item){
-                var ext = item.range;
+                var ext, rangeIsValid;
                 this.attr.fixRange = item.fixRange;
                 if (this.attr.fixRange > 0){
-                    if(!ext){
-                        ext = item.reset && this.attr.rangeBorder[1] ? this.attr.rangeBorder :  this.brush.extent();
+                    ext = item.range || this.brush.extent();
+                    rangeIsValid = _rangeContains(ext, this.attr.rangeBorder);
+                    if( this.attr.rangeBorder[1] && (item.reset || !rangeIsValid) ){
+                        ext = this.attr.rangeBorder;
                     }
                     ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
@@ -180,6 +188,18 @@ define(
         function daysInMonth(date){
             var d = new Date(date.getFullYear(), date.getMonth()+1, 0);
             return d.getDate();
+        }
+
+        function _rangeContains(times, range){
+            return  ( _rangeContainTime(times[0], range) &&
+                _rangeContainTime(times[1], range) );
+        }
+        function _rangeContainTime(timeIn, range){
+            var isValid = false;
+            if( timeIn > range[0] && timeIn < range[1] ){
+                isValid = true;
+            }
+            return isValid;
         }
 
     }

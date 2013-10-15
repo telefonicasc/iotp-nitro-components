@@ -79,11 +79,8 @@ define(
                     var ele = this.$node.data('bindto'),
                         position;
                     if(ele){
-                        position = $(ele).offset();
-                        this.$node.css({
-                            left: position.left - this.$node.width() / 2,
-                            top: position.top + $(ele).height()
-                        });
+                        position = L.DomUtil.getPosition(ele);
+                        L.DomUtil.setPosition(this.$node[0], position);
                     }
                 });
             });

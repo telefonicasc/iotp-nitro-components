@@ -8,11 +8,11 @@ define(
     'components/dashboard/dashboard',
     'components/dashboard/map'
 ],
-    
+
 function() {
 
         requirejs(['components/jquery_plugins'], function() {
-        
+
         $('.dashboard').m2mdashboard({
             mainContent: [{
                 component: 'DashboardMap',
@@ -23,9 +23,9 @@ function() {
                 cb({ markers: [
                     {
                         latitude: 40,
-                        longitude: -3                            
-                    }, 
-                    { 
+                        longitude: -3
+                    },
+                    {
                         latitude: 40.5,
                         longitude: -3.4
                     }

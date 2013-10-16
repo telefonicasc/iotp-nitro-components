@@ -165,6 +165,10 @@ define(
                 this.createTooltip();
                 this.on('valueChange', this.updateData);
                 this.on('itemselected', this.onItemSelected);
+                $( '.leaflet-marker-pane', this.$node ).
+                    append( this.$tooltip ).
+                    append( this.$groupTooltip ).
+                    append( this.$groupClickTooltip );
             });
 
             this.mapIsLoaded = false;
@@ -274,15 +278,11 @@ define(
 
             this.showTooltip = function(tooltipName, marker, data) {
                 var tooltip = this['$' + tooltipName],
-                    position = $(marker).offset();
-
+                    position = L.DomUtil.getPosition(marker);
                 tooltip.trigger('parentChange', {
                     value: data
                 });
-                tooltip.css({
-                    left: position.left - tooltip.width() / 2,
-                    top: position.top + $(marker).height()
-                });
+                L.DomUtil.setPosition(tooltip[0], position);
                 tooltip.trigger('show', marker);
             };
 

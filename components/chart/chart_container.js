@@ -49,7 +49,8 @@ define(
                 if (this.attr.grid) {
                     grid = svg.append('g').attr('class', 'grid');
                     Grid.attachTo(grid.node(), $.extend({
-                        clipId: clipId, classGrid: this.attr.classGrid
+                        clipId: clipId,
+                        classGrid: this.attr.classGrid
                     }, this.attr.grid));
                 }
 
@@ -65,7 +66,11 @@ define(
                             .attr('class', 'chart').node();
                         ComponentManager.get(chart.type)
                             .attachTo(chart.node, $.extend({
-                                scalex: x, scaley: y, clipId: clipId, width: 0, height: 0
+                                scalex: x,
+                                scaley: y,
+                                clipId: clipId,
+                                width: 0,
+                                height: 0
                             }, chart));
                     }, this));
                 }
@@ -88,7 +93,8 @@ define(
                 if (this.attr.rangeSelection) {
                     rangeSelection = svg.append('g').attr('class', 'x brush');
                     RangeSelection.attachTo(rangeSelection.node(), $.extend({
-                        x: x, y: y
+                        x: x,
+                        y: y
                     }, this.attr.rangeSelection));
                 }
 
@@ -131,68 +137,40 @@ define(
                 });
 
                 this.on('valueChange', function(e, options) {
-                        var model = options.value,
-                            value = model[this.attr.valueField],
-                            rangeField = this.attr.rangeField,
-                            range = rangeField && model[rangeField],
-                            valueRange = [];
-                        if (!value) value = [];
-                        if (!range) {
-                            range = d3.extent(value, function(d) {
-                                return new Date(d.date);
+                    var model = options.value,
+                        value = model[this.attr.valueField] || [],
+                        rangeField = this.attr.rangeField,
+                        range = rangeField && model[rangeField],
+                        valueRange = _getValueRange ( this.attr.charts, model );
+
+                    if (!range && value.length) {
+                        range = d3.extent(value, function(d) {
+                            return new Date(d.date);
+                        });
+                    }
+                    if( rangeSelection && range ){
+                        $(rangeSelection.node()).trigger('rangeBorder', {value:range});
+                    }
+                    if (!isNaN(valueRange[0])) {
+                        valueRange[0] = Math.min(valueRange[0], 0);
+                        y.domain(valueRange);
+                        this.$node.find('g.chart, g.grid, g.axis.y')
+                            .trigger('valueChange', $.extend({
+                                range: range,
+                                valueRange: valueRange
+                            }, options));
+
+                        if (this.attr.axisx) {
+                            $(axisx.node()).trigger('rangeChange', {
+                                range: range,
+                                valueRange: valueRange
                             });
                         }
-
+                        this.options = options;
+                    }
+                    if(range){
                         x.domain(range);
-
-                        $.each(this.attr.charts, function(i, chart) {
-                            var chartModel = chart.model;
-                            if (chart.modelTotalSufix){
-                                chartModel = chart.model + chart.modelTotalSufix;
-                            }
-
-                            if ($.isFunction(chart.valueRangeFn)) {
-                                chart.valueRangeFn(model, chartModel,
-                                    valueRange);
-                            } else {
-                                setValueRange(model, chartModel, valueRange);
-                            }
-                        });
-                        function setValueRange(model, chartModel, valueRange){
-                            var chartMin, chartMax;
-                            if (model[chartModel]) {
-                                chartMin = d3.min(model[chartModel], function(d) {
-                                    return d.value;
-                                }) * 1.2;
-                                chartMax = d3.max(model[chartModel], function(d) {
-                                    return d.value;
-                                }) * 1.2;
-                                if (!valueRange[0] || chartMin < valueRange[0]) {
-                                    valueRange[0] = chartMin;
-                                }
-                                if (!valueRange[1] || chartMax > valueRange[1]) {
-                                    valueRange[1] = chartMax;
-                                }
-                            }
-                        }
-
-                        if (!isNaN(valueRange[0])) {
-                            valueRange[0] = Math.min(valueRange[0], 0);
-
-                            y.domain(valueRange);
-                            this.$node.find('g.chart, g.grid, g.axis.y')
-                                .trigger('valueChange', $.extend({
-                                        range: range, valueRange: valueRange
-                                    }, options));
-
-                            if (this.attr.axisx) {
-                                $(axisx.node()).trigger('rangeChange', {
-                                    range: range, valueRange: valueRange
-                                });
-                            }
-
-                            this.options = options;
-                        }
+                    }
 
                 });
 
@@ -205,10 +183,43 @@ define(
                         this.attr.charts[i].model = value.newModel;
                     }
                     this.trigger('valueChange', this.options);
-
                 });
-
             });
+        }
+        function _getValueRange ( charts, model ){
+            var valueRange = [];
+            $.each(charts, function(i, chart) {
+                var chartModel = chart.model;
+                if (chart.modelTotalSufix){
+                    chartModel = chart.model + chart.modelTotalSufix;
+                }
+                if ($.isFunction(chart.valueRangeFn)) {
+                    // @TODO refactor!!!!!!
+                    chart.valueRangeFn(model, chartModel, valueRange);
+                } else {
+                    valueRange = _setValueRange(model, chartModel, valueRange);
+                }
+            });
+            return valueRange;
+        }
+        // @TODO refactor!!!!!!
+        function _setValueRange(model, chartModel, valueRange){
+            var chartMin, chartMax, data = model[chartModel] || [];
+            if (data.length) {
+                chartMin = d3.min(data, _getValue) * 1.2;
+                chartMax = d3.max(data, _getValue) * 1.2;
+                if (!valueRange[0] || chartMin < valueRange[0]) {
+                    valueRange[0] = chartMin;
+                }
+                if (!valueRange[1] || chartMax > valueRange[1]) {
+                    valueRange[1] = chartMax;
+                }
+            }
+            return valueRange;
+        }
+
+        function _getValue (d){
+            return d.value;
         }
     }
 );

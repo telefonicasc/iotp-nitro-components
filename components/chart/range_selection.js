@@ -17,6 +17,7 @@ define(
             fixRange: -1,
             x: d3.time.scale().range([0, 0]),
             y: d3.scale.linear().range([0, 0]),
+            rangeBorder:[],
             jump: false,
             animate: true
         });
@@ -27,33 +28,28 @@ define(
                 start = null,
                 end = null,
                 context = d3.select(this.node);
-
+            this.value = {};
             this.brush = d3.svg.brush()
-              .x(this.attr.x)
-              .on('brush', $.proxy(function() {
-
-                  start = this.brush.extent()[0];
-                  end = this.brush.extent()[1];
-                  this.brushing('brush');
-
-              }, this))
-              .on('brushstart', $.proxy(function() {
-
-                  this.value['brush'] = 'start';
-
-              }, this))
-              .on('brushend', $.proxy(function(){
-
-                  this.brushing('end');
-
-              }, this));
+                .x(this.attr.x)
+                .on('brush', $.proxy(function() {
+                    start = this.brush.extent()[0];
+                    end = this.brush.extent()[1];
+                    this.brushing('brush');
+                }, this))
+                .on('brushstart', $.proxy(function() {
+                    this.value['brush'] = 'start';
+                }, this))
+                .on('brushend', $.proxy(function(){
+                    this.brushing('end');
+                }, this));
 
             if (this.attr.x && this.attr.y){
-                context
-                  .call(this.brush)
-                  .selectAll('rect')
+                context.call(this.brush)
+                    .selectAll('rect')
                     .attr('y', 0)
-                    .attr('height', function() { y.range()[0]; });
+                    .attr('height', function() {
+                        return y.range()[0];
+                    });
 
                 context.selectAll('.resize rect')
                     .style('visibility', 'inherit');
@@ -63,21 +59,27 @@ define(
                 this.brush.extent(extent);
                 var start = this.attr.x(extent[0]),
                     end = this.attr.x(extent[1]);
-
-                if (this.attr.animate) {
-                    context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
-                        .style('display', 'block');
-                    context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
-                        .style('display', 'block');
-                    context.select('.extent').transition().attr('x', start)
-                        .attr('width', end - start);
-                } else {
-                    context.select('.w').attr('transform', 'translate(' + start + ',0)')
-                        .style('display', 'block');
-                    context.select('.e').attr('transform', 'translate(' + end + ',0)')
-                        .style('display', 'block');
-                    context.select('.extent').attr('x', start)
-                        .attr('width', end - start);
+                if( !$.isNumeric(start) && $.isNumeric(end) ){
+                    start = 0;
+                }
+                if($.isNumeric(start) && $.isNumeric(end) ){
+                    if (this.attr.animate) {
+                        context.select('.w').transition().attr('transform', 'translate(' + start + ',0)')
+                            .style('display', 'block');
+                        context.select('.e').transition().attr('transform', 'translate(' + end + ',0)')
+                            .style('display', 'block');
+                        context.select('.extent').transition().attr('x', start)
+                            .attr('width', end - start);
+                    } else {
+                        context.select('.w').attr('transform', 'translate(' + start + ',0)')
+                            .style('display', 'block');
+                        context.select('.e').attr('transform', 'translate(' + end + ',0)')
+                            .style('display', 'block');
+                        context.select('.extent').attr('x', start)
+                            .attr('width', end - start);
+                    }
+                }else{
+                    console.log('error al pintar las barritas', extent, start, end, this.attr.rangeBorder);
                 }
 
             };
@@ -92,17 +94,29 @@ define(
 
             this.on('valueChange', function(e, options) {
                 this.value = options.value;
-                if(this.value && this.value.totalRegistered){
-                    this.maxRange = getMaxRange( this.value.totalRegistered );
-                }
             });
 
+            this.on('rangeBorder', function(e,d){
+                this.attr.rangeBorder = d.value;
+                e.stopPropagation();
+            });
+
+            /*
+            item = {
+                range: [start, end],
+                fixRange: days,
+                reset: True/False
+            }
+            */
             this.on('rangeSelected', function(e, item){
+                var ext, rangeIsValid;
                 this.attr.fixRange = item.fixRange;
-
-                var ext = this.brush.extent();
-
                 if (this.attr.fixRange > 0){
+                    ext = item.range || this.brush.extent();
+                    rangeIsValid = _rangeContains(ext, this.attr.rangeBorder);
+                    if( this.attr.rangeBorder[1] && (item.reset || !rangeIsValid) ){
+                        ext = this.attr.rangeBorder;
+                    }
                     ext = this.setExtend(null, ext);
                     this.value[this.attr.selectedRangeField] = ext;
                     this.value['fixRange'] = item.fixRange;
@@ -136,9 +150,9 @@ define(
                     var month = ext[0].getMonth();
                     var dayOfWeek = ext[0].getUTCDay();
                     var addTime = 0;
-                    if (this.attr.fixRange == 35){ //Month
+                    if (this.attr.fixRange === 35){ //Month
                         ext[1].setMonth(month+1);
-                    }else if (this.attr.fixRange == 7){
+                    }else if (this.attr.fixRange === 7){
                         addTime = (( 6 - dayOfWeek) + offset) * TIME_DAY;
                         addTime += ext[1].getTime();
                         ext[1].setTime( addTime );
@@ -149,19 +163,19 @@ define(
                     if (this.attr.fixRange === 35){
                         days = daysInMonth(ext[0]);
                     }
-                    ext = getFixExtent(ext, days, this.maxRange);
+                    ext = getFixExtent(ext, days, this.attr.rangeBorder);
                 }
                 return ext;
             };
 
         });
 
-        function getFixExtent(currentExtent, dayRange, maxRange){
+        function getFixExtent(currentExtent, dayRange, rangeBorder){
             var startTime = currentExtent[0].getTime();
             var plusTime = dayRange * TIME_DAY;
             var endTime = currentExtent[0].getTime() + plusTime;
-            if( maxRange && maxRange.length === 2 && endTime > maxRange[1] ){
-                endTime = maxRange[1];
+            if( rangeBorder && rangeBorder.length === 2 && endTime > rangeBorder[1] ){
+                endTime = rangeBorder[1];
                 startTime = endTime - plusTime;
             }
             var ext = [ new Date(startTime), new Date(endTime) ];
@@ -176,20 +190,16 @@ define(
             return d.getDate();
         }
 
-        function getMaxRange(data){
-            var start = 0;
-            var end = 0;
-            if(data.length){
-                start = data[0].date;
+        function _rangeContains(times, range){
+            return  ( _rangeContainTime(times[0], range) &&
+                _rangeContainTime(times[1], range) );
+        }
+        function _rangeContainTime(timeIn, range){
+            var isValid = false;
+            if( timeIn > range[0] && timeIn < range[1] ){
+                isValid = true;
             }
-            $.each(data, function(i, item){
-                if(start > item.date){
-                    start = item.date;
-                }else if(end < item.date){
-                    end = item.date;
-                }
-            });
-            return [ new Date(start) , new Date(end) ];
+            return isValid;
         }
 
     }

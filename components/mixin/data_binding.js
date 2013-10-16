@@ -55,10 +55,12 @@ define(
                     }
 
                     e.stopPropagation();
-
-                    this.$node.trigger('valueChange', {
-                        value: value, silent: true
-                    });
+                    if( value !== undefined ){
+                        this.$node.trigger('valueChange', {
+                            value: value,
+                            silent: true
+                        });
+                    }
                 });
 
                 this.on('valueChange', function(e, o) {

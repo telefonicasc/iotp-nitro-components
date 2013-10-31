@@ -173,6 +173,7 @@ function() {
             return card;
         },
         'alarm' : function (card) {
+            var property = card.conditionList && card.conditionList[0];
             card.front = {
                 items: [{
                     component: 'CardFrontIcon',
@@ -208,6 +209,10 @@ function() {
             };
             card.defaultValue = 'true';
             card.header = locales['alarmHeader'];
+
+            if(property){
+                card.value = property.parameterValue;
+            }
             return card;
         },
         'threshold': function(card) {
@@ -239,13 +244,11 @@ function() {
         },
         'userProperty': function(card){
             var property = card.conditionList && card.conditionList[0];
-            card.defaultValue = {key:'', value:''};
-
             if(property){
-                card.defaultValue.value = property.parameterValue;
-                card.defaultValue.key = property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1');
-
-                property.parameterValue = $.extend({}, card.defaultValue);
+                card.value = {
+                    key: property.parameterValue,
+                    value: property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1')
+                };
             }
             card.header = locales['property'];
             card.front = {

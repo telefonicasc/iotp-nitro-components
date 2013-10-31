@@ -246,8 +246,8 @@ function() {
             var property = card.conditionList && card.conditionList[0];
             if(property){
                 card.value = {
-                    key: property.parameterValue,
-                    value: property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1')
+                    key: property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1'),
+                    value: property.parameterValue
                 };
             }
             card.header = locales['property'];

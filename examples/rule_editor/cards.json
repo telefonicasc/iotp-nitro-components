@@ -1,6 +1,12 @@
 {
     "count": 21,
     "data": [
+    {
+        "id": "005",
+        "type": "SensorCard",
+        "sensorCardType": "userProperty",
+        "configData": {}
+    },
         {
             "id": "001",
             "type": "SensorCard",

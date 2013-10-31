@@ -4,6 +4,7 @@
     {
         "id": "005",
         "type": "SensorCard",
+        "model": "NoSensorSignal",
         "sensorCardType": "userProperty",
         "configData": {}
     },

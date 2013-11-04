@@ -408,6 +408,7 @@ function() {
             var key = '${device.asset.UserProps.' + cardData.key + '}';
             var condition = cardConfig.conditionList && cardConfig.conditionList[0];
             if(condition){
+                condition.scope = 'USER_PROP';
                 condition.parameterValue = cardData.value;
                 condition.userProp = key;
             }

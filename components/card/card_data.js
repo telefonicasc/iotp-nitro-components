@@ -26,7 +26,8 @@ function() {
         'repeat': 'Repeat',
         'interval': 'Interval',
         'elapsed': 'Elapsed',
-        'noSensorSignal': 'No Sensor Signal'
+        'noSensorSignal': 'No Sensor Signal',
+        'sendSMSHeader': 'Enviar SMS'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -41,7 +42,8 @@ function() {
         'ANGLE': 'AngleWidget',
         'SLIDER': 'Slider',
         'BATTERY': 'Battery',
-        'SEND_EMAIL': 'SendEmail'
+        'SEND_EMAIL': 'SendEmail',
+        'SEND_SMS':'SendSMS'
     };
 
     var encodeSensor = {
@@ -338,6 +340,17 @@ function() {
                 }]
             };
             return card;
+        },
+        'SendSMSMibAction':function(card){
+            card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
+            card.header = locales.sendSMSHeader;
+            card.locales = {
+                subject: locales.subject,
+                to: locales.to
+            }
+            card.component = component.SEND_SMS;
+            card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
+            return card;
         }
     };
 
@@ -361,6 +374,10 @@ function() {
             return cardConfig;
         },
         'SendAlarmAction': function(cardConfig, cardData){
+            cardConfig.actionData.userParams = cardData.userParams;
+            return cardConfig;
+        },
+        'SendSMSMibAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }

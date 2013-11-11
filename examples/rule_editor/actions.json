@@ -14,7 +14,7 @@
                     }
                 ],
                 "name": "email",
-                "type": "SendSMSMibAction"
+                "type": "SendSmsMibAction"
             }
         },
         {

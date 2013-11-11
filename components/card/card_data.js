@@ -341,7 +341,7 @@ function() {
             };
             return card;
         },
-        'SendSMSMibAction':function(card){
+        'SendSmsMibAction':function(card){
             card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
             card.header = locales.sendSMSHeader;
             card.locales = {
@@ -377,7 +377,7 @@ function() {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         },
-        'SendSMSMibAction': function(cardConfig, cardData) {
+        'SendSmsMibAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }

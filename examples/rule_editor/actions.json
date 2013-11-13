@@ -1,6 +1,23 @@
 {
     "data": [
         {
+            "type" : "ActionCard",
+            "actionData": {
+                "userParams": [
+                    {
+                        "name": "sms.to",
+                        "value": ""
+                    },
+                    {
+                        "name": "sms.message",
+                        "value": ""
+                    }
+                ],
+                "name": "email",
+                "type": "SendSmsMibAction"
+            }
+        },
+        {
             "type": "ActionCard",
             "actionData": {
                 "userParams": [

@@ -27,8 +27,9 @@ function() {
         'interval': 'Interval',
         'elapsed': 'Elapsed',
         'noSensorSignal': 'No Sensor Signal',
-        'property': 'Propiedad',
-        'name': 'Nombre'
+        'sendSMSHeader': 'Send SMS',
+        'property': 'Property',
+        'name': 'Name'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -43,7 +44,8 @@ function() {
         'ANGLE': 'AngleWidget',
         'SLIDER': 'Slider',
         'BATTERY': 'Battery',
-        'SEND_EMAIL': 'SendEmail'
+        'SEND_EMAIL': 'SendEmail',
+        'SEND_SMS':'SendSMS'
     };
 
     var encodeSensor = {
@@ -389,6 +391,17 @@ function() {
                 }]
             };
             return card;
+        },
+        'SendSmsMibAction':function(card){
+            card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
+            card.header = locales.sendSMSHeader;
+            card.locales = {
+                subject: locales.subject,
+                to: locales.to
+            }
+            card.component = component.SEND_SMS;
+            card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
+            return card;
         }
     };
 
@@ -423,6 +436,10 @@ function() {
             return cardConfig;
         },
         'SendAlarmAction': function(cardConfig, cardData){
+            cardConfig.actionData.userParams = cardData.userParams;
+            return cardConfig;
+        },
+        'SendSmsMibAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
             return cardConfig;
         }

@@ -27,7 +27,9 @@ function() {
         'interval': 'Interval',
         'elapsed': 'Elapsed',
         'noSensorSignal': 'No Sensor Signal',
-        'sendSMSHeader': 'Enviar SMS'
+        'sendSMSHeader': 'Send SMS',
+        'property': 'Property',
+        'name': 'Name'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -173,6 +175,7 @@ function() {
             return card;
         },
         'alarm' : function (card) {
+            var property = card.conditionList && card.conditionList[0];
             card.front = {
                 items: [{
                     component: 'CardFrontIcon',
@@ -208,6 +211,10 @@ function() {
             };
             card.defaultValue = 'true';
             card.header = locales['alarmHeader'];
+
+            if(property){
+                card.value = property.parameterValue;
+            }
             return card;
         },
         'threshold': function(card) {
@@ -234,6 +241,50 @@ function() {
                 }]
             };
             card.header = locales['thresholdHeader'];
+
+            return card;
+        },
+        'userProperty': function(card){
+            var property = card.conditionList && card.conditionList[0];
+            if(property){
+                card.value = {
+                    key: property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1'),
+                    value: property.parameterValue
+                };
+            }
+            card.header = locales['property'];
+            card.front = {
+                items: [{
+                    component: 'CardFrontText',
+                    tpl: '<div class="m2m-card-text">' +
+                        '<div class="m2m-card-text-value">{{value.key}}' +
+                        '</div>' +
+                     '</div>'
+                }]
+            };
+            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+            card.back = {
+                items: [{
+                    component: 'CardBackText',
+                    inputs: [
+                        {
+                            label: locales['name'],
+                            name:'key'
+                        },
+                        {
+                            label: locales['value'],
+                            name:'value'
+                        }
+                    ]
+                }]
+            };
+            card.defaultCondition = {
+                    scope: 'USER_PROP',
+                    parameterValue: null,
+                    not: false,
+                    operator: null,
+                    userProp: ''
+            };
 
             return card;
         }
@@ -365,6 +416,17 @@ function() {
             }];
             delete cardConfig.configData;
             return cardConfig;
+        },
+        'userProperty':function(cardConfig, cardData){
+            var key = '${device.asset.UserProps.' + cardData.key + '}';
+            var condition = cardConfig.conditionList && cardConfig.conditionList[0];
+            if(condition){
+                condition.scope = 'USER_PROP';
+                condition.parameterValue = cardData.value;
+                condition.userProp = key;
+            }
+            delete cardConfig.sensorData;
+            return cardConfig;
         }
     };
 
@@ -453,8 +515,9 @@ function() {
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = (sensorData && sensorData.phenomenon) ?
                 sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
-            //@TODO este nombre de phenomenon es temporal
-            if (cardConfig.model === 'NoSensorSignal') {
+            if(cardConfig.sensorCardType === 'userProperty'){
+                name = 'userProperty';
+            }else if (cardConfig.model === 'NoSensorSignal') {
                 name = 'noSensorSignal';
             } else if (phenomenon === 'angle') {
                 name = 'angle';

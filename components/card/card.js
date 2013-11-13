@@ -159,11 +159,12 @@ define(
                     this.on('levelChange', $.proxy(function(e, o) {
                         this.$node.find('.body > *' ).trigger('updateLevel', o);
                     }, this));
-
-                    if(condition.parameterValue !== null ){
-                        this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
-                    }else{
-                        condition.parameterValue = this.attr.defaultValue;
+                    if(condition.scope !== 'USER_PROP'){
+                        if(condition.parameterValue !== null ){
+                            this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
+                        }else{
+                            condition.parameterValue = this.attr.defaultValue;
+                        }
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);

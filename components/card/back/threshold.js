@@ -58,10 +58,10 @@ define(
                     },
                     {
                         label: this.attr.labelCritical,
-                        value: '${device.asset.UserProps.threshold.major}'
+                        value: '${device.asset.UserProps.threshold.critical}'
                     },{
                         label: this.attr.labelMajor,
-                        value: '${device.asset.UserProps.threshold.critical}'
+                        value: '${device.asset.UserProps.threshold.major}'
                     },{
                         label: this.attr.labelMax,
                         value: '${device.asset.UserProps.threshold.max}'

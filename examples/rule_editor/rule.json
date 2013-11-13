@@ -66,7 +66,24 @@
                             }
                         ]
                     },
-                    "connectedTo": []
+                    "connectedTo": ["card1adf"]
+                },
+                {
+                    "id": "card1adf",
+                    "type": "SensorCard",
+                    "sensorCardType": "userProperty",
+                    "configData": {},
+                    "connectedTo": [],
+                    "conditionList": [
+                        {
+                            "scope": "USER_PROP",
+                            "userProp": "${device.asset.UserProps.histeresisa}",
+                            "parameterValue": "paco",
+                            "not": false,
+                            "operator": "DIFFERENT_TO"
+                        }
+                    ]
+
                 }
             ],
             "creationTime": {

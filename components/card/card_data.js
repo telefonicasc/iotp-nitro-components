@@ -204,12 +204,11 @@ function() {
 
             card.defaultCondition = {
                     scope: 'USER_PROP',
-                    parameterValue: null,
+                    parameterValue: 'true',
                     not: false,
                     operator: null,
                     userProp: '${device.asset.UserProps.histeresis}'
             };
-            card.defaultValue = 'true';
             card.header = locales['alarmHeader'];
 
             if(property){

@@ -2,12 +2,9 @@ define(
     [
         'libs/guid'
     ],
-
     function(GUID) {
 
-        return ChartElement;
-
-        function ChartElement() {
+        var ChartElement = function () {
             this.defaultAttrs({
                 x: {
                     scaleFun: d3.time.scale,
@@ -112,7 +109,7 @@ define(
             });
         }
 
-        function _filterDataByRangetime(keyData, data, range){
+        var _filterDataByRangetime = function (keyData, data, range){
             //                   newData
             // ---.---------.xxxxxxxxxxxxx.-------.---
             //  keyA    timeStart    timeEnd    keyB
@@ -154,14 +151,15 @@ define(
                     return item;
                 }
             });
-            if(keyA && data[keyA]){
+            if(data[keyA]){
                 newData.unshift( data[keyA] );
             }
             if(keyB && data[keyB]){
                 newData.push( data[keyB] );
             }
             return newData;
-        }
+        };
 
+        return ChartElement;
     }
 );

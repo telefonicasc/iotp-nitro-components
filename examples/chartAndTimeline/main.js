@@ -99,7 +99,7 @@ define(
         }]
       },
       data: function(cb) {
-        $.getJSON('data.json', function(data) {
+        $.getJSON('data2.json', function(data) {
             console.log('data', data);
           cb(data);
         });

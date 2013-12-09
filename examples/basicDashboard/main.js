@@ -8,34 +8,34 @@ define(
 'components/dashboard/dashboard',
 'components/mapViewer'
 ],
-    
+
 function() {
 
     requirejs(['components/jquery_plugins'], function() {
-            
-        // =====================================================================    
+
+        // =====================================================================
         /* Generic config */
         // =====================================================================
-            
+
         //<editor-fold defaultstate="collapsed" desc="Generic">
-            
+
         var markerColors = {
             ok: '#000',
             err: '#F00'
         };
         var useKermit = false;
-            
+
         //</editor-fold>
-    
-        // =====================================================================    
+
+        // =====================================================================
         /* Service URL setup */
         // =====================================================================
-        
+
         //<editor-fold defaultstate="collapsed" desc="AssetURL & AssetsDetailedURL">
 
         var assetsURL;
         var assetsDetailedURL;
-        
+
         if (!useKermit) {
             assetsURL = '/m2m/v2/services/TrafficLightsDE/assets';
             assetsDetailedURL = assetsURL + '?detailed=1';
@@ -45,13 +45,13 @@ function() {
             assetsURL = '/secure/m2m/v2/services/' + service + '/assets';
             assetsDetailedURL = assetsURL + '?detailed=1';
         }
-        
+
         //</editor-fold>
-        
+
         // =====================================================================
         // Configure & basic functions
         // =====================================================================
-        
+
         //<editor-fold defaultstate="collapsed" desc="Basic">
 
         var requestApiData = function (url, callback) {
@@ -78,7 +78,7 @@ function() {
                 });
             }
         };
-        
+
         var setAssetMarkers = function (restResponse) {
             var features = [];
             $.each(restResponse.data, function (k,v) {
@@ -108,11 +108,11 @@ function() {
                 $('.mapbox').trigger('center-map', [center.lat, center.lon]);
             }
         };
-        
+
         var loadMarkersFromService = function () {
             requestApiData(assetsDetailedURL,setAssetMarkers);
         };
-        
+
         var markerClicked = function (feature, previous, dom) {
             if (feature.properties['marker-size'] === 'large') {
                 feature.properties['marker-size'] = 'medium';
@@ -122,31 +122,31 @@ function() {
                 previous.properties['marker-size'] = 'medium';
             }
         };
-        
+
         var customTooltip = function (feature) {
             return feature.properties.title;
         };
-        
+
         var whenZoomed = function (features) {
-            
+
         };
-        
+
         var whenPanned = function (features) {
-            
+
         };
-        
+
         var featuresPreprocessor = function (features, map) {
             return features;
         };
-        
+
         //</editor-fold>
-        
+
         // =====================================================================
         // Dashboard component load
         // =====================================================================
-        
+
         //<editor-fold defaultstate="collapsed" desc="Load dashboard">
-        
+
         $('.dashboard').m2mdashboard({
             mainContent: [{
                 component: 'mapViewer',
@@ -169,7 +169,7 @@ function() {
                 featuresPreprocessor: featuresPreprocessor,
                 createOffscreenIndicators: true,
                 features: [
-                    {   
+                    {
                         geometry: { coordinates: [ -3.664929, 40.51654] },
                         properties: {
                             'marker-color':'#000',
@@ -190,15 +190,15 @@ function() {
             overviewPanel: {},
             data: function() {}
         });
-        
+
         //</editor-fold>
-            
+
         // =================================================================
         // Startup
         // =================================================================
 
         /* On load, do api rest call to get devices and set mapbox markers. */
         loadMarkersFromService();
-        
+
     });
 });

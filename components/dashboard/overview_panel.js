@@ -3,14 +3,15 @@ define(
         'components/component_manager',
         'components/mixin/container',
         'components/context_menu_indicator',
-        'components/mixin/data_binding'
+        'components/mixin/data_binding',
+        'libs/hogan/hogan'
     ],
 
     function(ComponentManager, ContainerMixin,
         ContextMenuIndicator, DataBinding) {
 
         return ComponentManager.create('overviewPanel',
-                DashboardOverview, ContainerMixin, DataBinding);
+                DashboardOverview, ContainerMixin, DataBinding );
 
         function DashboardOverview() {
 
@@ -18,43 +19,45 @@ define(
                 insertionPoint: '.overview-content',
                 title: '',
                 count: '',
-                countClass: 'blue'
+                countClass: 'blue',
+                tpl: '<div class="overview-header">'+
+                        '<span class="overview-count">{{count}}</span>'+
+                        '<span class="overview-title">{{{title}}}</span>'+
+                        '<span class="overview-contextMenu"></span>'+
+                    '</div>'+
+                    '<div class="overview-content">'+
+                    '</div>',
+                nodes: {
+                    headerNode: '.overview-header',
+                    countNode: '.overview-count',
+                    titleNode: '.overview-title',
+                    cmIndicator: '.overview-contextMenu',
+                    contentNode :'.overview-content'
+                }
             });
 
-            this.createOverviewHeader = function() {
-
-                if (this.attr.title && this.attr.count){
-                    this.$headerNode = $('<div>').addClass('overview-header');
-
-                    this.$countNode = $('<span>')
-                                .addClass('overview-count')
-                                .appendTo(this.$headerNode);
-
-                    this.$titleNode = $('<span>')
-                                .addClass('overview-title')
-                                .appendTo(this.$headerNode)
-                                .html(this.attr.title);
-
-                    this.$headerNode.appendTo(this.$node);
-
-                    if (!$.isFunction(this.attr.count)) {
-                        this.$countNode.html(this.attr.count);
-                    }
-                }
-
-                this.$contentNode = $('<div>')
-                        .addClass('overview-content')
-                        .appendTo(this.$node);
-
-                if (this.attr.contextMenu) {
-                    this.cmIndicator = $('<div>').appendTo(this.$headerNode);
-                    ContextMenuIndicator.attachTo(this.cmIndicator, this.attr);
-                }
-            };
-
             this.after('initialize', function() {
+                //@TODO move next two lines to new componente: example: "SimpleTpl"
+                this.compiledTpl = Hogan.compile(this.attr.tpl);
+                this.$node.html(this.compiledTpl.render(this.attr));
+
+                $.each(this.attr.nodes, $.proxy(function(name, selector) {
+                    this['$' + name] = $(selector, this.$node);
+                }, this));
+                if( !(this.attr.title && this.attr.count) ){
+                    this.$headerNode.hide()
+                }
+
+                this.$countNode.addClass( this.attr.countClass );
+
+                if( this.attr.contextMenu && this.$cmIndicator){
+                    ContextMenuIndicator.attachTo(this.$cmIndicator, this.attr);
+                }else{
+                    this.$cmIndicator.hide();
+                }
+
+
                 this.$node.addClass('dashboard-overview-panel sidebar');
-                this.createOverviewHeader();
 
                 this.on('valueChange', this.updateCount);
             });

@@ -1,0 +1,70 @@
+.leaflet-container{
+    .offscreen-indicator {
+        background-repeat: no-repeat;
+        background-position: center center;
+        color: #908F8F;
+        cursor: pointer;
+        display: none;
+        font-size: 14px;
+        font-weight: bold;
+        height: 71px;
+        line-height: 71px;
+        position: absolute;
+        text-align: center;
+        text-indent: -9999px;
+        width: 71px;
+
+        .opacity(0.3);
+
+        &:hover {
+            text-indent: 0px;
+            .opacity(1);
+        }
+
+        &.offscreen-nw {
+            top: 37px;
+            left: 37px;
+            background-image: url('../../img/nitro-components/mapViewer/NW.png');
+        }
+        &.offscreen-n {
+            top: 8px;
+            left: 50%;
+            margin-left: -36px;
+            background-image: url('../../img/nitro-components/mapViewer/N.png');
+        }
+        &.offscreen-ne {
+            top: 37px;
+            right: 37px;
+            background-image: url('../../img/nitro-components/mapViewer/NE.png');
+        }
+        &.offscreen-e {
+            top: 50%;
+            right: 8px;
+            margin-top: -36px;
+            background-image: url('../../img/nitro-components/mapViewer/E.png');
+        }
+        &.offscreen-se {
+            bottom: 25px;
+            right: 37px;
+            background-image: url('../../img/nitro-components/mapViewer/SE.png');
+        }
+
+        &.offscreen-s {
+            bottom: 0px;
+            left: 50%;
+            margin-left: -36px;
+            background-image: url('../../img/nitro-components/mapViewer/S.png');
+        }
+        &.offscreen-sw {
+            bottom: 25px;
+            left: 37px;
+            background-image: url('../../img/nitro-components/mapViewer/SW.png');
+        }
+        &.offscreen-w {
+            left: 8px;
+            top: 50%;
+            margin-top: -36px;
+            background-image: url('../../img/nitro-components/mapViewer/W.png');
+        }
+    }
+}

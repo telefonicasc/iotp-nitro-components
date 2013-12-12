@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" href="../../style/less/nitro-components.less" />
+    <style>
+    </style>
+  </head>
+  <body>
+
+    <div id="battery"></div>
+
+    <ul>
+      <li><button id="action1">Event 'drawBattery' ['full', 55]</button></li>
+      <li><button id="action2">Event 'drawBattery-voltage', 100</button></li>
+      <li><button id="action3">Event 'drawBattery-level', 'empty'</button></li>
+      <li><button id="action4">Event 'valueChange', {value:{voltage:35, charge:'low'}}</button></li>
+      <li><button id="action5">Event 'refresh'</button></li>
+    </ul>
+
+    <script src="../../libs/jquery/jquery.js"></script>
+    <script src="../../libs/hogan/hogan.js"></script>
+    <script src="../../libs/less/less.js"></script>
+    <script src="../../libs/raphael/raphael.js"></script>
+    <script data-main="main" src="../../libs/requirejs/require.js"></script>
+
+  </body>
+</html>

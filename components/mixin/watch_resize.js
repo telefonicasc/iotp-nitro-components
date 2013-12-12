@@ -2,31 +2,25 @@ define(
   [],
 
   function() {
-    
+
     return WatchResize;
 
     function WatchResize() {
 
       this.after('initialize', function() {
 
-        this.width = 0;
-        this.height = 0;
-
-        var updateSize = $.proxy(function() {
-          this.width = this.$node.width();
-          this.height = this.$node.height();
-          this.trigger('resize', { width: this.width, height: this.height });
-        }, this);
+        this.width = this.$node.width();
+        this.height = this.$node.height();
 
         var onRender = $.proxy(function() {
           $(window).on('resize', $.proxy(function() {
-            updateSize();
+            this.updateSize();
           }, this));
-          updateSize();
+          this.updateSize();
         }, this);
 
         this.on('resize', function(e) {
-          e.stopPropagation(); 
+          e.stopPropagation();
         });
 
         this.on('render', function() {
@@ -34,8 +28,19 @@ define(
             onRender();
           }
         });
+
+        this.on('updateSize', function() {
+            this.updateSize();
+        });
+
       });
+
+      this.updateSize = function() {
+          this.width = this.$node.width();
+          this.height = this.$node.height();
+          this.trigger('resize', { width: this.width, height: this.height });
+      };
     }
 
   }
-)
+);

@@ -1,0 +1,38 @@
+// Section Bar
+//
+// Markup: <div class="m2m-sectionbar">
+//             <h1>Hello!</h1>
+//         </div>
+//
+// Styleguide 5.0.
+
+
+.m2m-sectionbar {
+    .gradient(@m2m-sectionbar_bg-color, @m2m-sectionbar_bg-color-start, @m2m-sectionbar_bg-color-end);
+    border-bottom: 1px solid @m2m-sectionbar_border-color;
+    padding: 0;
+    height: 40px;
+    display: block;
+
+    h1{
+        height: 40px;
+        line-height: 40px;
+        font-weight: bold;
+        padding-left: 5px;
+    }
+    ul.m2m-btns{
+        height: 40px;
+        line-height: 40px;
+        &.lft { float:left; margin-right: 5px;}
+        &.rgt { float:right; margin-left: 5px;}
+        li{
+            display: inline;
+        }
+    }
+}
+
+.ie8 .m2m-sectionbar .m2m-btns {
+  line-height: 1;
+  margin-top: 8px;
+  margin-right: 5px;
+}

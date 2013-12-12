@@ -1,0 +1,34 @@
+{
+  "name": "m2m-nitro-components",
+  "version": "0.0.0",
+  "description": "Visual components for the nitro framework",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@pdihub.hi.inet:M2M/m2m-nitro-components.git"
+  },
+  "author": "Telefónica Digital",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-less": "~0.5.0",
+    "grunt-contrib-uglify": "~0.1.2",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-jasmine": "~0.4.2",
+    "grunt-template-jasmine-requirejs": "~0.1.0",
+    "dox": "~0.4.2",
+    "grunt-template-jasmine-istanbul": "~0.2.0",
+    "grunt-styleguide": "~0.2.4",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-closure-linter": "~0.1.0",
+    "grunt-plato": "~0.2.0"
+  }
+}

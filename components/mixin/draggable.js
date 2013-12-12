@@ -1,12 +1,17 @@
 define(
-  [],
-
+  [
+        'libs/jqueryui/jquery.ui.core',
+        'libs/jqueryui/jquery.ui.widget',
+        'libs/jqueryui/jquery.ui.mouse',  
+        'libs/jqueryui/jquery.ui.draggable',
+        'libs/jqueryui/jquery.ui.droppable'
+  ],
   function() {
-  
+
     return DraggableMixin;
 
     function DraggableMixin() {
-      
+
       this.defaultAttrs({
 
       });
@@ -14,24 +19,10 @@ define(
       this.after('initialize', function() {
 
         // TODO: No time to implement this properly
-        // using jquery ui draggable.
+        // using jquery ui draggable for the time being.
         // Would be nice to implement it and remove that dependency
-        this.$node.draggable(this.attr);
+        this.$node.draggable($.extend({}, this.attr));
 
-        /*this.$node.mousedown($.proxy(function(e) {
-          this.dragging = true;           
-        }, this));
-
-        this.$node.mousemove($.proxy(function(e) {
-          if (this.dragging) {
-            debugger;  
-          }
-        }, this));
-
-        this.$node.mouseup($.proxy(function(e) {
-          this.dragging = false;
-        }, this));*/
-        
       });
     }
   }

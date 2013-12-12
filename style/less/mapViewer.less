@@ -1,0 +1,81 @@
+.m2m-mapviewer{
+    overflow: hidden;
+
+    .marker-custom {
+        cursor: pointer;
+        pointer-events:all;
+    }
+    
+    .marker-popup {
+        position:relative;
+        left:-50%;
+        max-width:400px;    
+        background:#e9eff0;
+        border:2px solid #ccc;
+        color:#60777e;  
+        font-size: small;
+        font-weight: bold;
+        padding:10px;
+        -webkit-user-select:auto;
+        -moz-user-select:auto;
+        user-select:auto;
+        -webkit-box-shadow: 2px 2px 5px -2px #ccc;
+        box-shadow: 2px 2px 5px -2px #ccc;
+        -webkit-border-radius: 8px;
+        border-radius: 8px;    
+    }
+    .marker-popup:after,
+    .marker-popup:before {
+        top:100%;
+        border:solid transparent;
+        content:'';
+        height:0;
+        width:0;
+        left:50%;
+        position:absolute;
+        pointer-events:none;    
+    }
+
+    .marker-popup:after {
+        border-top-color:#e9eff0;
+        border-width:15px;
+        margin-left:-15px;
+    }
+
+    .marker-popup:before {
+        border-top-color:#ccc;
+        border-width:18px;
+        margin-left:-18px;
+    }
+    /* ========================================================================== */
+    /* Zoom buttons css */
+    /* ========================================================================== */
+    .zoomer {
+        background-color:#FFF;
+        border-color:#202020;
+        -webkit-border-radius:10%;
+        border-radius:10%;
+        position:absolute;
+        font-size:30px;
+        width:30px;
+        height:30px;
+        color:black;
+        text-align:center;
+        border:1px solid #C0C0C0;
+        vertical-align:middle;
+        top: 20px;
+        z-index: 100;
+    }
+
+    .zoomer:hover {
+        background-color:#C0C0C0;
+    }
+
+    .zoomin {
+        left:51px;
+    }
+
+    .zoomout {
+        left:20px;
+    }
+}

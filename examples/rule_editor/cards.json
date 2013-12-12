@@ -1,0 +1,244 @@
+{
+    "count": 21,
+    "data": [
+    {
+        "id": "005",
+        "type": "SensorCard",
+        "sensorCardType": "userProperty",
+        "configData": {}
+    },
+        {
+            "id": "001",
+            "type": "SensorCard",
+            "model": "Threshold",
+            "sensorCardType": "threshold",
+            "sensorData": {
+                "measureName": "",
+                "phenomenonApp": "",
+                "phenomenon": "",
+                "dataType": "",
+                "uom": ""
+            },
+            "configData": {}
+        }, {
+            "id": "002",
+            "type": "SensorCard",
+           	"sensorCardType": "alarm",
+            "configData": {}
+        },
+        {
+            "id": "003","type": "TimeCard",
+            "timeData":{},
+            "configData": { "timeType": "timeInterval" }
+        },
+        {"id": "004","type": "TimeCard",
+            "timeData":{ "context": "ASSET" },
+            "configData": { "timeType": "timeElapsed" }
+        },
+        {
+            "id": "1b4c0bd1-c868-40ee-96c7-015573da030a",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "pitch",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:angle",
+                "dataType": "Quantity",
+                "uom": "deg"
+            },
+            "configData": {}
+        }, {
+            "id": "f741e74d-9b77-44c2-b1e0-319f07b9cfd3",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "Xacceleration",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:Xacceleration",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:acceleration",
+                "dataType": "Quantity",
+                "uom": "g"
+            },
+            "configData": {}
+        }, {
+            "id": "f8685504-8da4-4c3f-9186-73d956f593b0",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "LinePower",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:LinePower",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Boolean",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "7cb8d76e-3d7a-466c-a767-9e6abf136a90",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "batteryStatus",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:batteryStatus",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "75402c35-38a3-4be2-aba2-f726b582799f",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "Zacceleration",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:Zacceleration",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:acceleration",
+                "dataType": "Quantity",
+                "uom": "g"
+            },
+            "configData": {}
+        }, {
+            "id": "bd0cbdaf-1b5f-46e5-92b0-df34c39c8d57",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "position",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:location",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:location",
+                "dataType": "Location",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "02d3c9e8-1656-479a-b4f5-737e561925c9",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "cellID",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:networkLocation",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "e02b3a45-db78-47e0-b725-bcaf2d8a1def",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "temperature",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:temperature",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:temperature",
+                "dataType": "Quantity",
+                "uom": "Cel"
+            },
+            "configData": {}
+        }, {
+            "id": "5943bbf1-8e6f-445e-86c1-ea580fe2cd6b",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "greenLight",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:greenLight",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "07663aea-7a56-472c-a23b-22c1d2c02206",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "redLight",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:redLight",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "f56ebbd8-6dbb-490a-8705-b65ce4a39ae1",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "batteryStatusObj",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:batteryStatusObj",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "9be027c6-4935-414e-a652-0887a0da39b9",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "voltageObj",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:voltageObj",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential",
+                "dataType": "Quantity",
+                "uom": "V"
+            },
+            "configData": {}
+        }, {
+            "id": "7e54ce1f-be22-4110-a023-a1f81c6690c5",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "Yacceleration",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:IDAS:1.0:Yacceleration",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:acceleration",
+                "dataType": "Quantity",
+                "uom": "g"
+            },
+            "configData": {}
+        }, {
+            "id": "52d3906e-b88d-4e98-b90a-b843e2a07fe4",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "operationStatus",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:operationStatus",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "555c2c0a-cecb-4b6c-b204-167df50e75a5",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "LinePowerObj",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:LinePowerObj",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Boolean",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }, {
+            "id": "31c437f2-8c5c-48ac-9c86-29c9bf85a121",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "voltage",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:voltage",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:electricPotential",
+                "dataType": "Quantity",
+                "uom": "V"
+            },
+            "configData": {}
+        }, {
+            "id": "40538dcc-2a53-4adb-abb3-2b52b97c73bb",
+            "type": "SensorCard",
+            "model": "SemaphoresModel",
+            "sensorData": {
+                "measureName": "yellowLight",
+                "phenomenonApp": "urn:x-ogc:def:phenomenon:semaphoresFrankfurt:1.0:yellowLight",
+                "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown",
+                "dataType": "Text",
+                "uom": "Unknown"
+            },
+            "configData": {}
+        }
+    ]
+}

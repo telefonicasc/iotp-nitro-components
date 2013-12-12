@@ -1,0 +1,156 @@
+.m2m-dashboardmap .marker {
+    background-image: url('@{image-path}/markers/blue-marker.png');
+    width: 29px;
+    height: 39px;
+    margin-left: -15px;
+    margin-top: -28px;
+    position: absolute;
+    -webkit-transition: -webkit-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -moz-transition: -moz-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -o-transition: -o-transform 0.2s ease-out, opacity 0.2s ease-in;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-in;
+}
+
+.m2m-dashboardmap .marker.red {
+    background-image: url('@{image-path}/markers/red-marker.png');
+}
+
+.m2m-dashboardmap .marker.group {
+    background-image: url('@{image-path}/markers/blue-marker-group.png');
+    color: white;
+    text-align: center;
+    height: 35px;
+    padding-top: 4px;
+    width: 26px;
+    font-size: 11px;
+}
+
+.m2m-dashboardmap .marker.red.group {
+    background-image: url('@{image-path}/markers/red-marker-group.png');
+}
+
+
+.m2m-dashboardmap .marker.grey.group {
+    background-image: url('@{image-path}/markers/grey-marker-group.png');
+}
+
+.m2m-dashboardmap .marker.selected {
+    background-image: url('@{image-path}/markers/blue-marker-selected.png');
+    margin-left: -22px;
+    margin-top: -32px;
+    width: 43px;
+    height: 43px;
+}
+
+.m2m-dashboardmap .marker.red.selected {
+    background-image: url('@{image-path}/markers/red-marker-selected.png');
+}
+
+.m2m-dashboardmap .marker.grey {
+    background-image: url('@{image-path}/markers/grey-marker.png');
+}
+
+.m2m-dashboardmap .marker.grey.selected {
+    background-image: url('@{image-path}/markers/grey-marker-selected.png');
+}
+
+.m2m-dashboardmap .tooltip {
+    width: auto;
+    border: 2px solid #a7c0c7;
+    border-radius: 6px;
+    padding-top: 6px;
+    background-color: #e8f1f3;
+    color: #60777e;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 8px 0 8px;
+    margin-top:15px;
+    margin-left:-62px;
+    z-index: 9999;
+
+    &:after {
+        display: none;
+    }
+
+    &.grouplist {
+        z-index: 9998;
+    }
+
+    .group-count {
+        display: inline-block;
+        background-image: url('@{image-path}/markers/blue-marker-tooltip.png');
+        color: #5e91a0;
+        background-repeat: no-repeat;
+        height: 17px;
+        padding-left: 20px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .group-count.red {
+        color: #CA3430;
+        background-image: url('@{image-path}/markers/red-marker-tooltip.png');
+    }
+
+    .group-count.grey {
+        color: #555555;
+        background-image: url('@{image-path}/markers/grey-marker-tooltip.png');
+    }
+}
+
+.m2m-dashboardmap .tooltip-arrow-border {
+    border-left: 13px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 14px solid #A7C0C7;
+    position: relative;
+    top: -23px;
+    width: 0;
+    left: 50%;
+    margin-left: -13px;
+    margin-bottom: -14px;
+}
+
+.m2m-dashboardmap .tooltip-arrow {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid #E8F1F3;
+    position: relative;
+    top: -20px;
+    width: 0;
+    left: 50%;
+    margin-left: -10px;
+    margin-bottom: -12px;
+    top: -20px;
+    height: 0px;
+}
+
+.m2m-dashboardmap .group-tooltip-marker {
+    background-image: url('@{image-path}/markers/blue-marker-tooltip.png');
+    height: 24px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+
+    &.selected {
+        background-image: url('@{image-path}/markers/blue-marker-selected-tooltip.png');
+    }
+    &.red {
+        background-image: url('@{image-path}/markers/red-marker-tooltip.png');
+    }
+    &.selected.red {
+        background-image: url('@{image-path}/markers/red-marker-selected-tooltip.png');
+    }
+    &.grey {
+        background-image: url('@{image-path}/markers/grey-marker-tooltip.png');
+    }
+    &.selected.grey {
+        background-image: url('@{image-path}/markers/grey-marker-selected-tooltip.png');
+    }
+}
+
+.detail-panel .detail-panel-content .m2m-dashboardmap.fit-minimap {
+    height: 200px;
+    position: relative;
+    width: 312px;
+}

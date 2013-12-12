@@ -1,0 +1,288 @@
+
+.application-menu {
+  background-color: #2C3337;
+  font-family: Helvetica, Arial, sans-serif;
+
+  ul {
+    width: 300px;
+  }
+  
+  li {
+    height: 46px;
+    margin: 8px 0px;
+    background-color: #30373B;
+    color: #A0A4A5;
+    
+    span {
+      font-size: 14px;
+      display: block;
+      padding: 15px 10px 15px 50px;
+    }
+  }
+
+  a {
+    display: block;
+    margin-left: 8px;
+    background-image: url("@{image-path}/menu_icons.png");
+    background-repeat: no-repeat;
+    background-position: 0px -160px;
+  }
+
+  a:link, a:visited {
+    text-decoration: none;
+    color: #A0A4A5;
+  }
+
+}
+
+.application-menu-tooltip.tooltip {
+  margin-left: 8px;
+  margin-top: 0px;
+  width: auto;
+  min-width: 0px;
+  padding-top: 9px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #31323a;
+  border-color: #31323a;
+  color: #e8e8e8;
+
+  &:after {
+    border-color: transparent #31323a transparent transparent;
+    top: 50%;
+    left: -22px;
+    margin-top: -9px;
+  }
+}
+
+.application-content {
+  background-color: white;
+  left: 55px;
+  .drop-shadow(-6px, 0, 6px, 0.3);
+}
+
+.tooltip {
+  font-family: Helvetica, Arial;
+  position: absolute;
+  min-width: 100px;
+  margin-left: -50px;
+  min-height: 20px;
+  margin-top: -60px;
+  font-size: 14px;
+  text-align: center;
+  color: #525f65;
+  background: #ffffff;
+  border: 4px solid #ffffff;
+  border-radius: 5px;
+  text-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 1px;
+  box-shadow: rgba(0, 0, 0, 0.0980392) 1px 1px 2px 0px;
+  z-index:99;
+  padding: 4px;
+  .value {
+    font-weight: bold;
+  }
+  .caption {
+    font-size: 11px;
+  }
+}
+
+.tooltip:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 10px;
+  border-style: solid;
+  border-color: #FFFFFF transparent transparent transparent;
+  top: 100%;
+  left: 40%;
+}
+
+.context-menu {
+
+  @width: 220px;
+  @padding: 6px;
+
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+
+  position: absolute;
+  background-color: #faf8f5;
+  border-radius: 6px;
+  display: none;
+  z-index: 99;
+  margin-left: 20px;
+  margin-top: -18px;
+  box-shadow: 0px 0px 15px #777;
+  width: @width;
+
+  color: #788d9a;
+
+  &.right-anchor {
+    margin-left: -200px;
+    margin-top: 30px;
+  }
+
+  ul {
+    margin: 0px;
+    list-style: none;
+    padding: @padding;
+    display: inline-block;
+    vertical-align: top;
+    width: @width - 2*@padding;
+  }
+
+  li {
+    cursor: pointer;
+    padding: @padding/2 @padding;
+    border-radius: 4px;
+
+    &.disabled {
+      color: #D4D2D8;
+    }
+
+    &.selected {
+      background-color: #64737b;
+      color: white;
+    }
+
+    &:hover {
+      background-color: #6EB4DB;
+      color: white;
+    }
+    
+    &.context-menu-title {
+      color: #9CABB4;
+      text-align: center;
+
+      &.back-link {
+        background: url("@{image-path}/context-menu-back.png") no-repeat left center;
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+    
+    &.dot-toggle {
+      padding-left: 26px;
+      position: relative;
+      color: #ccc;
+
+      &:hover {
+        color: white;
+      }
+
+      &:before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-width: 3px; 
+        border-style: solid;
+        border-radius: 8px;
+        position: absolute;
+        left: 6px;
+        top: 4px;
+        border-color:  #CCC;
+        background-color: rgba(200, 200, 200, 0.5);
+        opacity: 0.3;
+      }
+
+      &.selected {        
+        color: #788d9a;
+        &:hover {
+          color: white;
+        }
+        &:before {
+          opacity: 1;
+        }
+
+        .withColors(border, ~":before");
+        .withColors(background-light, ~":before"); 
+      }
+    }
+  }
+  
+  .separator {
+    padding: 0px;
+    margin: 6px 6px;
+    height: 1px;
+    background: #788D9A;
+    background: -moz-linear-gradient(left,  #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#faf8f5), color-stop(20%,#788d9a), color-stop(80%,#788d9a), color-stop(100%,#faf8f5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* IE10+ */
+    background: linear-gradient(to right,  #faf8f5 0%,#788d9a 20%,#788d9a 80%,#faf8f5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf8f5', endColorstr='#faf8f5',GradientType=1 ); /* IE6-9 */
+
+
+
+
+  }
+
+  .submenu {
+    background: url("@{image-path}/submenu-indicator.png") no-repeat right center;
+
+    &:hover {
+      background: #6EB4DB url("@{image-path}/submenu-indicator-hover.png") no-repeat right center;
+    }
+    &.selected {
+      background: #64737b url("@{image-path}/submenu-indicator-hover.png") no-repeat right center;
+    }
+  }
+}
+
+.context-menu-wrapper {
+  overflow: hidden;
+}
+
+
+.tooltip-arrow {
+  
+  width: 20px;
+  height: 40px;
+  position: absolute;
+  overflow: hidden;
+  left: -21px;
+  margin-left: 1px;
+  
+  &:before {
+    background-color: #FAF8F5;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    content: '';
+    left: 10px;
+    top: 16px;
+    box-shadow: 0px 0px 15px #777;
+    -webkit-transform: scaleY(0.65) rotate(45deg);
+  }
+}
+
+.right-anchor {
+  .tooltip-arrow {
+    
+    left: 173px;
+    top: -26px;
+    width: 40px;
+    height: 26px;
+
+    &:before {
+      -webkit-transform: scaleX(0.65) scaleY(1) rotate(45deg);
+    }
+  }
+}
+
+.context-menu-indicator {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 6px 0px 0px 6px;
+  cursor: pointer;
+  background-image: url("@{image-path}/context-menu-indicator.png");
+}
+
+.context-menu-indicator:hover {
+  background-image: url("@{image-path}/context-menu-indicator-hover.png");
+}

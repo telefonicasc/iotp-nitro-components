@@ -1,0 +1,78 @@
+.fit {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+@purple: #8E44AD;
+@blue: #2980b9;
+@green: #27ae60;
+@red: #c0392b;
+@orange: #f39c12;
+@cyan: #afc6d8;
+
+.withColors (@type, @selector: ~'') {
+  .withColors (@type, @selector, ~'purple', @purple);
+  .withColors (@type, @selector, ~'blue', @blue);
+  .withColors (@type, @selector, ~'green', @green);
+  .withColors (@type, @selector, ~'red', @red);
+  .withColors (@type, @selector, ~'orange', @orange);
+  .withColors (@type, @selector, ~'cyan', @cyan);
+}
+
+.withColors (background-light, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    background-color: rgba(red(@color), green(@color), blue(@color), 0.5);
+  }
+}
+
+.withColors (border, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    border-color: @color;
+  }
+}
+
+.withColors (background, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    background-color: @color;
+  }
+}
+
+.withColors (fill, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    fill: @color;
+  }
+}
+
+.withColors (stroke, @selector, @colorClass, @color) {
+  &.@{colorClass}@{selector} {
+    stroke: @color;
+  }
+}
+
+@m2m-btn_font_family: Arial,Verdana,sans-serif;
+
+@m2m-btn_color:#333;
+@m2m-btn_bg-color:#ccc;
+@m2m-btn_bg-color-start:#ccc;
+@m2m-btn_bg-color-end:#eee;
+
+@m2m-btn_accept_color:#fff;
+@m2m-btn_accept_bg-color:#196387;
+@m2m-btn_accept_bg-color-start:#08415f;
+@m2m-btn_accept_bg-color-end:#2481ad;
+
+@m2m-btn_hover_bg-color:#bbb;
+@m2m-btn_hover_bg-color-start:#bbb;
+@m2m-btn_hover_bg-color-end:#ddd;
+
+@m2m-sectionbar_bg-color: #d8d8d8;
+@m2m-sectionbar_bg-color-start: #d8d8d8;
+@m2m-sectionbar_bg-color-end: #f2f2f2;
+@m2m-sectionbar_border-color: #a5a5a5;

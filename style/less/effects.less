@@ -1,0 +1,99 @@
+// Flippable
+//
+// Creates a 3D flip effect
+//
+// Markup: 
+// <div class="flippable">
+//   <div class="front">Front side</div>
+//   <div class="back">Back side</div>
+// </div>
+//
+// Styleguide 1.0.
+
+.csstransforms3d {
+    .flippable .back {
+        visibility: visible;
+    }
+}
+
+.flippable {
+
+  position: relative;   
+
+  -webkit-transition: margin-left 0.5s, margin-top 0.5s;
+  -moz-transition: margin-left 0.5s, margin-top 0.5s;
+  -ms-transition: margin-left 0.5s, margin-top 0.5s;
+  transition: margin-left 0.5s, margin-top 0.5s;
+
+  .front, .back {
+    transition: transform 0.5s, width 0.5s, height 0.5s;
+    transform-style: preserve-3d;
+    transform-origin: 50% 50%;
+    backface-visibility:hidden;
+
+    -webkit-transition: -webkit-transform 0.5s, width 0.5s, height 0.5s;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-backface-visibility: hidden;
+    
+    -moz-transition: -moz-transform 0.5s, width 0.5s, height 0.5s;
+    -moz-transform-style: preserve-3d;
+    -moz-transform-origin: 50% 50%;    
+    -moz-backface-visibility:hidden; 
+
+    -ms-transition: -ms-transform 0.5s, width 0.5s, height 0.5s;
+    -ms-transform-style: preserve-3d;
+    -ms-transform-origin: 50% 50%;
+    -ms-backface-visibility:hidden;
+    
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+
+  .front {
+    z-index: 900;
+    -webkit-transform: perspective(300px) rotateY(0deg);
+    -moz-transform: perspective(300px) rotateY(0deg);
+    -ms-transform: perspective(300px) rotateY(0deg);
+    transform: perspective(300px) rotateY(0deg);
+  }
+
+  .back {
+    visibility: hidden;
+    z-index: 800;
+    -webkit-transform: perspective(300px) rotateY(180deg);
+    -moz-transform: perspective(300px) rotateY(180deg);
+    -ms-transform: perspective(300px) rotateY(180deg);
+    transform: perspective(300px) rotateY(180deg);
+  }
+
+  &.flip {
+    .front {
+      -webkit-transform: perspective(300px) rotateY(-180deg);
+      -moz-transform: perspective(300px) rotateY(-180deg);
+      -ms-transform: perspective(300px) rotateY(-180deg);
+      transform: perspective(300px) rotateY(-180deg);
+    }
+    .back {
+      visibility: visible;
+      z-index: 1000;
+      -webkit-transform: perspective(300px) rotateY(0deg);
+      -mox-transform: perspective(300px) rotateY(0deg);
+      -ms-transform: perspective(300px) rotateY(0deg);
+      transform: perspective(300px) rotateY(0deg);
+    }
+  }
+}
+
+/* For IE. Fix for CSS3PIE */
+.no-boxshadow.no-csstransforms .flippable{
+  .back {
+    top: -10000px;
+  }
+  &.flip {
+    .back {
+      top: 0px;
+    }
+  }
+}

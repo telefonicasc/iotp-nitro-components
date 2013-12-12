@@ -2,12 +2,13 @@ define(
   [
     'components/component_manager',
     'components/mixin/container',
+    'components/context_menu_indicator',
     'components/container'
   ],
 
-  function(ComponentManager, ContainerMixin) {
+  function(ComponentManager, ContainerMixin, ContextMenuIndicator) {
 
-    return ComponentManager.create('dashboardMainPanel', 
+    return ComponentManager.create('dashboardMainPanel',
       DashboardMainPanel, ContainerMixin);
 
     function DashboardMainPanel() {
@@ -23,12 +24,25 @@ define(
 
         this.before('renderItems', function() {
           this.attr.items = [{
-            tag: 'h1', html: this.attr.title  
+            tag: 'div',
+            className: 'title',
+            items: [{
+              tag: 'h1',
+              html: this.attr.title
+            }]
           }, {
             component: 'container',
             className: 'dashboard-main-panel-content',
             items: this.attr.items
           }];
+        });
+
+        this.on('render', function() {
+          var cmIndicator;
+          if (this.attr.contextMenu) {
+            cmIndicator = $('<div>').appendTo(this.$node.find('div.title'));
+            ContextMenuIndicator.attachTo(cmIndicator, this.attr);
+          }
         });
       });
     }

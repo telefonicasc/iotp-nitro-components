@@ -1,0 +1,64 @@
+
+/*Note: this css is not used, and actually included at style/less/panel.css*/
+
+.paged-container {
+    
+}
+
+.paged-container .fit {
+    overflow: hidden;
+}
+
+.paged-container .navigation {
+    padding-top: 3px;
+    text-align: center;
+    background: #9EB9BF;
+    position: absolute;
+    bottom: 0;
+    /*margin-left: -12px;*/
+    width: 100%;
+}
+
+.paged-container .navigation .page-left {
+    border-width: 5px 8px 5px 8px;
+    border-style: solid;
+    background: 0px;
+    height: 0px;
+    display: inline-block;
+    margin-right: 7px;
+    border-color: transparent #5A6568 transparent transparent;
+    cursor: pointer;
+}
+
+.paged-container .navigation .page-right {
+    border-width: 5px 8px 5px 8px;
+    border-style: solid;
+    background: 0px;
+    height: 0px;
+    display: inline-block;
+    margin-left: 4px;
+    border-color: transparent transparent transparent #5A6568;
+    cursor: pointer;
+}
+
+.paged-container .navigation .page-chooser {
+    cursor: pointer;
+    background-color: #BDD0D5;
+    display: inline-block;
+    width: 21px;
+    height: 18px;
+    margin-top: 6px;
+    margin-right: 3px;
+    margin-bottom: 6px;
+    border: 1px solid #98AAB0;
+    font-size: 11px;
+    color: #64737B;
+    font-weight: bold;
+    padding-top: 3px; 
+}
+
+.paged-container .navigation .page-chooser.selected {
+    background-color: #798b95;
+    border: 1px solid #758690;
+    color: #bdd0d5;
+}

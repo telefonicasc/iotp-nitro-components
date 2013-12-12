@@ -4,8 +4,13 @@
   font-family: Helvetica, Arial, sans-serif;
   background-color: #E7E7E7;
 
+  // Main content
+  //
+  // Dashboard main content area
+  //
+  // Styleguide 1.1
   .main-content {
-    margin: 30px;
+    margin: 25px;
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -13,17 +18,23 @@
     right: 320px;
 
     .dashboard-main-panel {
-      
-      position: relative;
 
-      h1 {
-        color: #708796;
-        font-size: 20px;
+      position: relative;
+      margin-bottom: 14px;
+
+      div {
+        h1 {
+          color: #708796;
+          font-size: 20px;
+          display: inline-block;
+          margin-bottom: 6px;
+          margin-top: 0px;
+        }
       }
 
       .dashboard-main-panel-content {
         position: absolute;
-        top: 30px;
+        top: 35px;
         left: 0px;
         right: 0px;
         bottom: 0px;
@@ -39,37 +50,155 @@
     width: 320px;
     background-color: #e9eff0;
     border-left: 1px solid #d2d2d2;
-  }
 
-  .overview-header {
-    height: 30px;
-    width: 100%;
-    background-color: #64737b;
-    color: white;
-    font-weight: bold;      
-
-    .overview-count {      
-      text-align: center;
-      padding-top: 6px;
-      display: inline-block;
-      background-color: #4a95de;
-      min-width: 35px;
-      height: 24px;
-    }    
-
-    .overview-title { 
-      padding-left: 10px;
+    &.dashboard-details-panel {
+      width: 330px;
+      top: auto;
     }
   }
 
+  .overview-content {
+
+    .last-section-panel {
+      border-bottom: 1px solid #9ea3a5;
+    }
+
+    .date-range {
+      color: #b2c0cb;
+      font-size: 14px;
+      text-align: center;
+      height: 21px;
+      padding-top: 7px;
+    }
+  }
+
+  .vertical-panel-group {
+
+    height: 111px;
+
+    .vertical-panel {
+      width: 33%;
+      border-right: 1px solid #9ea3a5;
+      display: inline-block;
+      vertical-align: top;
+      height: 110px;
+      text-align: center;
+
+      .overview-subpanel-body .text {
+        font-size: 26px;
+      }
+    }
+
+    .last-vertical-panel {
+      border-right: none;
+    }
+  }
+
+  .mapbox {
+    width: 100%;
+    height: 100%;
+  }
+
+
+
+
+    .detail-panel-header {
+        text-align: left;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right:5px;
+        background: #D1E2E4;
+        font-size: 14px;
+        font-weight: normal;
+        color: #5D747C;
+        border-top: 1px solid #C6DADC;
+
+        .header-right {
+            float: right;
+        }
+    }
+
+    .detail-panel-content {
+        background: #DDEAEC;
+    }
+
+    .detail-panel {
+        left: 8px;
+        right: 8px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+  .dashboard-overview-panel .panel-list .overview-subpanel{
+    cursor: pointer;
+  }
+}
+
+.chart {
+  .withColors(fill, ~' path.area');
+  .withColors(stroke, ~' path.line');
+  .withColors(stroke, ~' circle.hoverCircle');
+
+  .hoverCircle {
+    fill: white;
+    cursor: pointer;
+    stroke-width: 0;
+    &:hover{
+      stroke-width: 3px;
+    }
+  }
+
+  .baseline {
+    stroke-width: 2px;
+    stroke: #7f8c8d;
+  }
+
+  .border {
+    fill: none;
+    stroke: #B3B8BE;
+    stroke-width: 1px;
+  }
+
+  .chart-labels {
+    div {
+      color: #64737b;
+      font-weight: bold;
+      font-size: 12px;
+      padding-bottom: 26px;
+    }
+
+  }
 }
 
 .range-selection-chart {
 
-  border: 1px solid #b3b8be;
-  
-  .range-selection-area { 
-    
+  svg {
+    position: absolute;
+  }
+
+  .selected-range {
+    border-top: 2px solid #788d9a;
+    border-bottom: 2px solid #788d9a;
+  }
+
+  .selected-range {
+    overflow: hidden;
+  }
+
+  path.line {
+    fill: none;
+    stroke-width: 1px;
+    stroke: #b7bbbd;
+  }
+
+  .whole-chart path.area {
+    fill: #CCCFD2;
+    opacity: 1;
+  }
+
+  .selected-chart path.area {
+    fill: #EFD775;
+    opacity: 1;
   }
 
   .range-selection-handler {
@@ -79,13 +208,194 @@
     width: 10px;
     height: 100%;
     border-radius: 4px;
+    cursor: pointer;
+    margin-left: -14px;
   }
 }
 
-.fit {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;  
+.brush {
+
+  .extent {
+    fill: transparent;
+    stroke: #788d9a;
+    stroke-width: 2px;
+  }
+
+  .resize rect {
+    rx: 1,
+    ry: 1,
+    width: 4px;
+    fill: #d6dce2;
+    stroke-width: 1px;
+    stroke: #788d9a;
+  }
 }
+
+.chart {
+  .x.axis {
+    .domain {
+      display: none;
+    }
+    text {
+      fill: #3B3B3D;
+      font-weight: bold;
+      font-size: 13px;
+    }
+  }
+
+  .y.axis {
+    .domain {
+      display: none;
+    }
+    text{
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+  }
+
+  .axis_y {
+    fill: #7F8C8D;
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+    .domain {
+      display:none;
+    }
+  }
+}
+
+.radar-chart {
+  .axis line {
+    stroke: #ced7dc;
+    stroke-width: 3px;
+  }
+
+  .axis circle {
+    fill: #ced7dc;
+  }
+
+  .axis text {
+    text-anchor: middle;
+    font-size: 12px;
+    fill: #7c91a5;
+  }
+
+  .radar.base path {
+    fill: #ced7dc;
+    fill-opacity: 0.4;
+    stroke-width: 2px;
+    stroke-dasharray: 5,3;
+    stroke: #ced7dc;
+  }
+
+  .radar.base circle {
+    fill: #ced7dc;
+  }
+
+  .radar path {
+    fill: #3498db;
+    stroke-width: 3px;
+    fill-opacity: 0.4;
+    stroke: #64737b;
+  }
+
+  .radar circle {
+    fill: #64737b;
+  }
+}
+
+
+.cell-barchart-subpanel {
+  width: 100%;
+  height: 100%;
+
+  color: #617789;
+  text-align: center;
+
+  svg {
+    text {
+      font-size: 11px;
+      fill: #617789;
+      text-anchor: middle;
+    }
+    rect {
+      fill: #d6dddc;
+      stroke: #71859c;
+      stroke-width: 0.5px;
+    }
+
+    rect.color1 {
+      fill: #d6dddc;
+    }
+
+    rect.color2 {
+      fill: #cad7d8;
+    }
+  }
+  .title {
+    padding:5px;
+    background-color: #64737b;
+    color: #efeeeb;
+    border-bottom: 1px solid white;
+    .caption {
+      font-size: 10px;
+      color: #adbabc;
+    }
+
+  }
+  .chart-carousel {
+    background-color: #bfcecf;
+  }
+  .content {
+    background-color: #bfcecf;
+    padding: 15px 10px;
+    text-align: center;
+    .value {
+      font-size: 20px;
+      white-space:nowrap;
+      color: #525f65;
+    }
+    .caption {
+      font-size: 10px;
+    }
+  }
+}
+
+
+.group-barchart {
+
+  fill: none;
+  .bg_group {
+    stroke-width: 1px;
+    stroke: #e2e2e0;
+    fill: #efeeeb;
+  }
+  .odd {
+    fill: #ecebe7;
+  }
+  .axis_x {
+    text {
+      fill: #7F8C8D;
+      font-size: 12px;
+    }
+  }
+}
+
+.grid {
+  line.x {
+    stroke: #e2e2e0;
+    stroke-width: 1px;
+  }
+  line.y {
+    stroke: #e2e2e0;
+    stroke-width: 1px;
+  }
+  rect.bg_grid.even {
+    fill: #ecebe7;
+  }
+  rect.bg_grid.odd {
+    fill: #efeeeb;
+  }
+}
+

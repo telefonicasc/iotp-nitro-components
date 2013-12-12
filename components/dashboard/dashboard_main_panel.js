@@ -1,3 +1,16 @@
+/*
+_TODO_
+
+@name
+
+@mixin
+
+@option {}
+
+@event
+
+*/
+
 define(
   [
     'components/component_manager',

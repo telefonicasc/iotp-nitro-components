@@ -1,3 +1,21 @@
+/*
+_TODO_
+
+@name dashboard
+
+@mixin ContainerMixin
+@mixin DataBinding
+
+@option {Array} mainContent [] Left section. Ej: map
+@option {Object} overviewPanel {} Right section. Ej: list of elememts
+@option {Object} detailsPanel {} Right section, show when selected item
+@option {Function} itemData null Function for filter item selected data
+
+@event itemselected itemData selected item
+@event updateData none trigger for update data
+
+*/
+
 define(
     [
         'components/component_manager',

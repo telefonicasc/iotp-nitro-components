@@ -1,3 +1,15 @@
+/*
+_TODO_
+
+@name
+
+@mixin
+
+@option {}
+
+@event
+
+*/
 define(
     [
         'components/component_manager',
@@ -15,7 +27,7 @@ define(
 
             this.defaultAttrs({
                 header: '',
-                insertionPoint: '.detail-panel-content',                
+                insertionPoint: '.detail-panel-content',
                 tpl: '<div class="detail-panel-header">'+
                         '<div class="header-text">{{header}}</div>'+
                         '<div class="context-menu-anchor"></div>'+
@@ -31,7 +43,7 @@ define(
             });
 
             this.after('initialize', function() {
-                this.$node.addClass('detail-panel');                
+                this.$node.addClass('detail-panel');
 
                 this.on('render', function() {
                     if (this.attr.contextMenu) {
@@ -39,6 +51,6 @@ define(
                     }
                 });
             });
-        }   
+        }
     }
 );

@@ -1,3 +1,15 @@
+/*
+_TODO_
+
+@name
+
+@mixin
+
+@option {}
+
+@event
+
+*/
 define(
   [
     'components/component_manager',
@@ -29,7 +41,7 @@ define(
           nodes: {
               contextMenu: '#spanContextMenu',
           },
-          classNode: 'overview-subpanel'  
+          classNode: 'overview-subpanel'
         });
 
         this.after('initialize', function() {
@@ -38,7 +50,7 @@ define(
         });
 
         this.after('initialize', function() {
-            this.$node.addClass(this.attr.classNode);                
+            this.$node.addClass(this.attr.classNode);
 
             this.on('render', function() {
                 if (this.attr.contextMenu) {
@@ -50,7 +62,7 @@ define(
                 if (this.attr.contextMenu) {
                     this.appendContextMenu(this.attr.nodes.contextMenu);
                 }
-            });         
+            });
         });
 
         this.appendContextMenu = function(node){

@@ -1,7 +1,21 @@
 /**
- * @component MapMarkerGroupTooltip
- *
- * @mixins Tooltip DataBinding
+_todo_
+
+* **DefaultItems**
+```
+{
+    className: 'tooltip-arrow-border'
+}, {
+    className: 'tooltip-arrow'
+}, {
+    className: 'group-tooltip-marker-list'
+}
+```
+
+@name MapMarkerGroupTooltip
+
+@mixin Tooltip
+@mixin DataBinding
  */
 
 define(
@@ -15,6 +29,7 @@ define(
 
         function MapMarkerGroupTooltip() {
             this.defaultAttrs({
+                //@option {Array} items DefaultItems Items
                 items: [{
                     className: 'tooltip-arrow-border'
                 }, {
@@ -74,7 +89,9 @@ define(
                     if($ele) this.$node.data('bindto', $ele);
                 });
 
-
+                /*
+                @event fix none fix position
+                */
                 this.on('fix', function(){
                     var ele = this.$node.data('bindto'),
                         position;

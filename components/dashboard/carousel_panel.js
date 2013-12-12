@@ -1,3 +1,12 @@
+/*
+carouselPanel
+
+@name carouselPanel
+
+@option {carouselBarchartOptions} chartConf null Set carouselBarchart
+@option {Object} title {value:'',caption:''} Title
+@option {Object} content {value:'',caption:''} Content
+*/
 define(
   [
     'components/component_manager'
@@ -49,11 +58,11 @@ define(
               //If chart then attache 'carouselBarchart' component
               this.$chartNode.appendTo(this.$node);
               var chart = ComponentManager.get('carouselBarchart').attachTo(this.$chartNode, this.attr);
-            }               
-            this.$topNode.appendTo(this.$node); 
+            }
+            this.$topNode.appendTo(this.$node);
 
             this.on('valueChange', function(e, data) {
-              
+
               /*
               var data = {
                   topValue: "a",
@@ -66,7 +75,7 @@ define(
 
               var _attr = this.attr;
               this.$topValueNode.html( (data.topValue) ? data.topValue: _attr.title.value);
-              this.$bottomValueNode.html( (data.bottomValue )? data.bottomValue: _attr.content.value); 
+              this.$bottomValueNode.html( (data.bottomValue )? data.bottomValue: _attr.content.value);
               this.$topCaptionNode.html( (data.topCaption) ? data.topCaption: _attr.title.caption);
               this.$bottomCaptionNode.html( (data.bottomCaption) ? data.bottomCaption: _attr.content.caption);
               this.$chartNode.trigger('valueChange', {values: data.chartValues});

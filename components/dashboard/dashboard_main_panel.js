@@ -1,13 +1,11 @@
 /*
-_TODO_
+Componente usado en DashboardMap para pintar la sección de la izquierda
 
-@name
+@name dashboardMainPanel
 
-@mixin
+@mixin ContainerMixin
 
-@option {}
-
-@event
+@option {String} title '' Title
 
 */
 

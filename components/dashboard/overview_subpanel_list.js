@@ -1,13 +1,12 @@
 /*
     _TODO_
 
-@name
+@name OverviewSubpanelList
 
-@mixin
-
-@option {}
-
-@event
+@option {String} text '' Text
+@option {String} caption '' Caption
+@option {String} iconClass '' Icon class name
+@option {Function} filter null Function for filter data
 
 */
 define(

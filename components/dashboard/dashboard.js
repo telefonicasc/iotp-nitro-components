@@ -1,5 +1,23 @@
 /*
-_TODO_
+Este componente crea una interfaz gráfica con tres regiones delimitadas:
+
+```
+__________________________________________________________
+|                 |                   |                  |
+|  $mainContent   |  $overviewPanel   |  $detailsPanel   |
+|                 |                   |                  |
+|_________________|___________________|__________________|
+```
+
+La idea es que el componente sea capaz de gestionar los eventos de 'itemSelected'
+ya que cuando hay un elemento seleccionado $overviewPanel se oculta y se muestra $detailsPanel. Por defecto el dashboard no tiene ningún item seleccionado, para poder seleccionar o deseleccionar se hará a traves del evento 'itemSelected'.
+
+Dentro de cada sección podemos insertar cualquier otro componente ya que extienden de ContainerMixin
+
+**$mainContent**
+Contenedor de la izquierda que siempre está visible y en el que normalmente se coloca el mapa
+**$overviewPanel** Panel de la derecha donde normalmente se coloca un listado
+**$detailsPanel**
 
 @name dashboard
 

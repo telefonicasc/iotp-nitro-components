@@ -1,14 +1,17 @@
 /*
 _TODO_
 
-@name
+@name OverviewSubpanel
 
-@mixin
+@mixin DataBinding
+@mixin Template
 
-@option {}
+@option {String} iconClass '' Icon class name
+@option {String} text '' Text
+@option {String} text1 '' Subtitle
+@option {String} caption '' Body of panel
 
-@event
-
+@event render null Render sub pannel
 */
 define(
   [

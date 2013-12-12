@@ -1,13 +1,15 @@
 /*
 _TODO_
 
-@name
+@name overviewPanel
 
-@mixin
+@mixin ContainerMixin
+@mixin DataBinding
 
-@option {}
-
-@event
+@option {String} insertionPoint '.overview-content' jQuerySelector
+@option {String} title '' Title
+@option {String} count '' Count value
+@option {String} countClass 'blue' Class name of count element
 
 */
 define(

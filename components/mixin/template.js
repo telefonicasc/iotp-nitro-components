@@ -1,3 +1,9 @@
+/*
+TemplateMixin
+
+@name TemplateMixin
+@option {Boolean} updateOnValueChange true
+*/
 define(
   [
     'components/component_manager',

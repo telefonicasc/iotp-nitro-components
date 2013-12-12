@@ -1,3 +1,8 @@
+/*
+ContainerMixin
+
+@name ContainerMixin
+*/
 define(
   [
     'components/component_manager'

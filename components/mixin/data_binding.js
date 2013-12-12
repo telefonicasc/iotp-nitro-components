@@ -1,3 +1,11 @@
+/*
+dataBinding
+
+@name DataBinding
+
+@option {Boolean} resetModel false
+@option {Object} model empty
+*/
 define(
     [
         'libs/jsonpath'

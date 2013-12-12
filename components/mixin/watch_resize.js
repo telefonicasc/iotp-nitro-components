@@ -1,3 +1,8 @@
+/*
+WatchResize
+
+@name WatchResize
+*/
 define(
   [],
 

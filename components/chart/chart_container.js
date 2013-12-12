@@ -1,3 +1,17 @@
+/*
+chartContainer
+
+@name chartContainer
+
+@option {Boolean} showGrid true
+@option {Number} gridStrokeWidth 1
+@option {String} gridStrokeColor #AAAAAA
+@option {Number} marginBottom 0
+@option {Number} marginRight 0
+@option {Boolean} axisx false
+@option {Boolean} axisy false
+@option {Object} timeAxis { margin: 0, height: 20 }
+*/
 define(
     [
         'components/component_manager',
@@ -21,7 +35,7 @@ define(
             this.defaultAttrs({
                 showGrid: true,
                 gridStrokeWidth: 1,
-                gridStrokeColor: '#AAA',
+                gridStrokeColor: '#AAAAAA',
                 marginBottom: 0,
                 marginRight: 0,
                 axisx:false,

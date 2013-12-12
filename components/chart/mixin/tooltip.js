@@ -1,3 +1,8 @@
+/*
+Tooltip
+
+@name Tooltip
+*/
 define(
   [],
 
@@ -49,12 +54,12 @@ define(
                 $('.tooltip').hide();
             });
 
-            function fireEvent( elemId, eventName ) {                
+            function fireEvent( elemId, eventName ) {
                 var elem = document.getElementById(elemId);
-                if( elem != null ){   
+                if( elem != null ){
                     if(elem.fireEvent) {
-                        elem.fireEvent('on'+eventName);     
-                    }else {   
+                        elem.fireEvent('on'+eventName);
+                    }else {
                         var evObj = document.createEvent('Events');
                         evObj.initEvent(eventName, true, false);
                         elem.dispatchEvent( evObj );
@@ -66,4 +71,4 @@ define(
     }
 
   }
-);  
+);

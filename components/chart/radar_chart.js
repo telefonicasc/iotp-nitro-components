@@ -1,3 +1,13 @@
+/*
+radarChart
+
+@name radarChart
+
+@option {Array} maxValues empty
+@option {Array} axis false Axis
+@option {Number} radarSize 120 Radar Size
+@option {Object} radarPosition {x: 160, y: 160} Radar Position
+*/
 define(
     [
         'components/component_manager',

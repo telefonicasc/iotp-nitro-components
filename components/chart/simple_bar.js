@@ -1,3 +1,11 @@
+/*
+SimpleBar
+
+@name SimpleBar
+
+@option {String} valueField value
+@option {String} maxField max
+*/
 define(
     [
         'components/component_manager',
@@ -6,7 +14,7 @@ define(
 
     function(ComponentManager, DataBinding) {
 
-        return ComponentManager.create('SimpleBar', 
+        return ComponentManager.create('SimpleBar',
             SimpleBar, DataBinding);
 
         function SimpleBar() {
@@ -17,7 +25,7 @@ define(
             });
 
             this.after('initialize', function() {
-            
+
                 var bar = $('<div>')
                             .addClass('bar-value')
                             .appendTo(this.$node);
@@ -28,7 +36,7 @@ define(
                 this.on('valueChange', function(e, o) {
                     var value = o.value[this.attr.valueField],
                         max = o.value[this.attr.maxField];
-                    
+
                     bar.css('width', (100*value/max) + '%');
                 });
             });

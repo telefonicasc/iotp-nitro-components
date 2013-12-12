@@ -1,3 +1,12 @@
+/*
+chartGrid
+
+@name chartGrid
+
+@option {String} stroke #ffffff
+@option {Number} valueTicks 5
+@option {String} classGrid bg_grid
+*/
 define(
     [
         'components/component_manager',

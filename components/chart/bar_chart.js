@@ -1,3 +1,10 @@
+/*
+barChart
+
+@name barChart
+
+@option {Number} barWidth 0.8
+*/
 define(
     [
         'components/component_manager',
@@ -48,7 +55,7 @@ define(
                         self.showTooltip(this, d.value, barWidth/2-6);
                     });
                     bars.exit().remove();
-                    
+
                     if (anim){
                         bars = bars.transition().duration(800);
                     }
@@ -59,7 +66,7 @@ define(
                         return d.value >= 0 ? y(d.value) : y(0);
                     });
                     anim = false;
-                   
+
                 };
 
                 this.on('resize', function(e, chartSize) {
@@ -95,7 +102,7 @@ define(
                     }
                     if (this.attr.tooltip)
                         this.attr.tooltip.caption = (value.caption)? value.caption: '';
-                    
+
                     anim = true;
                     this.$node.parent().trigger('actionSelected', value);
 
@@ -105,7 +112,7 @@ define(
                     if (d === 0){
                         return;
                     }
-                    var html = '<div class="value">'+d+' €</div><div class="caption">'+this.attr.tooltip.caption+'</div>';                        
+                    var html = '<div class="value">'+d+' €</div><div class="caption">'+this.attr.tooltip.caption+'</div>';
                     this.trigger('showTooltip', {'elem':elem, 'html': html, 'offset': offset} );
                 };
 

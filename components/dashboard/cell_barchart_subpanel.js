@@ -24,12 +24,13 @@ chart: {
 ```
 
 @name cellBarchartSubpanel
+@mixin DataBinding
+@mixin ContainerMixin
 
 @option {CellBarchartSubpanelText} text EmptyValues values
 @option {CellBarchartSubpanelChart} chart - values
 
-@mixin DataBinding
-@mixin ContainerMixin
+
 */
 define(
   [

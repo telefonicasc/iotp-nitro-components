@@ -1,3 +1,16 @@
+/*
+areaStackedChart
+
+@name areaStackedChart
+
+@option {Array} colorArea ['#FF0000']
+@option {Array} colorLine ['#00FF00']
+@option {Number} fillOpacity 0
+@option {Array} subModelsSufix empty
+@option {Boolean} autoscale fals
+@option {Boolean} tooltip true
+@option {Boolean} tooltip2 false
+*/
 define(
     [
         'components/component_manager',

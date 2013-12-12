@@ -1,3 +1,15 @@
+/*
+TimeAxis
+
+@name TimeAxis
+@option {String} orientation bottom
+@option {String} valueField totalRegistered
+@option {String} rangeField: selectedRange
+@option {String} tickFormat %e-%b
+@option {String} stepType day
+@option {Number} stepTick 1
+@option {Number} paddingTick 0
+*/
 define(
     [
         'components/component_manager'

@@ -1,3 +1,15 @@
+/*
+rangeSelection
+
+@name rangeSelection
+
+@option {Number} fixRange -1
+@option {?} x d3.time.scale().range([0, 0])
+@option {?} y d3.scale.linear().range([0, 0])
+@option {Array} rangeBorder empty
+@option {Boolean} jump false
+@option {Boolean} animate true
+*/
 define(
 [
     'components/component_manager',

@@ -1,3 +1,16 @@
+/*
+GroupBarChart
+
+@name GroupBarChart
+
+@option {Object} labels empty
+@option {Boolean} tooltip false Tooltip
+@option {Array} colors ['#000000'] Color
+@option {Number} carouselHeight 100
+@option {Number} animDuration 600
+@option {Number} axisXheight 35
+@option {Number} minWidthGroup 200
+*/
 define(
 [
     'components/component_manager'

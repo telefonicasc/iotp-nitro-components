@@ -1,3 +1,10 @@
+/*
+ChartElement
+
+@name ChartElement
+@option {Object} x { scaleFun: d3.time.scale, key: 'date' }
+@option {Object} y { scaleFun: d3.time.linear, key: 'value' }
+*/
 define(
     [
         'libs/guid'

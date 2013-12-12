@@ -1,3 +1,11 @@
+/*
+carouselBarchart
+
+@name carouselBarchart
+
+@option {Object} chartConf { maxHeight: 75, width: 60, barPadding: 5 }
+@option {Array} data { name:'+', value: 72 }, {name:'-', value: 46 }
+*/
 define(
     [
         'components/component_manager'

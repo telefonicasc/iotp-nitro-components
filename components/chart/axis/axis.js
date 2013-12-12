@@ -1,3 +1,11 @@
+/*
+Axis
+
+@name Axis
+@option {?} axisFn d3.svg.axis
+@option {String} orientation right
+@option {Number} ticks 10
+*/
 define(
   [
     'components/component_manager',

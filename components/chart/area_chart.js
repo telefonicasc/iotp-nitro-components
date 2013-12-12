@@ -1,3 +1,11 @@
+/*
+areaChart
+
+@name areaChart
+
+@option {Boolean} area true
+@option {Object} hoverCircle { className: 'hoverCircle', mouseout: {'r': 6, 'opacity': 0}, mouseover: {'opacity': 1 } }
+*/
 define(
     [
         'components/component_manager',

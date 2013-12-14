@@ -1,8 +1,8 @@
 /**
-_todo_
+Gestiona los tooltips que aparecen en los grupos de markers
 
-* **DefaultItems**
-```
+__DefaultItems__
+```javascript
 {
     className: 'tooltip-arrow-border'
 }, {
@@ -16,7 +16,11 @@ _todo_
 
 @mixin Tooltip
 @mixin DataBinding
- */
+
+@event hide none Trigger for hide group
+@event show none Trigger for show group
+@event fix none Trigger for fix position
+*/
 
 define(
     [
@@ -89,9 +93,6 @@ define(
                     if($ele) this.$node.data('bindto', $ele);
                 });
 
-                /*
-                @event fix none fix position
-                */
                 this.on('fix', function(){
                     var ele = this.$node.data('bindto'),
                         position;

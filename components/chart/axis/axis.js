@@ -1,10 +1,10 @@
 /*
-Axis
+axis
 
-@name Axis
-@option {?} axisFn d3.svg.axis
-@option {String} orientation right
-@option {Number} ticks 10
+@name axis
+@option {Function} axisFn [D3.svg.axis](https://github.com/mbostock/d3/wiki/SVG-Axes)
+@option {String} orientation 'right' Orientation: 'left', 'right'
+@option {Number} ticks 10 ticks
 */
 define(
   [

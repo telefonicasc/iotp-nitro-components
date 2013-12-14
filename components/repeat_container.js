@@ -1,10 +1,46 @@
 /**
-  * @component RepeatContainer
-  *
-  * @event {in} valueChange Change value in component
-  *
-  * @attr {Object} item Attrs for components that are repeated
-  * @attr {Function} filter Filter value from 'valueChange' event
+Create wrapper for each data and create component with option
+
+###Example
+origin HTML
+```html
+<div id="list" ></div>
+```
+
+set component and change value
+```javascript
+$('#list').m2mRepeatContainer({
+    item:{
+        tpl: '<a href="#">{{name}}</a>'
+    }
+}):
+$('#list').trigger('valueChange', {value:[
+    {name:'one'},
+    {name:'two'},
+    {name:'three'}
+]);
+```
+
+restult of change
+```html
+<div id="list" >
+    <div class="repeat-container-item">
+        <div><a href="#">une</a></div>
+    </div>
+    <div class="repeat-container-item">
+        <div><a href="#">two</a></div>
+    </div>
+    <div class="repeat-container-item">
+        <div><a href="#">three</a></div>
+    </div>
+</div>
+```
+
+
+  * @name RepeatContainer
+  * @mixin DataBinding
+  * @option {Object} item {component:'container'} Attrs for components that are repeated
+  * @option {Function} filter fn() Filter value from 'valueChange' event
   *
   */
 define(

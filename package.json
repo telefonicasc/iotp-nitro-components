@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "gendocs": "node ./libs/dca-component-documentor/generatedoc.js -o ./doc/user-document.md ./components/**/*.js"
+    "gendocs": "node ./libs/dca-component-documentor/generatedoc.js -o ./doc/user-document.md"
   },
   "repository": {
     "type": "git",

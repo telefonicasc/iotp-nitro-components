@@ -1,3 +1,17 @@
+/**
+This component use [Raphael]() for draw dinamic icon of temperature
+
+@name temperatureWidget
+
+@option {String} fillColor '#6F8388' Fill Color
+@option {String} borderColor '#6F8388' Border Color
+@option {String} baseColor '#DDEAEC' Base Color
+@option {String} id 'temperature-widget' Element Id
+@option {Number} tmin 0 Time minimun
+@option {Number} tmax 30 Time Maximun
+@option {Number} temp 0.0 Temperature
+
+*/
 define (
 [
     'components/component_manager',

@@ -1,16 +1,24 @@
 /*
 chartContainer
-
+__timeAxisDefault__
+```javascript
+{
+    margin: 0,
+    height: 20
+}
+```
 @name chartContainer
+@mixin DataBinding
+@mixin WatchResize
 
-@option {Boolean} showGrid true
-@option {Number} gridStrokeWidth 1
-@option {String} gridStrokeColor #AAAAAA
-@option {Number} marginBottom 0
-@option {Number} marginRight 0
-@option {Boolean} axisx false
-@option {Boolean} axisy false
-@option {Object} timeAxis { margin: 0, height: 20 }
+@option {Boolean} showGrid true showGrid
+@option {Number} gridStrokeWidth 1 gridStrokeWidth
+@option {String} gridStrokeColor '#AAAAAA' gridStrokeColor
+@option {Number} marginBottom 0 marginBottom
+@option {Number} marginRight 0 marginRight
+@option {Boolean} axisx false axisx
+@option {Boolean} axisy false axisy
+@option {Object} timeAxis timeAxisDefault timeAxis
 */
 define(
     [

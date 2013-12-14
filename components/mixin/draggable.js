@@ -1,5 +1,5 @@
-/*
-DraggableMixin
+/**
+Convert node in draggable item. Use `jQueryUI.Draggable()`
 
 @name DraggableMixin
 */

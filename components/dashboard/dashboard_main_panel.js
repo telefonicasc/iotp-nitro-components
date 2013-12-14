@@ -6,8 +6,7 @@ Componente usado en DashboardMap para pintar la sección de la izquierda
 @mixin ContainerMixin
 
 @option {String} title '' Title
-
-*/
+ */
 
 define(
   [

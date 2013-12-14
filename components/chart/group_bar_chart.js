@@ -3,13 +3,13 @@ GroupBarChart
 
 @name GroupBarChart
 
-@option {Object} labels empty
-@option {Boolean} tooltip false Tooltip
-@option {Array} colors ['#000000'] Color
-@option {Number} carouselHeight 100
-@option {Number} animDuration 600
-@option {Number} axisXheight 35
-@option {Number} minWidthGroup 200
+@option {Object} labels empty labels
+@option {Boolean} tooltip false Tooltip tooltip
+@option {Array} colors ['#000000'] Color colors
+@option {Number} carouselHeight 100 carouselHeight
+@option {Number} animDuration 600 animDuration
+@option {Number} axisXheight 35 axisXheight
+@option {Number} minWidthGroup 200 minWidthGroup
 */
 define(
 [

@@ -1,5 +1,5 @@
 /*
-WatchResize
+Update size, width and height, when trigger `'resize'` event of window
 
 @name WatchResize
 */

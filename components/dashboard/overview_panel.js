@@ -1,5 +1,5 @@
-/*
-_TODO_
+/**
+Create `$overviewPanel` section of __dashboard__ component
 
 @name overviewPanel
 
@@ -10,7 +10,6 @@ _TODO_
 @option {String} title '' Title
 @option {String} count '' Count value
 @option {String} countClass 'blue' Class name of count element
-
 */
 define(
     [

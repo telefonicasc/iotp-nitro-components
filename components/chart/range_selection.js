@@ -2,13 +2,14 @@
 rangeSelection
 
 @name rangeSelection
+@mixin DataBinding
 
-@option {Number} fixRange -1
-@option {?} x d3.time.scale().range([0, 0])
-@option {?} y d3.scale.linear().range([0, 0])
-@option {Array} rangeBorder empty
-@option {Boolean} jump false
-@option {Boolean} animate true
+@option {Number} fixRange -1 fixRange
+@option {D3.range} x [0,0] [D3 range](https://github.com/mbostock/d3/wiki/Arrays#wiki-d3_range) fo axis X
+@option {D3.range} y [0,0] [D3 range](https://github.com/mbostock/d3/wiki/Arrays#wiki-d3_range) fo axis Y
+@option {Array} rangeBorder [] Border of range for filter data
+@option {Boolean} jump false jump
+@option {Boolean} animate true animate
 */
 define(
 [

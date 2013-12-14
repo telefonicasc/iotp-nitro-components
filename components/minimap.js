@@ -1,3 +1,20 @@
+/**
+This component use **[Mapbox](https://www.mapbox.com/mapbox.js/)** librari for draw map witch one marker
+Create Map with one element
+
+
+@name minimap
+@mixin DataBinding
+
+@option {String} mapId -- Mapbox user Id
+@option {String} markerColor '#5C8F9E' Marker Color
+@option {Number} zoomValue 16 Zoom Value
+@option {Boolean} movable false Movable map
+@option {String} listenTo 'updateMinimap' Evento for update value
+@option {String} containerClass 'mapbox-mini' Css class nae of container
+@option {Object} center {lat:50.45,lon:7.48} Center in this location
+
+*/
 define(
         [
             'components/component_manager',
@@ -89,7 +106,7 @@ define(
                     // Expects something like: "{"name":"Tank-501340596","location":{"altitude":0,"latitude":40.513538,"longitude":-3.663769}}"
                     this.on('valueChange', function(e, o) {
                         e.stopPropagation();
-                        if (!o.value) { 
+                        if (!o.value) {
                             return;
                         }
                         var markerModel = o.value.markerModel === undefined ? null : o.value.markerModel;

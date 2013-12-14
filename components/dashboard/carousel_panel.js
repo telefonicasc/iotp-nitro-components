@@ -1,11 +1,28 @@
-/*
-carouselPanel
+/**
 
+__carouselPanelValue__
+```javascript
+//example
+{
+    topValue: "a",
+    topCaption: "a1",
+    bottomValue: "c",
+    bottomCaption: "c1",
+    chartValues: [{name:'', value: 10}, {name: '', value:20}, .... ]
+}
+```
+__ChartValueObject__
+```javascript
+{
+ value:'',
+ caption:''
+}
+```
 @name carouselPanel
-
-@option {carouselBarchartOptions} chartConf null Set carouselBarchart
-@option {Object} title {value:'',caption:''} Title
-@option {Object} content {value:'',caption:''} Content
+@option {carouselBarchartOptions} chartConf undefined Set carouselBarchart
+@option {ChartValueObject} title ChartValueObject Title
+@option {ChartValueObject} content ChartValueObject Content
+@option {Object} value carouselPanelModel Value
 */
 define(
   [
@@ -62,17 +79,6 @@ define(
             this.$topNode.appendTo(this.$node);
 
             this.on('valueChange', function(e, data) {
-
-              /*
-              var data = {
-                  topValue: "a",
-                  topCaption: "a1",
-                  bottomValue: "c",
-                  bottomCaption: "c1",
-                  chartValues: [{name:'', value: 10}, {name: '', value:20}, .... ]
-              }
-              */
-
               var _attr = this.attr;
               this.$topValueNode.html( (data.topValue) ? data.topValue: _attr.title.value);
               this.$bottomValueNode.html( (data.bottomValue )? data.bottomValue: _attr.content.value);

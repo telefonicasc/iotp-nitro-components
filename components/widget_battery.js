@@ -1,14 +1,17 @@
 /**
-  * @component batteryWidget
-  *
-  * @event {in} valueChange Change value in component
-  * @event {in} drawBattery Change value in component
-  * @event {in} drawBattery-voltage Change Voltage in component
-  * @event {in} drawBattery-level Change Charge-Level in component
-  * @event {in} refresh Redraw component
-  *
-  * @mixin Template, Data_binding
-  */
+Draw battery icon
+
+@name batteryWidget
+@mixin Template
+@mixin DataBinding
+
+@event drawBattery {} Change value in component
+@event drawBattery-voltage {} Change Voltage in component
+@event drawBattery-level {} Change Charge-Level in component
+@event refresh undefined Redraw component
+
+
+*/
 
 define (
 [

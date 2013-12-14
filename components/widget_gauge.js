@@ -2,8 +2,8 @@
  * Draw gauge icon
  *
  * @name gaugeWidget
- * @mixin Data_binding
- * @mixin Othercompon
+ * @mixin DataBinding
+ * @mixin Component
  *
  * @option {Number} value 0 Initial value
  * @option {String} unit '' Unit to show with label

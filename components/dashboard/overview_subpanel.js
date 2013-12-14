@@ -1,5 +1,5 @@
 /*
-_TODO_
+ Create list for __overviewPanel__ component
 
 @name OverviewSubpanel
 

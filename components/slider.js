@@ -1,10 +1,24 @@
+/**
+Create dinamic slider element and triger 'valueChange' event with value when drag pitch element
+
+@name Slider
+@mixin Template
+
+@option {String} label 'value' Label
+@option {Number} value 0 Value
+@option {Number} minValue 0 Min Value
+@option {Number} maxValue 100 Max Value
+@option {Boolean} showSliderLabel true Show slider label
+@option {Boolean} showSliderValue true Show slider value
+
+*/
 define(
     [
         'components/component_manager',
         'components/mixin/template',
         'libs/jqueryui/jquery.ui.core',
         'libs/jqueryui/jquery.ui.widget',
-        'libs/jqueryui/jquery.ui.mouse',  
+        'libs/jqueryui/jquery.ui.mouse',
         'libs/jqueryui/jquery.ui.draggable',
         'libs/jqueryui/jquery.ui.droppable'
     ],
@@ -24,7 +38,7 @@ define(
                 showSliderValue: true,
                 tpl: '<label class="slider-label">{{label}}</label>' +
                      '<div class="slider-bar">' +
-                        '<div class="slider-level"></div>' +                        
+                        '<div class="slider-level"></div>' +
                      '</div>' +
                      '<div class="slider-scale">' +
                         '<div class="slider-min">{{minValue}}</div>' +
@@ -52,7 +66,7 @@ define(
                 handler.draggable({
                     axis: 'x', containment: this.$node
                 });
-                
+
 
                 this.$node.on('dragstart drag dragstop', function(e, ui) {
                     e.stopPropagation();
@@ -61,13 +75,12 @@ define(
                 this.$valueSpan = $('.slider-handler > span', this.$node);
 
                 handler.on('drag', $.proxy(function(e, ui) {
-                    var value = ui.position.left * this.attr.maxValue
-                            / bar.width();
+                    var value = ui.position.left * this.attr.maxValue bar.width();
                     value = Math.min(Math.max(value, 0), this.attr.maxValue);
                     value = value < 0.1 ? 0 : value;
                     value = value.toPrecision(2);
                     this.trigger('valueChange', { value: value });
-                }, this)); 
+                }, this));
 
                 this.on('valueChange', function(e, o) {
                     this.setSliderValue(o.value);
@@ -78,11 +91,11 @@ define(
                 }
 
                 if (this.attr.sliderMinLabel) {
-                    $('.slider-min', this.$node).html(this.attr.sliderMinLabel); 
+                    $('.slider-min', this.$node).html(this.attr.sliderMinLabel);
                 }
 
                 if (this.attr.sliderMaxLabel) {
-                    $('.slider-max', this.$node).html(this.attr.sliderMaxLabel);            
+                    $('.slider-max', this.$node).html(this.attr.sliderMaxLabel);
                 }
 
                 this.setSliderValue(this.attr.value);
@@ -98,7 +111,7 @@ define(
                 }
 
                 level.css({
-                    right: (96 * (1 - parseFloat(value)/this.attr.maxValue)) + '%' 
+                    right: (96 * (1 - parseFloat(value)/this.attr.maxValue)) + '%'
                 });
 
                 handler.css({

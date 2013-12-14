@@ -1,36 +1,8 @@
 /*
 Create a BarChart
 
-* **CellBarchartSubpanelText**
-```
-// empty
-text: {
-  title:   { value: '', caption: '' },
-  content: { value: '', caption: '' }
-}
-```
-
-* **CellBarchartSubpanelChart**
-```
-//example
-chart: {
-  conf: {
-    maxHeight: 70,
-    width: 45,
-    barPadding: 4
-  },
-  data: [ { gains: 87 }, { losses: 46 }, ... ]    //values from 0 - 100
-}
-```
-
 @name cellBarchartSubpanel
-@mixin DataBinding
-@mixin ContainerMixin
-
-@option {CellBarchartSubpanelText} text EmptyValues values
-@option {CellBarchartSubpanelChart} chart - values
-
-
+@deprecated
 */
 define(
   [
@@ -38,26 +10,6 @@ define(
     'components/mixin/data_binding',
     'components/mixin/container'
   ],
-
-  /* DATA BINDING SAMPLE
-  	    {
-          component: 'cellBarchartSubpanel',
-          className: 'cell-barchart-subpanel',
-          text: {
-            title: { value: '21%', caption: 'of users online' },
-            content: { value: '345', caption: 'unique users online' }
-          },
-          chart: {        //(optional)
-            conf: {
-              maxHeight: 70,
-              width: 45,
-              barPadding: 4
-            },
-            data: [ { gains: 87 }, { losses: 46 }, ... ]    //values from 0 - 100
-          }
-        }
-   */
-
   function(ComponentManager, DataBinding, ContainerMixin) {
 
     return ComponentManager.create('cellBarchartSubpanel',

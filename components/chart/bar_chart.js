@@ -2,8 +2,10 @@
 barChart
 
 @name barChart
+@mixin Tooltip
 
-@option {Number} barWidth 0.8
+@option {Number} barWidth 0.8 barWidth
+@option {String} cssClass '' Css class nane for svg element
 */
 define(
     [

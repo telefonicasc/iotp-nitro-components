@@ -1,7 +1,7 @@
 /**
 Map component for dashboards using mapbox
-* **DashboardMapMarkerOption**
-```
+__DashboardMapMarkerOption__
+```javascript
 {
   latitude: 40.5,
   longitude: -3,
@@ -10,8 +10,8 @@ Map component for dashboards using mapbox
 }
 ```
 
-* **DefaultTooltipComponent**
-```
+__DefaultTooltipComponent__
+```javascript
 {
     component: 'Tooltip',
     items: [{
@@ -43,8 +43,6 @@ Map component for dashboards using mapbox
 @event itemselected When it is received, the css class 'selected' is added to the marker of the selected item
 @event valueChange map markers are updated with the data in the event
 @eventt itemselected Is triggered when a marker is clicked
-
-@style dashboard_map.less
 */
 
 define(

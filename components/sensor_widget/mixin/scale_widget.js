@@ -1,3 +1,11 @@
+/**
+@name ScaleWidget
+
+
+@option {Number} value 0 value
+@option {Number} maxValue 100 maxValue
+@option {Object} scaleRectStyle {} [Raphael - Paper.rect()](http://raphaeljs.com/reference.html#Paper.rect) configuration
+*/
 define(
     [
         'components/component_manager',
@@ -52,7 +60,7 @@ define(
                     y: this.height - height
                 }, this.attr.scaleRectStyle));
             };
-            
+
         }
     }
 );

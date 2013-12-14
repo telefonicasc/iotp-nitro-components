@@ -2,9 +2,10 @@
 SimpleBar
 
 @name SimpleBar
+@mixin DataBinding
 
-@option {String} valueField value
-@option {String} maxField max
+@option {String} valueField 'value' Name of attribute on model for `value` value
+@option {String} maxField 'max' Name of attribute on model for `max` value
 */
 define(
     [

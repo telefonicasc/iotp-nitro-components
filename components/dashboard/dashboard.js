@@ -10,14 +10,19 @@ __________________________________________________________
 ```
 
 La idea es que el componente sea capaz de gestionar los eventos de 'itemSelected'
-ya que cuando hay un elemento seleccionado $overviewPanel se oculta y se muestra $detailsPanel. Por defecto el dashboard no tiene ningún item seleccionado, para poder seleccionar o deseleccionar se hará a traves del evento 'itemSelected'.
+ya que cuando hay un elemento seleccionado $overviewPanel se oculta y se muestra $detailsPanel.
+Por defecto el dashboard no tiene ningún item seleccionado, para poder seleccionar o
+deseleccionar se hará a traves del evento `'itemSelected'`.
 
 Dentro de cada sección podemos insertar cualquier otro componente ya que extienden de ContainerMixin
 
-**$mainContent**
+__$mainContent__
 Contenedor de la izquierda que siempre está visible y en el que normalmente se coloca el mapa
 **$overviewPanel** Panel de la derecha donde normalmente se coloca un listado
 **$detailsPanel**
+
+_**notas**_
+* Para poder mantener seleccionado un Asset cuando se refresca los datos es necesario que el modelo contenda el parámetro 'id'
 
 @name dashboard
 
@@ -31,7 +36,6 @@ Contenedor de la izquierda que siempre está visible y en el que normalmente se 
 
 @event itemselected itemData selected item
 @event updateData none trigger for update data
-
 */
 
 define(

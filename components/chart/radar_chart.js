@@ -1,12 +1,23 @@
 /*
 radarChart
 
-@name radarChart
+__PositionObject__
+```javascript
+{
+    x: 160,
+    y: 160
+}
+```
 
-@option {Array} maxValues empty
+
+@name radarChart
+@mixin WatchResize
+@mixin DataBinding
+
+@option {Array} maxValues []
 @option {Array} axis false Axis
 @option {Number} radarSize 120 Radar Size
-@option {Object} radarPosition {x: 160, y: 160} Radar Position
+@option {Object} radarPosition PositionObject Radar Position
 */
 define(
     [

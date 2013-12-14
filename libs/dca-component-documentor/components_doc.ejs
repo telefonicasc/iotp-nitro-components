@@ -1,49 +1,34 @@
 <? docfiles.forEach(function(doc) { ?>
-
   <!-- Start <?= doc.filename ?> -->
+  <?= /\.md$/.test(doc.filename)?doc.javadoc.shift().raw.code:'' ?>
 
   <? doc.javadoc.forEach(function(comment) { ?>
-
-
-
-
     <? if (!comment.ignore) { ?>
       <? if (comment.name) { ?>
         <? if (comment.isMethod || comment.isFunction) { ?>
-          ## <?= comment.name ?>(<?= comment.paramStr ?>)
+          ###<?= comment.name ?>(<?= comment.paramStr ?>)
         <? } else { ?>
-          ## <?= comment.name ?>
+          ###<?= comment.name ?>
         <? } ?>
       <? } ?>
+
       <? if (comment.tag.mixin) { ?>
-      _**Mixin:** <? comment.tag.mixin.forEach(function(paramTag) { ?>[ <?= paramTag.string ?> ](),<? }) ?>_
+      _**Mixin:**_ <? comment.tag.mixin.forEach(function(paramTag) { ?>[*<?= paramTag.string ?>*] - <? }) ?>
       <? } ?>
 
-        <? if (comment.deprecated) { ?>
-          **Deprecated**
-        <? } ?>
-
-        <? if (comment.author) { ?>
-          Author: <?- comment.author ?>
-        <? } ?>
-
-        <? if (comment.version) { ?>
-          Version: <?= comment.version ?>
-        <? } ?>
-
-        <? if (comment.see) { ?>
-          See: <?= comment.see ?>
-        <? } ?>
+      <? if (comment.deprecated) { ?>
+        **Deprecated**
+      <? } ?>
 
       <? if (comment.paramTags.length > 0) { ?>
-        ### Params:
+        #### Params:
         <? comment.paramTags.forEach(function(paramTag) { ?>
           * **<?= paramTag.joinedTypes ?>** *<?= paramTag.name ?>* <?= paramTag.description ?>
         <? }) ?>
       <? } ?>
 
       <? if (comment.returnTags.length > 0) { ?>
-        ### Return:
+        #### Return
         <? comment.returnTags.forEach(function(returnTag) { ?>
           * **<?= returnTag.joinedTypes ?>** <?= returnTag.description ?>
         <? }) ?>
@@ -52,7 +37,7 @@
       <?= comment.description ?>
 
       <? if (comment.tag.option.length > 0) { ?>
-        ### Options:
+        #### Options
 
         Option | Type | Default | Description
         --- | --- | --- | ---
@@ -61,7 +46,7 @@
       <? } ?>
 
       <? if (comment.tag.event) { ?>
-        ### Events:
+        #### Events
 
         Event | Argument | Description
         --- | --- | ---

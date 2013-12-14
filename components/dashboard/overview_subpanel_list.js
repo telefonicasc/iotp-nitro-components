@@ -1,5 +1,5 @@
 /*
-    _TODO_
+Create item of list in `OverviewSubpanel` component
 
 @name OverviewSubpanelList
 
@@ -7,7 +7,6 @@
 @option {String} caption '' Caption
 @option {String} iconClass '' Icon class name
 @option {Function} filter null Function for filter data
-
 */
 define(
     [

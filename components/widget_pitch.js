@@ -1,3 +1,17 @@
+/**
+This component use [Raphael]() for draw dinamic icon of pitch
+
+@name pitchWidget
+
+@option {String} pitchChart '.pitch-chart' Css class name of chart
+@option {String} pitchLabel '.pitch-label' Css class name of label
+@option {String} fillColor '#6F8388' Fill color
+@option {String} borderColor '#6F8388' Border Color
+@option {String} baseColor '#E9EFF0' Base Color
+@option {String} id 'pitch-widget' Element Id
+@option {Number} angle 75 angle
+
+*/
 define (
 [
     'components/component_manager',

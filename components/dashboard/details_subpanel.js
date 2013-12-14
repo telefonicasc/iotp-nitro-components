@@ -1,14 +1,13 @@
-/*
+/**
 Nodo donde se pinta los datos del Asset dentro de la lista
 
 @name DashboardDetailsSubpanel
 
 @mixin Template
-@mixin Container
+@mixin ContainerMixin
 
 @option {String} header '' Header title
 @option {ContextMenuIndicatorOption} contextMenu null  Add context menu
-
 */
 define(
     [

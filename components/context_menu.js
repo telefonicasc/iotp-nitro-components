@@ -1,3 +1,18 @@
+/**
+Contextual menu.
+
+@name contextMenu
+
+@option {Array} items [] List of items to show in this context menu
+@option {Function} onSelect fn(item) Function that gets called when an item is selected
+
+@event show undefined Shows the context menu.
+@event hide undefined Hide the context menu.
+@event back undefined Triggered when the user clicks on a go back link
+@event selected undefined Triggered when the user selects one of the options
+
+*/
+
 define(
   [
     'components/component_manager',
@@ -9,22 +24,6 @@ define(
     return ComponentManager.create('contextMenu',
       ContextMenu);
 
-    /**
-     * Contextual menu.
-     *
-     * Options:
-     *
-     *   - `items` List of items to show in this context menu
-     *   - `onSelect` Function that gets called when an item is selected
-     *
-     * Events:
-     *
-     *   - `show` Shows the context menu.
-     *   - `hide` Hide the context menu.
-     *   - `back` Triggered when the user clicks on a go back link
-     *   - `selected` Triggered when the user selects one of the options
-     *
-     */
     function ContextMenu() {
 
       var panelPath = [];

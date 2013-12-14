@@ -1,8 +1,15 @@
 /**
-@component pagedContainer
-@event {in} valueChange Change value in component
-@event {in} update Redraw pages
-@event {out} pageChanged When page is changed
+Create pagination by component
+
+@name pagedContainer
+@mixin Container
+@mixin Template
+
+@option {String} insertionPoint '.elements' jQuery selector
+
+@event valueChange Object Change value in component
+@event update undefined Redraw pages
+@event pageChanged undefined When page is changed
 */
 define(
     [

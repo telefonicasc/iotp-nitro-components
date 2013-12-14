@@ -3,11 +3,9 @@ columnChart
 
 @name columnChart
 
-@option {?} model null
-@option {?} fixRange null
-@option {Number} opacity 0.2
-@option {Number} paddingColumn 3
-@option {string} cssClass empty
+@option {Number} opacity 0.2 opacity
+@option {Number} paddingColumn 3 Padding of bar chart
+@option {string} cssClass '' Css class name
 */
 define(
     [

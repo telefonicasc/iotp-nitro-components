@@ -2,14 +2,15 @@
 areaStackedChart
 
 @name areaStackedChart
+@mixin Tooltip
 
-@option {Array} colorArea ['#FF0000']
-@option {Array} colorLine ['#00FF00']
-@option {Number} fillOpacity 0
-@option {Array} subModelsSufix empty
-@option {Boolean} autoscale fals
-@option {Boolean} tooltip true
-@option {Boolean} tooltip2 false
+@option {Array} colorArea ['#FF0000'] Color area
+@option {Array} colorLine ['#00FF00'] Color line
+@option {Number} fillOpacity 0 Fill Opacity
+@option {Array} subModelsSufix [] Set prefix list of model name
+@option {Boolean} autoscale false autoscale
+@option {Boolean} tooltip true tooltip
+@option {Boolean} tooltip2 false tooltip2
 */
 define(
     [

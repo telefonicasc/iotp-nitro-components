@@ -1,7 +1,25 @@
 /*
 Tooltip
 
+__ShowTooltipObject__
+```javascript
+{
+    elem:'.container', //jQuery selector
+    offset:0 // pixels
+}
+```
+
+__HideTooltipObject__
+```javascript
+{
+    fn: function(){}
+}
+```
+
 @name Tooltip
+
+@event showTooltip ShowTooltipObject Show Tooltip
+@event hideTooltip HideTooltipObject Hide Tooltip and set callback
 */
 define(
   [],

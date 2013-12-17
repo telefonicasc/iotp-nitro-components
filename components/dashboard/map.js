@@ -1,18 +1,49 @@
 /**
- * @component DashboardMap
- *
- * Map component for dashboards using mapbox
- *
- * @event_in itemselected When it is received, the css class 'selected' is
- *   added to the marker of the selected item
+Map component for dashboards using mapbox
+__DashboardMapMarkerOption__
+```javascript
+{
+  latitude: 40.5,
+  longitude: -3,
+  cssClass: 'red',
+  title: 'Marker 1'
+}
+```
 
- * @event_in valueChange map markers are updated with the data in the event
- *
- * @event_out itemselected Is triggered when a marker is clicked
- *
- * @mixins DataBinding
- * @style dashboard_map.less
- */
+__DefaultTooltipComponent__
+```javascript
+{
+    component: 'Tooltip',
+    items: [{
+        html: '',
+        className: 'tooltip-arrow-border'
+    }, {
+        html: '',
+        className: 'tooltip-arrow'
+    }, {
+        tpl: '{{value.marker.title}}'
+    }]
+}
+```
+
+
+@name DashboardMap
+@mixins DataBinding
+
+@option {String} mapboxId '' Mapbox id for the map
+@option {Number} maxGroupRadius 20 Maximum distance to group markers
+@option {Boolean} fitBounds true fit bounds of markers when update
+@option {Boolean} fitBoundsOnce false Once fit bounds of markers when update
+@option {Boolean} zoomControl true Show zoom control
+@option {Function} markerFactory fn() Factory function to translate from input data items to the format the DashboardMapMarkerOption is specting.
+@option {Function} iconFunction fn() Function to create the icon for the marker. By default it creates a div with css class 'marker' and the 'cssClass' attribute of the marker
+@option {Function} groupIconFunction fn() Function to create the icon for a marker group By default it creates a div with css classes 'marker', 'group', and all the child item css classes. The content of the div is the number of markers in the group
+@option {Object} tooltip DefaultTooltipComponent Tooltip component
+
+@event itemselected When it is received, the css class 'selected' is added to the marker of the selected item
+@event valueChange map markers are updated with the data in the event
+@eventt itemselected Is triggered when a marker is clicked
+*/
 
 define(
     [

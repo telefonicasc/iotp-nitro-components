@@ -1,3 +1,25 @@
+/*
+chartContainer
+__timeAxisDefault__
+```javascript
+{
+    margin: 0,
+    height: 20
+}
+```
+@name chartContainer
+@mixin DataBinding
+@mixin WatchResize
+
+@option {Boolean} showGrid true showGrid
+@option {Number} gridStrokeWidth 1 gridStrokeWidth
+@option {String} gridStrokeColor '#AAAAAA' gridStrokeColor
+@option {Number} marginBottom 0 marginBottom
+@option {Number} marginRight 0 marginRight
+@option {Boolean} axisx false axisx
+@option {Boolean} axisy false axisy
+@option {Object} timeAxis timeAxisDefault timeAxis
+*/
 define(
     [
         'components/component_manager',
@@ -21,7 +43,7 @@ define(
             this.defaultAttrs({
                 showGrid: true,
                 gridStrokeWidth: 1,
-                gridStrokeColor: '#AAA',
+                gridStrokeColor: '#AAAAAA',
                 marginBottom: 0,
                 marginRight: 0,
                 axisx:false,

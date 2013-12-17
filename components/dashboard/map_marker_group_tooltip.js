@@ -1,8 +1,26 @@
 /**
- * @component MapMarkerGroupTooltip
- *
- * @mixins Tooltip DataBinding
- */
+Gestiona los tooltips que aparecen en los grupos de markers
+
+__DefaultItems__
+```javascript
+{
+    className: 'tooltip-arrow-border'
+}, {
+    className: 'tooltip-arrow'
+}, {
+    className: 'group-tooltip-marker-list'
+}
+```
+
+@name MapMarkerGroupTooltip
+
+@mixin Tooltip
+@mixin DataBinding
+
+@event hide none Trigger for hide group
+@event show none Trigger for show group
+@event fix none Trigger for fix position
+*/
 
 define(
     [
@@ -15,6 +33,7 @@ define(
 
         function MapMarkerGroupTooltip() {
             this.defaultAttrs({
+                //@option {Array} items DefaultItems Items
                 items: [{
                     className: 'tooltip-arrow-border'
                 }, {
@@ -73,7 +92,6 @@ define(
                 this.on('show', function(e, $ele){
                     if($ele) this.$node.data('bindto', $ele);
                 });
-
 
                 this.on('fix', function(){
                     var ele = this.$node.data('bindto'),

@@ -1,3 +1,16 @@
+/*
+rangeSelection
+
+@name rangeSelection
+@mixin DataBinding
+
+@option {Number} fixRange -1 fixRange
+@option {D3.range} x [0,0] [D3 range](https://github.com/mbostock/d3/wiki/Arrays#wiki-d3_range) fo axis X
+@option {D3.range} y [0,0] [D3 range](https://github.com/mbostock/d3/wiki/Arrays#wiki-d3_range) fo axis Y
+@option {Array} rangeBorder [] Border of range for filter data
+@option {Boolean} jump false jump
+@option {Boolean} animate true animate
+*/
 define(
 [
     'components/component_manager',

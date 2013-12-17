@@ -1,3 +1,13 @@
+/*
+chartGrid
+
+@name chartGrid
+@mixin ChartElement
+
+@option {String} stroke '#ffffff' stroke
+@option {Number} valueTicks 5 valueTicks
+@option {String} classGrid 'bg_grid' Css class name of grid element
+*/
 define(
     [
         'components/component_manager',

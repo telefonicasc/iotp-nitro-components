@@ -1,29 +1,15 @@
+/*
+Create a BarChart
+
+@name cellBarchartSubpanel
+@deprecated
+*/
 define(
   [
     'components/component_manager',
     'components/mixin/data_binding',
     'components/mixin/container'
   ],
-
-  /* DATA BINDING SAMPLE
-  	    {
-          component: 'cellBarchartSubpanel',
-          className: 'cell-barchart-subpanel',
-          text: {
-            title: { value: '21%', caption: 'of users online' },
-            content: { value: '345', caption: 'unique users online' }
-          },
-          chart: {        //(optional)
-            conf: {
-              maxHeight: 70,
-              width: 45,
-              barPadding: 4
-            },
-            data: [ { gains: 87 }, { losses: 46 }, ... ]    //values from 0 - 100 
-          }
-        }
-   */
-   
   function(ComponentManager, DataBinding, ContainerMixin) {
 
     return ComponentManager.create('cellBarchartSubpanel',
@@ -36,7 +22,7 @@ define(
         text: {
             title: { value: '', caption: '' },
             content: { value: '', caption: '' }
-        }          
+        }
       });
 
       this.after('initialize', function() {
@@ -57,7 +43,7 @@ define(
             })
             .attr("y", function(obj) {
               var value = obj[getObjKeys(obj)[0]];
-              return _chartConf.maxHeight - value*_chartConf.maxHeight/100; 
+              return _chartConf.maxHeight - value*_chartConf.maxHeight/100;
             })
             .attr("width", _chartConf.width)
             .attr("height", function(obj) {
@@ -87,9 +73,9 @@ define(
               for(var key in obj) keys.push(key);
               return keys;
             }
-           
+
         }
-        
+
         this.before('renderItems', function() {
           var _text = this.attr.text;
           if (_text){
@@ -101,20 +87,20 @@ define(
               html: html
             }];
           }
-          
+
         });
 
         this.after('renderItems', function() {
           //If there is chart then render it
           if (this.attr.chart){
             this.createChart();
-          }    
-        });  
+          }
+        });
 
         this.on('resize', function(e, chartSize) {
           //this.createChart();
           e.stopPropagation();
-        });   
+        });
 
       });
     }

@@ -1,3 +1,18 @@
+/*
+ Create list for __overviewPanel__ component
+
+@name OverviewSubpanel
+
+@mixin DataBinding
+@mixin Template
+
+@option {String} iconClass '' Icon class name
+@option {String} text '' Text
+@option {String} text1 '' Subtitle
+@option {String} caption '' Body of panel
+
+@event render null Render sub pannel
+*/
 define(
   [
     'components/component_manager',
@@ -29,7 +44,7 @@ define(
           nodes: {
               contextMenu: '#spanContextMenu',
           },
-          classNode: 'overview-subpanel'  
+          classNode: 'overview-subpanel'
         });
 
         this.after('initialize', function() {
@@ -38,7 +53,7 @@ define(
         });
 
         this.after('initialize', function() {
-            this.$node.addClass(this.attr.classNode);                
+            this.$node.addClass(this.attr.classNode);
 
             this.on('render', function() {
                 if (this.attr.contextMenu) {
@@ -50,7 +65,7 @@ define(
                 if (this.attr.contextMenu) {
                     this.appendContextMenu(this.attr.nodes.contextMenu);
                 }
-            });         
+            });
         });
 
         this.appendContextMenu = function(node){

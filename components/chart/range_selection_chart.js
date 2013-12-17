@@ -1,3 +1,8 @@
+/*
+rangeSelectionChart
+
+@name rangeSelectionChart
+*/
 define(
     [
         'components/component_manager',

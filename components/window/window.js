@@ -1,14 +1,16 @@
 /**
- * @component Window
+ * Window
  *
- * @event {in} show Shows the window
- * @event {in} hide Hides the window
- * @event {out} afterShow Triggered after the window is showed
- * @event {out} afterHide Triggered after the window is hidden
+ * @name Window
  *
- * @attr {String} container CSS selector for the container of the window
- * @attr {boolean} showOnInit True to show the window when initialized
- * @attr {boolean} mask True to show an opacity mask
+ * @event show undefined Shows the window
+ * @event hide undefined Hides the window
+ * @event afterShow undefined Triggered after the window is showed
+ * @event afterHide undefined Triggered after the window is hidden
+ *
+ * @option {String} container 'body' CSS selector for the container of the window
+ * @option {boolean} showOnInit false True to show the window when initialized
+ * @option {boolean} mask true True to show an opacity mask
  *
  */
 define(
@@ -17,7 +19,7 @@ define(
         'components/mixin/container',
         'components/mixin/data_binding'
     ],
-    
+
     function(ComponentManager, Container, DataBinding) {
 
         var Window = function() {
@@ -30,12 +32,12 @@ define(
 
             this.after('initialize', function() {
                 this.attr.insertionPoint = '.m2m-window-content';
-                this.$node.addClass('m2m-window fit'); 
+                this.$node.addClass('m2m-window fit');
                 this.$node.appendTo($(this.attr.container));
                 this.$node.append($('<div>').addClass('m2m-window-content'));
 
                 this.on('show', this.show);
-                this.on('hide', this.hide); 
+                this.on('hide', this.hide);
                 this.on('click', this.onClick);
 
                 if (!this.attr.showOnInit) {
@@ -64,7 +66,7 @@ define(
             };
         };
 
-        return ComponentManager.create('Window', Window, 
+        return ComponentManager.create('Window', Window,
             Container, DataBinding);
     }
 );

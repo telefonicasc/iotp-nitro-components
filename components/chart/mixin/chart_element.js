@@ -1,3 +1,35 @@
+/*
+ChartElement
+
+__AxisObject__
+```javscript
+{
+    scaleFun: d3.time.scale,
+    key: 'date'
+}
+```
+
+__DefaultAxisObjectX__
+```javscript
+{
+    scaleFun: d3.time.scale,
+    key: 'date'
+}
+```
+
+__DefaultAxisObjectY__
+```javscript
+{
+    scaleFun: d3.time.linear,
+    key: 'value'
+}
+```
+
+
+@name ChartElement
+@option {AxisObject} x DefaultAxisObjectX Axis X
+@option {AxisObject} y DefaultAxisObjectY Axis Y
+*/
 define(
     [
         'libs/guid'

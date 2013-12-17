@@ -1,3 +1,14 @@
+/**
+Nodo donde se pinta los datos del Asset dentro de la lista
+
+@name DashboardDetailsSubpanel
+
+@mixin Template
+@mixin ContainerMixin
+
+@option {String} header '' Header title
+@option {ContextMenuIndicatorOption} contextMenu null  Add context menu
+*/
 define(
     [
         'components/component_manager',
@@ -15,7 +26,7 @@ define(
 
             this.defaultAttrs({
                 header: '',
-                insertionPoint: '.detail-panel-content',                
+                insertionPoint: '.detail-panel-content',
                 tpl: '<div class="detail-panel-header">'+
                         '<div class="header-text">{{header}}</div>'+
                         '<div class="context-menu-anchor"></div>'+
@@ -31,7 +42,7 @@ define(
             });
 
             this.after('initialize', function() {
-                this.$node.addClass('detail-panel');                
+                this.$node.addClass('detail-panel');
 
                 this.on('render', function() {
                     if (this.attr.contextMenu) {
@@ -39,6 +50,6 @@ define(
                     }
                 });
             });
-        }   
+        }
     }
 );

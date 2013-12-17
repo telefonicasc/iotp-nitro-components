@@ -1,3 +1,9 @@
+/**
+Create element for toogle class when trigger 'click' event
+
+@name toggle
+@mixin DataBinding
+*/
 define(
   [
     'components/component_manager',

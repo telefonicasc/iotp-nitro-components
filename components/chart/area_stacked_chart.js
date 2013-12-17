@@ -1,3 +1,17 @@
+/*
+areaStackedChart
+
+@name areaStackedChart
+@mixin Tooltip
+
+@option {Array} colorArea ['#FF0000'] Color area
+@option {Array} colorLine ['#00FF00'] Color line
+@option {Number} fillOpacity 0 Fill Opacity
+@option {Array} subModelsSufix [] Set prefix list of model name
+@option {Boolean} autoscale false autoscale
+@option {Boolean} tooltip true tooltip
+@option {Boolean} tooltip2 false tooltip2
+*/
 define(
     [
         'components/component_manager',

@@ -1,3 +1,28 @@
+/*
+carouselBarchart
+__chartConfDefault__
+```javascript
+{
+    maxHeight: 75,
+    width: 60,
+    barPadding: 5
+}
+```
+
+__dataModel__
+```javascript
+{
+    name:'+',
+    value: 72
+}
+```
+
+
+@name carouselBarchart
+
+@option {Object} chartConf chartConfDefault chartConf
+@option {Array} data undefined List of the dataModel object
+*/
 define(
     [
         'components/component_manager'

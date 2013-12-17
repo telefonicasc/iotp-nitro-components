@@ -1,3 +1,26 @@
+/*
+Tooltip
+
+__ShowTooltipObject__
+```javascript
+{
+    elem:'.container', //jQuery selector
+    offset:0 // pixels
+}
+```
+
+__HideTooltipObject__
+```javascript
+{
+    fn: function(){}
+}
+```
+
+@name Tooltip
+
+@event showTooltip ShowTooltipObject Show Tooltip
+@event hideTooltip HideTooltipObject Hide Tooltip and set callback
+*/
 define(
   [],
 
@@ -49,12 +72,12 @@ define(
                 $('.tooltip').hide();
             });
 
-            function fireEvent( elemId, eventName ) {                
+            function fireEvent( elemId, eventName ) {
                 var elem = document.getElementById(elemId);
-                if( elem != null ){   
+                if( elem != null ){
                     if(elem.fireEvent) {
-                        elem.fireEvent('on'+eventName);     
-                    }else {   
+                        elem.fireEvent('on'+eventName);
+                    }else {
                         var evObj = document.createEvent('Events');
                         evObj.initEvent(eventName, true, false);
                         elem.dispatchEvent( evObj );
@@ -66,4 +89,4 @@ define(
     }
 
   }
-);  
+);

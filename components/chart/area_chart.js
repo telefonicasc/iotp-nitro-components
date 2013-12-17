@@ -1,3 +1,25 @@
+/*
+areaChart
+
+__CircleOption__
+```
+{
+    className: 'hoverCircle',
+    mouseout: {
+        'r': 6,
+        'opacity': 0
+    },
+    mouseover: {'opacity': 1 }
+}
+```
+
+@name areaChart
+@mixin ChartElement
+
+@option {Boolean} area true Draw area
+@option {Boolean} tooltip Show tooltip when hover mouse on point of chart
+@option {Object CircleOption} hoverCircle __CircleOption__ Tooltip configuration
+*/
 define(
     [
         'components/component_manager',

@@ -1,3 +1,11 @@
+/*
+axis
+
+@name axis
+@option {Function} axisFn [D3.svg.axis](https://github.com/mbostock/d3/wiki/SVG-Axes)
+@option {String} orientation 'right' Orientation: 'left', 'right'
+@option {Number} ticks 10 ticks
+*/
 define(
   [
     'components/component_manager',

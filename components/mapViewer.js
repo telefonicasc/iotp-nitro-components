@@ -1,5 +1,7 @@
-/*
+/**!
 Mapbox map component.
+
+@deprecated
 
 ### Style
 * mapViewer.less
@@ -652,8 +654,8 @@ function(ComponentManager, DataBinding) {
                     else if (position.top > dimensions.y) locator += 's';
 
                     if (position.left > dimensions.x) locator += 'e';
-                    else if (position.left < markerDimesion.w) locator += 'w';    
-                }                
+                    else if (position.left < markerDimesion.w) locator += 'w';
+                }
 
                 locator += 'markers';
 

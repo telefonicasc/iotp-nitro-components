@@ -1,3 +1,18 @@
+/*!
+This component use [Raphael]() for draw grafics
+
+@option {Strign} lightsChart '.lights-chart' Css class nane for chart element
+@option {Strign} lightsLabel '.lights-label' Css class nane for label element
+@option {Strign} fillColor '#6F8388' Fill color
+@option {Strign} borderColor '#6F8388' Border color
+@option {Strign} baseColor '#E9EFF0' Base color
+@option {Strign} id 'lights-widget' Elemt Id
+@option {Strign} useKermit false Force use Kermit for request
+@option {Strign} arrowURL 'url(res/images/arrow.png)' arrowURL
+@option {Strign} greyLightURL 'url(res/images/greyLight.png)' greyLightURL
+@option {Strign} imageBaseURL 'url(res/images/' imageBaseURL
+
+*/
 define (
 [
     'components/component_manager',
@@ -37,12 +52,12 @@ function (ComponentManager, Data_binding) {
                 );
             });
 
-            /* To use in local mode */
+            // To use in local mode
             this.on('updateLights', function (event, data) {
                 this.drawLights(data);
             });
 
-            /* To use with kermit */
+            // To use with kermit
             this.on('paintLights', function (event, red, yellow, green) {
                 this.requestDataCallback(red,yellow,green);
             });

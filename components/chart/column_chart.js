@@ -1,3 +1,12 @@
+/*
+columnChart
+
+@name columnChart
+
+@option {Number} opacity 0.2 opacity
+@option {Number} paddingColumn 3 Padding of bar chart
+@option {string} cssClass '' Css class name
+*/
 define(
     [
         'components/component_manager'

@@ -1,3 +1,16 @@
+/**
+Create `$overviewPanel` section of __dashboard__ component
+
+@name overviewPanel
+
+@mixin ContainerMixin
+@mixin DataBinding
+
+@option {String} insertionPoint '.overview-content' jQuerySelector
+@option {String} title '' Title
+@option {String} count '' Count value
+@option {String} countClass 'blue' Class name of count element
+*/
 define(
     [
         'components/component_manager',

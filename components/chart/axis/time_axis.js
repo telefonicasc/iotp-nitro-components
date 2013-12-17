@@ -1,3 +1,26 @@
+/*
+timeAxis
+
+__ResizeObject__
+```javascript
+{
+    width: 0,
+    height:0,
+}
+```
+
+@name timeAxis
+@option {String} orientation 'bottom' orientation
+@option {String} valueField 'totalRegistered' valueField
+@option {String} rangeField: 'selectedRange' rangeField
+@option {String} tickFormat '%e-%b' [Time formating](https://github.com/mbostock/d3/wiki/Time-Formatting)
+@option {String} stepType 'day' Steps: 'day', 'month', 'year'
+@option {Number} stepTick 1 stepTick
+@option {Number} paddingTick 0 Distance each tick should display away from its theorical center
+
+@event resize ResizeObject Resize chart
+@event rangeChange {range:[]} define [D3.range](https://github.com/mbostock/d3/wiki/Arrays#wiki-d3_range) of chart
+*/
 define(
     [
         'components/component_manager'

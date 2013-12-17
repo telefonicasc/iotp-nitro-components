@@ -1,3 +1,24 @@
+/*
+radarChart
+
+__PositionObject__
+```javascript
+{
+    x: 160,
+    y: 160
+}
+```
+
+
+@name radarChart
+@mixin WatchResize
+@mixin DataBinding
+
+@option {Array} maxValues []
+@option {Array} axis false Axis
+@option {Number} radarSize 120 Radar Size
+@option {Object} radarPosition PositionObject Radar Position
+*/
 define(
     [
         'components/component_manager',

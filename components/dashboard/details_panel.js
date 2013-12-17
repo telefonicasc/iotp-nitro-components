@@ -1,3 +1,20 @@
+/*
+Componente usado en DashboardMap para pintar la sección de la derecha y se muestra cuando hay un item seleccionado
+
+@name DashboardDetailsPanel
+
+@mixin WatchResize
+@mixin ContainerMixin
+@mixin DataBinding
+
+@option {Number} marginTop  36 Margin top
+@option {Boolean} expandHorizontally false Expanded in vertical or horizontal
+
+@event expand none Trigger this event for expanded
+@event collapse none Trigger this event for collapsed
+
+*/
+
 define(
     [
         'components/component_manager',

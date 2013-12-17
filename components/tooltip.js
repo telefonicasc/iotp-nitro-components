@@ -1,3 +1,13 @@
+/**
+Create tooltip element
+
+@name Tooltip
+
+@mixin DataBinding
+
+@event hide undefined Trigger this event for hide element
+@event show undefined Trigger this event for show element
+*/
 define(
     [
         'components/component_manager',

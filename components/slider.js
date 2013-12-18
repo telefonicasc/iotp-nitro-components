@@ -75,7 +75,7 @@ define(
                 this.$valueSpan = $('.slider-handler > span', this.$node);
 
                 handler.on('drag', $.proxy(function(e, ui) {
-                    var value = ui.position.left * this.attr.maxValue bar.width();
+                    var value = ui.position.left * this.attr.maxValue / bar.width();
                     value = Math.min(Math.max(value, 0), this.attr.maxValue);
                     value = value < 0.1 ? 0 : value;
                     value = value.toPrecision(2);

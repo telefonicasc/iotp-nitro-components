@@ -142,7 +142,7 @@ define(
 
                     this.$overviewPanel.on('itemselected',
                         $.proxy(function(e, data){
-                            this.$mainContent.children().trigger('itemselected', data);
+                            this.$mainContent.children().triggerHandler('itemselected', data);
                         }, this));
 
                     this.$overviewPanel.on('itemselected',
@@ -150,6 +150,8 @@ define(
 
                     this.$mainContent.on('itemselected',
                         $.proxy(this.sendItemSelectedToDetail, this));
+
+
 
                 });
 

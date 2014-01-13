@@ -68,7 +68,7 @@ define(
                 var itemData = {'item':itemSelected};
                 if(itemSelected){
                     this.sendItemSelectedToDetail(null, itemData);
-                    this.$mainContent.children().trigger('itemselected', itemData);
+                    this.$mainContent.children().triggerHandler('itemselected', itemData);
                 }else{
                     this.unselectItem();
                     this.$detailsPanel.trigger('collapse', { duration: 0 });

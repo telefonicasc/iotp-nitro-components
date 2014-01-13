@@ -151,8 +151,6 @@ define(
                     this.$mainContent.on('itemselected',
                         $.proxy(this.sendItemSelectedToDetail, this));
 
-
-
                 });
 
                 this.on('updateData', function () {

@@ -109,10 +109,10 @@ define(
                     message : $(frontTpl[2])
                 }
             };
-            
+
             this.$back.find('.email-subject-label').html(this.attr.locales.subject);
             this.$back.find('.email-address-label').html(this.attr.locales.to);
-            
+
             var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
 
             this.$back.on('click', _stopPropagation);
@@ -146,12 +146,23 @@ define(
             $(node.parent() ).on('click', function(){
                 node.removeClass('flip');
             });
-
+            var insertInMessage = true;
+            $(element.back.subject).focus(function(){
+                insertInMessage = false;
+            });
+            $(element.back.message).focus(function(){
+                insertInMessage = true;
+            });
             $(element.back.token).on('click', '.token', function(){
                 var token = $(this).text().replace(TOKEN_SYMBOL,'');
                 var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
-                _insertAt(element.back.message[0], value);
+                var toElement = element.back.message;
+                if(! insertInMessage ){
+                    toElement = element.back.subject;
+                }
+                _insertAt(toElement[0], value);
                 element.back.message.change();
+                toElement.focus();
             });
 
             this.validate();

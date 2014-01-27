@@ -134,6 +134,12 @@ define(
                     this.value[this.attr.selectedRangeField] = ext;
                     this.value['fixRange'] = item.fixRange;
                     this.updateExtent(ext);
+                }else if(item.range && item.range.length ){
+                    ext = item.range;
+                    ext = this.setExtend(null, ext);
+                    this.value[this.attr.selectedRangeField] = ext;
+                    this.value['fixRange'] = item.fixRange;
+                    this.updateExtent(ext);
                 }
                 this.value['brush'] = null;
                 this.trigger('valueChange', { value: this.value });

@@ -53,9 +53,13 @@ define(
                         return d.date;
                     })
                     .attr('width', barWidth);
-                    bars.on('mouseover', function(d) {
-                        self.showTooltip(this, d.value, barWidth/2-6);
-                    });
+
+                    if (this.attr.tooltip){
+                        bars.on('mouseover', function(d) {
+                            self.showTooltip(this, d.value, barWidth/2-6);
+                        });
+                    }
+
                     bars.exit().remove();
 
                     if (anim){

@@ -201,7 +201,6 @@ select {
   right: 0px;
 }
 .overview-subpanel {
-  cursor: pointer;
   border-bottom: 1px solid #D6DEE0;
   padding: 7px 0;
 }
@@ -376,6 +375,9 @@ select {
   color: #5D747C;
   border-top: 1px solid #C6DADC;
 }
+.dashboard .detail-panel-header .header-right {
+  float: right;
+}
 .dashboard .detail-panel-content {
   background: #DDEAEC;
 }
@@ -384,6 +386,9 @@ select {
   right: 8px;
   padding-left: 8px;
   padding-right: 8px;
+}
+.dashboard .dashboard-overview-panel .panel-list .overview-subpanel {
+  cursor: pointer;
 }
 .chart.purple path.area {
   fill: #8e44ad;
@@ -440,9 +445,12 @@ select {
   stroke: #afc6d8;
 }
 .chart .hoverCircle {
-  stroke-width: 3px;
   fill: white;
   cursor: pointer;
+  stroke-width: 0;
+}
+.chart .hoverCircle:hover {
+  stroke-width: 3px;
 }
 .chart .baseline {
   stroke-width: 2px;
@@ -1692,6 +1700,170 @@ li.delimiter-value {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+.card.m2m-card-send-sms .back {
+  width: 487px;
+  height: 448px;
+  margin-top: -143px;
+  margin-left: -180px;
+  border: 5px solid #77868E;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 25px;
+  -webkit-border-bottom-right-radius: 25px;
+  -webkit-border-bottom-left-radius: 25px;
+  -webkit-border-top-left-radius: 25px;
+  -moz-border-radius-topright: 25px;
+  -moz-border-radius-bottomright: 25px;
+  -moz-border-radius-bottomleft: 25px;
+  -moz-border-radius-topleft: 25px;
+  border-radius: 25px 25px 25px 25px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.card.m2m-card-send-sms .back .header {
+  display: none;
+}
+.card.m2m-card-send-sms .back .body {
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 20px;
+  -webkit-border-bottom-right-radius: 20px;
+  -webkit-border-bottom-left-radius: 20px;
+  -webkit-border-top-left-radius: 20px;
+  -moz-border-radius-topright: 20px;
+  -moz-border-radius-bottomright: 20px;
+  -moz-border-radius-bottomleft: 20px;
+  -moz-border-radius-topleft: 20px;
+  border-radius: 20px 20px 20px 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.card.m2m-card-send-sms .back .card-body {
+  background-color: white;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.card.m2m-card-send-sms .back .card-header {
+  padding: 10px 6px;
+  display: block;
+  background-color: #E6EDF0;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 20px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 20px;
+  -moz-border-radius-topright: 20px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 20px;
+  border-radius: 20px 0 0 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 20px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.card.m2m-card-send-sms .back .card-header label,
+.card.m2m-card-send-sms .back .card-header input {
+  display: block;
+}
+.card.m2m-card-send-sms .back .card-header label {
+  color: #8C9193;
+  font-size: 12px;
+  font-weight: 800;
+}
+.card.m2m-card-send-sms .back .card-header input {
+  border: 0;
+  background: transparent;
+  border-bottom: 1px dotted #C1BCA4;
+  width: 472px;
+  margin-top: 5px;
+}
+.card.m2m-card-send-sms .back .card-header .email-address {
+  font-size: 1.2em;
+  color: gray;
+}
+.card.m2m-card-send-sms .back .card-body {
+  padding: 0 6px;
+  background: #fff;
+}
+.card.m2m-card-send-sms .back .card-body textarea {
+  width: 472px;
+  height: 221px;
+  color: #4C4C4C;
+  border: 0;
+  font-size: 20px;
+  resize: none;
+}
+.card.m2m-card-send-sms .back .token {
+  cursor: pointer;
+  margin: 12px 6px 0px 12px;
+  min-width: 125px;
+  height: 18px;
+  padding: 8px;
+  color: #788D9A;
+  display: inline-block;
+  font-size: 16px;
+  background-color: #BFDDF2;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 27px;
+  -webkit-border-bottom-right-radius: 27px;
+  -webkit-border-bottom-left-radius: 27px;
+  -webkit-border-top-left-radius: 27px;
+  -moz-border-radius-topright: 27px;
+  -moz-border-radius-bottomright: 27px;
+  -moz-border-radius-bottomleft: 27px;
+  -moz-border-radius-topleft: 27px;
+  border-radius: 27px 27px 27px 27px;
+  border-top-right-radius: 27px;
+  border-bottom-right-radius: 27px;
+  border-bottom-left-radius: 27px;
+  border-top-left-radius: 27px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  text-align: center;
+}
+.card.m2m-card-send-sms .back .token-selector {
+  border-top: 1px solid #a0a0a0;
+}
+.card.m2m-card-send-sms .front {
+  background-color: #fff;
+}
+.card.m2m-card-send-sms .front .header {
+  background-color: #3D454A;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.card.m2m-card-send-sms .front .header h1 {
+  text-align: left;
+  padding-left: 5px;
+}
+.card.m2m-card-send-sms .front .body {
+  background-color: #77868E;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding: 5px;
+  overflow: hidden;
+}
+.card.m2m-card-send-sms .front h3 {
+  color: #fff;
+  margin-bottom: 5px;
+}
+.card.m2m-card-send-sms .front p {
+  color: #b0c0c5;
+  font-size: 0.8em;
+}
 .csstransforms3d .flippable .back {
   visibility: visible;
 }
@@ -2512,6 +2684,7 @@ li.delimiter-value {
   width: 50%;
   display: inline-block;
   position: relative;
+  height: 60px;
 }
 .temperature-widget .temperature-label {
   position: absolute;
@@ -2525,6 +2698,7 @@ li.delimiter-value {
 .gauge-widget {
   display: inline-block;
   vertical-align: middle;
+  height: 60px;
 }
 .gauge-label {
   font-weight: bold;
@@ -2893,6 +3067,9 @@ li.delimiter-value {
 .m2m-dashboardmap .marker.red.group {
   background-image: url('../../img/nitro-components/markers/red-marker-group.png');
 }
+.m2m-dashboardmap .marker.grey.group {
+  background-image: url('../../img/nitro-components/markers/grey-marker-group.png');
+}
 .m2m-dashboardmap .marker.selected {
   background-image: url('../../img/nitro-components/markers/blue-marker-selected.png');
   margin-left: -22px;
@@ -2902,6 +3079,12 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .marker.red.selected {
   background-image: url('../../img/nitro-components/markers/red-marker-selected.png');
+}
+.m2m-dashboardmap .marker.grey {
+  background-image: url('../../img/nitro-components/markers/grey-marker.png');
+}
+.m2m-dashboardmap .marker.grey.selected {
+  background-image: url('../../img/nitro-components/markers/grey-marker-selected.png');
 }
 .m2m-dashboardmap .tooltip {
   width: auto;
@@ -2914,10 +3097,15 @@ li.delimiter-value {
   font-weight: bold;
   text-align: center;
   padding: 8px 8px 0 8px;
-  margin-top: -50px;
+  margin-top: 15px;
+  margin-left: -62px;
+  z-index: 9999;
 }
 .m2m-dashboardmap .tooltip:after {
   display: none;
+}
+.m2m-dashboardmap .tooltip.grouplist {
+  z-index: 9998;
 }
 .m2m-dashboardmap .tooltip .group-count {
   display: inline-block;
@@ -2932,6 +3120,10 @@ li.delimiter-value {
 .m2m-dashboardmap .tooltip .group-count.red {
   color: #CA3430;
   background-image: url('../../img/nitro-components/markers/red-marker-tooltip.png');
+}
+.m2m-dashboardmap .tooltip .group-count.grey {
+  color: #555555;
+  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
 }
 .m2m-dashboardmap .tooltip-arrow-border {
   border-left: 13px solid transparent;
@@ -2958,10 +3150,11 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .group-tooltip-marker {
   background-image: url('../../img/nitro-components/markers/blue-marker-tooltip.png');
-  height: 24px;
+  min-height: 24px;
   cursor: pointer;
   background-repeat: no-repeat;
   padding-left: 20px;
+  margin-bottom: 5px;
 }
 .m2m-dashboardmap .group-tooltip-marker.selected {
   background-image: url('../../img/nitro-components/markers/blue-marker-selected-tooltip.png');
@@ -2971,6 +3164,12 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .group-tooltip-marker.selected.red {
   background-image: url('../../img/nitro-components/markers/red-marker-selected-tooltip.png');
+}
+.m2m-dashboardmap .group-tooltip-marker.grey {
+  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
+}
+.m2m-dashboardmap .group-tooltip-marker.selected.grey {
+  background-image: url('../../img/nitro-components/markers/grey-marker-selected-tooltip.png');
 }
 .detail-panel .detail-panel-content .m2m-dashboardmap.fit-minimap {
   height: 200px;

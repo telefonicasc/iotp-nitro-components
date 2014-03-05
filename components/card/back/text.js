@@ -9,7 +9,8 @@ define(
             'TEXT':'Text',
             'QUANTITY':'Quantity'
         };
-        var REGEXP_QANTITY = /^\d+(\.\d*)*?$/;
+        // CHANGE: IDAS-16037 añadido -? delante 
+        var REGEXP_QANTITY = /^-?\d+(\.\d*)*?$/;
         var isIE8 = (function() {
             return !!( (/msie 8./i).test(navigator.appVersion) && !(/opera/i).test(navigator.userAgent) && window.ActiveXObject && XDomainRequest && !window.msPerformance );
         })();
@@ -36,14 +37,21 @@ define(
                 this.$node.on('keyup change', 'input', $.proxy(function(e) {
                     var $ele = $(e.currentTarget);
                     var value = $ele.val();
-                    var dataType = $ele.data('dataType');
+                    var type = $ele.data('dataType');
                     if(isIE8){
-                        if(!this.isValid(dataType, value)){
+                        if(!this.isValid(type, value)){
                             $ele.val(value);
                         }
                     }
 
-                    this.trigger('valueChange', { value: this.getData() });
+                    // CHANGE: IDAS-16037
+                    // TODO JOHAN: ñapa para que no desaparezca el '-'
+                    // habría que buscar mejor opción
+                    //
+                    // Esto tiene el efecto pernicioso de que si en una tarjeta de 
+                    // Quantity dejas sólo un '-', al darle la vuelta no tiene un 0
+                    if ( ( type === dataType.TEXT ) || ( ( e.keyCode != 109)  && ( e.keyCode != 189) ) )
+                        this.trigger('valueChange', { value: this.getData() });
 
                 }, this));
 
@@ -92,8 +100,9 @@ define(
             this.makeInput = function(data){
                 var ele = $('<input type="text" />');
                 if(!isIE8 && data.dataType === dataType.QUANTITY){
-                    ele.attr('type', 'number').
-                        attr('min', '0');
+                    // CHANGE: IDAS-16037
+                    ele.attr('type', 'number')/* .  
+                        attr('min', '0'); */
                 }
                 ele.data('dataType', data.dataType);
                 ele.attr('name', data.name || data.label);

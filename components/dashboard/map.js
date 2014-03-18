@@ -333,7 +333,9 @@ define(
 
                     if (markerItem &&
                             $.isNumeric(markerItem.latitude) &&
-                            $.isNumeric(markerItem.longitude)) {
+                            $.isNumeric(markerItem.longitude) &&
+                            (markerItem.longitude >= -90 && markerItem.longitude <= 90) &&
+                            (markerItem.longitude >= -180 && markerItem.longitude <= 180) ) {
                         position = [markerItem.latitude, markerItem.longitude],
                         icon = this.attr.iconFunction(markerItem),
                         marker = L.marker(position, {

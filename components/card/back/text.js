@@ -9,7 +9,7 @@ define(
             'TEXT':'Text',
             'QUANTITY':'Quantity'
         };
-        var REGEXP_QANTITY = /^\d+(\.\d*)*?$/;
+        var REGEXP_QANTITY = /^-?\d+(\.\d*)*?$/;
         var isIE8 = (function() {
             return !!( (/msie 8./i).test(navigator.appVersion) && !(/opera/i).test(navigator.userAgent) && window.ActiveXObject && XDomainRequest && !window.msPerformance );
         })();
@@ -36,14 +36,16 @@ define(
                 this.$node.on('keyup change', 'input', $.proxy(function(e) {
                     var $ele = $(e.currentTarget);
                     var value = $ele.val();
-                    var dataType = $ele.data('dataType');
+                    var type = $ele.data('dataType');
                     if(isIE8){
-                        if(!this.isValid(dataType, value)){
+                        if(!this.isValid(type, value)){
                             $ele.val(value);
                         }
                     }
-
-                    this.trigger('valueChange', { value: this.getData() });
+                    // si el input es de tipo "number" devuelve un valor vacío en caso no tener el formato adecuado
+                    // dado que el evento "valueChange" redefine el valor (como vacío) no se podía añadir el guión ("-") para números negativos
+                    if ( ( type === dataType.TEXT ) || ( ( e.keyCode != 109)  && ( e.keyCode != 189) ) )
+                        this.trigger('valueChange', { value: this.getData() });
 
                 }, this));
 
@@ -92,8 +94,7 @@ define(
             this.makeInput = function(data){
                 var ele = $('<input type="text" />');
                 if(!isIE8 && data.dataType === dataType.QUANTITY){
-                    ele.attr('type', 'number').
-                        attr('min', '0');
+                    ele.attr('type', 'number');
                 }
                 ele.data('dataType', data.dataType);
                 ele.attr('name', data.name || data.label);

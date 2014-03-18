@@ -42,8 +42,10 @@ define(
                             $ele.val(value);
                         }
                     }
-
-                    this.trigger('valueChange', { value: this.getData() });
+                    // si el input es de tipo "number" devuelve un valor vacío en caso no tener el formato adecuado
+                    // dado que el evento "valueChange" redefine el valor (como vacío) no se podía añadir el guión ("-") para números negativos
+                    if ( ( type === dataType.TEXT ) || ( ( e.keyCode != 109)  && ( e.keyCode != 189) ) )
+                        this.trigger('valueChange', { value: this.getData() });
 
                 }, this));
 

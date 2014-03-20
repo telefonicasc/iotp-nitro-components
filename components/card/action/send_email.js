@@ -41,16 +41,18 @@ define(
                 '<textarea class="email-message"></textarea>',
             '</div>',
             '<div class="token-selector"></div>'
-        ].join('');
-        var FRONT_TPL = [
-            '<i class="email-address"></i>',
-            '<h3 class="email-subject"></h3>',
-            '<p class="email-message"></p>'
-        ].join('') ;
-        var TOKEN_TPL = '<div class="token"></div>';
-        var TOKEN_SYMBOL = '+';
-        var TOKEN_VALUE_TPL_START = '${';
-        var TOKEN_VALUE_TPL_END = '}';
+        ].join( '' ),
+
+            FRONT_TPL = [
+                '<i class="email-address"></i>',
+                '<h3 class="email-subject"></h3>',
+                '<p class="email-message"></p>'
+            ].join( '' ),
+
+            TOKEN_TPL = '<div class="token"></div>',
+            TOKEN_SYMBOL = '+',
+            TOKEN_VALUE_TPL_START = '${',
+            TOKEN_VALUE_TPL_END = '}';
 
         function SendEmail () {
             // this == scope of component
@@ -70,12 +72,14 @@ define(
                 this._userParamsObject['mail.subject'] = this.$element.back.subject.val();
                 this._userParamsObject['mail.to'] = this.$element.back.emailAddress.val();
                 this._userParamsObject['mail.message'] = this.$element.back.message.val();
+
                 var value = {
-                    'userParams' : _userParamsObjectToArray(this._userParamsObject)
-                };
-                var data = {
-                    'value': value
-                };
+                        'userParams' : _userParamsObjectToArray(this._userParamsObject)
+                    },
+                    data = {
+                        'value': value
+                    };
+
                 return data;
             };
 
@@ -84,26 +88,34 @@ define(
             };
 
             this.isValid = function(){
-                var userParam = this._userParamsObject;
-                var a, b, c, d;
-                    a = b = c = d = false;
-                if ( userParam[ 'mail.from' ] && userParam[ 'mail.subject' ] && userParam[ 'mail.to' ] && userParam[ 'mail.message' ] ) {
+                var userParam = this._userParamsObject,
+                    a, b, c, d;
+
+                a = b = c = d = false;
+
+                if (
+                    userParam[ 'mail.from' ] &&
+                    userParam[ 'mail.subject' ] &&
+                    userParam[ 'mail.to' ] &&
+                    userParam[ 'mail.message' ]
+                ) {
                     a = ( userParam[ 'mail.from' ].length > 0 );
                     b = ( userParam[ 'mail.subject' ].length > 0 );
                     c = ( userParam[ 'mail.to' ].length > 0 );
                     d = ( userParam[ 'mail.message' ].length > 0 );
                 }
 
-                return (a && b && c);
+                return ( a && b && c && d );
             };
         }
 
         function _install () {
-            var frontTpl = $(FRONT_TPL);
-            var backTpl = $(BACK_TPL);
+            var frontTpl = $( FRONT_TPL ),
+                backTpl = $( BACK_TPL );
             // this == scope of element in component
             this.$front.find('.body').append(frontTpl);
             this.$back.find('.body').append(backTpl);
+
             var element = this.$element = {
                 back : {
                     from : $(backTpl).find('input.email-from'),
@@ -119,47 +131,46 @@ define(
                 }
             };
 
-            this.$back.find('.email-subject-label').html(this.attr.locales.subject);
-            this.$back.find('.email-address-label').html(this.attr.locales.to);
+            this.$back.find( '.email-subject-label' ).html( this.attr.locales.subject );
+            this.$back.find( '.email-address-label' ).html( this.attr.locales.to );
 
-            var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
+            var userParamsObject = this._userParamsObject = _userParamsToObject( this.attr.actionData.userParams );
 
-            this.$back.on('click', _stopPropagation);
+            this.$back.on( 'click', _stopPropagation );
 
             //@TODO
             //hay que ver porque dublica también los elementos creados inicialmente
             //el siguiente método de borrado no debería ser necsario
-            element.back.token.html('');
-            $.each(this.attr.tokens, _addToken(element));
+            element.back.token.html( '' );
+            $.each( this.attr.tokens, _addToken( element ) );
 
-            element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
-            element.back.message.on('change', _updateElementOnChange(element.front.message) );
+            element.back.subject.on( 'change', _updateElementOnChange( element.front.subject ) );
+            element.back.message.on( 'change', _updateElementOnChange( element.front.message ) );
 
-            var triggerUpdateOnChange = _triggerUpdateOnChange(this);
-            element.back.from.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
-            element.back.emailAddress.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
-            element.back.subject.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
-            element.back.message.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
+            var triggerUpdateOnChange = _triggerUpdateOnChange( this );
+            element.back.from.on( 'change',  triggerUpdateOnChange ).keyup( triggerUpdateOnChange );
+            element.back.emailAddress.on( 'change',  triggerUpdateOnChange ).keyup( triggerUpdateOnChange );
+            element.back.subject.on( 'change', triggerUpdateOnChange ).keyup( triggerUpdateOnChange );
+            element.back.message.on( 'change', triggerUpdateOnChange ).keyup( triggerUpdateOnChange );
 
             //set values
-            element.back.from.val(userParamsObject['mail.from']);
-            element.back.subject.val(userParamsObject['mail.subject']);
-            element.back.emailAddress.val(userParamsObject['mail.to']);
-            element.back.message.val(userParamsObject['mail.message']);
+            element.back.from.val( userParamsObject[ 'mail.from' ] );
+            element.back.subject.val( userParamsObject[ 'mail.subject' ] );
+            element.back.emailAddress.val( userParamsObject[ 'mail.to' ] );
+            element.back.message.val( userParamsObject[ 'mail.message' ] );
 
-            element.front.subject.text(userParamsObject['mail.subject']);
-            element.front.message.text(userParamsObject['mail.message']);
+            element.front.subject.text( userParamsObject[ 'mail.subject' ] );
+            element.front.message.text( userParamsObject[ 'mail.message' ] );
 
-            $('.email-subject-label', this.$node).html(this.attr.locales.subject);
-            $('.email-address-label', this.$node).html(this.attr.locales.to);
+            $( '.email-subject-label', this.$node ).html( this.attr.locales.subject );
+            $( '.email-address-label', this.$node ).html( this.attr.locales.to );
 
-            var node = this.$node;
+            var node = this.$node,
+                insertInMessage = true;
 
             $( node.parent() ).on( 'click', function () {
                 node.removeClass( 'flip' );
             } );
-
-            var insertInMessage = true;
 
             $( element.back.subject ).focus( function () {
                 insertInMessage = false;
@@ -170,12 +181,14 @@ define(
             } );
 
             $( element.back.token ).on( 'click', '.token', function () {
-                var token = $( this ).text().replace( TOKEN_SYMBOL,'' );
-                var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
-                var toElement = element.back.message;
+                var token = $( this ).text().replace( TOKEN_SYMBOL,'' ),
+                    value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END,
+                    toElement = element.back.message;
+
                 if ( ! insertInMessage ){
                     toElement = element.back.subject;
                 }
+
                 _insertAt( toElement[ 0 ], value );
                 element.back.message.change();
                 toElement.focus();
@@ -188,9 +201,9 @@ define(
             e.stopPropagation();
         }
 
-        function _addToken(element){
-            return function(index, name){
-                var ele = _makeSymbolElement(name);
+        function _addToken ( element ) {
+            return function( index, name ) {
+                var ele = _makeSymbolElement( name );
                 element.back.token.append( ele );
             };
         }

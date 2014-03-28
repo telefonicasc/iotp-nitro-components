@@ -34,6 +34,7 @@ __DefaultTooltipComponent__
 @option {Number} maxGroupRadius 20 Maximum distance to group markers
 @option {Boolean} fitBounds true fit bounds of markers when update
 @option {Boolean} fitBoundsOnce false Once fit bounds of markers when update
+@option {Boolean} fitOnItemSelected Fit the screen centering the map when item selected
 @option {Boolean} zoomControl true Show zoom control
 @option {Function} markerFactory fn() Factory function to translate from input data items to the format the DashboardMapMarkerOption is specting.
 @option {Function} iconFunction fn() Function to create the icon for the marker. By default it creates a div with css class 'marker' and the 'cssClass' attribute of the marker
@@ -71,6 +72,8 @@ define(
                 fitBounds: true,
 
                 fitBoundsOnce: false,
+
+                fitOnItemSelected: false,
 
                 /** Show zoom control */
                 zoomControl: true,
@@ -380,8 +383,10 @@ define(
                 this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
                 if (marker) {
                     $(marker._icon).addClass('selected');
-                    this.map.panTo(marker._latlng);
-                    this.offscreen.update();
+                    if ( this.attr.fitOnItemSelected ) {
+                        this.map.panTo( marker._latlng );
+                        this.offscreen.update();
+                    }
                 }
             };
 

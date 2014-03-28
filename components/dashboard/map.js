@@ -383,8 +383,10 @@ define(
                 this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
                 if (marker) {
                     $(marker._icon).addClass('selected');
-                    if ( this.attr.fitOnItemSelected ) this.map.panTo( marker._latlng );
-                    this.offscreen.update();
+                    if ( this.attr.fitOnItemSelected ) {
+                        this.map.panTo( marker._latlng );
+                        this.offscreen.update();
+                    }
                 }
             };
 

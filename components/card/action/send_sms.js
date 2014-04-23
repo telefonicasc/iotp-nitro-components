@@ -131,7 +131,7 @@ define(
 
             //set values
             //element.back.subject.val(userParamsObject['mail.subject']);
-            element.back.emailAddress.val(userParamsObject['sms.to']);
+            element.back.emailAddress.val(userParamsObject['sms.to'] || '+34');
             element.back.message.val(userParamsObject['sms.message']);
 
             element.front.emailAddress.text(userParamsObject['sms.to']);

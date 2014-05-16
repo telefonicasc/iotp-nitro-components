@@ -29,7 +29,8 @@ function() {
         'noSensorSignal': 'No Sensor Signal',
         'sendSMSHeader': 'Send SMS',
         'property': 'Property',
-        'name': 'Name'
+        'name': 'Name',
+        'setPropertyHeader' : 'Set property'
     };
 
     var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
@@ -401,6 +402,38 @@ function() {
             card.component = component.SEND_SMS;
             card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
             return card;
+        },
+        'PropertyAction':function (card){
+            card.cssClass   = 'm2m-card-action m2m-card-alarm-action action-card';
+            card.header     = locales.setPropertyHeader;
+            card.actionCard = true;
+            card.front      = {
+                items: [{
+                    component: 'CardFrontText',
+                    tpl: '<dl class="properties">'+
+                            '<dt>{{value.value}}</dt>'+
+                            '<dd>{{value.name}}</dd>'+
+                        '</dl>'
+                }]
+            };
+
+            card.back       = {
+                items: [{
+                    component: 'CardBackText',
+                    inputs: [
+                        {
+                            label: locales['name'],
+                            name:'name'
+                        },
+                        {
+                            label: locales['value'],
+                            name:'value'
+                        }
+                    ]
+                }]
+            };
+
+            return card;
         }
     };
 
@@ -440,6 +473,21 @@ function() {
         },
         'SendSmsMibAction': function(cardConfig, cardData) {
             cardConfig.actionData.userParams = cardData.userParams;
+            return cardConfig;
+        },
+        'PropertyAction': function (cardConfig, cardData) {
+            var up = [];
+            $.each(cardData, function (k,v) {
+                if(v && k === 'name'){
+                    v = '${device.asset.UserProps.' + v + '}';
+                }
+                up.push({
+                    name    : 'property.' + k,
+                    value   : v
+                });
+            });
+            cardConfig.actionData.userParams = up;
+
             return cardConfig;
         }
     };

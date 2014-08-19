@@ -67,6 +67,17 @@ define([], function() {
                             setValue = getValue.assign,
                             currentValue;
 
+                        scope.safeApply = function(fn) {
+                            var phase = this.$root.$$phase;
+                            if(phase == '$apply' || phase == '$digest') {
+                                if(fn && (typeof(fn) === 'function')) {
+                                    fn();
+                                }
+                            } else {
+                                this.$apply(fn);
+                            }
+                        };
+
                         scope.$watch(function() {
                             var value = getValue(scope);
                             if (!angular.equals(value, currentValue)) {
@@ -85,7 +96,7 @@ define([], function() {
                             if (e.target === element[0] &&
                                 o.angularUpdate !== false) {
                                 currentValue = o.value;
-                                scope.$apply(function() {
+                                scope.safeApply(function() {
                                     setValue(scope, o.value);
                                 });
                             }

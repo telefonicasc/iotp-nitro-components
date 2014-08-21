@@ -4,7 +4,7 @@ define(
         'components/mixin/data_binding'
     ],
 
-    function(ComponentManager, DataBinding, Template) {
+    function(ComponentManager, DataBinding) {
         var dataType = {
             'TEXT':'Text',
             'QUANTITY':'Quantity'

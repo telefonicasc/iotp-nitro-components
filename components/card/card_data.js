@@ -287,6 +287,21 @@ function() {
             };
 
             return card;
+        },
+        'ceprule' : function (card) {
+            card.front = {
+                items: [{
+                    component: 'CardFrontText'
+                }]
+            };
+            card.back = {
+                items: [{
+                    component: 'CardBackTextarea'
+                }]
+            };
+            card.delimiterList = ['EQUAL_TO'];
+
+            return card;
         }
 
     };
@@ -434,6 +449,24 @@ function() {
             };
 
             return card;
+        },
+        'ceprule': function (card){
+            card.cssClass   = 'm2m-card-action action-card';
+            card.actionCard = true;
+            card.header = 'CEP';
+            card.front      = {
+                items: [{
+                    component: 'CardFrontText',
+                    tpl: '<p>{{value}}</p>'
+                }]
+            };
+            card.back       = {
+                items: [{
+                    component: 'CardBackTextarea'
+                }]
+            };
+
+            return card;
         }
     };
 
@@ -555,10 +588,14 @@ function() {
     };
 
     var _getMethodNameForPase = function(cardConfig){
-        var sensorData = cardConfig.sensorData,
-            name, phenomenon;
-        var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
-        var patt = /^\$/g;
+        var sensorData      = cardConfig.sensorData,
+            patt            = /^\$/g,
+            conditionList   = cardConfig.conditionList || [ { parameterValue : ''} ],
+            parameterValue  = conditionList[0].parameterValue,
+            sensorCardType  = cardConfig.sensorCardType,
+            name,
+            phenomenon;
+
         if(cardConfig.type === cardType.SENSOR_CARD){
             phenomenon = (sensorData && sensorData.phenomenon) ?
                 sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
@@ -570,8 +607,10 @@ function() {
                 name = 'angle';
             } else if (!sensorData){
                 name = 'alarm';
-            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
+            } else if ( sensorCardType === 'threshold' || patt.test(parameterValue)) {
                 name = 'threshold';
+             }else if ( sensorCardType === 'ceprule' ) {
+                name = 'ceprule';
              }else if (phenomenon === 'electricPotential') {
                 name = 'battery';
             } else if (sensorData && sensorData.dataType === 'Boolean') {

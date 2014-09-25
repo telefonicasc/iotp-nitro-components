@@ -659,18 +659,6 @@ select {
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
   background-color: white;
 }
-.card.m2m-card-action .front,
-.card.m2m-card-action .back {
-  width: 174px;
-  height: 134px;
-}
-.card.m2m-card-action .front .header {
-  height: 39px;
-}
-.card.m2m-card-action .front .header h1 {
-  height: 39px;
-  line-height: 39px;
-}
 .card .front {
   position: absolute;
 }
@@ -743,6 +731,125 @@ select {
   width: 218px;
   height: 168px;
 }
+.m2m-card-action .front,
+.m2m-card-action .back {
+  width: 174px;
+  height: 134px;
+}
+.m2m-card-action .front {
+  background-color: #fff;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 13px;
+  -webkit-border-bottom-right-radius: 13px;
+  -webkit-border-bottom-left-radius: 13px;
+  -webkit-border-top-left-radius: 13px;
+  -moz-border-radius-topright: 13px;
+  -moz-border-radius-bottomright: 13px;
+  -moz-border-radius-bottomleft: 13px;
+  -moz-border-radius-topleft: 13px;
+  border-radius: 13px 13px 13px 13px;
+  border-top-right-radius: 13px;
+  border-bottom-right-radius: 13px;
+  border-bottom-left-radius: 13px;
+  border-top-left-radius: 13px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.m2m-card-action .front .header {
+  background-color: #3D454A;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  height: 39px;
+}
+.m2m-card-action .front .header h1 {
+  text-align: left;
+  padding-left: 5px;
+  color: white;
+  font-size: 0.9em;
+  height: 39px;
+  line-height: 39px;
+}
+.m2m-card-action .front .body {
+  background-color: #77868E;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding: 5px;
+  overflow: hidden;
+}
+.m2m-card-action .front h3 {
+  color: #fff;
+  margin-bottom: 5px;
+}
+.m2m-card-action .front p {
+  color: #b0c0c5;
+  font-size: 0.8em;
+}
+.m2m-card-action .back {
+  width: 220px;
+  height: 180px;
+  margin-top: -30px;
+  border: 5px solid #77868E;
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 25px;
+  -webkit-border-bottom-right-radius: 25px;
+  -webkit-border-bottom-left-radius: 25px;
+  -webkit-border-top-left-radius: 25px;
+  -moz-border-radius-topright: 25px;
+  -moz-border-radius-bottomright: 25px;
+  -moz-border-radius-bottomleft: 25px;
+  -moz-border-radius-topleft: 25px;
+  border-radius: 25px 25px 25px 25px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.m2m-card-action .back .card-header-label {
+  display: none;
+}
+.m2m-card-action .back .body {
+  behavior: url("style/css3pie/PIE.htc");
+  -webkit-border-top-right-radius: 20px;
+  -webkit-border-bottom-right-radius: 20px;
+  -webkit-border-bottom-left-radius: 20px;
+  -webkit-border-top-left-radius: 20px;
+  -moz-border-radius-topright: 20px;
+  -moz-border-radius-bottomright: 20px;
+  -moz-border-radius-bottomleft: 20px;
+  -moz-border-radius-topleft: 20px;
+  border-radius: 20px 20px 20px 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.m2m-card-action .back .card-body {
+  background-color: white;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.m2m-card-action .back .m2m-card-label {
+  color: #596c73;
+  font-size: 13px;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 20px;
+}
+.m2m-card-action dl.properties {
+  text-align: center;
+  font-size: 2em;
+}
+.m2m-card-action dl.properties dt {
+  color: #fff;
+}
 .m2m-card-condition .front {
   background-color: white;
 }
@@ -791,30 +898,6 @@ select {
   left: 4px;
   right: 4px;
 }
-.m2m-card-action .front {
-  background: #2d3539;
-  behavior: url("style/css3pie/PIE.htc");
-  -webkit-border-top-right-radius: 13px;
-  -webkit-border-bottom-right-radius: 13px;
-  -webkit-border-bottom-left-radius: 13px;
-  -webkit-border-top-left-radius: 13px;
-  -moz-border-radius-topright: 13px;
-  -moz-border-radius-bottomright: 13px;
-  -moz-border-radius-bottomleft: 13px;
-  -moz-border-radius-topleft: 13px;
-  border-radius: 13px 13px 13px 13px;
-  border-top-right-radius: 13px;
-  border-bottom-right-radius: 13px;
-  border-bottom-left-radius: 13px;
-  border-top-left-radius: 13px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-.m2m-card-action .front .header h1 {
-  color: white;
-  font-size: 0.9em;
-}
 .m2m-card-time .front {
   background-color: white;
 }
@@ -830,54 +913,12 @@ select {
 }
 .card.m2m-card-send-email .back {
   width: 487px;
-  height: 448px;
+  height: 508px;
   margin-top: -143px;
   margin-left: -180px;
-  border: 5px solid #77868E;
-  behavior: url("style/css3pie/PIE.htc");
-  -webkit-border-top-right-radius: 25px;
-  -webkit-border-bottom-right-radius: 25px;
-  -webkit-border-bottom-left-radius: 25px;
-  -webkit-border-top-left-radius: 25px;
-  -moz-border-radius-topright: 25px;
-  -moz-border-radius-bottomright: 25px;
-  -moz-border-radius-bottomleft: 25px;
-  -moz-border-radius-topleft: 25px;
-  border-radius: 25px 25px 25px 25px;
-  border-top-right-radius: 25px;
-  border-bottom-right-radius: 25px;
-  border-bottom-left-radius: 25px;
-  border-top-left-radius: 25px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
 }
 .card.m2m-card-send-email .back .header {
   display: none;
-}
-.card.m2m-card-send-email .back .body {
-  behavior: url("style/css3pie/PIE.htc");
-  -webkit-border-top-right-radius: 20px;
-  -webkit-border-bottom-right-radius: 20px;
-  -webkit-border-bottom-left-radius: 20px;
-  -webkit-border-top-left-radius: 20px;
-  -moz-border-radius-topright: 20px;
-  -moz-border-radius-bottomright: 20px;
-  -moz-border-radius-bottomleft: 20px;
-  -moz-border-radius-topleft: 20px;
-  border-radius: 20px 20px 20px 20px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-.card.m2m-card-send-email .back .card-body {
-  background-color: white;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
 }
 .card.m2m-card-send-email .back .card-header {
   padding: 10px 6px;
@@ -907,6 +948,7 @@ select {
 }
 .card.m2m-card-send-email .back .card-header label {
   color: #8C9193;
+  margin-top: 15px;
   font-size: 12px;
   font-weight: 800;
 }
@@ -967,118 +1009,6 @@ select {
 }
 .card.m2m-card-send-email .back .token-selector {
   border-top: 1px solid #a0a0a0;
-}
-.card.m2m-card-send-email .front {
-  background-color: #fff;
-}
-.card.m2m-card-send-email .front .header {
-  background-color: #3D454A;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-.card.m2m-card-send-email .front .header h1 {
-  text-align: left;
-  padding-left: 5px;
-}
-.card.m2m-card-send-email .front .body {
-  background-color: #77868E;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  padding: 5px;
-  overflow: hidden;
-}
-.card.m2m-card-send-email .front h3 {
-  color: #fff;
-  margin-bottom: 5px;
-}
-.card.m2m-card-send-email .front p {
-  color: #b0c0c5;
-  font-size: 0.8em;
-}
-.card.m2m-card-alarm-action .back {
-  width: 220px;
-  height: 180px;
-  margin-top: -30px;
-  border: 5px solid #77868E;
-  behavior: url("style/css3pie/PIE.htc");
-  -webkit-border-top-right-radius: 25px;
-  -webkit-border-bottom-right-radius: 25px;
-  -webkit-border-bottom-left-radius: 25px;
-  -webkit-border-top-left-radius: 25px;
-  -moz-border-radius-topright: 25px;
-  -moz-border-radius-bottomright: 25px;
-  -moz-border-radius-bottomleft: 25px;
-  -moz-border-radius-topleft: 25px;
-  border-radius: 25px 25px 25px 25px;
-  border-top-right-radius: 25px;
-  border-bottom-right-radius: 25px;
-  border-bottom-left-radius: 25px;
-  border-top-left-radius: 25px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-.card.m2m-card-alarm-action .back .card-header-label {
-  display: none;
-}
-.card.m2m-card-alarm-action .back .body {
-  behavior: url("style/css3pie/PIE.htc");
-  -webkit-border-top-right-radius: 20px;
-  -webkit-border-bottom-right-radius: 20px;
-  -webkit-border-bottom-left-radius: 20px;
-  -webkit-border-top-left-radius: 20px;
-  -moz-border-radius-topright: 20px;
-  -moz-border-radius-bottomright: 20px;
-  -moz-border-radius-bottomleft: 20px;
-  -moz-border-radius-topleft: 20px;
-  border-radius: 20px 20px 20px 20px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-  -moz-background-clip: padding-box;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-.card.m2m-card-alarm-action .back .card-body {
-  background-color: white;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
-.card.m2m-card-alarm-action .back .m2m-card-label {
-  color: #596c73;
-  font-size: 13px;
-  text-align: left;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding: 20px;
-}
-.card.m2m-card-alarm-action .front {
-  background-color: #fff;
-}
-.card.m2m-card-alarm-action .front .header {
-  background-color: #3D454A;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-.card.m2m-card-alarm-action .front .header h1 {
-  text-align: left;
-  padding-left: 5px;
-}
-.card.m2m-card-alarm-action .front .body {
-  background-color: #77868E;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  padding: 5px;
-  overflow: hidden;
-}
-.card.m2m-card-alarm-action .front h3 {
-  color: #fff;
-  margin-bottom: 5px;
-}
-.card.m2m-card-alarm-action .front p {
-  color: #b0c0c5;
-  font-size: 0.8em;
 }
 .card.m2m-card-alarm-action .front .m2m-card-alarm-img {
   background-position: center center;
@@ -1623,6 +1553,7 @@ li.delimiter-value {
   font-size: 16px;
   color: #596c73;
   width: 100%;
+  height: 28px;
   margin-left: -5px;
 }
 .back select {
@@ -1863,6 +1794,17 @@ li.delimiter-value {
 .card.m2m-card-send-sms .front p {
   color: #b0c0c5;
   font-size: 0.8em;
+}
+.m2m-card-textarea {
+  margin: 10px;
+}
+.m2m-card-textarea textarea {
+  border: 1px dotted #C1BCA4;
+  width: 100%;
+  height: 130px;
+}
+.m2m-card-action .m2m-card-textarea textarea {
+  height: 90px;
 }
 .csstransforms3d .flippable .back {
   visibility: visible;
@@ -2396,6 +2338,7 @@ li.delimiter-value {
   left: 50%;
   background: #fff;
   min-width: 350px;
+  max-width: 700px;
   margin-left: -150px;
   margin-top: -100px;
   padding-top: 5px;

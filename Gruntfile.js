@@ -117,11 +117,11 @@ module.exports = function(grunt) {
     },
     plato: {
       check: {
-	options: {
+        options: {
           jshint : grunt.file.readJSON('.jshintrc')
       	},
         files: {
-	  'reports/complexity': ['components/**/*.js']
+          'reports/complexity': ['components/**/*.js']
         },
       }
     }

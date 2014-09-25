@@ -17,6 +17,8 @@ define(
         'attribName': 'Attribute Name',
         'valueThreshold': 'Value Threshold',
         'attributeThreshold': 'Attribute Threshold',
+        'valueAttributeThreshold': '${... value ...}',
+        'dataType': 'Data Type',
         'type': 'Type',
         'regexpTitle': 'Id',
         'regexp': 'RegExp',
@@ -51,7 +53,7 @@ define(
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'value' ]
+                        label: locales.value
                     } ]
                 };
 
@@ -79,7 +81,7 @@ define(
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'attribName' ]
+                        label: locales.attribName
                     }
                     /*{
                         component: 'Dropdown',
@@ -126,12 +128,35 @@ define(
                         component: 'CardBackText',
                         inputs: [
                             {
-                                label: locales[ 'name' ],
+                                label: locales.name,
                                 name: 'key'
+                            }
+                        ]
+                    }, {
+                        component: 'Dropdown',
+                        options: [
+                            {
+                                'label': 'Quantity',
+                                'value': 'Quantity',
+                                'selected': true
                             },
                             {
-                                label: locales[ 'value' ],
-                                name: 'value'
+                                'label': 'Text',
+                                'value': 'Text'
+                            }
+                        ]
+                    }, {
+                        component: 'CardBackText',
+                        inputs: [
+                            {
+                                label: locales.value,
+                                name: 'value',
+
+                                // RegExp:
+                                // - Alphanumeric
+                                // - Allow: . (dot) - (hyphen) _ (underscore)
+                                // - Not allow: __ (two underscores consecutively)
+                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                             }
                         ]
                     } ]
@@ -171,12 +196,36 @@ define(
                         component: 'CardBackText',
                         inputs: [
                             {
-                                label: locales[ 'name' ],
+                                label: locales.name,
                                 name: 'key'
+                            }
+                        ]
+                    }, {
+                        component: 'Dropdown',
+                        options: [
+                            {
+                                'label': 'Quantity',
+                                'value': 'Quantity',
+                                'selected': true
                             },
                             {
-                                label: locales[ 'value' ],
-                                name: 'value'
+                                'label': 'Text',
+                                'value': 'Text'
+                            }
+                        ]
+                    }, {
+                        component: 'CardBackText',
+                        inputs: [
+                            {
+                                label: locales.value,
+                                name: 'value',
+                                placeholder: locales.valueAttributeThreshold,
+
+                                // RegExp:
+                                // - Alphanumeric
+                                // - Allow: . (dot) - (hyphen) _ (underscore)
+                                // - Not allow: __ (two underscores consecutively)
+                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                             }
                         ]
                     } ]
@@ -219,7 +268,7 @@ define(
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'regexp' ]
+                        label: locales.regexp
                     } ]
                 };
 
@@ -266,7 +315,7 @@ define(
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'type' ]
+                        label: locales.type
                     } ]
                 };
 
@@ -278,20 +327,20 @@ define(
 
         encodeTime = {
             'timeElapsed': function ( card ) {
-                card.header = locales[ 'elapsed' ];
+                card.header = locales.elapsed;
                 card.cssClass = 'm2m-card-time m2m-card-elapsed';
 
                 card.front = {
                     items: [ {
                         component: 'CardFrontQuantityValue',
-                        label: locales[ 'after' ],
+                        label: locales.after,
                         units: 'seg'
                     } ]
                 };
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'value' ],
+                        label: locales.value,
                         dataType: 'Quantity'
                     } ]
                 };
@@ -306,20 +355,20 @@ define(
             },
 
             'timeInterval': function ( card ) {
-                card.header = locales[ 'interval' ];
+                card.header = locales.interval;
                 card.cssClass = 'm2m-card-time m2m-card-interval';
 
                 card.front = {
                     items: [ {
                         component: 'CardFrontQuantityValue',
-                        label: locales[ 'interval' ],
+                        label: locales.interval,
                         units: 'min'
                     } ]
                 };
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales[ 'value' ],
+                        label: locales.value,
                         dataType: 'Quantity'
                     } ]
                 };
@@ -380,11 +429,11 @@ define(
                         component: 'CardBackText',
                         inputs: [
                             {
-                                label: locales[ 'name' ],
+                                label: locales.name,
                                 name: 'name'
                             },
                             {
-                                label: locales[ 'value' ],
+                                label: locales.value,
                                 name: 'value'
                             }
                         ]

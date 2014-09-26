@@ -118,7 +118,7 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.key}}' +
+                            '<div class="m2m-card-text-value">{{value.value}}' +
                             '</div>' +
                          '</div>'
                     } ]
@@ -186,7 +186,7 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.key}}' +
+                            '<div class="m2m-card-text-value">{{value.value}}' +
                             '</div>' +
                          '</div>'
                     } ]
@@ -276,34 +276,6 @@ define(
 
                 return card;
             },
-
-            /*'entityAttrib': function ( card ) {
-                card.header = locales.valueThreshold;
-                card.front = {
-                    items: [ {
-                        component: 'CardFrontText'
-                    } ]
-                };
-                card.back = {
-                    items: [ {
-                        component: 'CardBackText',
-                        inputs: [
-                            {
-                                label: locales[ 'name' ],
-                                name: 'key'
-                            },
-                            {
-                                label: locales[ 'value' ],
-                                name: 'value'
-                            }
-                        ]
-                    } ]
-                };
-
-                card.delimiterList = [ 'GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO' ];
-
-                return card;
-            },*/
 
             'type': function ( card ) {
                 card.header = locales.type;

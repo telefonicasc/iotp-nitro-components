@@ -413,25 +413,6 @@ define(
                 };
 
                 return card;
-            },
-
-            'ceprule': function ( card ) {
-                card.cssClass   = 'm2m-card-action action-card';
-                card.actionCard = true;
-                card.header = locales.epl;
-                card.front = {
-                    items: [ {
-                        component: 'CardFrontText',
-                        tpl: '<p>{{value}}</p>'
-                    } ]
-                };
-                card.back = {
-                    items: [ {
-                        component: 'CardBackTextarea'
-                    } ]
-                };
-
-                return card;
             }
         },
 

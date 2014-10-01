@@ -82,13 +82,7 @@ define(
                     items: [ {
                         component: 'CardBackText',
                         label: locales.attribName
-                    }
-                    /*{
-                        component: 'Dropdown',
-                        defaultValue: '',
-                        options: card.configData
-                    }*/
-                    ]
+                    } ]
                 };
                 card.delimiterList = [ 'GREATER_THAN' ];
                 card.delimiterCustomLabels = [
@@ -125,32 +119,31 @@ define(
                 };
                 card.back = {
                     items: [ {
-                        component: 'CardBackText',
+                        component: 'CardBackTextCombo',
                         inputs: [
                             {
-                                label: locales.name,
-                                name: 'key'
-                            }
-                        ]
-                    }, {
-                        component: 'Dropdown',
-                        options: [
-                            {
-                                'label': 'Quantity',
-                                'value': 'Quantity',
-                                'selected': true
-                            },
-                            {
-                                'label': 'Text',
-                                'value': 'Text'
-                            }
-                        ]
-                    }, {
-                        component: 'CardBackText',
-                        inputs: [
-                            {
+                                type: 'text',
+                                name: 'thresoldName',
+                                label: locales.name
+                            }, {
+                                type: 'dropdown',
+                                name: 'thresoldType',
+                                options: [
+                                    {
+                                        'label': 'Quantity',
+                                        'value': 'Quantity',
+                                        'selected': true
+                                    },
+                                    {
+                                        'label': 'Text',
+                                        'value': 'Text'
+                                    }
+                                ]
+                            }, {
+                                type: 'text',
+                                name: 'thresoldValue',
                                 label: locales.value,
-                                name: 'value',
+
 
                                 // RegExp:
                                 // - Alphanumeric
@@ -168,6 +161,13 @@ define(
                     not: false,
                     operator: null,
                     userProp: ''
+                };
+                card.sensorData = {
+                    measureName: 'acceleration',
+                    phenomenonApp: 'myPhenomApp',
+                    phenomenon: 'myPhenom',
+                    dataType: 'Quantity',
+                    uom: 'myUOM'
                 };
 
                 return card;
@@ -193,32 +193,32 @@ define(
                 };
                 card.back = {
                     items: [ {
-                        component: 'CardBackText',
+                        component: 'CardBackTextCombo',
                         inputs: [
                             {
-                                label: locales.name,
-                                name: 'key'
-                            }
-                        ]
-                    }, {
-                        component: 'Dropdown',
-                        options: [
-                            {
-                                'label': 'Quantity',
-                                'value': 'Quantity',
-                                'selected': true
+                                type: 'text',
+                                name: 'thresoldName',
+                                label: locales.name
                             },
                             {
-                                'label': 'Text',
-                                'value': 'Text'
-                            }
-                        ]
-                    }, {
-                        component: 'CardBackText',
-                        inputs: [
+                                type: 'dropdown',
+                                name: 'thresoldType',
+                                options: [
+                                    {
+                                        'label': 'Quantity',
+                                        'value': 'Quantity',
+                                        'selected': true
+                                    },
+                                    {
+                                        'label': 'Text',
+                                        'value': 'Text'
+                                    }
+                                ]
+                            },
                             {
+                                type: 'text',
+                                name: 'thresoldValue',
                                 label: locales.value,
-                                name: 'value',
                                 placeholder: locales.valueAttributeThreshold,
 
                                 // RegExp:
@@ -413,25 +413,6 @@ define(
                 };
 
                 return card;
-            },
-
-            'ceprule': function ( card ) {
-                card.cssClass   = 'm2m-card-action action-card';
-                card.actionCard = true;
-                card.header = locales.epl;
-                card.front = {
-                    items: [ {
-                        component: 'CardFrontText',
-                        tpl: '<p>{{value}}</p>'
-                    } ]
-                };
-                card.back = {
-                    items: [ {
-                        component: 'CardBackTextarea'
-                    } ]
-                };
-
-                return card;
             }
         },
 
@@ -456,11 +437,36 @@ define(
 
                 if ( condition ) {
                     condition.scope = 'USER_PROP';
-                    condition.parameterValue = cardData.value;
+                    condition.parameterValue = cardData.thresoldValue;
                     condition.userProp = key;
                 }
 
-                delete cardConfig.sensorData;
+                cardConfig.sensorData = {
+                    measureName: cardData.thresoldName,
+                    dataType: cardData.thresoldType
+                };
+
+                cardConfig.conditionList = condition;
+
+                return cardConfig;
+            },
+
+            'attributeThreshold': function ( cardConfig, cardData ) {
+                var key = '${device.asset.UserProps.' + cardData.key + '}',
+                    condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+
+                if ( condition ) {
+                    condition.scope = 'USER_PROP';
+                    condition.parameterValue = cardData.thresoldValue;
+                    condition.userProp = key;
+                }
+
+                cardConfig.sensorData = {
+                    measureName: cardData.thresoldName,
+                    dataType: cardData.thresoldType
+                };
+
+                cardConfig.conditionList = condition;
 
                 return cardConfig;
             }

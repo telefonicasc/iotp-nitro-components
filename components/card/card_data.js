@@ -272,7 +272,7 @@ define(
                     } ]
                 };
 
-                card.delimiterList = [ 'EQUAL_TO' ];
+                card.delimiterList = [ 'MATCH' ];
 
                 return card;
             },

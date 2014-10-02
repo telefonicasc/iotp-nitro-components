@@ -14,13 +14,15 @@ define(
                     'EQUAL_TO',
                     'DIFFERENT_TO',
                     'MINOR_THAN',
-                    'GREATER_THAN'
+                    'GREATER_THAN',
+                    'MATCH'
                 ],
                 delimiterLabels: {
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
-                    'GREATER_THAN': 'ABOVE'
+                    'GREATER_THAN': 'ABOVE',
+                    'MATCH': 'MATCH'
                 },
                 delimiterCustomLabels: [],
                 cardConfig : {'conditionList':[]}
@@ -32,7 +34,7 @@ define(
                 var delimiterList = cardElement.data('delimiterList');
                 var delimiterValue;
                 this.attr.delimiterCustomLabels = cardElement.data('delimiterCustomLabels');
-               
+
                 if(!$.isArray(delimiterList)){
                     delimiterList = this.attr.delimiterList;
                 }
@@ -50,7 +52,7 @@ define(
                         .appendTo(this.$node);
 
                 $.each(delimiterList, $.proxy(function(i, del) {
-                   
+
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
                             .data('value', del)

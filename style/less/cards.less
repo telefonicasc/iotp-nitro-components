@@ -103,7 +103,7 @@
   &.flip {
       .front, .back {
         width: round(@card-action-width*@card-flip-factor);
-        height: round(@card-action-height*@card-flip-factor);
+        height: round(@card-action-height * 1.5);
       }
   }
   .front, .back {
@@ -316,7 +316,6 @@
     cursor: pointer;
     margin: 12px 6px 0px 12px;
     min-width: 125px;
-    height: 18px;
     padding: 8px;
     color: #788D9A;
     display: inline-block;

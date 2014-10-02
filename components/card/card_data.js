@@ -272,7 +272,7 @@ define(
                     } ]
                 };
 
-                card.delimiterList = [];
+                card.delimiterList = [ 'MATCH' ];
 
                 return card;
             },
@@ -287,7 +287,7 @@ define(
                 card.back = {
                     items: [ {
                         component: 'CardBackText',
-                        label: locales.type
+                        label: locales.value
                     } ]
                 };
 

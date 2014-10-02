@@ -48,7 +48,7 @@ define(
                     Card:{
                         'subject': 'Subject',
                         'to': 'To',
-                        'sensor_name': 'Sensor Name'
+                        'sensor_name': 'Condition'
                     },
                     CardData:{
                         'true': 'True',

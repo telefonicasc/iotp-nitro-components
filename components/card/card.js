@@ -41,7 +41,7 @@ define(
                 delimiterList: false,
                 defaultValue : '',
                 locales: {
-                    'sensor_name':'Sensor Name'
+                    'sensor_name': 'Condition'
                 }
             });
 

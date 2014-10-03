@@ -244,7 +244,6 @@ define(
                         if (o.cards) {
                             if (o.cards.conditions) {
                                 cards = o.cards.conditions.cards || [];
-                                cards.unshift( _makeCardNoSensorSignal(cards) );
                                 this.attr.cards.conditions = cards;
 
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
@@ -668,23 +667,6 @@ define(
             var placeholder = $('<div>').
                 addClass('card-placeholder action-card');
             return placeholder;
-        }
-
-        function _makeCardNoSensorSignal(sensorCards){
-            var data = {
-                'id': '0',
-                'type': 'SensorCard',
-                'model': 'NoSensorSignal',
-                'sensorData':{},
-                'conditionList':[{
-                       'scope':'LAST_MEASURE',
-                       'not':false,
-                       'operator':'GREATER_THAN',
-                       'parameterValue':'${device.asset.UserProps.reportInterval}'
-                    }],
-                'configData': _getPhenomenonList(sensorCards)
-            };
-            return data;
         }
 
         function _getPhenomenonList(cards){

@@ -43,22 +43,22 @@ define(
         },
 
         encodeSensor = {
-            'text': function ( card ) {
-                card.front = {
-                    items: [ {
-                        component: 'CardFrontText'
-                    } ]
-                };
-                card.delimiterList = [ 'EQUAL_TO', 'DIFFERENT_TO' ];
-                card.back = {
-                    items: [ {
-                        component: 'CardBackText',
-                        label: locales.value
-                    } ]
-                };
+            // 'text': function ( card ) {
+            //     card.front = {
+            //         items: [ {
+            //             component: 'CardFrontText'
+            //         } ]
+            //     };
+            //     card.delimiterList = [ 'EQUAL_TO', 'DIFFERENT_TO' ];
+            //     card.back = {
+            //         items: [ {
+            //             component: 'CardBackText',
+            //             label: locales.value
+            //         } ]
+            //     };
 
-                return card;
-            },
+            //     return card;
+            // },
 
             'notUpdated': function ( card ) {
                 if ( card.sensorData && card.sensorData.measureName && $.isArray( card.configData ) ) {
@@ -531,7 +531,6 @@ define(
                 }
                 card = $.extend( card, card.configData );
                 adapterMethod = encodeSensor[ adapterMethodName ];
-
             } else if ( card.type === cardType.ACTION_CARD ) {
                 card = $.extend( card, card.actionData );
                 adapterMethod = encodeAction[ adapterMethodName ];

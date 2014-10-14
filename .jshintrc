@@ -25,6 +25,7 @@
     "define": true,
     "describeComponent": true,
     "d3": true,
+    "Raphael": true,
     "beforeEach": true,
     "setupComponent" : true,
     "expect": true,

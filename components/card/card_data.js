@@ -59,7 +59,6 @@ define(
 
             //     return card;
             // },
-
             'notUpdated': function ( card ) {
                 if ( card.sensorData && card.sensorData.measureName && $.isArray( card.configData ) ) {
                     $.map( card.configData, function ( option ) {
@@ -274,6 +273,15 @@ define(
 
                 card.delimiterList = [ 'MATCH' ];
 
+                 card.defaultCondition = {
+                    scope: 'XPATH',
+                    parameterValue: null,
+                    parameterName: 'regexp',
+                    not: false,
+                    operator: 'MATCH',
+                    userProp: ''
+                };
+
                 return card;
             },
 
@@ -292,6 +300,15 @@ define(
                 };
 
                 card.delimiterList = [ 'EQUAL_TO', 'DIFFERENT_TO' ];
+
+                card.defaultCondition = {
+                    scope: 'XPATH',
+                    parameterValue: null,
+                    parameterName: 'type',
+                    not: false,
+                    operator: null,
+                    userProp: ''
+                };
 
                 return card;
             }
@@ -554,7 +571,6 @@ define(
 
             if ( cardConfig.type === cardType.SENSOR_CARD ) {
                 adapterMethod = decodeSensor[ adapterMethodName ];
-
             } else if ( cardConfig.type === cardType.ACTION_CARD ) {
                 adapterMethod = decodeAction[adapterMethodName];
             } else if ( cardConfig.type === cardType.TIME_CARD ) {

@@ -35,6 +35,7 @@ define(
                 defaultCondition : {
                     'scope': 'OBSERVATION',
                     'parameterValue': null,
+                    'parameterName': null,
                     'not': false,
                     'operator': null
                 },

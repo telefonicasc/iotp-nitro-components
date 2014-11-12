@@ -83,15 +83,13 @@ define(
                         label: locales.attribName
                     } ]
                 };
-                card.delimiterList = [ 'GREATER_THAN' ];
-                card.delimiterCustomLabels = [
+                card.delimiterList = [];
+                card.conditionList = [
                     {
-                        valueKey: 'GREATER_THAN',
-                        labelKey: 'IS_OFF'
-                    },
-                    {
-                        valueKey: 'EQUAL_TO',
-                        labelKey: 'IS_OFF'
+                        scope: 'LAST_MEASURE',
+                        not: false,
+                        operator: 'EQUAL_TO',
+                        parameterValue: '${device.asset.UserProps.reportInterval}'
                     }
                 ];
 
@@ -273,10 +271,10 @@ define(
 
                 card.delimiterList = [ 'MATCH' ];
 
-                 card.defaultCondition = {
+                card.defaultCondition = {
                     scope: 'XPATH',
                     parameterValue: null,
-                    parameterName: 'regexp',
+                    parameterName: 'id',
                     not: false,
                     operator: 'MATCH',
                     userProp: ''
@@ -309,6 +307,10 @@ define(
                     operator: null,
                     userProp: ''
                 };
+
+                card.sensorData = {
+                    dataType: 'Text'
+                }
 
                 return card;
             }
@@ -439,7 +441,7 @@ define(
                 cardConfig.conditionList = [ {
                     'scope': 'LAST_MEASURE',
                     'not': false,
-                    'operator': ( cardData.dataType === 'Quantity' ) ? 'GREATER_THAN':'EQUAL_TO',
+                    'operator': 'EQUAL_TO',
                     'parameterValue': '${device.asset.UserProps.reportInterval}'
                 } ];
 
@@ -486,7 +488,32 @@ define(
                 cardConfig.conditionList = condition;
 
                 return cardConfig;
-            }
+            },
+
+            'regexp': function ( cardConfig, cardData ) {
+                var key = '^' + cardData + '.*',
+                condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+
+                cardConfig.sensorData = {
+                    parameterValue: key
+                };
+
+                if ( condition ) {
+                    condition.userProp = key;
+                }
+
+                cardConfig.conditionList = condition;
+
+                return cardConfig;
+            },
+
+            'type': function ( cardConfig, cardData ) {
+                cardConfig.sensorData = {
+                    dataType: 'Text'
+                };
+
+                return cardConfig;
+            },
         },
 
         decodeAction = {

@@ -10,15 +10,15 @@ define(
 
         var defaultAttrs = {
             from: '',
-            subject:'',
-            emailAddress:'',
-            message:'',
+            subject: '',
+            emailAddress: '',
+            message: '',
             tokens: [],
             actionCard: true,
             actionData: {
-                name:'',
-                description:'',
-                userParams:[]
+                name: '',
+                description: '',
+                userParams: []
             }
 
            // Locales defined in card_data (encodeAction --> SendEmailAction)
@@ -56,25 +56,25 @@ define(
 
         function SendEmail () {
             // this == scope of component
-            this.defaultAttrs( $.extend({},defaultAttrs) );
+            this.defaultAttrs( $.extend( {}, defaultAttrs ) );
             this.after('initialize', _install);
 
             this._userParamsObject = {};
             this.$element = null;
 
-            this.validate = function(){
+            this.validate = function () {
                 var isValid = this.isValid();
-                this.$node.data('isValid', isValid);
+                this.$node.data( 'isValid', isValid );
             };
 
-            this.getValue = function(){
-                this._userParamsObject['mail.from'] = this.$element.back.from.val();
-                this._userParamsObject['mail.subject'] = this.$element.back.subject.val();
-                this._userParamsObject['mail.to'] = this.$element.back.emailAddress.val();
-                this._userParamsObject['mail.message'] = this.$element.back.message.val();
+            this.getValue = function () {
+                this._userParamsObject[ 'mail.from' ] = this.$element.back.from.val();
+                this._userParamsObject[ 'mail.subject' ] = this.$element.back.subject.val();
+                this._userParamsObject[ 'mail.to' ] = this.$element.back.emailAddress.val();
+                this._userParamsObject[ 'mail.message' ] = this.$element.back.message.val();
 
                 var value = {
-                        'userParams' : _userParamsObjectToArray(this._userParamsObject)
+                        'userParams' : _userParamsObjectToArray( this._userParamsObject )
                     },
                     data = {
                         'value': value
@@ -83,11 +83,11 @@ define(
                 return data;
             };
 
-            this.valueChange = function(){
-                this.trigger('valueChange', this.getValue());
+            this.valueChange = function () {
+                this.trigger( 'valueChange', this.getValue() );
             };
 
-            this.isValid = function(){
+            this.isValid = function () {
                 var userParam = this._userParamsObject,
                     a, b, c, d;
 
@@ -113,21 +113,21 @@ define(
             var frontTpl = $( FRONT_TPL ),
                 backTpl = $( BACK_TPL );
             // this == scope of element in component
-            this.$front.find('.body').append(frontTpl);
-            this.$back.find('.body').append(backTpl);
+            this.$front.find( '.body' ).append( frontTpl );
+            this.$back.find( '.body' ).append( backTpl );
 
             var element = this.$element = {
                 back : {
-                    from : $(backTpl).find('input.email-from'),
-                    subject : $(backTpl).find('input.email-subject'),
-                    emailAddress : $(backTpl).find('input.email-address'),
-                    message : $(backTpl).find('.email-message'),
-                    token : $(backTpl[2])
+                    from : $( backTpl ).find( 'input.email-from' ),
+                    subject : $( backTpl ).find( 'input.email-subject' ),
+                    emailAddress : $( backTpl ).find( 'input.email-address' ),
+                    message : $( backTpl ).find( '.email-message' ),
+                    token : $( backTpl[ 2 ] )
                 },
                 front : {
-                    emailAddress : $(frontTpl[0]),
-                    subject : $(frontTpl[1]),
-                    message : $(frontTpl[2])
+                    emailAddress : $( frontTpl[ 0 ] ),
+                    subject : $( frontTpl[ 1 ] ),
+                    message : $( frontTpl[ 2 ] )
                 }
             };
 

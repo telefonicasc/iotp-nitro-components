@@ -3,30 +3,6 @@ define(
     function () {
 
     var locales = {
-        'true': 'True',
-        'false': 'False',
-        'value': 'Value',
-        'after': 'After',
-        'every': 'Every',
-        'sendEmailHeader': 'Send email',
-        'subject': 'Subject',
-        'to': 'To',
-        'interval': 'Interval',
-        'elapsed': 'Elapsed',
-        'notUpdated': 'Not Updated',
-        'attribName': 'Attribute Name',
-        'valueThreshold': 'Value Threshold',
-        'attributeThreshold': 'Attribute Threshold',
-        'valueAttributeThreshold': '${... value ...}',
-        'dataType': 'Data Type',
-        'type': 'Type',
-        'regexpTitle': 'Id',
-        'regexp': 'RegExp',
-        'epl': 'EPL',
-        'sendSMSHeader': 'Send SMS',
-        'property': 'Property',
-        'name': 'Name',
-        'updateAttribute' : 'Update'
     },
 
         PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:',
@@ -39,27 +15,11 @@ define(
 
         component = {
             'SEND_EMAIL': 'SendEmail',
-            'SEND_SMS':'SendSMS'
+            'SEND_SMS': 'SendSMS'
         },
 
         encodeSensor = {
-            // 'text': function ( card ) {
-            //     card.front = {
-            //         items: [ {
-            //             component: 'CardFrontText'
-            //         } ]
-            //     };
-            //     card.delimiterList = [ 'EQUAL_TO', 'DIFFERENT_TO' ];
-            //     card.back = {
-            //         items: [ {
-            //             component: 'CardBackText',
-            //             label: locales.value
-            //         } ]
-            //     };
-
-            //     return card;
-            // },
-            'notUpdated': function ( card ) {
+            notUpdated: function ( card ) {
                 if ( card.sensorData && card.sensorData.measureName && $.isArray( card.configData ) ) {
                     $.map( card.configData, function ( option ) {
                         var measureName = ( option.value && option.value.measureName );
@@ -96,7 +56,7 @@ define(
                 return card;
             },
 
-            'valueThreshold': function ( card ) {
+            valueThreshold: function ( card ) {
                 var property = card.conditionList && card.conditionList[ 0 ];
                 if ( property ) {
                     card.value = {
@@ -170,7 +130,7 @@ define(
                 return card;
             },
 
-            'attributeThreshold': function ( card ) {
+            attributeThreshold: function ( card ) {
                 var property = card.conditionList && card.conditionList[ 0 ];
                 if ( property ) {
                     card.value = {
@@ -239,7 +199,7 @@ define(
                 return card;
             },
 
-            'ceprule' : function ( card ) {
+            ceprule: function ( card ) {
                 card.front = {
                     items: [ {
                         component: 'CardFrontText'
@@ -255,7 +215,7 @@ define(
                 return card;
             },
 
-            'regexp': function ( card ) {
+            regexp: function ( card ) {
                 card.header = locales.regexpTitle;
                 card.front = {
                     items: [ {
@@ -283,7 +243,7 @@ define(
                 return card;
             },
 
-            'type': function ( card ) {
+            type: function ( card ) {
                 card.header = locales.type;
                 card.front = {
                     items: [ {
@@ -317,7 +277,7 @@ define(
         },
 
         encodeTime = {
-            'timeElapsed': function ( card ) {
+            timeElapsed: function ( card ) {
                 card.header = locales.elapsed;
                 card.cssClass = 'm2m-card-time m2m-card-elapsed';
 
@@ -345,7 +305,7 @@ define(
                 return card;
             },
 
-            'timeInterval': function ( card ) {
+            timeInterval: function ( card ) {
                 card.header = locales.interval;
                 card.cssClass = 'm2m-card-time m2m-card-interval';
 
@@ -375,7 +335,7 @@ define(
         },
 
         encodeAction = {
-            'SendEmailAction': function ( card ) {
+            SendEmailAction: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
                 card.header = locales.sendEmailHeader;
                 card.locales = {
@@ -388,7 +348,7 @@ define(
                 return card;
             },
 
-            'SendSmsMibAction': function ( card ) {
+            SendSmsMibAction: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
                 card.header = locales.sendSMSHeader;
                 card.locales = {
@@ -401,7 +361,7 @@ define(
                 return card;
             },
 
-            'updateAttribute': function ( card ) {
+            updateAttribute: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
                 card.header = locales.updateAttribute;
                 card.actionCard = true;
@@ -436,7 +396,7 @@ define(
         },
 
         decodeSensor = {
-            'notUpdated': function ( cardConfig, cardData ) {
+            notUpdated: function ( cardConfig, cardData ) {
                 cardConfig.sensorData = cardData;
                 cardConfig.conditionList = [ {
                     'scope': 'LAST_MEASURE',
@@ -450,7 +410,7 @@ define(
                 return cardConfig;
             },
 
-            'valueThreshold': function ( cardConfig, cardData ) {
+            valueThreshold: function ( cardConfig, cardData ) {
                 var key = '${device.asset.UserProps.' + cardData.key + '}',
                     condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
@@ -470,7 +430,7 @@ define(
                 return cardConfig;
             },
 
-            'attributeThreshold': function ( cardConfig, cardData ) {
+            attributeThreshold: function ( cardConfig, cardData ) {
                 var key = '${device.asset.UserProps.' + cardData.key + '}',
                     condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
@@ -490,7 +450,7 @@ define(
                 return cardConfig;
             },
 
-            'regexp': function ( cardConfig, cardData ) {
+            regexp: function ( cardConfig, cardData ) {
                 var key = '^' + cardData + '.*',
                 condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
@@ -507,7 +467,7 @@ define(
                 return cardConfig;
             },
 
-            'type': function ( cardConfig, cardData ) {
+            type: function ( cardConfig, cardData ) {
                 cardConfig.sensorData = {
                     dataType: 'Text'
                 };
@@ -517,19 +477,27 @@ define(
         },
 
         decodeAction = {
-            'SendEmailAction': function ( cardConfig, cardData ) {
+            SendEmailAction: function ( cardConfig, cardData ) {
                 cardConfig.actionData.userParams = cardData.userParams;
 
                 return cardConfig;
             },
 
-            'SendSmsMibAction': function ( cardConfig, cardData ) {
+            SendSmsMibAction: function ( cardConfig, cardData ) {
                 cardConfig.actionData.userParams = cardData.userParams;
 
                 return cardConfig;
             },
 
-            'PropertyAction': function ( cardConfig, cardData ) {
+            updateAttribute: function ( cardConfig, cardData ) {
+                cardConfig.actionData.userParams = cardData;
+                cardConfig.actionData.name = 'updateAttribute';
+                cardConfig.actionData.type = 'updateAttribute';
+
+                return cardConfig;
+            },
+
+            PropertyAction: function ( cardConfig, cardData ) {
                 var up = [];
                 $.each( cardData, function ( k, v ) {
                     if ( v && k === 'name' ) {
@@ -547,14 +515,15 @@ define(
         },
 
         decodeTime = {
-            'timeElapsed': function ( cardConfig, cardData ) {
+            timeElapsed: function ( cardConfig, cardData ) {
                 cardConfig.timeData.interval = cardData;
                 cardConfig.timeData.context = 'ASSET';
                 cardConfig.timeData.repeat = '0';
 
                 return cardConfig;
             },
-            'timeInterval': function ( cardConfig, cardData ) {
+
+            timeInterval: function ( cardConfig, cardData ) {
                 cardConfig.timeData.interval = cardData;
                 cardConfig.timeData.repeat = '0';
                 cardConfig.timeData.context = 'ASSET';//no debería ser necesario pero BE lo necesita
@@ -612,6 +581,7 @@ define(
         },
 
         addLocales = function ( newLocales ) {
+            console.info('Los locales: ', locales, newLocales);
             $.extend( locales, newLocales );
         },
 

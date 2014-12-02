@@ -489,6 +489,14 @@ define(
                 return cardConfig;
             },
 
+            updateAttribute: function ( cardConfig, cardData ) {
+                cardConfig.actionData.userParams = cardData;
+                cardConfig.actionData.name = 'updateAttribute';
+                cardConfig.actionData.type = 'updateAttribute';
+
+                return cardConfig;
+            },
+
             PropertyAction: function ( cardConfig, cardData ) {
                 var up = [];
                 $.each( cardData, function ( k, v ) {

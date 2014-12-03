@@ -581,7 +581,6 @@ define(
         },
 
         addLocales = function ( newLocales ) {
-            console.info('Los locales: ', locales, newLocales);
             $.extend( locales, newLocales );
         },
 

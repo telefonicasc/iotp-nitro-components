@@ -169,7 +169,7 @@ define(
                     });
                 });
 
-                this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
+                this.$graphEditor.on('addDelimiter', $.proxy(function(e, o) {
                     var node = o.node,
                         placeholder,
                         delimiter;

@@ -121,6 +121,7 @@ define(
                         if ( o.draggable !== false ) {
                             Draggable.attachTo( node, {} );
                         }
+                        this.trigger( 'addDelimiter', o );
                     }
                 } );
 

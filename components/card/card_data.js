@@ -31,7 +31,7 @@ define(
                     } );
                 }
 
-                card.header = locales.notUpdated;
+                card.header = locales.notUpdate;
                 card.front = {
                     items: [ {
                         component: 'CardFrontOff'

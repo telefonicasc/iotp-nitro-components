@@ -48,7 +48,9 @@ define(
                         var regExp = new RegExp( $ele.data( 'regExp' ), 'i' );
 
                         if ( ! value.match( regExp ) ) {
-                            $ele.val( value.slice( 0, -1 ) );
+                            // We have to clear all text, instead last character inserted,
+                            // in order to avoid detected keyboard issues with timings.
+                            $ele.val( '' );
 
                             return false;
                         }

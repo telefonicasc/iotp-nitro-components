@@ -60,8 +60,9 @@ define(
                 var property = card.conditionList && card.conditionList[ 0 ];
                 if ( property ) {
                     card.value = {
-                        key: property.userProp.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
-                        value: property.parameterValue
+                        key: property.userProp, //.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
+                        value: property.parameterValue,
+                        thresoldValue: property.parameterValue
                     };
                 }
                 card.header = locales.valueThreshold;
@@ -134,7 +135,7 @@ define(
                 var property = card.conditionList && card.conditionList[ 0 ];
                 if ( property ) {
                     card.value = {
-                        key: property.userProp.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
+                        key: property.userProp, //.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
                         value: property.parameterValue
                     };
                 }
@@ -180,9 +181,10 @@ define(
 
                                 // RegExp:
                                 // - Alphanumeric
-                                // - Allow: . (dot) - (hyphen) _ (underscore)
-                                // - Not allow: __ (two underscores consecutively)
-                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                // - Must start with a letter
+                                // - Allow: . (dot) _ (underscore)
+                                // - Not allow: __ (two underscores consecutively) - (hypens)
+                                regExp: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$'
                             }
                         ]
                     } ]
@@ -411,41 +413,55 @@ define(
             },
 
             valueThreshold: function ( cardConfig, cardData ) {
-                var key = '${device.asset.UserProps.' + cardData.key + '}',
-                    condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
                 if ( condition ) {
-                    condition.scope = 'USER_PROP';
+                    condition.scope = 'OBSERVATION';
                     condition.parameterValue = cardData.thresoldValue;
-                    condition.userProp = key;
+
+                    delete condition.userProp;
                 }
 
                 cardConfig.sensorData = {
                     measureName: cardData.thresoldName,
-                    dataType: cardData.thresoldType
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
                 };
 
                 cardConfig.conditionList = condition;
+                // cardConfig.model = 'NoSensorSignal';
+
+                delete cardConfig.sensorCardType;
+                delete cardConfig.configData;
 
                 return cardConfig;
             },
 
             attributeThreshold: function ( cardConfig, cardData ) {
-                var key = '${device.asset.UserProps.' + cardData.key + '}',
-                    condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
                 if ( condition ) {
-                    condition.scope = 'USER_PROP';
-                    condition.parameterValue = cardData.thresoldValue;
-                    condition.userProp = key;
+                    condition.scope = 'OBSERVATION';
+                    condition.parameterValue = '${' + cardData.thresoldValue + '}';
+
+                    delete condition.userProp;
                 }
 
                 cardConfig.sensorData = {
                     measureName: cardData.thresoldName,
-                    dataType: cardData.thresoldType
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
                 };
 
                 cardConfig.conditionList = condition;
+                // cardConfig.model = 'NoSensorSignal';
+
+                delete cardConfig.sensorCardType;
+                delete cardConfig.configData;
 
                 return cardConfig;
             },

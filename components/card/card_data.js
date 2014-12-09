@@ -507,7 +507,7 @@ define(
                 cardConfig.sensorData = {
                     dataType: 'Text'
                 };
-console.warn('editando tipo: ', cardConfig );
+
                 return cardConfig;
             },
         },

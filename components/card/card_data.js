@@ -60,7 +60,7 @@ define(
                 var property = card.conditionList && card.conditionList[ 0 ];
                 if ( property ) {
                     card.value = {
-                        key: property.userProp, //.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
+                        key: property.userProp,
                         value: property.parameterValue,
                         thresoldValue: property.parameterValue
                     };
@@ -70,7 +70,7 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.value}}' +
+                            '<div class="m2m-card-text-value">{{value.thresoldName}}' +
                             '</div>' +
                          '</div>'
                     } ]
@@ -96,18 +96,37 @@ define(
                                         'label': 'Text',
                                         'value': 'Text'
                                     }
-                                ]
+                                ],
+                                // RegExp:
+                                // Two scenarios:
+                                // - Quantity
+                                // ---- Only numbers
+                                // ---- Allow: positive and negative values (+, -), decimals with dot notation
+                                //
+                                // - String
+                                // ---- Alphanumeric
+                                // ---- Allow: . (dot) - (hyphen) _ (underscore)
+                                // ---- Not allow: __ (two underscores consecutively)
+                                regExp: {
+                                    'Quantity': '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                                    'Text': '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                },
+                                regExpTarget: 'thresoldValue'
                             }, {
                                 type: 'text',
                                 name: 'thresoldValue',
                                 label: locales.value,
-
+                                regExpOrigin: 'thresoldType'
 
                                 // RegExp:
-                                // - Alphanumeric
-                                // - Allow: . (dot) - (hyphen) _ (underscore)
-                                // - Not allow: __ (two underscores consecutively)
-                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                // Two scenarios:
+                                // - Quantity
+                                // ---- Only numbers
+                                // - String
+                                // ---- Alphanumeric
+                                // ---- Allow: . (dot) - (hyphen) _ (underscore)
+                                // ---- Not allow: __ (two underscores consecutively)
+                                //regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                             }
                         ]
                     } ]
@@ -140,11 +159,12 @@ define(
                     };
                 }
                 card.header = locales.attributeThreshold;
+                console.warn( 'enchufo en la carta:', card);
                 card.front = {
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.value}}' +
+                            '<div class="m2m-card-text-value">{{value.thresoldName}}' +
                             '</div>' +
                          '</div>'
                     } ]
@@ -487,7 +507,7 @@ define(
                 cardConfig.sensorData = {
                     dataType: 'Text'
                 };
-
+console.warn('editando tipo: ', cardConfig );
                 return cardConfig;
             },
         },

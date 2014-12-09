@@ -4,10 +4,10 @@ define(
         'components/mixin/data_binding'
     ],
 
-    function(ComponentManager, DataBinding) {
+    function( ComponentManager, DataBinding ) {
         var dataType = {
-            'TEXT':'Text',
-            'QUANTITY':'Quantity'
+            'TEXT': 'Text',
+            'QUANTITY': 'Quantity'
         },
             REGEXP_QUANTITY = /^-?\d+(\.\d*)*?$/,
             isIE8 = ( function () {
@@ -43,17 +43,8 @@ define(
                         }
                     }
 
-                    // Testing value REGEXP Validation
-                    if ( $ele.data( 'regExp' ) ) {
-                        var regExp = new RegExp( $ele.data( 'regExp' ), 'i' );
-
-                        if ( ! value.match( regExp ) ) {
-                            // We have to clear all text, instead last character inserted,
-                            // in order to avoid detected keyboard issues with timings.
-                            $ele.val( '' );
-
-                            return false;
-                        }
+                    if ( ! this.validateWithRegExp( $ele ) ) {
+                        return false;
                     }
 
                     // si el input es de tipo "number" devuelve un valor vacío en caso no tener el formato adecuado
@@ -76,6 +67,58 @@ define(
 
                 } );
             } );
+
+            this.validateWithRegExp = function ( $ele ) {
+                var $eleParent,
+                    $target,
+                    targetValue;
+
+                $eleParent = $ele.parents( '.m2m-card-condition' );
+
+                // Checks for custom value REGEXP validation
+                if ( $ele.data( 'regExp' ) ) {
+                    var regExp = this.prepareRegExp( $ele );
+                }
+
+                // Checks for delegated REGEXP validation
+                if ( $ele.data( 'regExpOrigin' ) ) {
+                    var $originEle = $eleParent.find( '[name="' + $ele.data( 'regExpOrigin' ) + '"]' ),
+                        regExp = this.prepareRegExp( $originEle );
+                }
+
+                // Check for REGEXP target
+                $target = ( $ele.data( 'regExpTarget' ) ) ?
+                    $eleParent.find( '[name="' + $ele.data( 'regExpTarget' ) + '"]' ) :
+                    $ele;
+
+                targetValue = $target.val();
+
+                if ( ! targetValue.match( regExp ) ) {
+                    // We have to clear all text, instead last character inserted,
+                    // in order to avoid detected keyboard issues with timings.
+                    $target.val( '' );
+
+                    return false;
+                }
+
+                return true;
+            };
+
+            this.prepareRegExp = function ( $ele ) {
+                var regExp;
+
+                if ( ! $ele || ! $ele.data( 'regExp' ) ) {
+                    return false;
+                }
+
+                if ( $.isPlainObject( $ele.data( 'regExp' ) ) ) {
+                    regExp = new RegExp( $ele.data( 'regExp' )[ $ele.val() ], 'i' );
+                } else {
+                    regExp = new RegExp( $ele.data( 'regExp' ), 'i' );
+                }
+
+                return regExp;
+            };
 
             this.getData = function () {
                 var $inputs = $( 'input, select', this.$node ),
@@ -126,6 +169,8 @@ define(
 
                 data.placeholder && ele.attr( 'placeholder', data.placeholder );
                 data.regExp && ele.data( 'regExp', data.regExp );
+                data.regExpOrigin && ele.data( 'regExpOrigin', data.regExpOrigin );
+                data.regExpTarget && ele.data( 'regExpTarget', data.regExpTarget );
 
                 return ele;
             };
@@ -154,14 +199,13 @@ define(
                     }
                 }, this ) );
 
-                /*$ele.on( 'change', $.proxy( function ( e, o ) {
-                    var dataValue = $( ':selected', $ele ).data( 'dataValue' );
-                    this.trigger( 'valueChange', { value: dataValue } );
-                }, this ) );*/
-
                 if ( ! currentValue ) {
                     $ele.val( this.attr.defaultValue );
                 }
+
+                data.regExp && $ele.data( 'regExp', data.regExp );
+                data.regExpOrigin && $ele.data( 'regExpOrigin', data.regExpOrigin );
+                data.regExpTarget && $ele.data( 'regExpTarget', data.regExpTarget );
 
                 return $ele;
             };

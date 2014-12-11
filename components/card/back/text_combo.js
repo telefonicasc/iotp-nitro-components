@@ -64,7 +64,6 @@ define(
                     } else {
                         $( 'input', this.$node ).val( o.value );
                     }
-
                 } );
             } );
 

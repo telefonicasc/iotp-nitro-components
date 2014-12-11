@@ -57,14 +57,9 @@ define(
             },
 
             valueThreshold: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ];
-                if ( property ) {
-                    card.value = {
-                        key: property.userProp,
-                        value: property.parameterValue,
-                        thresoldValue: property.parameterValue
-                    };
-                }
+                var property = card.conditionList && card.conditionList[ 0 ],
+                    sensor = card.sensorData || false;
+
                 card.header = locales.valueThreshold;
                 card.front = {
                     items: [ {
@@ -117,16 +112,6 @@ define(
                                 name: 'thresoldValue',
                                 label: locales.value,
                                 regExpOrigin: 'thresoldType'
-
-                                // RegExp:
-                                // Two scenarios:
-                                // - Quantity
-                                // ---- Only numbers
-                                // - String
-                                // ---- Alphanumeric
-                                // ---- Allow: . (dot) - (hyphen) _ (underscore)
-                                // ---- Not allow: __ (two underscores consecutively)
-                                //regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                             }
                         ]
                     } ]
@@ -151,22 +136,18 @@ define(
             },
 
             attributeThreshold: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ];
-                if ( property ) {
-                    card.value = {
-                        key: property.userProp, //.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
-                        value: property.parameterValue
-                    };
-                }
+                var property = ( card.conditionList && card.conditionList[ 0 ] ) ? card.conditionList[ 0 ] : false,
+                    sensor = card.sensorData || false;
+
                 card.header = locales.attributeThreshold;
-                console.warn( 'enchufo en la carta:', card);
                 card.front = {
                     items: [ {
                         component: 'CardFrontText',
-                        tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.thresoldName}}' +
-                            '</div>' +
-                         '</div>'
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.thresoldName}}</strong></span>' +
+                                '<span>{{value.thresoldType}}</span>' +
+                                '<span>{{value.thresoldValue}}</span>' +
+                            '</dl>'
                     } ]
                 };
                 card.back = {
@@ -391,8 +372,8 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<dl class="properties">' +
-                                '<dt>{{value.value}}</dt>' +
-                                '<dd>{{value.name}}</dd>' +
+                                '<dt>{{thresoldName}}</dt>' +
+                                '<dd>{{thresoldValue}}</dd>' +
                             '</dl>'
                     } ]
                 };
@@ -451,9 +432,6 @@ define(
                 };
 
                 cardConfig.conditionList = condition;
-                // cardConfig.model = 'NoSensorSignal';
-
-                delete cardConfig.sensorCardType;
                 delete cardConfig.configData;
 
                 return cardConfig;
@@ -478,9 +456,7 @@ define(
                 };
 
                 cardConfig.conditionList = condition;
-                // cardConfig.model = 'NoSensorSignal';
 
-                delete cardConfig.sensorCardType;
                 delete cardConfig.configData;
 
                 return cardConfig;

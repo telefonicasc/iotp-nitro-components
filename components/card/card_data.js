@@ -3,7 +3,21 @@ define(
     function () {
 
     var locales = {
-    },
+        },
+        /**
+         * RuleEditor atributes configuration
+         * @type {Object}
+         */
+        options = {
+            card : {
+                valueThreshold : {
+                    regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                },
+                attributeThreshold : {
+                    regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                }
+            }
+        },
 
         PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:',
 
@@ -106,7 +120,7 @@ define(
                                 // - Alphanumeric
                                 // - Allow: . (dot) - (hyphen) _ (underscore)
                                 // - Not allow: __ (two underscores consecutively)
-                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                regExp: options.card.valueThreshold.regExpValidator // '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$' //
                             }
                         ]
                     } ]
@@ -182,7 +196,7 @@ define(
                                 // - Alphanumeric
                                 // - Allow: . (dot) - (hyphen) _ (underscore)
                                 // - Not allow: __ (two underscores consecutively)
-                                regExp: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                regExp: options.card.attributeThreshold.regExpValidator // '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                             }
                         ]
                     } ]
@@ -647,6 +661,7 @@ define(
     return {
         'addLocales': addLocales,
         'encode': encode,
-        'decode': decode
+        'decode': decode,
+        'options': options
     };
 } );

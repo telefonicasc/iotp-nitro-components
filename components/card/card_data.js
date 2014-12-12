@@ -11,12 +11,14 @@ define(
         options = {
             card : {
                 valueThreshold : {
-                    regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                    // Example of option:
+                    //  > regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 },
                 attributeThreshold : {
-                    regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
-                    regExpQuantity: '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
-                    regExpText: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                    // Example of option:
+                    //  > regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
+                    //  > regExpQuantity: '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                    //  > regExpText: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 }
             }
         },

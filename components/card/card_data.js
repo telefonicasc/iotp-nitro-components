@@ -14,7 +14,9 @@ define(
                     regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 },
                 attributeThreshold : {
-                    regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$'
+                    regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
+                    regExpQuantity: '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                    regExpText: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 }
             }
         },
@@ -117,8 +119,8 @@ define(
                                 // ---- Allow: . (dot) - (hyphen) _ (underscore)
                                 // ---- Not allow: __ (two underscores consecutively)
                                 regExp: {
-                                    'Quantity': '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
-                                    'Text': '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                    'Quantity': options.card.valueThreshold.regExpQuantity,
+                                    'Text': options.card.valueThreshold.regExpText
                                 },
                                 regExpTarget: 'thresoldValue'
                             }, {

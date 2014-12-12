@@ -76,16 +76,30 @@ define(
 
             valueThreshold: function ( card ) {
                 var property = card.conditionList && card.conditionList[ 0 ],
-                    sensor = card.sensorData || false;
+                    sensor = card.sensorData || false,
+                    tmpType = 'Quantity';
+
+                if ( property ) {
+                    property.parameterValue = {
+                        thresoldValue: property.parameterValue
+                    }
+                }
+
+                if ( sensor ) {
+                    tmpType = sensor.dataType;
+                    property.parameterValue.thresoldType = tmpType;
+                    property.parameterValue.thresoldName = sensor.measureName;
+                }
 
                 card.header = locales.valueThreshold;
                 card.front = {
                     items: [ {
                         component: 'CardFrontText',
-                        tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.thresoldName}}' +
-                            '</div>' +
-                         '</div>'
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.thresoldName}}</strong></span>' +
+                                '<span>{{value.thresoldType}}</span>' +
+                                '<span>{{value.thresoldValue}}</span>' +
+                            '</dl>'
                     } ]
                 };
                 card.back = {
@@ -103,11 +117,12 @@ define(
                                     {
                                         'label': 'Quantity',
                                         'value': 'Quantity',
-                                        'selected': true
+                                        'selected': ( tmpType === 'Quantity' ? true : false )
                                     },
                                     {
                                         'label': 'Text',
-                                        'value': 'Text'
+                                        'value': 'Text',
+                                        'selected': ( tmpType === 'Text' ? true : false )
                                     }
                                 ],
                                 // RegExp:
@@ -161,7 +176,28 @@ define(
 
             attributeThreshold: function ( card ) {
                 var property = ( card.conditionList && card.conditionList[ 0 ] ) ? card.conditionList[ 0 ] : false,
-                    sensor = card.sensorData || false;
+                    sensor = card.sensorData || false
+                    tmpType = 'Quantity';
+
+                if ( property ) {
+                    var tmpValue = property.parameterValue,
+                        pattern = /\$\{(.*)\}/,
+                        matches;
+
+                    if ( matches = tmpValue.match( pattern ) ) {
+                        tmpValue = matches[ 1 ];
+                    }
+
+                    property.parameterValue = {
+                        thresoldValue: tmpValue
+                    }
+                }
+
+                if ( sensor ) {
+                    tmpType = sensor.dataType;
+                    property.parameterValue.thresoldType = tmpType;
+                    property.parameterValue.thresoldName = sensor.measureName;
+                }
 
                 card.header = locales.attributeThreshold;
                 card.front = {
@@ -190,11 +226,12 @@ define(
                                     {
                                         'label': 'Quantity',
                                         'value': 'Quantity',
-                                        'selected': true
+                                        'selected': ( tmpType === 'Quantity' ? true : false )
                                     },
                                     {
                                         'label': 'Text',
-                                        'value': 'Text'
+                                        'value': 'Text',
+                                        'selected': ( tmpType === 'Text' ? true : false )
                                     }
                                 ]
                             },

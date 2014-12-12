@@ -1,6 +1,8 @@
+// ==========================================
 // Copyright 2013 Twitter, Inc
-
+// Licensed under The MIT License
 // http://opensource.org/licenses/MIT
+// ==========================================
 
 //implementation lifted from underscore.js (c) 2009-2012 Jeremy Ashkenas
 

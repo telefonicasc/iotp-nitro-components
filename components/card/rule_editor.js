@@ -59,11 +59,15 @@ define(
                 editable: true,
                 ruleValidator : function(ruleData){
                     return true;
-                }
+                },
+
+                //Configure cards
+                card : {}
             });
 
             this.after('initialize', function() {
                 CardData.addLocales(this.attr.locales.CardData);
+                $.extend(true, CardData.options, this.attr);
 
                 this.connections = [];
                 this.value = this.attr.value;

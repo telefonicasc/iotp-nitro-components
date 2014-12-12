@@ -14,7 +14,7 @@ define(
                     regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 },
                 attributeThreshold : {
-                    regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                    regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$'
                 }
             }
         },
@@ -45,7 +45,7 @@ define(
                     } );
                 }
 
-                card.header = locales.notUpdated;
+                card.header = locales.notUpdate;
                 card.front = {
                     items: [ {
                         component: 'CardFrontOff'
@@ -71,19 +71,15 @@ define(
             },
 
             valueThreshold: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ];
-                if ( property ) {
-                    card.value = {
-                        key: property.userProp.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
-                        value: property.parameterValue
-                    };
-                }
+                var property = card.conditionList && card.conditionList[ 0 ],
+                    sensor = card.sensorData || false;
+
                 card.header = locales.valueThreshold;
                 card.front = {
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.value}}' +
+                            '<div class="m2m-card-text-value">{{value.thresoldName}}' +
                             '</div>' +
                          '</div>'
                     } ]
@@ -109,18 +105,33 @@ define(
                                         'label': 'Text',
                                         'value': 'Text'
                                     }
-                                ]
+                                ],
+                                // RegExp:
+                                // Two scenarios:
+                                // - Quantity
+                                // ---- Only numbers
+                                // ---- Allow: positive and negative values (+, -), decimals with dot notation
+                                //
+                                // - String
+                                // ---- Alphanumeric
+                                // ---- Allow: . (dot) - (hyphen) _ (underscore)
+                                // ---- Not allow: __ (two underscores consecutively)
+                                regExp: {
+                                    'Quantity': '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                                    'Text': '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                },
+                                regExpTarget: 'thresoldValue'
                             }, {
                                 type: 'text',
                                 name: 'thresoldValue',
                                 label: locales.value,
 
-
                                 // RegExp:
                                 // - Alphanumeric
                                 // - Allow: . (dot) - (hyphen) _ (underscore)
                                 // - Not allow: __ (two underscores consecutively)
-                                regExp: options.card.valueThreshold.regExpValidator // '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$' //
+                                regExp: options.card.valueThreshold.regExpValidator,
+                                regExpOrigin: 'thresoldType'
                             }
                         ]
                     } ]
@@ -145,21 +156,18 @@ define(
             },
 
             attributeThreshold: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ];
-                if ( property ) {
-                    card.value = {
-                        key: property.userProp.replace( /^\${device\.asset\.UserProps\.(.+)}$/g, '$1' ),
-                        value: property.parameterValue
-                    };
-                }
+                var property = ( card.conditionList && card.conditionList[ 0 ] ) ? card.conditionList[ 0 ] : false,
+                    sensor = card.sensorData || false;
+
                 card.header = locales.attributeThreshold;
                 card.front = {
                     items: [ {
                         component: 'CardFrontText',
-                        tpl: '<div class="m2m-card-text">' +
-                            '<div class="m2m-card-text-value">{{value.value}}' +
-                            '</div>' +
-                         '</div>'
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.thresoldName}}</strong></span>' +
+                                '<span>{{value.thresoldType}}</span>' +
+                                '<span>{{value.thresoldValue}}</span>' +
+                            '</dl>'
                     } ]
                 };
                 card.back = {
@@ -192,11 +200,10 @@ define(
                                 label: locales.value,
                                 placeholder: locales.valueAttributeThreshold,
 
-                                // RegExp:
-                                // - Alphanumeric
-                                // - Allow: . (dot) - (hyphen) _ (underscore)
-                                // - Not allow: __ (two underscores consecutively)
-                                regExp: options.card.attributeThreshold.regExpValidator // '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                // - Must start with a letter
+                                // - Allow: . (dot) _ (underscore)
+                                // - Not allow: __ (two underscores consecutively) - (hypens)
+                                regExp: options.card.attributeThreshold.regExpValidator
                             }
                         ]
                     } ]
@@ -383,8 +390,8 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<dl class="properties">' +
-                                '<dt>{{value.value}}</dt>' +
-                                '<dd>{{value.name}}</dd>' +
+                                '<dt>{{thresoldName}}</dt>' +
+                                '<dd>{{thresoldValue}}</dd>' +
                             '</dl>'
                     } ]
                 };
@@ -425,41 +432,50 @@ define(
             },
 
             valueThreshold: function ( cardConfig, cardData ) {
-                var key = '${device.asset.UserProps.' + cardData.key + '}',
-                    condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
                 if ( condition ) {
-                    condition.scope = 'USER_PROP';
+                    condition.scope = 'OBSERVATION';
                     condition.parameterValue = cardData.thresoldValue;
-                    condition.userProp = key;
+
+                    delete condition.userProp;
                 }
 
                 cardConfig.sensorData = {
                     measureName: cardData.thresoldName,
-                    dataType: cardData.thresoldType
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
                 };
 
                 cardConfig.conditionList = condition;
+                delete cardConfig.configData;
 
                 return cardConfig;
             },
 
             attributeThreshold: function ( cardConfig, cardData ) {
-                var key = '${device.asset.UserProps.' + cardData.key + '}',
-                    condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
                 if ( condition ) {
-                    condition.scope = 'USER_PROP';
-                    condition.parameterValue = cardData.thresoldValue;
-                    condition.userProp = key;
+                    condition.scope = 'OBSERVATION';
+                    condition.parameterValue = '${' + cardData.thresoldValue + '}';
+
+                    delete condition.userProp;
                 }
 
                 cardConfig.sensorData = {
                     measureName: cardData.thresoldName,
-                    dataType: cardData.thresoldType
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
                 };
 
                 cardConfig.conditionList = condition;
+
+                delete cardConfig.configData;
 
                 return cardConfig;
             },

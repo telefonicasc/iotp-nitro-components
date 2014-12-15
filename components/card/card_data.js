@@ -37,38 +37,74 @@ define(
 
         encodeSensor = {
             notUpdated: function ( card ) {
-                if ( card.sensorData && card.sensorData.measureName && $.isArray( card.configData ) ) {
-                    $.map( card.configData, function ( option ) {
-                        var measureName = ( option.value && option.value.measureName );
-                        if ( measureName === card.sensorData.measureName ) {
-                            option.selected = true;
-                        }
+                var property = card.conditionList && card.conditionList[ 0 ],
+                    sensor = card.sensorData || false,
+                    timeData = card.timeData || false;
 
-                        return option;
-                    } );
+                if ( property ) {
+                    property.parameterValue = {
+                        maxTime: property.parameterValue
+                    }
+
+                    if ( sensor ) {
+                        property.parameterValue.attributeName = sensor.measureName;
+                    }
+
+                    if ( timeData ) {
+                        property.parameterValue.checkInterval = timeData.interval;
+                    }
                 }
 
                 card.header = locales.notUpdate;
                 card.front = {
                     items: [ {
-                        component: 'CardFrontOff'
+                        component: 'CardFrontText',
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.checkInterval}}</strong></span>' +
+                                '<span>{{value.attributeName}}</span>' +
+                                '<span>{{value.maxTime}}</span>' +
+                            '</dl>'
                     } ]
                 };
                 card.back = {
-                    items: [ {
-                        component: 'CardBackText',
-                        label: locales.attribName
-                    } ]
+                    items: [
+                        {
+                            component: 'CardBackTextCombo',
+                            inputs: [
+                                {
+                                    type: 'text',
+                                    name: 'checkInterval',
+                                    label: locales.checkInterval
+                                },
+                                {
+                                    type: 'text',
+                                    name: 'attributeName',
+                                    label: locales.attribName
+                                },
+                                {
+                                    type: 'text',
+                                    name: 'maxTime',
+                                    label: locales.maxTime
+                                }
+                            ]
+                        }
+                    ]
                 };
                 card.delimiterList = [];
-                card.conditionList = [
+                card.defaultCondition = [
                     {
                         scope: 'LAST_MEASURE',
                         not: false,
                         operator: 'EQUAL_TO',
-                        parameterValue: '${device.asset.UserProps.reportInterval}'
+                        parameterValue: ''
                     }
                 ];
+                card.sensorData = {
+                    measureName: '',
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    uom: ''
+                };
 
                 return card;
             },
@@ -82,12 +118,12 @@ define(
                     property.parameterValue = {
                         thresoldValue: property.parameterValue
                     }
-                }
 
-                if ( sensor ) {
-                    tmpType = sensor.dataType;
-                    property.parameterValue.thresoldType = tmpType;
-                    property.parameterValue.thresoldName = sensor.measureName;
+                    if ( sensor ) {
+                        tmpType = sensor.dataType;
+                        property.parameterValue.thresoldType = tmpType;
+                        property.parameterValue.thresoldName = sensor.measureName;
+                    }
                 }
 
                 card.header = locales.valueThreshold;
@@ -114,12 +150,12 @@ define(
                                 name: 'thresoldType',
                                 options: [
                                     {
-                                        'label': 'Quantity',
+                                        'label': locales.quantity,
                                         'value': 'Quantity',
                                         'selected': ( tmpType === 'Quantity' ? true : false )
                                     },
                                     {
-                                        'label': 'Text',
+                                        'label': locales.text,
                                         'value': 'Text',
                                         'selected': ( tmpType === 'Text' ? true : false )
                                     }
@@ -176,12 +212,12 @@ define(
                     property.parameterValue = {
                         thresoldValue: tmpValue
                     }
-                }
 
-                if ( sensor ) {
-                    tmpType = sensor.dataType;
-                    property.parameterValue.thresoldType = tmpType;
-                    property.parameterValue.thresoldName = sensor.measureName;
+                    if ( sensor ) {
+                        tmpType = sensor.dataType;
+                        property.parameterValue.thresoldType = tmpType;
+                        property.parameterValue.thresoldName = sensor.measureName;
+                    }
                 }
 
                 card.header = locales.attributeThreshold;
@@ -209,13 +245,13 @@ define(
                                 name: 'thresoldType',
                                 options: [
                                     {
-                                        'label': 'Quantity',
+                                        'label': locales.quantity,
                                         'value': 'Quantity',
                                         'selected': ( tmpType === 'Quantity' ? true : false )
                                     },
                                     {
                                         'label': 'Text',
-                                        'value': 'Text',
+                                        'value': locales.text,
                                         'selected': ( tmpType === 'Text' ? true : false )
                                     }
                                 ]
@@ -346,34 +382,6 @@ define(
                 card.timeCard = true;
 
                 return card;
-            },
-
-            timeInterval: function ( card ) {
-                card.header = locales.interval;
-                card.cssClass = 'm2m-card-time m2m-card-interval';
-
-                card.front = {
-                    items: [ {
-                        component: 'CardFrontQuantityValue',
-                        label: locales.interval,
-                        units: 'min'
-                    } ]
-                };
-                card.back = {
-                    items: [ {
-                        component: 'CardBackText',
-                        label: locales.value,
-                        dataType: 'Quantity'
-                    } ]
-                };
-
-                if ( card.timeData && card.timeData.interval ) {
-                    card.value = card.timeData.interval;
-                }
-                card.defaultValue = '1';
-                card.timeCard = true;
-
-                return card;
             }
         },
 
@@ -440,14 +448,28 @@ define(
 
         decodeSensor = {
             notUpdated: function ( cardConfig, cardData ) {
-                cardConfig.sensorData = cardData;
-                cardConfig.conditionList = [ {
-                    'scope': 'LAST_MEASURE',
-                    'not': false,
-                    'operator': 'EQUAL_TO',
-                    'parameterValue': '${device.asset.UserProps.reportInterval}'
-                } ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
+                if ( condition ) {
+                    condition.scope = 'LAST_MEASURE';
+                    condition.parameterValue = cardData.maxTime;
+                }
+
+                cardConfig.timeData = {
+                  'interval': cardData.checkInterval,
+                  'repeat': '-1',
+                  'context': ''
+               };
+
+               cardConfig.sensorData = {
+                  'measureName': cardData.attributeName,
+                  'phenomenonApp': '',
+                  'phenomenon': '',
+                  'dataType': '',
+                  'uom': ''
+               };
+
+                cardConfig.conditionList = condition;
                 delete cardConfig.configData;
 
                 return cardConfig;
@@ -573,14 +595,6 @@ define(
                 cardConfig.timeData.repeat = '0';
 
                 return cardConfig;
-            },
-
-            timeInterval: function ( cardConfig, cardData ) {
-                cardConfig.timeData.interval = cardData;
-                cardConfig.timeData.repeat = '0';
-                cardConfig.timeData.context = 'ASSET';//no debería ser necesario pero BE lo necesita
-
-                return cardConfig;
             }
         },
 
@@ -686,9 +700,7 @@ define(
                 name = cardConfig.actionData.type;
             } else if ( cardConfig.type === cardType.TIME_CARD ) {
                 phenomenon = cardConfig.configData.timeType;
-                if ( phenomenon === 'timeInterval' ) {
-                    name = 'timeInterval';
-                } else if ( phenomenon === 'timeElapsed' ) {
+                if ( phenomenon === 'timeElapsed' ) {
                     name = 'timeElapsed';
                 }
             }

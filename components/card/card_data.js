@@ -3,7 +3,24 @@ define(
     function () {
 
     var locales = {
-    },
+        },
+        /**
+         * RuleEditor atributes configuration
+         * @type {Object}
+         */
+        options = {
+            card : {
+                valueThreshold : {
+                    // Example of option:
+                    //  > regExpQuantity:  '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                    //  > regExpText:      '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                },
+                attributeThreshold : {
+                    // Example of option:
+                    //  > regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
+                }
+            }
+        },
 
         PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:',
 
@@ -144,14 +161,16 @@ define(
                                     }
                                 ],
                                 regExp: {
-                                    'Quantity': '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
-                                    'Text': '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                                    'Quantity': options.card.valueThreshold.regExpQuantity,
+                                    'Text': options.card.valueThreshold.regExpText
                                 },
                                 regExpTarget: 'thresoldValue'
                             }, {
                                 type: 'text',
                                 name: 'thresoldValue',
                                 label: locales.value,
+
+                                regExp: options.card.valueThreshold.regExpText,
                                 regExpOrigin: 'thresoldType'
                             }
                         ]
@@ -242,7 +261,7 @@ define(
                                 name: 'thresoldValue',
                                 label: locales.value,
                                 placeholder: locales.valueAttributeThreshold,
-                                regExp: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$'
+                                regExp: options.card.attributeThreshold.regExpValidator
                             }
                         ]
                     } ]
@@ -692,6 +711,7 @@ define(
     return {
         'addLocales': addLocales,
         'encode': encode,
-        'decode': decode
+        'decode': decode,
+        'options': options
     };
 } );

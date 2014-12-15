@@ -12,13 +12,12 @@ define(
             card : {
                 valueThreshold : {
                     // Example of option:
-                    //  > regExpValidator: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                    //  > regExpQuantity:  '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                    //  > regExpText:      '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 },
                 attributeThreshold : {
                     // Example of option:
                     //  > regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
-                    //  > regExpQuantity: '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
-                    //  > regExpText: '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 }
             }
         },
@@ -110,16 +109,6 @@ define(
                                         'value': 'Text'
                                     }
                                 ],
-                                // RegExp:
-                                // Two scenarios:
-                                // - Quantity
-                                // ---- Only numbers
-                                // ---- Allow: positive and negative values (+, -), decimals with dot notation
-                                //
-                                // - String
-                                // ---- Alphanumeric
-                                // ---- Allow: . (dot) - (hyphen) _ (underscore)
-                                // ---- Not allow: __ (two underscores consecutively)
                                 regExp: {
                                     'Quantity': options.card.valueThreshold.regExpQuantity,
                                     'Text': options.card.valueThreshold.regExpText
@@ -130,11 +119,7 @@ define(
                                 name: 'thresoldValue',
                                 label: locales.value,
 
-                                // RegExp:
-                                // - Alphanumeric
-                                // - Allow: . (dot) - (hyphen) _ (underscore)
-                                // - Not allow: __ (two underscores consecutively)
-                                regExp: options.card.valueThreshold.regExpValidator,
+                                regExp: options.card.valueThreshold.regExpText,
                                 regExpOrigin: 'thresoldType'
                             }
                         ]
@@ -203,10 +188,6 @@ define(
                                 name: 'thresoldValue',
                                 label: locales.value,
                                 placeholder: locales.valueAttributeThreshold,
-
-                                // - Must start with a letter
-                                // - Allow: . (dot) _ (underscore)
-                                // - Not allow: __ (two underscores consecutively) - (hypens)
                                 regExp: options.card.attributeThreshold.regExpValidator
                             }
                         ]

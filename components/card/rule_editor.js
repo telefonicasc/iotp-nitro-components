@@ -554,8 +554,8 @@ define(
                         }
                     }
                 }, this));
-                cardsData = _setScopeInSensorCards(cardsData);
-                cardsData.sort(_orderCards);
+                //cardsData = _setScopeInSensorCards(cardsData);
+                //cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
                 //data.name = "";
@@ -697,15 +697,15 @@ define(
             return {phenomenons: phenomenons};
         }
 
-        function _orderCards(a, b){
+        /*function _orderCards(a, b){
             var out = 0;
             if(b.type === 'TimeCard'){
                 out = b.configData.timeType === 'timeInterval'?1:-1;
             }
             return out;
         }
-
-        function _setScopeInSensorCards(cards){
+        */
+        /*function _setScopeInSensorCards(cards){
             var hasTimeInterval = false;
             for(var i =cards.length; i--;){
                 if( cards[i].timeData && cards[i].configData.timeType === 'timeInterval' ){
@@ -721,6 +721,7 @@ define(
 
             return cards;
         }
+        */
         function _setScope(card, scope){
             if( $.isArray(card.conditionList) ){
                 $.each(card.conditionList, function(i, condition){

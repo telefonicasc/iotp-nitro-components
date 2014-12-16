@@ -50,6 +50,19 @@
       .thresold-attribs {
         margin-top: 10px;
 
+        &:before, &:after {
+          color: #cccccc;
+          content: open-quote;
+          font-size: 120px;
+          position: absolute;
+        }
+
+        &:after {
+          bottom: -50px;
+          content: close-quote;
+          right: 0;
+        }
+
         span {
           display: block;
           font-size: 21px;
@@ -82,6 +95,36 @@
       color: rgb(128, 128, 128);
       text-align: center;
       font-weight: normal;
+    }
+  }
+
+  &.preview {
+    .front {
+      .body {
+        .thresold-attribs {
+          &:before, &:after {
+              color: rgb(124, 145, 158);
+              bottom: auto;
+              font-family: Times, 'Times New Roman', Georgia, serif;
+              opacity: 0.5;
+              font-size: 50px;
+              font-weight: bold;
+              position: absolute;
+              right: auto;
+              margin-top: 35px;
+          }
+
+          &:before {
+              content:open-quote;
+              margin-left: 40px;
+          }
+
+          &:after {
+              content:close-quote;
+              margin-left: 76px;
+          }
+        }
+      }
     }
   }
 

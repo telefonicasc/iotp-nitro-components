@@ -2,11 +2,12 @@ define(
     [],
     function () {
 
-    var locales = {
-        },
+    var locales = {},
+
         /**
          * RuleEditor atributes configuration
-         * @type {Object}
+         *
+         * @type    object
          */
         options = {
             card : {
@@ -35,7 +36,34 @@ define(
             'SEND_SMS': 'SendSMS'
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Add Locales
+         * Mixes locales from other repositories
+         *
+         * @param   object  newLocales  A JSON object that holds translated strings
+         * @return  object              A JSON that holds all translated strings
+         */
+        addLocales = function ( newLocales ) {
+            $.extend( locales, newLocales );
+        },
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Encode Sensor
+         * Condition cards description and initialized
+         *
+         * @type    object
+         */
         encodeSensor = {
+            /**
+             * Not Updated Card
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             notUpdated: function ( card ) {
                 var property = card.conditionList && card.conditionList[ 0 ],
                     sensor = card.sensorData || false,
@@ -109,6 +137,12 @@ define(
                 return card;
             },
 
+            /**
+             * Value Threshold
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             valueThreshold: function ( card ) {
                 var property = card.conditionList && card.conditionList[ 0 ],
                     sensor = card.sensorData || false,
@@ -195,6 +229,12 @@ define(
                 return card;
             },
 
+            /**
+             * Attribute Threshold
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             attributeThreshold: function ( card ) {
                 var property = ( card.conditionList && card.conditionList[ 0 ] ) ? card.conditionList[ 0 ] : false,
                     sensor = card.sensorData || false
@@ -278,6 +318,12 @@ define(
                 return card;
             },
 
+            /**
+             * CEP Rule
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             ceprule: function ( card ) {
                 card.front = {
                     items: [ {
@@ -294,6 +340,12 @@ define(
                 return card;
             },
 
+            /**
+             * RegExp (Alias ID)
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             regexp: function ( card ) {
                 card.header = locales.regexpTitle;
                 card.front = {
@@ -322,6 +374,12 @@ define(
                 return card;
             },
 
+            /**
+             * Type
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             type: function ( card ) {
                 card.header = locales.type;
                 card.front = {
@@ -355,7 +413,21 @@ define(
             }
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Encode Time
+         * Time based condition cards description and initialized
+         *
+         * @type    object
+         */
         encodeTime = {
+            /**
+             * Time Elapsed
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             timeElapsed: function ( card ) {
                 card.header = locales.elapsed;
                 card.cssClass = 'm2m-card-time m2m-card-elapsed';
@@ -385,7 +457,21 @@ define(
             }
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Encode Action
+         * Action cards description and initialized
+         *
+         * @type    object
+         */
         encodeAction = {
+            /**
+             * Send Email Action
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             SendEmailAction: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
                 card.header = locales.sendEmailHeader;
@@ -399,6 +485,12 @@ define(
                 return card;
             },
 
+            /**
+             * Send SMS Action
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             SendSmsMibAction: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
                 card.header = locales.sendSMSHeader;
@@ -412,6 +504,12 @@ define(
                 return card;
             },
 
+            /**
+             * Update Attribute
+             *
+             * @param   object  card    The defaults card attributes
+             * @return  object          The card composed
+             */
             updateAttribute: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
                 card.header = locales.updateAttribute;
@@ -446,6 +544,14 @@ define(
             }
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Sensor
+         * Mapped of data after any kind of condition card modification
+         *
+         * @type    object
+         */
         decodeSensor = {
             notUpdated: function ( cardConfig, cardData ) {
                 var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
@@ -550,6 +656,14 @@ define(
             },
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Action
+         * Mapped of data after any kind of action card modification
+         *
+         * @type    object
+         */
         decodeAction = {
             SendEmailAction: function ( cardConfig, cardData ) {
                 cardConfig.actionData.userParams = cardData.userParams;
@@ -569,25 +683,17 @@ define(
                 cardConfig.actionData.type = 'updateAttribute';
 
                 return cardConfig;
-            },
-
-            PropertyAction: function ( cardConfig, cardData ) {
-                var up = [];
-                $.each( cardData, function ( k, v ) {
-                    if ( v && k === 'name' ) {
-                        v = '${device.asset.UserProps.' + v + '}';
-                    }
-                    up.push( {
-                        name    : 'property.' + k,
-                        value   : v
-                    } );
-                } );
-                cardConfig.actionData.userParams = up;
-
-                return cardConfig;
             }
         },
 
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Time
+         * Mapped of data after any kind of time based card modification
+         *
+         * @type    object
+         */
         decodeTime = {
             timeElapsed: function ( cardConfig, cardData ) {
                 cardConfig.timeData.interval = cardData;
@@ -597,6 +703,8 @@ define(
                 return cardConfig;
             }
         },
+
+        // --------------------------------------------------------------------
 
         encode = function ( card ) {
             var adapterMethodName = _getMethodNameForParse( card ),
@@ -646,15 +754,18 @@ define(
             return cardConfig;
         },
 
-        addLocales = function ( newLocales ) {
-            $.extend( locales, newLocales );
-        },
+        // --------------------------------------------------------------------
 
+        /**
+         * Get Method name for parse
+         * Gets a card config data and finds the appropriate method to parse
+         * its data.
+         *
+         * @param  object   cardConfig  The card configuration
+         * @return string               The name of the method for parse data
+         */
         _getMethodNameForParse = function ( cardConfig ) {
             var sensorData      = cardConfig.sensorData,
-                patt            = /^\$/g,
-                conditionList   = cardConfig.conditionList || [ { parameterValue : '' } ],
-                parameterValue  = conditionList[0].parameterValue,
                 sensorCardType  = cardConfig.sensorCardType,
                 name,
                 phenomenon;
@@ -708,6 +819,7 @@ define(
             return name;
         };
 
+    // Returning public methods
     return {
         'addLocales': addLocales,
         'encode': encode,

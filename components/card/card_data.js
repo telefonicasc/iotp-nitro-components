@@ -480,7 +480,7 @@ define(
                     to: locales.to
                 };
                 card.component = component.SEND_EMAIL;
-                card.tokens = [ '${type} ${id}' ];
+                card.tokens = [ 'type', 'id' ];
 
                 return card;
             },
@@ -499,7 +499,7 @@ define(
                     to: locales.to
                 };
                 card.component = component.SEND_SMS;
-                card.tokens = [ '${type} ${id}' ];
+                card.tokens = [ 'type', 'id' ];
 
                 return card;
             },

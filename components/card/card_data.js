@@ -480,7 +480,7 @@ define(
                     to: locales.to
                 };
                 card.component = component.SEND_EMAIL;
-                card.tokens = [ 'device_latitude', 'device_longitude', 'measure.value', 'device.asset.name' ];
+                card.tokens = [ 'type', 'id' ];
 
                 return card;
             },
@@ -499,7 +499,7 @@ define(
                     to: locales.to
                 };
                 card.component = component.SEND_SMS;
-                card.tokens = [ 'device_latitude', 'device_longitude', 'measure.value', 'device.asset.name' ];
+                card.tokens = [ 'type', 'id' ];
 
                 return card;
             },

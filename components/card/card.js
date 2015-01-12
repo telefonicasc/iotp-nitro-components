@@ -53,7 +53,7 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
-                    CardData.addLocales(this.attr.locales.CardData);
+                    CardData.addLocales( resamplingLocales() );
                     $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 
@@ -184,6 +184,27 @@ define(
             function _isSensorCard(instance){
                 return instance.attr.actionCard !== true &&
                     instance.attr.timeCard !== true;
+            }
+
+            /**
+             * Resampling Locales
+             * Gets the main i18n and extract translations for rules.
+             *
+             * @return  obj         The rules translations
+             */
+            function resamplingLocales () {
+                var dataObj = Kermit.i18n.strings,
+                    result = {},
+                    obj, key;
+
+                for( obj in dataObj ) {
+                    if ( ! obj.indexOf( 'Rules.' ) ) {
+                        key = obj.substr( 6, obj.length );
+                        result[ key ] = dataObj[ obj ];
+                    }
+                }
+
+                return result;
             }
         }
     }

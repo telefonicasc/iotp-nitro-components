@@ -511,6 +511,7 @@ define(
              * @return  object          The card composed
              */
             updateAttribute: function ( card ) {
+                var userParams = card.userParams || {};
                 card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
                 card.header = locales.updateAttribute;
                 card.actionCard = true;
@@ -518,8 +519,8 @@ define(
                     items: [ {
                         component: 'CardFrontText',
                         tpl: '<dl class="properties">' +
-                                '<dt>{{thresoldName}}</dt>' +
-                                '<dd>{{thresoldValue}}</dd>' +
+                                '<dt>{{value.name}}</dt>' +
+                                '<dd>{{value.value}}</dd>' +
                             '</dl>'
                     } ]
                 };
@@ -538,6 +539,10 @@ define(
                             }
                         ]
                     } ]
+                };
+                card.value = {
+                    name: (userParams.name || '' ) ,
+                    value: (userParams.value || '' )
                 };
 
                 return card;

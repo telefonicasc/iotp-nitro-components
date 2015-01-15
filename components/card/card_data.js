@@ -636,19 +636,10 @@ define(
             },
 
             regexp: function ( cardConfig, cardData ) {
-                var key = '^' + cardData + '.*',
-                condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
 
-                cardConfig.sensorData = {
-                    parameterValue: key
-                };
-
-                if ( condition ) {
-                    condition.userProp = key;
-                }
-
+                cardConfig.sensorData = {};
                 cardConfig.conditionList = condition;
-
                 return cardConfig;
             },
 

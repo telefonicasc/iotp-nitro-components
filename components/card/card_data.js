@@ -474,7 +474,7 @@ define(
              */
             SendEmailAction: function ( card ) {
                 card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
-                card.header = locales.sendEmail;
+                card.header = locales.sendEmailHeader;
                 card.locales = {
                     subject: locales.subject,
                     to: locales.to

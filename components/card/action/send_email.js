@@ -133,6 +133,7 @@ define(
 
             this.$back.find( '.email-subject-label' ).html( this.attr.locales.subject );
             this.$back.find( '.email-address-label' ).html( this.attr.locales.to );
+            this.$back.find( '.email-from-label' ).html( this.attr.locales.from );
 
             var userParamsObject = this._userParamsObject = _userParamsToObject( this.attr.actionData.userParams );
 
@@ -164,6 +165,8 @@ define(
 
             $( '.email-subject-label', this.$node ).html( this.attr.locales.subject );
             $( '.email-address-label', this.$node ).html( this.attr.locales.to );
+            $( '.email-from-label', this.$node ).html( this.attr.locales.from );
+
 
             var node = this.$node,
                 insertInMessage = true;

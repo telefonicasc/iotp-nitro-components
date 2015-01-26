@@ -477,7 +477,8 @@ define(
                 card.header = locales.sendEmailHeader;
                 card.locales = {
                     subject: locales.subject,
-                    to: locales.to
+                    to: locales.to,
+                    from: locales.from
                 };
                 card.component = component.SEND_EMAIL;
                 card.tokens = [ 'type', 'id' ];

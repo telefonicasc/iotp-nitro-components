@@ -122,7 +122,7 @@ module.exports = function(grunt) {
       	},
         files: {
           'reports/complexity': ['components/**/*.js']
-        },
+        }
       }
     }
   });

@@ -48,20 +48,20 @@ define(
 
         this.$node.on('click', $.proxy(function(e) {
           if (e.target === this.node) {
-              this.trigger('expand');
+              this.trigger(this.expanded ? 'collapse' : 'expand');
           }
         }, this));
 
-        this.appContent.on('click', $.proxy(function() {
-          this.trigger('collapse');
-        }, this));
-
         this.on('expand', function(e, options) {
-          var w = this.appContent.width();
-          this.appContent.css('width', w);
-          this.appContent.animate({
-            left: this.attr.expandedWidth
-          }, this.attr.expandDuration);
+          this.appContent.css('width', 'auto');
+          this.appContent.animate({ left: this.attr.expandedWidth },
+            this.attr.expandDuration,
+            function(){
+              if (!container.collapsed) {
+                container.trigger('toggle', true);
+              }
+              container.collapsed = true;
+            });
           this.expanded = true;
         });
 
@@ -71,8 +71,11 @@ define(
             function(){
               container.trigger('collapsed');
               container.css('width', 'auto');
+              if (container.collapsed) {
+                container.trigger('toggle', false);
+              }
+              container.collapsed = false;
             });
-
           this.expanded = false;
         });
 

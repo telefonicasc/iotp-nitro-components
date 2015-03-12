@@ -652,7 +652,7 @@ select {
 .card .front,
 .card .back {
   width: 160px;
-  height: 195px;
+  height: 210px;
   behavior: url("style/css3pie/PIE.htc");
   -webkit-box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
@@ -683,6 +683,29 @@ select {
   right: 0px;
   bottom: 0px;
 }
+.card .front .body .thresold-attribs {
+  margin-top: 10px;
+}
+.card .front .body .thresold-attribs:before,
+.card .front .body .thresold-attribs:after {
+  color: #cccccc;
+  content: open-quote;
+  font-size: 120px;
+  position: absolute;
+}
+.card .front .body .thresold-attribs:after {
+  bottom: -50px;
+  content: close-quote;
+  right: 0;
+}
+.card .front .body .thresold-attribs span {
+  display: block;
+  font-size: 21px;
+  line-height: 34px;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+}
 .card .back .card-header-label {
   font-size: 12px;
   color: #b3b8be;
@@ -702,6 +725,26 @@ select {
   text-align: center;
   font-weight: normal;
 }
+.card.preview .front .body .thresold-attribs:before,
+.card.preview .front .body .thresold-attribs:after {
+  color: #7c919e;
+  bottom: auto;
+  font-family: Times, 'Times New Roman', Georgia, serif;
+  opacity: 0.5;
+  font-size: 50px;
+  font-weight: bold;
+  position: absolute;
+  right: auto;
+  margin-top: 35px;
+}
+.card.preview .front .body .thresold-attribs:before {
+  content: open-quote;
+  margin-left: 40px;
+}
+.card.preview .front .body .thresold-attribs:after {
+  content: close-quote;
+  margin-left: 76px;
+}
 .card textarea {
   -webkit-appearance: none;
   appearance: none;
@@ -712,9 +755,10 @@ select {
 .card.flip .front,
 .card.flip .back {
   width: 200px;
-  height: 244px;
+  height: 263px;
 }
 .card.preview {
+  cursor: move;
   -webkit-transform: scale(0.5);
   -moz-transform: scale(0.5);
   -o-transform: scale(0.5);
@@ -729,7 +773,7 @@ select {
 .m2m-card-action.flip .front,
 .m2m-card-action.flip .back {
   width: 218px;
-  height: 168px;
+  height: 201px;
 }
 .m2m-card-action .front,
 .m2m-card-action .back {
@@ -850,6 +894,9 @@ select {
 .m2m-card-action dl.properties dt {
   color: #fff;
 }
+.m2m-card-action dl.properties dd {
+  color: #3D454A;
+}
 .m2m-card-condition .front {
   background-color: white;
 }
@@ -894,7 +941,7 @@ select {
   background-color: white;
   position: absolute;
   bottom: 4px;
-  top: 100px;
+  top: 65px;
   left: 4px;
   right: 4px;
 }
@@ -913,7 +960,7 @@ select {
 }
 .card.m2m-card-send-email .back {
   width: 487px;
-  height: 508px;
+  height: 508px !important;
   margin-top: -143px;
   margin-left: -180px;
 }
@@ -956,7 +1003,7 @@ select {
   border: 0;
   background: transparent;
   border-bottom: 1px dotted #C1BCA4;
-  width: 472px;
+  width: 470px;
   margin-top: 5px;
 }
 .card.m2m-card-send-email .back .card-header .email-subject {
@@ -971,7 +1018,7 @@ select {
   background: #fff;
 }
 .card.m2m-card-send-email .back .card-body textarea {
-  width: 472px;
+  width: 470px;
   height: 221px;
   color: #4C4C4C;
   border: 0;
@@ -982,7 +1029,6 @@ select {
   cursor: pointer;
   margin: 12px 6px 0px 12px;
   min-width: 125px;
-  height: 18px;
   padding: 8px;
   color: #788D9A;
   display: inline-block;
@@ -1095,7 +1141,7 @@ select {
   float: left;
   margin: 10px;
   width: 80px;
-  height: 97.5px;
+  height: 105px;
 }
 .card-toolbox .card .m2m-card-action {
   width: 87px;
@@ -1313,11 +1359,11 @@ select {
 }
 .node-container .card {
   margin-left: -80px;
-  margin-top: -98px;
+  margin-top: -105px;
 }
 .node-container .card.flip {
   margin-left: -100px;
-  margin-top: -122px;
+  margin-top: -131px;
 }
 .node-container .card.m2m-card-action {
   margin-left: -87px;
@@ -1325,7 +1371,7 @@ select {
 }
 .card.ui-draggable-dragging {
   margin-left: -80px;
-  margin-top: -98px;
+  margin-top: -105px;
   z-index: 10000;
 }
 .card.ui-draggable-dragging.m2m-card-action {
@@ -1341,7 +1387,7 @@ select {
 }
 .m2m-card-delimiter {
   position: absolute;
-  margin-top: 85px;
+  margin-top: 115px;
   z-index: 950;
 }
 li.delimiter-value {
@@ -1557,8 +1603,15 @@ li.delimiter-value {
   margin-left: -5px;
 }
 .back select {
-  width: 90%;
-  margin-left: 5%;
+  border: 1px solid #bcc0c1;
+  border-radius: 4px;
+  padding: 4px;
+  width: 80%;
+}
+.back select.text_combo {
+  margin-left: -5px;
+  margin-top: 15px;
+  width: 100%;
 }
 .back .m2m-action-alarm {
   margin: 50px;
@@ -1717,7 +1770,7 @@ li.delimiter-value {
   border: 0;
   background: transparent;
   border-bottom: 1px dotted #C1BCA4;
-  width: 472px;
+  width: 470px;
   margin-top: 5px;
 }
 .card.m2m-card-send-sms .back .card-header .email-address {
@@ -1729,7 +1782,7 @@ li.delimiter-value {
   background: #fff;
 }
 .card.m2m-card-send-sms .back .card-body textarea {
-  width: 472px;
+  width: 470px;
   height: 221px;
   color: #4C4C4C;
   border: 0;
@@ -1740,7 +1793,6 @@ li.delimiter-value {
   cursor: pointer;
   margin: 12px 6px 0px 12px;
   min-width: 125px;
-  height: 18px;
   padding: 8px;
   color: #788D9A;
   display: inline-block;
@@ -1880,7 +1932,9 @@ li.delimiter-value {
   background: -ms-linear-gradient(bottom, #cccccc, #eeeeee);
   background: -moz-linear-gradient(center bottom, #cccccc 0%, #eeeeee 100%);
   background: -o-linear-gradient(#eeeeee, #cccccc);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#cccccc', GradientType=0);
+  -pie-background: linear-gradient(#eeeeee, #cccccc);
+  /*ie 6-9 via PIE*/
+
   border: 1px solid #cccccc;
   border-bottom: 1px solid #bbb;
   behavior: url("style/css3pie/PIE.htc");
@@ -1912,7 +1966,10 @@ li.delimiter-value {
   background: -ms-linear-gradient(bottom, #bbbbbb, #dddddd);
   background: -moz-linear-gradient(center bottom, #bbbbbb 0%, #dddddd 100%);
   background: -o-linear-gradient(#dddddd, #bbbbbb);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#bbbbbb', GradientType=0);
+  -pie-background: linear-gradient(#dddddd, #bbbbbb);
+  /*ie 6-9 via PIE*/
+
+  behavior: url("style/css3pie/PIE.htc");
   border: 1px solid #bbbbbb;
   border-bottom: 1px solid #999;
   cursor: pointer;
@@ -1931,7 +1988,10 @@ li.delimiter-value {
   background: -ms-linear-gradient(bottom, #08415f, #2481ad);
   background: -moz-linear-gradient(center bottom, #08415f 0%, #2481ad 100%);
   background: -o-linear-gradient(#2481ad, #08415f);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2481ad', endColorstr='#08415f', GradientType=0);
+  -pie-background: linear-gradient(#2481ad, #08415f);
+  /*ie 6-9 via PIE*/
+
+  behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.accept {
   background: #2481ad;
@@ -1939,7 +1999,34 @@ li.delimiter-value {
   background: -ms-linear-gradient(bottom, #2481ad, #08415f);
   background: -moz-linear-gradient(center bottom, #2481ad 0%, #08415f 100%);
   background: -o-linear-gradient(#08415f, #2481ad);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#08415f', endColorstr='#2481ad', GradientType=0);
+  -pie-background: linear-gradient(#08415f, #2481ad);
+  /*ie 6-9 via PIE*/
+
+  behavior: url("style/css3pie/PIE.htc");
+}
+.m2m-btn.cancel {
+  color: #ffffff;
+  border-color: #ae1210;
+  background: #ae1210;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #972b2a), color-stop(1, #ed3f17));
+  background: -ms-linear-gradient(bottom, #972b2a, #ed3f17);
+  background: -moz-linear-gradient(center bottom, #972b2a 0%, #ed3f17 100%);
+  background: -o-linear-gradient(#ed3f17, #972b2a);
+  -pie-background: linear-gradient(#ed3f17, #972b2a);
+  /*ie 6-9 via PIE*/
+
+  behavior: url("style/css3pie/PIE.htc");
+}
+.m2m-btn:hover.cancel {
+  background: #ed3f17;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #ed3f17), color-stop(1, #972b2a));
+  background: -ms-linear-gradient(bottom, #ed3f17, #972b2a);
+  background: -moz-linear-gradient(center bottom, #ed3f17 0%, #972b2a 100%);
+  background: -o-linear-gradient(#972b2a, #ed3f17);
+  -pie-background: linear-gradient(#972b2a, #ed3f17);
+  /*ie 6-9 via PIE*/
+
+  behavior: url("style/css3pie/PIE.htc");
 }
 .application-menu {
   background-color: #2C3337;

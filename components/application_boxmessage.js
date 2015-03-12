@@ -32,7 +32,13 @@ define(
         };
 
         var BoxMessage = {
+            okHandler: null,
+            cancelHandler: null,
             close: function() {
+                btnOk.off('click', BoxMessage.okHandler);
+                btnCancel.off('click', BoxMessage.cancelHandler);
+                BoxMessage.okHandler = null;
+                BoxMessage.cancelHandler = null;
                 el.box.removeAttr('data-m2mid');
                 el.box.hide();
                 el.bg.hide();
@@ -46,8 +52,16 @@ define(
                     btnCancel.text(option.buttonTextCancel || option.button.cancel.label);
                     el.btnsdiv.show();
                     el.btndiv.hide();
-                    btnOk.one('click', option.okCallback || option.button.accept.callback);
-                    btnCancel.one('click', option.button.close.callback);
+                    BoxMessage.okHandler = option.okCallback || option.button.accept.callback;
+                    btnOk.one('click', BoxMessage.okHandler);
+                    BoxMessage.cancelHandler = option.button.close.callback;
+                    btnCancel.one('click', BoxMessage.cancelHandler);
+                    if (option.button.accept.cls) {
+                        btnOk.addClass(option.button.accept.cls);
+                    }
+                    if (option.button.close.cls) {
+                        btnCancel.addClass(option.button.close.cls);
+                    }
                     focusEl = btnOk;
                 } else {
                     btnClose.one('click', option.button.close.callback);

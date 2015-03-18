@@ -35,8 +35,12 @@ define(
             okHandler: null,
             cancelHandler: null,
             close: function() {
-                btnOk.off('click', BoxMessage.okHandler);
-                btnCancel.off('click', BoxMessage.cancelHandler);
+                if (BoxMessage.okHandler) {
+                    btnOk.off('click', BoxMessage.okHandler);
+                }
+                if (BoxMessage.cancelHandler) {
+                    btnCancel.off('click', BoxMessage.cancelHandler);
+                }
                 BoxMessage.okHandler = null;
                 BoxMessage.cancelHandler = null;
                 el.box.removeAttr('data-m2mid');

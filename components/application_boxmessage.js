@@ -41,8 +41,12 @@ define(
                 if (BoxMessage.cancelHandler) {
                     btnCancel.off('click', BoxMessage.cancelHandler);
                 }
+                if (BoxMessage.boxCls) {
+                    el.box.removeClass(BoxMessage.boxCls);
+                }
                 BoxMessage.okHandler = null;
                 BoxMessage.cancelHandler = null;
+                BoxMessage.boxCls = null;
                 el.box.removeAttr('data-m2mid');
                 el.box.hide();
                 el.bg.hide();
@@ -73,6 +77,11 @@ define(
                     el.btnsdiv.hide();
                     el.btndiv.show();
                     focusEl = btnClose;
+                }
+
+                if (option.cls) {
+                    BoxMessage.boxCls = option.cls;
+                    el.box.addClass(option.cls);
                 }
 
                 if (option.title) {

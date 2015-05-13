@@ -128,6 +128,7 @@ define(
                 this.on( 'removeGraphNode', function ( e, o ) {
                     var node = o.node;
                     node.remove();
+                    this.trigger('nodeRemoved', { node: node });
                 } );
 
                 this.on( 'saveConnections', function () {

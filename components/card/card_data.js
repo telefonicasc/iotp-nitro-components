@@ -448,7 +448,8 @@ define(
                 };
 
                 if ( card.timeData && card.timeData.interval ) {
-                    card.value = card.timeData.interval;
+                    // card.timeData.interval is in milliseconds, need do change to sec.
+                    card.value = +card.timeData.interval / 1000;
                 }
                 card.defaultValue = '1';
                 card.timeCard = true;
@@ -693,7 +694,8 @@ define(
          */
         decodeTime = {
             timeElapsed: function ( cardConfig, cardData ) {
-                cardConfig.timeData.interval = cardData;
+                // card.timeData.interval is in milliseconds, need do change to sec.
+                cardConfig.timeData.interval = +cardData * 1000;
                 cardConfig.timeData.context = 'ASSET';
                 cardConfig.timeData.repeat = '0';
 

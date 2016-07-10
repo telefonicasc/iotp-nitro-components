@@ -1,6 +1,6 @@
 {
   "name": "m2m-nitro-components",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "description": "Visual components for the nitro framework",
   "main": "index.js",
   "directories": {

@@ -131,7 +131,7 @@ define(
 
                         // If model is a JSON path string
                         } else if (model.indexOf('$') === 0) {
-                            value = jsonPath(value, model);
+                            value = jsonPath.query(value, model);
 
                         // If model is just a string take the property of the
                         // object with that name

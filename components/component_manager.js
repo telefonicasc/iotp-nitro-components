@@ -57,16 +57,16 @@ each | _function(name, component)_ | undefined | Iterator for all components
 */
 define(
     [
-        'libs/flight/lib/component'
+        'node_modules/flightjs/build/flight'
     ],
-    function(defineComponent) {
+    function(flight) {
 
         var components = {};
 
         function createComponent(name, mixins) {
             var component = {
                     mixins: mixins,
-                    flightComponent: defineComponent.apply(this, mixins)
+                    flightComponent: flight.component.apply(this, mixins)
                 };
 
             component.flightComponent.componentName = name;

@@ -86,7 +86,7 @@ will be Pepe, and will change the html to:
 */
 define(
     [
-        'libs/jsonpath'
+        'node_modules/jsonpath/jsonpath'
     ],
 
     function(jsonPath) {

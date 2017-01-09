@@ -72,7 +72,7 @@ $('#blabla').trigger('valueChange', {
 define(
   [
     'components/component_manager',
-    'libs/hogan/hogan'
+    'node_modules/hogan.js/dist/hogan-3.0.2'
   ],
 
   function(ComponentManager) {

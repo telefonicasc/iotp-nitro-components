@@ -3,7 +3,7 @@ define(
         'components/component_manager',
         'components/draggable',
         'components/mixin/template',
-        'libs/raphael/raphael'
+        'node_modules/raphael/raphael'
     ],
 
     function ( ComponentManager, Draggable, Template ) {

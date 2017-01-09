@@ -52,7 +52,7 @@ define(
         'components/mixin/data_binding',
         'components/tooltip',
         'components/dashboard/map_marker_group_tooltip',
-        'libs/leaflet.markercluster-src',
+        'node_modules/leaflet.markercluster/dist/leaflet.markercluster',
         'libs/leaflet.offscreen-src'
     ],
 

@@ -17,13 +17,13 @@ module.exports = function(grunt) {
             options: {
                 baseUrl: baseUrl,
                 out: out || 'nitro_components.js',
-                include: ['libs/almond'].concat(components),
+                include: ['node_modules/almond/almond'].concat(components),
                 insertRequire: components,
                 wrap: true
             }
         };
         var lessPath = baseUrl + 'style/less/nitro-components.less';
-        var cssPath = 'style/css/nitro-components.css';
+        var cssPath = build.outCss || 'style/css/nitro-components.css';
         var lesscfg = {
             files: {
                 'style/css/nitro-components.css': lessPath

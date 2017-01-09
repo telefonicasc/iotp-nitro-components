@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         var build = grunt.config('nitroComponents.' + this.target);
         var components = build.components;
         var optimize = build.optimize;
-        var baseUrl = build.path || './node_modules/iotp-nitro-components/';
+        var baseUrl = build.path || './node_modules/nitro-components/';
         var out = build.out;
         var requireCfg = {
             options: {

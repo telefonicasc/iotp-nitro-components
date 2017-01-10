@@ -5,11 +5,11 @@ Convert node in draggable item. Use `jQueryUI.Draggable()`
 */
 define(
   [
-        'node_modules/jquery-ui/core',
-        'node_modules/jquery-ui/widget',
-        'node_modules/jquery-ui/mouse',
-        'node_modules/jquery-ui/draggable',
-        'node_modules/jquery-ui/droppable'
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.core',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.widget',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.mouse',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.draggable',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.droppable'
   ],
   function() {
 

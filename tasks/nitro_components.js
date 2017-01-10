@@ -25,10 +25,9 @@ module.exports = function(grunt) {
         var lessPath = baseUrl + 'style/less/nitro-components.less';
         var cssPath = build.outCss || 'style/css/nitro-components.css';
         var lesscfg = {
-            files: {
-                'style/css/nitro-components.css': lessPath
-            }
-        };
+                files: {}
+            };
+        lesscfg.files[cssPath] = lessPath;
         var banner = '/*! ********************************************** \r\n ' +
             '<%= nitroComponentsPackage.name %> - v<%= nitroComponentsPackage.version %> - ' +
             'build: <%= grunt.template.today("yyyy/mm/dd h:MM:ss TT")  %> \r\n' +

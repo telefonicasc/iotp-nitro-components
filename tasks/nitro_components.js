@@ -7,6 +7,7 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-contrib-less');
         grunt.loadNpmTasks('grunt-contrib-concat');
         grunt.loadNpmTasks('grunt-contrib-requirejs');
+        grunt.loadNpmTasks('grunt-contrib-copy');
 
         var build = grunt.config('nitroComponents.' + this.target);
         var components = build.components;
@@ -24,6 +25,12 @@ module.exports = function(grunt) {
         };
         var lessPath = baseUrl + 'style/less/nitro-components.less';
         var cssPath = build.outCss || 'style/css/nitro-components.css';
+        var imagesPath = baseUrl + 'style/img';
+        var outImagesPath = build.outImages || 'style/img/';
+        //external deps css files
+        var libCssFiles = [
+            baseUrl + 'node_modules/leaflet/dist/leaflet.css'
+        ];
         var lesscfg = {
             files: {}
         };
@@ -45,11 +52,18 @@ module.exports = function(grunt) {
                 stripBanners: true,
                 banner: banner
             },
-            src: [cssPath],
+            src: [cssPath].concat(libCssFiles),
             dest: cssPath
         };
 
         if (optimize) requireCfg.options.optimize = optimize;
+
+        var imagesConfig = {
+            expand: true,
+            cwd: imagesPath,
+            src: ['**'],
+            dest: outImagesPath
+        };
 
         //load package
         grunt.config.set('nitroComponentsPackage', grunt.file.readJSON(baseUrl + 'package.json'));
@@ -65,5 +79,9 @@ module.exports = function(grunt) {
         grunt.config.set('less.nitroComponents', lesscfg);
         grunt.task.run('less:nitroComponents');
         grunt.task.run('concat:nitroComponentsStyle');
+
+        //copy images
+        grunt.config.set('copy.nitrocomponentsImages', imagesConfig);
+        grunt.task.run('copy:nitrocomponentsImages');
     });
 };

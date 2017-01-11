@@ -30,7 +30,6 @@ __DefaultTooltipComponent__
 @name DashboardMap
 @mixins DataBinding
 
-@option {String} mapboxId '' Mapbox id for the map
 @option {Number} maxGroupRadius 20 Maximum distance to group markers
 @option {Boolean} fitBounds true fit bounds of markers when update
 @option {Boolean} fitBoundsOnce false Once fit bounds of markers when update
@@ -52,6 +51,7 @@ define(
         'components/mixin/data_binding',
         'components/tooltip',
         'components/dashboard/map_marker_group_tooltip',
+        'node_modules/leaflet/dist/leaflet',
         'node_modules/leaflet.markercluster/dist/leaflet.markercluster',
         'libs/leaflet.offscreen-src'
     ],
@@ -62,8 +62,14 @@ define(
 
             this.defaultAttrs({
 
-                /** Mapbox id for the map */
-                mapboxId: 'keithtid.map-w594ylml',
+                MAP_TILE_PROVIDER: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                MAP_TILE_PROVIDER_SUBDOMAINS: 'abcd',
+                MAP_TILE_PROVIDER_MAXZOOM: 19,
+                MAP_TILE_PROVIDER_ATTRIBUTION: '&copy; ' +
+                    '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; ' +
+                    '<a href="http://cartodb.com/attributions">CartoDB</a>',
+
+                deafultCenter: [40.416691, -3.700345], //Madrid
 
                 /** Maximum distance to group markers */
                 maxGroupRadius: 20,
@@ -203,18 +209,26 @@ define(
                     append( this.$tooltip ).
                     append( this.$groupTooltip ).
                     append( this.$groupClickTooltip );
+                this.attr.init && this.attr.init(this);
             });
 
             this.mapIsLoaded = false;
 
             // Create mapbox components and layers
             this.createMap = function() {
-                var options = {
-                        zoomControl: this.attr.zoomControl,
-                        attributionControl: false
-                    };
-                this.map = L.mapbox.map(this.$mapbox[0],
-                    this.attr.mapboxId, options);
+                this.$mapbox.css({'height': '100%'});
+                this.map = L.map(this.$mapbox[0], {
+                    center: [40.416691, -3.700345],
+                    zoom: 5,
+                    zoomControl: this.attr.zoomControl
+                });
+                L.tileLayer(this.attr.MAP_TILE_PROVIDER, {
+                    maxZoom: this.attr.MAP_TILE_PROVIDER_MAXZOOM,
+                    subdomains: this.attr.MAP_TILE_PROVIDER_SUBDOMAINS,
+                    attribution: this.attr.MAP_TILE_PROVIDER_ATTRIBUTION,
+                }).addTo(this.map);
+
+                this.attr.mapInstance = this.map;
                 this.offscreen = new L.Control.Offscreen();
                 this.map.addControl(this.offscreen);
 
@@ -263,7 +277,7 @@ define(
                 this.markersLayer.on('clustermouseover', $.proxy(function(e) {
                     if (!this.$groupClickTooltip.is(':visible')) {
                         this.showTooltip('groupTooltip', e.layer._icon,
-                                { markers: e.layer.getAllChildMarkers() });
+                            { markers: e.layer.getAllChildMarkers() });
                     }
                 }, this));
 
@@ -275,7 +289,7 @@ define(
                     if( this.$groupClickTooltip.is(':visible') ){
                         this.$groupClickTooltip.trigger('hide');
                         this.showTooltip('groupTooltip', e.layer._icon,
-                                { markers: e.layer.getAllChildMarkers() });
+                            { markers: e.layer.getAllChildMarkers() });
                     }else{
                         this.$groupTooltip.trigger('hide');
                         this.showTooltip('groupClickTooltip', e.layer._icon,
@@ -335,8 +349,8 @@ define(
                         position, icon, marker;
 
                     if (markerItem &&
-                            $.isNumeric(markerItem.latitude) &&
-                            $.isNumeric(markerItem.longitude) &&
+                        $.isNumeric(markerItem.latitude) &&
+                        $.isNumeric(markerItem.longitude) &&
                             (markerItem.latitude >= -90 && markerItem.latitude <= 90) &&
                             (markerItem.longitude >= -180 && markerItem.longitude <= 180) ) {
                         position = [markerItem.latitude, markerItem.longitude],

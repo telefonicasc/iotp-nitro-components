@@ -810,7 +810,6 @@ select {
   text-align: left;
   padding-left: 5px;
   color: white;
-  font-size: 0.9em;
   height: 39px;
   line-height: 39px;
 }
@@ -1157,7 +1156,6 @@ select {
   bottom: 47px;
   top: 41px;
   /*background-image: url("@{image-path}/ruleback.png");*/
-
   background: #48585c;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #48585c), color-stop(1, #2a3336));
   background: -ms-linear-gradient(bottom, #48585c, #2a3336);
@@ -1934,7 +1932,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#eeeeee, #cccccc);
   -pie-background: linear-gradient(#eeeeee, #cccccc);
   /*ie 6-9 via PIE*/
-
   border: 1px solid #cccccc;
   border-bottom: 1px solid #bbb;
   behavior: url("style/css3pie/PIE.htc");
@@ -1968,7 +1965,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#dddddd, #bbbbbb);
   -pie-background: linear-gradient(#dddddd, #bbbbbb);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
   border: 1px solid #bbbbbb;
   border-bottom: 1px solid #999;
@@ -1990,7 +1986,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#2481ad, #08415f);
   -pie-background: linear-gradient(#2481ad, #08415f);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.accept {
@@ -2001,7 +1996,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#08415f, #2481ad);
   -pie-background: linear-gradient(#08415f, #2481ad);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn.cancel {
@@ -2014,7 +2008,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#ed3f17, #972b2a);
   -pie-background: linear-gradient(#ed3f17, #972b2a);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.cancel {
@@ -2025,7 +2018,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#972b2a, #ed3f17);
   -pie-background: linear-gradient(#972b2a, #ed3f17);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .application-menu {
@@ -2245,25 +2237,18 @@ li.delimiter-value {
   background: #788D9A;
   background: -moz-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, right top, color-stop(0%, #faf8f5), color-stop(20%, #788d9a), color-stop(80%, #788d9a), color-stop(100%, #faf8f5));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* IE10+ */
-
   background: linear-gradient(to right, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* W3C */
-
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#faf8f5', endColorstr='#faf8f5', GradientType=1);
   /* IE6-9 */
-
 }
 .context-menu .submenu {
   background: url("../../img/nitro-components/submenu-indicator.png") no-repeat right center;
@@ -2837,10 +2822,9 @@ li.delimiter-value {
 }
 .m2m-mapviewer {
   overflow: hidden;
-  /* Zoom buttons css */
-
   /* ========================================================================== */
-
+  /* Zoom buttons css */
+  /* ========================================================================== */
 }
 .m2m-mapviewer .marker-custom {
   cursor: pointer;

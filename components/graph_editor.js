@@ -6,7 +6,7 @@ define(
         'node_modules/raphael/raphael'
     ],
 
-    function ( ComponentManager, Draggable, Template ) {
+    function ( ComponentManager, Draggable, Template, Raphael ) {
 
         return ComponentManager.create( 'graphEditor',
             Template, GraphEditor );

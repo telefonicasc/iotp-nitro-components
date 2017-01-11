@@ -271,7 +271,7 @@ define(
                 this.$graphEditor.droppable({
                     accept: '.card.preview',
                     drop: $.proxy(function(e, ui) {
-                        ui.draggable.data('draggable').cancelHelperRemoval = true;
+                        ui.draggable.data('uiDraggable').cancelHelperRemoval = true;
                         this.$graphEditor.trigger('addNode', { node: ui.helper });
                         $(window).trigger('resize');
                         this.relayoutCards();

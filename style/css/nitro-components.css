@@ -262,10 +262,10 @@ select {
   margin-top: 15px;
 }
 .overview-subpanel .icon.arrow-down {
-  background-image: url("../../img/nitro-components/arrow-down.png");
+  background-image: url("../img/arrow-down.png");
 }
 .overview-subpanel .icon.arrow-up {
-  background-image: url("../../img/nitro-components/arrow-up.png");
+  background-image: url("../img/arrow-up.png");
 }
 .overview-subpanel .overview-subpanel-body {
   width: 80%;
@@ -2041,7 +2041,7 @@ li.delimiter-value {
 .application-menu a {
   display: block;
   margin-left: 8px;
-  background-image: url("../../img/nitro-components/menu_icons.png");
+  background-image: url("../img/menu_icons.png");
   background-repeat: no-repeat;
   background-position: 0px -160px;
 }
@@ -2158,7 +2158,7 @@ li.delimiter-value {
   text-align: center;
 }
 .context-menu li.context-menu-title.back-link {
-  background: url("../../img/nitro-components/context-menu-back.png") no-repeat left center;
+  background: url("../img/context-menu-back.png") no-repeat left center;
 }
 .context-menu li.context-menu-title:hover {
   background-color: transparent;
@@ -2251,13 +2251,13 @@ li.delimiter-value {
   /* IE6-9 */
 }
 .context-menu .submenu {
-  background: url("../../img/nitro-components/submenu-indicator.png") no-repeat right center;
+  background: url("../img/submenu-indicator.png") no-repeat right center;
 }
 .context-menu .submenu:hover {
-  background: #6eb4db url("../../img/nitro-components/submenu-indicator-hover.png") no-repeat right center;
+  background: #6eb4db url("../img/submenu-indicator-hover.png") no-repeat right center;
 }
 .context-menu .submenu.selected {
-  background: #64737b url("../../img/nitro-components/submenu-indicator-hover.png") no-repeat right center;
+  background: #64737b url("../img/submenu-indicator-hover.png") no-repeat right center;
 }
 .context-menu-wrapper {
   overflow: hidden;
@@ -2296,10 +2296,10 @@ li.delimiter-value {
   height: 15px;
   margin: 6px 0px 0px 6px;
   cursor: pointer;
-  background-image: url("../../img/nitro-components/context-menu-indicator.png");
+  background-image: url("../img/context-menu-indicator.png");
 }
 .context-menu-indicator:hover {
-  background-image: url("../../img/nitro-components/context-menu-indicator-hover.png");
+  background-image: url("../img/context-menu-indicator-hover.png");
 }
 .border-panel {
   bottom: 0px;
@@ -3013,49 +3013,49 @@ li.delimiter-value {
 .leaflet-container .offscreen-indicator.offscreen-nw {
   top: 37px;
   left: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/NW.png');
+  background-image: url('../img/mapViewer/NW.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-n {
   top: 8px;
   left: 50%;
   margin-left: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/N.png');
+  background-image: url('../img/mapViewer/N.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-ne {
   top: 37px;
   right: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/NE.png');
+  background-image: url('../img/mapViewer/NE.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-e {
   top: 50%;
   right: 8px;
   margin-top: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/E.png');
+  background-image: url('../img/mapViewer/E.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-se {
   bottom: 25px;
   right: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/SE.png');
+  background-image: url('../img/mapViewer/SE.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-s {
   bottom: 0px;
   left: 50%;
   margin-left: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/S.png');
+  background-image: url('../img/mapViewer/S.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-sw {
   bottom: 25px;
   left: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/SW.png');
+  background-image: url('../img/mapViewer/SW.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-w {
   left: 8px;
   top: 50%;
   margin-top: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/W.png');
+  background-image: url('../img/mapViewer/W.png');
 }
 .m2m-dashboardmap .marker {
-  background-image: url('../../img/nitro-components/markers/blue-marker.png');
+  background-image: url('../img/markers/blue-marker.png');
   width: 29px;
   height: 39px;
   margin-left: -15px;
@@ -3067,10 +3067,10 @@ li.delimiter-value {
   transition: transform 0.2s ease-out, opacity 0.2s ease-in;
 }
 .m2m-dashboardmap .marker.red {
-  background-image: url('../../img/nitro-components/markers/red-marker.png');
+  background-image: url('../img/markers/red-marker.png');
 }
 .m2m-dashboardmap .marker.group {
-  background-image: url('../../img/nitro-components/markers/blue-marker-group.png');
+  background-image: url('../img/markers/blue-marker-group.png');
   color: white;
   text-align: center;
   height: 35px;
@@ -3079,26 +3079,26 @@ li.delimiter-value {
   font-size: 11px;
 }
 .m2m-dashboardmap .marker.red.group {
-  background-image: url('../../img/nitro-components/markers/red-marker-group.png');
+  background-image: url('../img/markers/red-marker-group.png');
 }
 .m2m-dashboardmap .marker.grey.group {
-  background-image: url('../../img/nitro-components/markers/grey-marker-group.png');
+  background-image: url('../img/markers/grey-marker-group.png');
 }
 .m2m-dashboardmap .marker.selected {
-  background-image: url('../../img/nitro-components/markers/blue-marker-selected.png');
+  background-image: url('../img/markers/blue-marker-selected.png');
   margin-left: -22px;
   margin-top: -32px;
   width: 43px;
   height: 43px;
 }
 .m2m-dashboardmap .marker.red.selected {
-  background-image: url('../../img/nitro-components/markers/red-marker-selected.png');
+  background-image: url('../img/markers/red-marker-selected.png');
 }
 .m2m-dashboardmap .marker.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker.png');
+  background-image: url('../img/markers/grey-marker.png');
 }
 .m2m-dashboardmap .marker.grey.selected {
-  background-image: url('../../img/nitro-components/markers/grey-marker-selected.png');
+  background-image: url('../img/markers/grey-marker-selected.png');
 }
 .m2m-dashboardmap .tooltip {
   width: auto;
@@ -3113,7 +3113,7 @@ li.delimiter-value {
   padding: 8px 8px 0 8px;
   margin-top: 15px;
   margin-left: -62px;
-  z-index: 9999;
+  z-index: 10001000;
 }
 .m2m-dashboardmap .tooltip:after {
   display: none;
@@ -3123,7 +3123,7 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .tooltip .group-count {
   display: inline-block;
-  background-image: url('../../img/nitro-components/markers/blue-marker-tooltip.png');
+  background-image: url('../img/markers/blue-marker-tooltip.png');
   color: #5e91a0;
   background-repeat: no-repeat;
   height: 17px;
@@ -3133,11 +3133,11 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .tooltip .group-count.red {
   color: #CA3430;
-  background-image: url('../../img/nitro-components/markers/red-marker-tooltip.png');
+  background-image: url('../img/markers/red-marker-tooltip.png');
 }
 .m2m-dashboardmap .tooltip .group-count.grey {
   color: #555555;
-  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
+  background-image: url('../img/markers/grey-marker-tooltip.png');
 }
 .m2m-dashboardmap .tooltip-arrow-border {
   border-left: 13px solid transparent;
@@ -3163,7 +3163,7 @@ li.delimiter-value {
   height: 0px;
 }
 .m2m-dashboardmap .group-tooltip-marker {
-  background-image: url('../../img/nitro-components/markers/blue-marker-tooltip.png');
+  background-image: url('../img/markers/blue-marker-tooltip.png');
   min-height: 24px;
   cursor: pointer;
   background-repeat: no-repeat;
@@ -3171,19 +3171,19 @@ li.delimiter-value {
   margin-bottom: 5px;
 }
 .m2m-dashboardmap .group-tooltip-marker.selected {
-  background-image: url('../../img/nitro-components/markers/blue-marker-selected-tooltip.png');
+  background-image: url('../img/markers/blue-marker-selected-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.red {
-  background-image: url('../../img/nitro-components/markers/red-marker-tooltip.png');
+  background-image: url('../img/markers/red-marker-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.selected.red {
-  background-image: url('../../img/nitro-components/markers/red-marker-selected-tooltip.png');
+  background-image: url('../img/markers/red-marker-selected-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
+  background-image: url('../img/markers/grey-marker-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.selected.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker-selected-tooltip.png');
+  background-image: url('../img/markers/grey-marker-selected-tooltip.png');
 }
 .detail-panel .detail-panel-content .m2m-dashboardmap.fit-minimap {
   height: 200px;

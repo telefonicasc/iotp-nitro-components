@@ -236,7 +236,7 @@ define(
                     maxClusterRadius: this.attr.maxGroupRadius,
                     iconCreateFunction: this.attr.groupIconFunction,
                     showCoverageOnHover: false,
-                    zoomToBoundsOnClick: false
+                    zoomToBoundsOnClick: true
                 }).addTo(this.map);
 
                 if(this.attr.fitBoundsOnce) this.attr.fitBounds = false;
@@ -292,8 +292,10 @@ define(
                             { markers: e.layer.getAllChildMarkers() });
                     }else{
                         this.$groupTooltip.trigger('hide');
-                        this.showTooltip('groupClickTooltip', e.layer._icon,
-                            { markers: e.layer.getAllChildMarkers() });
+                        if (!this.markersLayer._spiderfied) {
+                            this.showTooltip('groupClickTooltip', e.layer._icon,
+                                { markers: e.layer.getAllChildMarkers() });
+                        }
                     }
 
                 }, this));

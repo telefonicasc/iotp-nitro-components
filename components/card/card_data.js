@@ -290,8 +290,8 @@ define(
                                         'selected': ( tmpType === 'Quantity' ? true : false )
                                     },
                                     {
-                                        'label': 'Text',
-                                        'value': locales.text,
+                                        'label': locales.text,
+                                        'value': 'Text',
                                         'selected': ( tmpType === 'Text' ? true : false )
                                     }
                                 ]

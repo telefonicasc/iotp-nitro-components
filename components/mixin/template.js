@@ -63,64 +63,67 @@ $('#blabla').trigger('valueChange', {
 });
 ```
 
-@name Template
-@option {Boolean} updateOnValueChange true Re-draw template when trigger `'valueChange'` envent
-@option {Object} nodes undefined Object selector of elements, key is name of selector and value is jQuerySelector and you can atribute with '$' prefix: `this.$myNode`
+Template
+option {Boolean} updateOnValueChange true       Re-draw template when trigger `'valueChange'` envent
+option {Object} nodes undefined     Object selector of elements, key is name of selector and value is jQuerySelector and
+    you can refer to them as an attribute with '$' prefix: `this.$myNode`
 
-@event valueChange {value:{}} If `updateOnValueChange` is true, use param.value for redraw template
+event valueChange {value:{}} If `updateOnValueChange` is true, use param.value for redraw template
 */
 define(
-  [
-    'components/component_manager',
-    'libs/hogan/hogan'
-  ],
+    [
+        'components/component_manager',
+        'node_modules/hogan.js/dist/hogan-3.0.2'
+    ],
 
-  function(ComponentManager) {
+    function(ComponentManager) {
 
-    return TemplateMixin;
 
-    function TemplateMixin() {
+        function TemplateMixin() {
 
-      this.defaultAttrs({
-        updateOnValueChange: true
-      });
-
-      this.template = function(){};
-
-      this.after('initialize', function() {
-        if (this.attr.tpl) {
-          this.compiledTpl = Hogan.compile(this.attr.tpl);
-          this.$node.html(this.compiledTpl.render(this.attr));
-
-          if (this.attr.components) {
-            $.each(this.attr.components, $.proxy(function(selector, component) {
-              ComponentManager.get(component).attachTo(selector);
-            }, this));
-          }
-
-          this.on('valueChange', function(e, o) {
-            var data = $.extend({ value: o.value }, this.attr);
-            $.each(data, function(key, value) {
-              if ($.isFunction(value)) {
-                data[key] = value(o.value);
-              }
+            this.defaultAttrs({
+                updateOnValueChange: true
             });
-            if (this.attr.updateOnValueChange) {
-              this.$node.html(this.compiledTpl.render(data));
-              this.template();
-            }
-          });
 
-          this.template();
+            this.template = function() {
+            };
+
+            this.after('initialize', function() {
+                if (this.attr.tpl) {
+                    this.compiledTpl = Hogan.compile(this.attr.tpl);
+                    this.$node.html(this.compiledTpl.render(this.attr));
+
+                    if (this.attr.components) {
+                        $.each(this.attr.components, $.proxy(function(selector, component) {
+                            ComponentManager.get(component).attachTo(selector);
+                        }, this));
+                    }
+
+                    this.on('valueChange', function(e, o) {
+                        var data = $.extend({ value: o.value }, this.attr);
+                        $.each(data, function(key, value) {
+                            if ($.isFunction(value)) {
+                                data[key] = value(o.value);
+                            }
+                        });
+                        if (this.attr.updateOnValueChange) {
+                            this.$node.html(this.compiledTpl.render(data));
+                            this.template();
+                        }
+                    });
+
+                    this.template();
+                }
+
+                if (this.attr.nodes) {
+                    $.each(this.attr.nodes, $.proxy(function(name, selector) {
+                        this['$' + name] = $(selector, this.$node);
+                    }, this));
+                }
+            });
         }
 
-        if (this.attr.nodes) {
-          $.each(this.attr.nodes, $.proxy(function(name, selector) {
-            this['$' + name] = $(selector, this.$node);
-          }, this));
-        }
-      });
+        return TemplateMixin;
     }
-  }
 );
 

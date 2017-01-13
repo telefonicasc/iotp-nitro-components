@@ -1,6 +1,6 @@
 define(
     [],
-    function () {
+    function() {
 
     var locales = {},
 
@@ -10,13 +10,13 @@ define(
          * @type    object
          */
         options = {
-            card : {
-                valueThreshold : {
+            card: {
+                valueThreshold: {
                     // Example of option:
                     //  > regExpQuantity:  '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
                     //  > regExpText:      '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
                 },
-                attributeThreshold : {
+                attributeThreshold: {
                     // Example of option:
                     //  > regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
                 }
@@ -39,19 +39,6 @@ define(
         // --------------------------------------------------------------------
 
         /**
-         * Add Locales
-         * Mixes locales from other repositories
-         *
-         * @param   object  newLocales  A JSON object that holds translated strings
-         * @return  object              A JSON that holds all translated strings
-         */
-        addLocales = function ( newLocales ) {
-            $.extend( locales, newLocales );
-        },
-
-        // --------------------------------------------------------------------
-
-        /**
          * Encode Sensor
          * Condition cards description and initialized
          *
@@ -61,38 +48,38 @@ define(
             /**
              * Not Updated Card
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            notUpdated: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ],
+            notUpdated: function(card) {
+                var property = card.conditionList && card.conditionList[0],
                     sensor = card.sensorData || false,
                     timeData = card.timeData || false;
 
-                if ( property ) {
+                if (property) {
                     property.parameterValue = {
                         maxTime: property.parameterValue
-                    }
+                    };
 
-                    if ( sensor ) {
+                    if (sensor) {
                         property.parameterValue.attributeName = sensor.measureName;
                     }
 
-                    if ( timeData ) {
+                    if (timeData) {
                         property.parameterValue.checkInterval = timeData.interval;
                     }
                 }
 
                 card.header = locales.notUpdate;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText',
                         tpl: '<div class="thresold-attribs">' +
                                 '<span><strong>{{value.checkInterval}}</strong></span>' +
                                 '<span>{{value.attributeName}}</span>' +
                                 '<span>{{value.maxTime}}</span>' +
                             '</dl>'
-                    } ]
+                    }]
                 };
                 card.back = {
                     items: [
@@ -140,20 +127,20 @@ define(
             /**
              * Value Threshold
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            valueThreshold: function ( card ) {
-                var property = card.conditionList && card.conditionList[ 0 ],
+            valueThreshold: function(card) {
+                var property = card.conditionList && card.conditionList[0],
                     sensor = card.sensorData || false,
                     tmpType = 'Quantity';
 
-                if ( property ) {
+                if (property) {
                     property.parameterValue = {
                         thresoldValue: property.parameterValue
-                    }
+                    };
 
-                    if ( sensor ) {
+                    if (sensor) {
                         tmpType = sensor.dataType;
                         property.parameterValue.thresoldType = tmpType;
                         property.parameterValue.thresoldName = sensor.measureName;
@@ -162,17 +149,17 @@ define(
 
                 card.header = locales.valueThreshold;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText',
                         tpl: '<div class="thresold-attribs">' +
                                 '<span><strong>{{value.thresoldName}}</strong></span>' +
                                 '<span>{{value.thresoldType}}</span>' +
                                 '<span>{{value.thresoldValue}}</span>' +
                             '</dl>'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackTextCombo',
                         inputs: [
                             {
@@ -186,12 +173,12 @@ define(
                                     {
                                         'label': locales.quantity,
                                         'value': 'Quantity',
-                                        'selected': ( tmpType === 'Quantity' ? true : false )
+                                        'selected': (tmpType === 'Quantity' ? true : false)
                                     },
                                     {
                                         'label': locales.text,
                                         'value': 'Text',
-                                        'selected': ( tmpType === 'Text' ? true : false )
+                                        'selected': (tmpType === 'Text' ? true : false)
                                     }
                                 ],
                                 regExp: {
@@ -208,9 +195,9 @@ define(
                                 regExpOrigin: 'thresoldType'
                             }
                         ]
-                    } ]
+                    }]
                 };
-                card.delimiterList = [ 'GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO' ];
+                card.delimiterList = ['GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO'];
                 card.defaultCondition = {
                     scope: 'USER_PROP',
                     parameterValue: null,
@@ -232,28 +219,28 @@ define(
             /**
              * Attribute Threshold
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            attributeThreshold: function ( card ) {
-                var property = ( card.conditionList && card.conditionList[ 0 ] ) ? card.conditionList[ 0 ] : false,
-                    sensor = card.sensorData || false
+            attributeThreshold: function(card) {
+                var property = (card.conditionList && card.conditionList[0]) ? card.conditionList[0] : false,
+                    sensor = card.sensorData || false,
                     tmpType = 'Quantity';
 
-                if ( property ) {
+                if (property) {
                     var tmpValue = property.parameterValue,
                         pattern = /\$\{(.*)\}/,
                         matches;
 
-                    if ( matches = tmpValue.match( pattern ) ) {
-                        tmpValue = matches[ 1 ];
+                    if (matches = tmpValue.match(pattern)) {
+                        tmpValue = matches[1];
                     }
 
                     property.parameterValue = {
                         thresoldValue: tmpValue
-                    }
+                    };
 
-                    if ( sensor ) {
+                    if (sensor) {
                         tmpType = sensor.dataType;
                         property.parameterValue.thresoldType = tmpType;
                         property.parameterValue.thresoldName = sensor.measureName;
@@ -262,17 +249,17 @@ define(
 
                 card.header = locales.attributeThreshold;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText',
                         tpl: '<div class="thresold-attribs">' +
                                 '<span><strong>{{value.thresoldName}}</strong></span>' +
                                 '<span>{{value.thresoldType}}</span>' +
                                 '<span>{{value.thresoldValue}}</span>' +
                             '</dl>'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackTextCombo',
                         inputs: [
                             {
@@ -287,12 +274,12 @@ define(
                                     {
                                         'label': locales.quantity,
                                         'value': 'Quantity',
-                                        'selected': ( tmpType === 'Quantity' ? true : false )
+                                        'selected': (tmpType === 'Quantity' ? true : false)
                                     },
                                     {
-                                        'label': 'Text',
-                                        'value': locales.text,
-                                        'selected': ( tmpType === 'Text' ? true : false )
+                                        'label': locales.text,
+                                        'value': 'Text',
+                                        'selected': (tmpType === 'Text' ? true : false)
                                     }
                                 ]
                             },
@@ -304,9 +291,9 @@ define(
                                 regExp: options.card.attributeThreshold.regExpValidator
                             }
                         ]
-                    } ]
+                    }]
                 };
-                card.delimiterList = [ 'GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO' ];
+                card.delimiterList = ['GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO'];
                 card.defaultCondition = {
                     scope: 'USER_PROP',
                     parameterValue: null,
@@ -321,21 +308,21 @@ define(
             /**
              * CEP Rule
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            ceprule: function ( card ) {
+            ceprule: function(card) {
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackTextarea'
-                    } ]
+                    }]
                 };
-                card.delimiterList = [ 'EQUAL_TO' ];
+                card.delimiterList = ['EQUAL_TO'];
 
                 return card;
             },
@@ -343,24 +330,24 @@ define(
             /**
              * RegExp (Alias ID)
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            regexp: function ( card ) {
+            regexp: function(card) {
                 card.header = locales.regexpTitle;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackText',
                         label: locales.regexp
-                    } ]
+                    }]
                 };
 
-                card.delimiterList = [ 'MATCH' ];
+                card.delimiterList = ['MATCH'];
 
                 card.defaultCondition = {
                     scope: 'XPATH',
@@ -377,24 +364,24 @@ define(
             /**
              * Type
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            type: function ( card ) {
+            type: function(card) {
                 card.header = locales.type;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackText',
                         label: locales.value
-                    } ]
+                    }]
                 };
 
-                card.delimiterList = [ 'EQUAL_TO', 'DIFFERENT_TO' ];
+                card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
 
                 card.defaultCondition = {
                     scope: 'XPATH',
@@ -407,7 +394,7 @@ define(
 
                 card.sensorData = {
                     dataType: 'Text'
-                }
+                };
 
                 return card;
             }
@@ -425,31 +412,31 @@ define(
             /**
              * Time Elapsed
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            timeElapsed: function ( card ) {
+            timeElapsed: function(card) {
                 card.header = locales.elapsed;
                 card.cssClass = 'm2m-card-time m2m-card-elapsed';
 
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontQuantityValue',
                         label: locales.after,
                         units: 'seg'
-                    } ]
+                    }]
                 };
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackText',
                         label: locales.value,
                         dataType: 'Quantity'
-                    } ]
+                    }]
                 };
 
-                if ( card.timeData && card.timeData.interval ) {
+                if (card.timeData && card.timeData.interval) {
                     // card.timeData.interval is in milliseconds, need do change to sec.
-                    card.value = +card.timeData.interval / 1000;
+                    card.value = + card.timeData.interval / 1000;
                 }
                 card.defaultValue = '1';
                 card.timeCard = true;
@@ -470,10 +457,10 @@ define(
             /**
              * Send Email Action
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            SendEmailAction: function ( card ) {
+            SendEmailAction: function(card) {
                 card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
                 card.header = locales.sendEmailHeader;
                 card.locales = {
@@ -482,7 +469,7 @@ define(
                     from: locales.from
                 };
                 card.component = component.SEND_EMAIL;
-                card.tokens = [ 'type', 'id' ];
+                card.tokens = ['type', 'id'];
 
                 return card;
             },
@@ -490,10 +477,10 @@ define(
             /**
              * Send SMS Action
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            SendSmsMibAction: function ( card ) {
+            SendSmsMibAction: function(card) {
                 card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
                 card.header = locales.sendSMSHeader;
                 card.locales = {
@@ -501,7 +488,7 @@ define(
                     to: locales.to
                 };
                 card.component = component.SEND_SMS;
-                card.tokens = [ 'type', 'id' ];
+                card.tokens = ['type', 'id'];
 
                 return card;
             },
@@ -509,26 +496,26 @@ define(
             /**
              * Update Attribute
              *
-             * @param   object  card    The defaults card attributes
-             * @return  object          The card composed
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
              */
-            updateAttribute: function ( card ) {
+            updateAttribute: function(card) {
                 var userParams = card.userParams || {};
                 card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
                 card.header = locales.updateAttribute;
                 card.actionCard = true;
                 card.front = {
-                    items: [ {
+                    items: [{
                         component: 'CardFrontText',
                         tpl: '<dl class="properties">' +
                                 '<dt>{{value.name}}</dt>' +
                                 '<dd>{{value.value}}</dd>' +
                             '</dl>'
-                    } ]
+                    }]
                 };
 
                 card.back = {
-                    items: [ {
+                    items: [{
                         component: 'CardBackText',
                         inputs: [
                             {
@@ -540,11 +527,11 @@ define(
                                 name: 'value'
                             }
                         ]
-                    } ]
+                    }]
                 };
                 card.value = {
-                    name: (userParams.name || '' ) ,
-                    value: (userParams.value || '' )
+                    name: (userParams.name || '') ,
+                    value: (userParams.value || '')
                 };
 
                 return card;
@@ -560,27 +547,27 @@ define(
          * @type    object
          */
         decodeSensor = {
-            notUpdated: function ( cardConfig, cardData ) {
-                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+            notUpdated: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
 
-                if ( condition ) {
+                if (condition) {
                     condition.scope = 'LAST_MEASURE';
                     condition.parameterValue = cardData.maxTime;
                 }
 
                 cardConfig.timeData = {
-                  'interval': cardData.checkInterval,
-                  'repeat': '-1',
-                  'context': ''
-               };
+                    'interval': cardData.checkInterval,
+                    'repeat': '-1',
+                    'context': ''
+                };
 
-               cardConfig.sensorData = {
-                  'measureName': cardData.attributeName,
-                  'phenomenonApp': '',
-                  'phenomenon': '',
-                  'dataType': '',
-                  'uom': ''
-               };
+                cardConfig.sensorData = {
+                    'measureName': cardData.attributeName,
+                    'phenomenonApp': '',
+                    'phenomenon': '',
+                    'dataType': '',
+                    'uom': ''
+                };
 
                 cardConfig.conditionList = condition;
                 delete cardConfig.configData;
@@ -588,10 +575,10 @@ define(
                 return cardConfig;
             },
 
-            valueThreshold: function ( cardConfig, cardData ) {
-                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+            valueThreshold: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
 
-                if ( condition ) {
+                if (condition) {
                     condition.scope = 'OBSERVATION';
                     condition.parameterValue = cardData.thresoldValue;
 
@@ -612,10 +599,10 @@ define(
                 return cardConfig;
             },
 
-            attributeThreshold: function ( cardConfig, cardData ) {
-                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+            attributeThreshold: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
 
-                if ( condition ) {
+                if (condition) {
                     condition.scope = 'OBSERVATION';
                     condition.parameterValue = '${' + cardData.thresoldValue + '}';
 
@@ -637,21 +624,21 @@ define(
                 return cardConfig;
             },
 
-            regexp: function ( cardConfig, cardData ) {
-                var condition = cardConfig.conditionList && cardConfig.conditionList[ 0 ];
+            regexp: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
 
                 cardConfig.sensorData = {};
                 cardConfig.conditionList = condition;
                 return cardConfig;
             },
 
-            type: function ( cardConfig, cardData ) {
+            type: function(cardConfig, cardData) {
                 cardConfig.sensorData = {
                     dataType: 'Text'
                 };
 
                 return cardConfig;
-            },
+            }
         },
 
         // --------------------------------------------------------------------
@@ -663,19 +650,19 @@ define(
          * @type    object
          */
         decodeAction = {
-            SendEmailAction: function ( cardConfig, cardData ) {
+            SendEmailAction: function(cardConfig, cardData) {
                 cardConfig.actionData.userParams = cardData.userParams;
 
                 return cardConfig;
             },
 
-            SendSmsMibAction: function ( cardConfig, cardData ) {
+            SendSmsMibAction: function(cardConfig, cardData) {
                 cardConfig.actionData.userParams = cardData.userParams;
 
                 return cardConfig;
             },
 
-            updateAttribute: function ( cardConfig, cardData ) {
+            updateAttribute: function(cardConfig, cardData) {
                 cardConfig.actionData.userParams = cardData;
                 cardConfig.actionData.name = 'updateAttribute';
                 cardConfig.actionData.type = 'updateAttribute';
@@ -693,7 +680,7 @@ define(
          * @type    object
          */
         decodeTime = {
-            timeElapsed: function ( cardConfig, cardData ) {
+            timeElapsed: function(cardConfig, cardData) {
                 // card.timeData.interval is in milliseconds, need do change to sec.
                 cardConfig.timeData.interval = +cardData * 1000;
                 cardConfig.timeData.context = 'ASSET';
@@ -701,122 +688,137 @@ define(
 
                 return cardConfig;
             }
-        },
-
-        // --------------------------------------------------------------------
-
-        encode = function ( card ) {
-            var adapterMethodName = _getMethodNameForParse( card ),
-                adapterMethod;
-
-            card = $.extend( {}, card );
-
-            if ( card.type === cardType.SENSOR_CARD ) {
-                if ( ! card.header && card.sensorData ) {
-                    card.header = card.sensorData.measureName || '';
-                }
-                card = $.extend( card, card.configData );
-                adapterMethod = encodeSensor[ adapterMethodName ];
-            } else if ( card.type === cardType.ACTION_CARD ) {
-                card = $.extend( card, card.actionData );
-                adapterMethod = encodeAction[ adapterMethodName ];
-            } else if ( card.type === cardType.TIME_CARD ) {
-                adapterMethodName = card.configData.timeType;
-                adapterMethod = encodeTime[ adapterMethodName ];
-            }
-
-            if ( $.isFunction( adapterMethod ) ) {
-                card = adapterMethod( card );
-            }
-
-            return card;
-        },
-
-        decode = function ( cardConfig, cardData ) {
-            var adapterMethodName = _getMethodNameForParse( cardConfig ),
-                adapterMethod;
-
-            cardConfig = $.extend( {}, cardConfig );
-
-            if ( cardConfig.type === cardType.SENSOR_CARD ) {
-                adapterMethod = decodeSensor[ adapterMethodName ];
-            } else if ( cardConfig.type === cardType.ACTION_CARD ) {
-                adapterMethod = decodeAction[adapterMethodName];
-            } else if ( cardConfig.type === cardType.TIME_CARD ) {
-                adapterMethod = decodeTime[ adapterMethodName ];
-            }
-
-            if ( $.isFunction( adapterMethod ) ) {
-                cardConfig = adapterMethod( cardConfig, cardData );
-            }
-
-            return cardConfig;
-        },
-
-        // --------------------------------------------------------------------
-
-        /**
-         * Get Method name for parse
-         * Gets a card config data and finds the appropriate method to parse
-         * its data.
-         *
-         * @param  object   cardConfig  The card configuration
-         * @return string               The name of the method for parse data
-         */
-        _getMethodNameForParse = function ( cardConfig ) {
-            var sensorData      = cardConfig.sensorData,
-                sensorCardType  = cardConfig.sensorCardType,
-                name,
-                phenomenon;
-
-            if ( cardConfig.type === cardType.SENSOR_CARD ) {
-                phenomenon = ( sensorData && sensorData.phenomenon ) ?
-                    sensorData.phenomenon.replace( PHENOMENON_PREFIX, '' ) : '';
-
-                switch ( true ) {
-                case ( sensorCardType === 'valueThreshold' ):
-                    name = 'valueThreshold';
-                    break;
-
-                case ( sensorCardType === 'attributeThreshold' ):
-                    name = 'attributeThreshold';
-                    break;
-
-                case ( sensorCardType === 'type' ):
-                    name = 'type';
-                    break;
-
-                case ( sensorCardType === 'regexp' ):
-                    name = 'regexp';
-                    break;
-
-                case ( sensorCardType === 'entityAttrib' ):
-                    name = 'entityAttrib';
-                    break;
-
-                case ( sensorCardType === 'notUpdated' ):
-                    name = 'notUpdated';
-                    break;
-
-                case ( sensorCardType === 'ceprule' ):
-                    name = 'ceprule';
-                    break;
-
-                default:
-                    name = 'text';
-                    break;
-                }
-            } else if ( cardConfig.type === cardType.ACTION_CARD ) {
-                name = cardConfig.actionData.type;
-            } else if ( cardConfig.type === cardType.TIME_CARD ) {
-                phenomenon = cardConfig.configData.timeType;
-                if ( phenomenon === 'timeElapsed' ) {
-                    name = 'timeElapsed';
-                }
-            }
-
-            return name;
         };
+
+        // --------------------------------------------------------------------
+
+
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Add Locales
+     * Mixes locales from other repositories
+     *
+     * @param   {object}  newLocales  A JSON object that holds translated strings
+     * @return  {object}              A JSON that holds all translated strings
+     */
+    var addLocales = function(newLocales) {
+        $.extend(locales, newLocales);
+    };
+
+    var encode = function(card) {
+        var adapterMethodName = _getMethodNameForParse(card),
+            adapterMethod;
+
+        card = $.extend({}, card);
+
+        if (card.type === cardType.SENSOR_CARD) {
+            if (! card.header && card.sensorData) {
+                card.header = card.sensorData.measureName || '';
+            }
+            card = $.extend(card, card.configData);
+            adapterMethod = encodeSensor[adapterMethodName];
+        } else if (card.type === cardType.ACTION_CARD) {
+            card = $.extend(card, card.actionData);
+            adapterMethod = encodeAction[adapterMethodName];
+        } else if (card.type === cardType.TIME_CARD) {
+            adapterMethodName = card.configData.timeType;
+            adapterMethod = encodeTime[adapterMethodName];
+        }
+
+        if ($.isFunction(adapterMethod)) {
+            card = adapterMethod(card);
+        }
+
+        return card;
+    };
+
+    var decode = function(cardConfig, cardData) {
+        var adapterMethodName = _getMethodNameForParse(cardConfig),
+            adapterMethod;
+
+        cardConfig = $.extend({}, cardConfig);
+
+        if (cardConfig.type === cardType.SENSOR_CARD) {
+            adapterMethod = decodeSensor[adapterMethodName];
+        } else if (cardConfig.type === cardType.ACTION_CARD) {
+            adapterMethod = decodeAction[adapterMethodName];
+        } else if (cardConfig.type === cardType.TIME_CARD) {
+            adapterMethod = decodeTime[adapterMethodName];
+        }
+
+        if ($.isFunction(adapterMethod)) {
+            cardConfig = adapterMethod(cardConfig, cardData);
+        }
+
+        return cardConfig;
+    };
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Get Method name for parse
+     * Gets a card config data and finds the appropriate method to parse
+     * its data.
+     *
+     * @param  {object}   cardConfig  The card configuration
+     * @return {string}               The name of the method for parse data
+     */
+    var _getMethodNameForParse = function(cardConfig) {
+        var sensorData = cardConfig.sensorData,
+            sensorCardType = cardConfig.sensorCardType,
+            name,
+            phenomenon;
+
+        if (cardConfig.type === cardType.SENSOR_CARD) {
+            phenomenon = (sensorData && sensorData.phenomenon) ?
+                sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
+
+            switch (true) {
+            case (sensorCardType === 'valueThreshold'):
+                name = 'valueThreshold';
+                break;
+
+            case (sensorCardType === 'attributeThreshold'):
+                name = 'attributeThreshold';
+                break;
+
+            case (sensorCardType === 'type'):
+                name = 'type';
+                break;
+
+            case (sensorCardType === 'regexp'):
+                name = 'regexp';
+                break;
+
+            case (sensorCardType === 'entityAttrib'):
+                name = 'entityAttrib';
+                break;
+
+            case (sensorCardType === 'notUpdated'):
+                name = 'notUpdated';
+                break;
+
+            case (sensorCardType === 'ceprule'):
+                name = 'ceprule';
+                break;
+
+            default:
+                name = 'text';
+                break;
+            }
+        } else if (cardConfig.type === cardType.ACTION_CARD) {
+            name = cardConfig.actionData.type;
+        } else if (cardConfig.type === cardType.TIME_CARD) {
+            phenomenon = cardConfig.configData.timeType;
+            if (phenomenon === 'timeElapsed') {
+                name = 'timeElapsed';
+            }
+        }
+
+        return name;
+    };
 
     // Returning public methods
     return {
@@ -825,4 +827,4 @@ define(
         'decode': decode,
         'options': options
     };
-} );
+});

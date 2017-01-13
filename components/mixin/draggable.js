@@ -1,34 +1,34 @@
 /**
-Convert node in draggable item. Use `jQueryUI.Draggable()`
+ Convert node in draggable item. Use `jQueryUI.Draggable()`
 
-@name DraggableMixin
-*/
+ DraggableMixin
+ */
 define(
-  [
-        'libs/jqueryui/jquery.ui.core',
-        'libs/jqueryui/jquery.ui.widget',
-        'libs/jqueryui/jquery.ui.mouse',
-        'libs/jqueryui/jquery.ui.draggable',
-        'libs/jqueryui/jquery.ui.droppable'
-  ],
-  function() {
+    [
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.core',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.widget',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.mouse',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.draggable',
+        'node_modules/jquery-ui-browserify/ui/jquery.ui.droppable'
+    ],
+    function() {
 
-    return DraggableMixin;
+        function DraggableMixin() {
 
-    function DraggableMixin() {
+            this.defaultAttrs({
 
-      this.defaultAttrs({
+            });
 
-      });
+            this.after('initialize', function() {
 
-      this.after('initialize', function() {
+                // TODO: No time to implement this properly
+                // using jquery ui draggable for the time being.
+                // Would be nice to implement it and remove that dependency
+                this.$node.draggable($.extend({}, this.attr));
 
-        // TODO: No time to implement this properly
-        // using jquery ui draggable for the time being.
-        // Would be nice to implement it and remove that dependency
-        this.$node.draggable($.extend({}, this.attr));
+            });
+        }
 
-      });
+        return DraggableMixin;
     }
-  }
 );

@@ -27,23 +27,26 @@ __DefaultTooltipComponent__
 ```
 
 
-@name DashboardMap
-@mixins DataBinding
+DashboardMap
+mixin DataBinding
 
-@option {String} mapboxId '' Mapbox id for the map
-@option {Number} maxGroupRadius 20 Maximum distance to group markers
-@option {Boolean} fitBounds true fit bounds of markers when update
-@option {Boolean} fitBoundsOnce false Once fit bounds of markers when update
-@option {Boolean} fitOnItemSelected Fit the screen centering the map when item selected
-@option {Boolean} zoomControl true Show zoom control
-@option {Function} markerFactory fn() Factory function to translate from input data items to the format the DashboardMapMarkerOption is specting.
-@option {Function} iconFunction fn() Function to create the icon for the marker. By default it creates a div with css class 'marker' and the 'cssClass' attribute of the marker
-@option {Function} groupIconFunction fn() Function to create the icon for a marker group By default it creates a div with css classes 'marker', 'group', and all the child item css classes. The content of the div is the number of markers in the group
-@option {Object} tooltip DefaultTooltipComponent Tooltip component
+option {Number} maxGroupRadius 20 Maximum distance to group markers
+option {Boolean} fitBounds true fit bounds of markers when update
+option {Boolean} fitBoundsOnce false Once fit bounds of markers when update
+option {Boolean} fitOnItemSelected Fit the screen centering the map when item selected
+option {Boolean} zoomControl true Show zoom control
+option {Function} markerFactory fn() Factory function to translate from input data items
+    to the format the DashboardMapMarkerOption is specting.
+option {Function} iconFunction fn() Function to create the icon for the marker.
+    By default it creates a div with css class 'marker' and the 'cssClass' attribute of the marker
+option {Function} groupIconFunction fn() Function to create the icon for a marker group.
+    By default it creates a div with css classes 'marker', 'group', and all the child item css classes.
+    The content of the div is the number of markers in the group
+option {Object} tooltip DefaultTooltipComponent Tooltip component
 
-@event itemselected When it is received, the css class 'selected' is added to the marker of the selected item
-@event valueChange map markers are updated with the data in the event
-@eventt itemselected Is triggered when a marker is clicked
+event itemselected When it is received, the css class 'selected' is added to the marker of the selected item
+event valueChange map markers are updated with the data in the event
+event itemselected Is triggered when a marker is clicked
 */
 
 define(
@@ -52,7 +55,8 @@ define(
         'components/mixin/data_binding',
         'components/tooltip',
         'components/dashboard/map_marker_group_tooltip',
-        'libs/leaflet.markercluster-src',
+        'node_modules/leaflet/dist/leaflet',
+        'node_modules/leaflet.markercluster/dist/leaflet.markercluster',
         'libs/leaflet.offscreen-src'
     ],
 
@@ -62,8 +66,14 @@ define(
 
             this.defaultAttrs({
 
-                /** Mapbox id for the map */
-                mapboxId: 'keithtid.map-w594ylml',
+                MAP_TILE_PROVIDER: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                MAP_TILE_PROVIDER_SUBDOMAINS: 'abcd',
+                MAP_TILE_PROVIDER_MAXZOOM: 19,
+                MAP_TILE_PROVIDER_ATTRIBUTION: '&copy; ' +
+                    '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; ' +
+                    '<a href="http://cartodb.com/attributions">CartoDB</a>',
+
+                deafultCenter: [40.416691, -3.700345], //Madrid
 
                 /** Maximum distance to group markers */
                 maxGroupRadius: 20,
@@ -151,7 +161,7 @@ define(
                     component: 'Tooltip',
                     model: function(data) {
                         var byClass = {};
-                        $.each( (data && data.markers) || [], function(i, marker) {
+                        $.each((data && data.markers) || [], function(i, marker) {
                             var className = marker.options.marker.cssClass;
                             className = className || 'default';
                             byClass[className] = byClass[className] || 0;
@@ -199,22 +209,30 @@ define(
                 this.createTooltip();
                 this.on('valueChange', this.updateData);
                 this.on('itemselected', this.onItemSelected);
-                $( '.leaflet-marker-pane', this.$node ).
-                    append( this.$tooltip ).
-                    append( this.$groupTooltip ).
-                    append( this.$groupClickTooltip );
+                $('.leaflet-marker-pane', this.$node).
+                    append(this.$tooltip).
+                    append(this.$groupTooltip).
+                    append(this.$groupClickTooltip);
+                this.attr.init && this.attr.init(this);
             });
 
             this.mapIsLoaded = false;
 
             // Create mapbox components and layers
             this.createMap = function() {
-                var options = {
-                        zoomControl: this.attr.zoomControl,
-                        attributionControl: false
-                    };
-                this.map = L.mapbox.map(this.$mapbox[0],
-                    this.attr.mapboxId, options);
+                this.$mapbox.css({'height': '100%'});
+                this.map = L.map(this.$mapbox[0], {
+                    center: [40.416691, -3.700345],
+                    zoom: 5,
+                    zoomControl: this.attr.zoomControl
+                });
+                L.tileLayer(this.attr.MAP_TILE_PROVIDER, {
+                    maxZoom: this.attr.MAP_TILE_PROVIDER_MAXZOOM,
+                    subdomains: this.attr.MAP_TILE_PROVIDER_SUBDOMAINS,
+                    attribution: this.attr.MAP_TILE_PROVIDER_ATTRIBUTION
+                }).addTo(this.map);
+
+                this.attr.mapInstance = this.map;
                 this.offscreen = new L.Control.Offscreen();
                 this.map.addControl(this.offscreen);
 
@@ -222,10 +240,12 @@ define(
                     maxClusterRadius: this.attr.maxGroupRadius,
                     iconCreateFunction: this.attr.groupIconFunction,
                     showCoverageOnHover: false,
-                    zoomToBoundsOnClick: false
+                    zoomToBoundsOnClick: true
                 }).addTo(this.map);
 
-                if(this.attr.fitBoundsOnce) this.attr.fitBounds = false;
+                if (this.attr.fitBoundsOnce) {
+                    this.attr.fitBounds = false;
+                }
 
                 this.map.on('movestart', $.proxy(function(e) {
                     this.$tooltip.trigger('hide');
@@ -236,8 +256,8 @@ define(
                     this.$groupClickTooltip.trigger('hide');
                 }, this));
 
-                this.map.on('zoomend',  $.proxy(this.selectedMarkerIcon, this));
-                this.map.on('moveend',  $.proxy(this.selectedMarkerIcon, this));
+                this.map.on('zoomend', $.proxy(this.selectedMarkerIcon, this));
+                this.map.on('moveend', $.proxy(this.selectedMarkerIcon, this));
 
 
                 this.map.on('move', $.proxy(this.fixGroupClickTooltip, this));
@@ -263,7 +283,7 @@ define(
                 this.markersLayer.on('clustermouseover', $.proxy(function(e) {
                     if (!this.$groupClickTooltip.is(':visible')) {
                         this.showTooltip('groupTooltip', e.layer._icon,
-                                { markers: e.layer.getAllChildMarkers() });
+                            { markers: e.layer.getAllChildMarkers() });
                     }
                 }, this));
 
@@ -272,30 +292,32 @@ define(
                 }, this));
 
                 this.markersLayer.on('clusterclick', $.proxy(function(e) {
-                    if( this.$groupClickTooltip.is(':visible') ){
+                    if (this.$groupClickTooltip.is(':visible')) {
                         this.$groupClickTooltip.trigger('hide');
                         this.showTooltip('groupTooltip', e.layer._icon,
-                                { markers: e.layer.getAllChildMarkers() });
-                    }else{
-                        this.$groupTooltip.trigger('hide');
-                        this.showTooltip('groupClickTooltip', e.layer._icon,
                             { markers: e.layer.getAllChildMarkers() });
+                    }else {
+                        this.$groupTooltip.trigger('hide');
+                        if (!this.markersLayer._spiderfied) {
+                            this.showTooltip('groupClickTooltip', e.layer._icon,
+                                { markers: e.layer.getAllChildMarkers() });
+                        }
                     }
 
                 }, this));
             };
 
-            this.selectedMarkerIcon = function(){
-                $.each(this.markers, function(i, marker){
-                    if(marker._icon && marker.options.item._selected){
+            this.selectedMarkerIcon = function() {
+                $.each(this.markers, function(i, marker) {
+                    if (marker._icon && marker.options.item._selected) {
                         $(marker._icon).addClass('selected');
                     }
                 });
-            }
+            };
 
-            this.fixGroupClickTooltip = function(){
+            this.fixGroupClickTooltip = function() {
                 this.$groupClickTooltip.trigger('fix');
-            }
+            };
 
             this.createTooltip = function() {
                 var tooltips = ['tooltip', 'groupTooltip', 'groupClickTooltip'];
@@ -335,26 +357,30 @@ define(
                         position, icon, marker;
 
                     if (markerItem &&
-                            $.isNumeric(markerItem.latitude) &&
-                            $.isNumeric(markerItem.longitude) &&
+                        $.isNumeric(markerItem.latitude) &&
+                        $.isNumeric(markerItem.longitude) &&
                             (markerItem.latitude >= -90 && markerItem.latitude <= 90) &&
-                            (markerItem.longitude >= -180 && markerItem.longitude <= 180) ) {
-                        position = [markerItem.latitude, markerItem.longitude],
-                        icon = this.attr.iconFunction(markerItem),
+                            (markerItem.longitude >= -180 && markerItem.longitude <= 180)) {
+                        position = [markerItem.latitude, markerItem.longitude];
+                        icon = this.attr.iconFunction(markerItem);
                         marker = L.marker(position, {
-                            icon: icon, item: item, marker: markerItem
+                            icon: icon,
+                            item: item,
+                            marker: markerItem
                         });
 
                         bounds.push(position);
                         this.markers.push(marker);
                     }
                 }, this));
-                if( this.mapIsLoaded ){
-                    if ( (this.attr.fitBounds || this.attr.fitBoundsOnce) && bounds.length) this.map.fitBounds(bounds);
+                if (this.mapIsLoaded) {
+                    if ((this.attr.fitBounds || this.attr.fitBoundsOnce) && bounds.length) {
+                        this.map.fitBounds(bounds);
+                    }
                     this.offscreen.update(this.markers);
                     this.attr.fitBoundsOnce = false;
                 }
-                $.each(this.markers, $.proxy(function(i,marker){
+                $.each(this.markers, $.proxy(function(i, marker) {
                     marker.addTo(this.markersLayer);
                 }, this));
 
@@ -380,11 +406,11 @@ define(
 
                 this.markersSelectItem(marker);
                 this.$node.find('.marker.selected').removeClass('selected');
-                this.$groupClickTooltip.trigger('itemselected', {'item':item, 'silent':true});
+                this.$groupClickTooltip.trigger('itemselected', {'item': item, 'silent': true});
                 if (marker) {
                     $(marker._icon).addClass('selected');
-                    if ( this.attr.fitOnItemSelected ) {
-                        this.map.panTo( marker._latlng );
+                    if (this.attr.fitOnItemSelected) {
+                        this.map.panTo(marker._latlng);
                         this.offscreen.update();
                     }
                 }
@@ -397,11 +423,11 @@ define(
                 })[0];
             };
 
-            this.markersSelectItem = function(markerSelected){
-                $.each(this.markers, function(i, marker){
+            this.markersSelectItem = function(markerSelected) {
+                $.each(this.markers, function(i, marker) {
                     marker.options.item._selected = (markerSelected === marker);
                 });
-            }
+            };
 
         }
 

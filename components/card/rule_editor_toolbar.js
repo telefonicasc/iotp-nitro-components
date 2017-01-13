@@ -6,14 +6,11 @@ define(
 
     function(ComponentManager, Slider) {
 
-        return ComponentManager.create('RuleEditorToolbar',
-            RuleEditorToolbar);
-
         function RuleEditorToolbar() {
 
             this.defaultAttrs({
                 actionsLabel: 'Actions',
-                conditionsLabel: 'Conditions'                
+                conditionsLabel: 'Conditions'
             });
 
             this.after('initialize', function() {
@@ -76,6 +73,9 @@ define(
                 this.$zoomSlider.trigger('valueChange', { value: 100 });
             });
         }
+
+        return ComponentManager.create('RuleEditorToolbar',
+            RuleEditorToolbar);
 
     }
 );

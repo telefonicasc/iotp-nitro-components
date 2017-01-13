@@ -7,9 +7,6 @@ define(
 
     function(ComponentManager, DataBinding, Template) {
 
-        return ComponentManager.create('CardFrontQuantityValue', DataBinding,
-            Template, CardFrontQuantityValue);
-
         function CardFrontQuantityValue() {
 
             this.defaultAttrs({
@@ -25,6 +22,8 @@ define(
                 this.trigger('valueChange', { value: 0 });
             });
         }
+        return ComponentManager.create('CardFrontQuantityValue', DataBinding,
+            Template, CardFrontQuantityValue);
 
     }
 );

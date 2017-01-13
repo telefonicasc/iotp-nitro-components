@@ -1,12 +1,12 @@
 /**
 Create tooltip element
 
-@name Tooltip
+Tooltip
 
-@mixin DataBinding
+mixin DataBinding
 
-@event hide undefined Trigger this event for hide element
-@event show undefined Trigger this event for show element
+event hide undefined Trigger this event for hide element
+event show undefined Trigger this event for show element
 */
 define(
     [
@@ -16,9 +16,6 @@ define(
     ],
 
     function(ComponentManager, Container, DataBinding) {
-
-        return ComponentManager.create('Tooltip',
-            Tooltip, DataBinding);
 
         function Tooltip() {
 
@@ -56,5 +53,8 @@ define(
                 this.trigger('hide');
             });
         }
+
+        return ComponentManager.create('Tooltip',
+            Tooltip, DataBinding);
     }
 );

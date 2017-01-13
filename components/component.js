@@ -1,10 +1,5 @@
 /**
 Create wrapper with Template and DataBinding functionalities
-
-@name component
-@mixin Template
-@mixin DataBinding
-
 */
 define(
     [

@@ -262,10 +262,10 @@ select {
   margin-top: 15px;
 }
 .overview-subpanel .icon.arrow-down {
-  background-image: url("../../img/nitro-components/arrow-down.png");
+  background-image: url("../img/arrow-down.png");
 }
 .overview-subpanel .icon.arrow-up {
-  background-image: url("../../img/nitro-components/arrow-up.png");
+  background-image: url("../img/arrow-up.png");
 }
 .overview-subpanel .overview-subpanel-body {
   width: 80%;
@@ -810,7 +810,6 @@ select {
   text-align: left;
   padding-left: 5px;
   color: white;
-  font-size: 0.9em;
   height: 39px;
   line-height: 39px;
 }
@@ -1157,7 +1156,6 @@ select {
   bottom: 47px;
   top: 41px;
   /*background-image: url("@{image-path}/ruleback.png");*/
-
   background: #48585c;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #48585c), color-stop(1, #2a3336));
   background: -ms-linear-gradient(bottom, #48585c, #2a3336);
@@ -1934,7 +1932,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#eeeeee, #cccccc);
   -pie-background: linear-gradient(#eeeeee, #cccccc);
   /*ie 6-9 via PIE*/
-
   border: 1px solid #cccccc;
   border-bottom: 1px solid #bbb;
   behavior: url("style/css3pie/PIE.htc");
@@ -1968,7 +1965,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#dddddd, #bbbbbb);
   -pie-background: linear-gradient(#dddddd, #bbbbbb);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
   border: 1px solid #bbbbbb;
   border-bottom: 1px solid #999;
@@ -1990,7 +1986,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#2481ad, #08415f);
   -pie-background: linear-gradient(#2481ad, #08415f);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.accept {
@@ -2001,7 +1996,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#08415f, #2481ad);
   -pie-background: linear-gradient(#08415f, #2481ad);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn.cancel {
@@ -2014,7 +2008,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#ed3f17, #972b2a);
   -pie-background: linear-gradient(#ed3f17, #972b2a);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.cancel {
@@ -2025,7 +2018,6 @@ li.delimiter-value {
   background: -o-linear-gradient(#972b2a, #ed3f17);
   -pie-background: linear-gradient(#972b2a, #ed3f17);
   /*ie 6-9 via PIE*/
-
   behavior: url("style/css3pie/PIE.htc");
 }
 .application-menu {
@@ -2049,7 +2041,7 @@ li.delimiter-value {
 .application-menu a {
   display: block;
   margin-left: 8px;
-  background-image: url("../../img/nitro-components/menu_icons.png");
+  background-image: url("../img/menu_icons.png");
   background-repeat: no-repeat;
   background-position: 0px -160px;
 }
@@ -2166,7 +2158,7 @@ li.delimiter-value {
   text-align: center;
 }
 .context-menu li.context-menu-title.back-link {
-  background: url("../../img/nitro-components/context-menu-back.png") no-repeat left center;
+  background: url("../img/context-menu-back.png") no-repeat left center;
 }
 .context-menu li.context-menu-title:hover {
   background-color: transparent;
@@ -2245,34 +2237,27 @@ li.delimiter-value {
   background: #788D9A;
   background: -moz-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, right top, color-stop(0%, #faf8f5), color-stop(20%, #788d9a), color-stop(80%, #788d9a), color-stop(100%, #faf8f5));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(left, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* IE10+ */
-
   background: linear-gradient(to right, #faf8f5 0%, #788d9a 20%, #788d9a 80%, #faf8f5 100%);
   /* W3C */
-
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#faf8f5', endColorstr='#faf8f5', GradientType=1);
   /* IE6-9 */
-
 }
 .context-menu .submenu {
-  background: url("../../img/nitro-components/submenu-indicator.png") no-repeat right center;
+  background: url("../img/submenu-indicator.png") no-repeat right center;
 }
 .context-menu .submenu:hover {
-  background: #6eb4db url("../../img/nitro-components/submenu-indicator-hover.png") no-repeat right center;
+  background: #6eb4db url("../img/submenu-indicator-hover.png") no-repeat right center;
 }
 .context-menu .submenu.selected {
-  background: #64737b url("../../img/nitro-components/submenu-indicator-hover.png") no-repeat right center;
+  background: #64737b url("../img/submenu-indicator-hover.png") no-repeat right center;
 }
 .context-menu-wrapper {
   overflow: hidden;
@@ -2311,10 +2296,10 @@ li.delimiter-value {
   height: 15px;
   margin: 6px 0px 0px 6px;
   cursor: pointer;
-  background-image: url("../../img/nitro-components/context-menu-indicator.png");
+  background-image: url("../img/context-menu-indicator.png");
 }
 .context-menu-indicator:hover {
-  background-image: url("../../img/nitro-components/context-menu-indicator-hover.png");
+  background-image: url("../img/context-menu-indicator-hover.png");
 }
 .border-panel {
   bottom: 0px;
@@ -2837,10 +2822,9 @@ li.delimiter-value {
 }
 .m2m-mapviewer {
   overflow: hidden;
-  /* Zoom buttons css */
-
   /* ========================================================================== */
-
+  /* Zoom buttons css */
+  /* ========================================================================== */
 }
 .m2m-mapviewer .marker-custom {
   cursor: pointer;
@@ -3029,49 +3013,49 @@ li.delimiter-value {
 .leaflet-container .offscreen-indicator.offscreen-nw {
   top: 37px;
   left: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/NW.png');
+  background-image: url('../img/mapViewer/NW.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-n {
   top: 8px;
   left: 50%;
   margin-left: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/N.png');
+  background-image: url('../img/mapViewer/N.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-ne {
   top: 37px;
   right: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/NE.png');
+  background-image: url('../img/mapViewer/NE.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-e {
   top: 50%;
   right: 8px;
   margin-top: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/E.png');
+  background-image: url('../img/mapViewer/E.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-se {
   bottom: 25px;
   right: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/SE.png');
+  background-image: url('../img/mapViewer/SE.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-s {
   bottom: 0px;
   left: 50%;
   margin-left: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/S.png');
+  background-image: url('../img/mapViewer/S.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-sw {
   bottom: 25px;
   left: 37px;
-  background-image: url('../../img/nitro-components/mapViewer/SW.png');
+  background-image: url('../img/mapViewer/SW.png');
 }
 .leaflet-container .offscreen-indicator.offscreen-w {
   left: 8px;
   top: 50%;
   margin-top: -36px;
-  background-image: url('../../img/nitro-components/mapViewer/W.png');
+  background-image: url('../img/mapViewer/W.png');
 }
 .m2m-dashboardmap .marker {
-  background-image: url('../../img/nitro-components/markers/blue-marker.png');
+  background-image: url('../img/markers/blue-marker.png');
   width: 29px;
   height: 39px;
   margin-left: -15px;
@@ -3083,10 +3067,10 @@ li.delimiter-value {
   transition: transform 0.2s ease-out, opacity 0.2s ease-in;
 }
 .m2m-dashboardmap .marker.red {
-  background-image: url('../../img/nitro-components/markers/red-marker.png');
+  background-image: url('../img/markers/red-marker.png');
 }
 .m2m-dashboardmap .marker.group {
-  background-image: url('../../img/nitro-components/markers/blue-marker-group.png');
+  background-image: url('../img/markers/blue-marker-group.png');
   color: white;
   text-align: center;
   height: 35px;
@@ -3095,26 +3079,26 @@ li.delimiter-value {
   font-size: 11px;
 }
 .m2m-dashboardmap .marker.red.group {
-  background-image: url('../../img/nitro-components/markers/red-marker-group.png');
+  background-image: url('../img/markers/red-marker-group.png');
 }
 .m2m-dashboardmap .marker.grey.group {
-  background-image: url('../../img/nitro-components/markers/grey-marker-group.png');
+  background-image: url('../img/markers/grey-marker-group.png');
 }
 .m2m-dashboardmap .marker.selected {
-  background-image: url('../../img/nitro-components/markers/blue-marker-selected.png');
+  background-image: url('../img/markers/blue-marker-selected.png');
   margin-left: -22px;
   margin-top: -32px;
   width: 43px;
   height: 43px;
 }
 .m2m-dashboardmap .marker.red.selected {
-  background-image: url('../../img/nitro-components/markers/red-marker-selected.png');
+  background-image: url('../img/markers/red-marker-selected.png');
 }
 .m2m-dashboardmap .marker.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker.png');
+  background-image: url('../img/markers/grey-marker.png');
 }
 .m2m-dashboardmap .marker.grey.selected {
-  background-image: url('../../img/nitro-components/markers/grey-marker-selected.png');
+  background-image: url('../img/markers/grey-marker-selected.png');
 }
 .m2m-dashboardmap .tooltip {
   width: auto;
@@ -3129,7 +3113,7 @@ li.delimiter-value {
   padding: 8px 8px 0 8px;
   margin-top: 15px;
   margin-left: -62px;
-  z-index: 9999;
+  z-index: 10001000;
 }
 .m2m-dashboardmap .tooltip:after {
   display: none;
@@ -3139,7 +3123,7 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .tooltip .group-count {
   display: inline-block;
-  background-image: url('../../img/nitro-components/markers/blue-marker-tooltip.png');
+  background-image: url('../img/markers/blue-marker-tooltip.png');
   color: #5e91a0;
   background-repeat: no-repeat;
   height: 17px;
@@ -3149,11 +3133,11 @@ li.delimiter-value {
 }
 .m2m-dashboardmap .tooltip .group-count.red {
   color: #CA3430;
-  background-image: url('../../img/nitro-components/markers/red-marker-tooltip.png');
+  background-image: url('../img/markers/red-marker-tooltip.png');
 }
 .m2m-dashboardmap .tooltip .group-count.grey {
   color: #555555;
-  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
+  background-image: url('../img/markers/grey-marker-tooltip.png');
 }
 .m2m-dashboardmap .tooltip-arrow-border {
   border-left: 13px solid transparent;
@@ -3179,7 +3163,7 @@ li.delimiter-value {
   height: 0px;
 }
 .m2m-dashboardmap .group-tooltip-marker {
-  background-image: url('../../img/nitro-components/markers/blue-marker-tooltip.png');
+  background-image: url('../img/markers/blue-marker-tooltip.png');
   min-height: 24px;
   cursor: pointer;
   background-repeat: no-repeat;
@@ -3187,19 +3171,19 @@ li.delimiter-value {
   margin-bottom: 5px;
 }
 .m2m-dashboardmap .group-tooltip-marker.selected {
-  background-image: url('../../img/nitro-components/markers/blue-marker-selected-tooltip.png');
+  background-image: url('../img/markers/blue-marker-selected-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.red {
-  background-image: url('../../img/nitro-components/markers/red-marker-tooltip.png');
+  background-image: url('../img/markers/red-marker-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.selected.red {
-  background-image: url('../../img/nitro-components/markers/red-marker-selected-tooltip.png');
+  background-image: url('../img/markers/red-marker-selected-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker-tooltip.png');
+  background-image: url('../img/markers/grey-marker-tooltip.png');
 }
 .m2m-dashboardmap .group-tooltip-marker.selected.grey {
-  background-image: url('../../img/nitro-components/markers/grey-marker-selected-tooltip.png');
+  background-image: url('../img/markers/grey-marker-selected-tooltip.png');
 }
 .detail-panel .detail-panel-content .m2m-dashboardmap.fit-minimap {
   height: 200px;

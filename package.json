@@ -4,13 +4,10 @@
   "description": "Visual components for the nitro framework",
   "main": "index.js",
   "directories": {
-    "doc": "doc",
-    "example": "examples",
-    "test": "test"
+    "doc": "doc"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "gendocs": "node ./libs/dca-component-documentor/generatedoc.js -o ./doc/user-document.md"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -19,27 +16,27 @@
   "author": "Telefónica I+D",
   "readmeFilename": "README.md",
   "dependencies": {
-    "jquery-ui": "~1.9.1",
-    "flight": "~1.5.1",
+    "jquery-ui-browserify": "1.11.0-pre-seelio",
+    "flightjs": "~1.5.1",
     "raphael": "~2.2.7",
     "leaflet": "~1.0.2",
     "leaflet.markercluster": "~1.0.0",
-    "jsonpath": "~0.15.0",
-    "hogan": "~3.0.2"
+    "jsonpath": "~0.2.9",
+    "hogan.js": "~3.0.2",
+    "almond": "~0.2.5"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-less": "~0.11.0",
     "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-requirejs": "~2.3.2",
-    "grunt-contrib-jasmine": "~0.4.2",
-    "grunt-template-jasmine-requirejs": "~0.1.0",
-    "dox": "~0.4.2",
-    "grunt-template-jasmine-istanbul": "~0.2.0",
-    "grunt-styleguide": "~0.2.4",
+    "grunt-contrib-requirejs": "~1.0.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-watch": "~0.3.1",
-    "grunt-closure-linter": "~0.1.0",
-    "grunt-plato": "~0.2.0",
-    "markdox": "~0.1.2"
+    "grunt-githooks": "~0.3.1",
+    "grunt-gjslint": "~0.1.0",
+    "grunt-contrib-jshint": "~0.7.1",
+    "jshint-stylish": "~0.1.3"
+
   }
 }

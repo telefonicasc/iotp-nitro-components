@@ -76,13 +76,15 @@ will be Pepe, and will change the html to:
 </div>
 ```
 
-@name DataBinding
+DataBinding
 
-@option {Boolean} resetModel false
-@option {String} model empty As in the example above. It will pick the property with that name from the parent value.
-@option {Function} model empty The function will be executed to get the value for the component. The parent value will be passed as parameter.
-@option {jsonPath} model empty String to select the data from the parent value.
-@option {Object} model empty This will be the value of the component, no matter what the value of the parent component is.
+option {Boolean} resetModel false
+option {String} model empty As in the example above. It will pick the property with that name from the parent value.
+option {Function} model empty The function will be executed to get the value for the component.
+    The parent value will be passed as parameter.
+option {jsonPath} model empty String to select the data from the parent value.
+option {Object} model empty This will be the value of the component,
+    no matter what the value of the parent component is.
 */
 define(
     [
@@ -90,8 +92,6 @@ define(
     ],
 
     function(jsonPath) {
-
-        return DataBinding;
 
         function DataBinding() {
 
@@ -141,7 +141,7 @@ define(
                     }
 
                     e.stopPropagation();
-                    if( value !== undefined ){
+                    if (value !== undefined) {
                         this.$node.trigger('valueChange', {
                             value: value,
                             silent: true
@@ -170,6 +170,8 @@ define(
                 });
             });
         }
+
+        return DataBinding;
     }
 );
 

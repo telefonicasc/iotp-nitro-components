@@ -47,7 +47,7 @@ how to build your own components.
 
 Method | Parameters | Return | Description
 --- | --- | --- | ---
-create | _name, constructor, mixins_ | component | Create componente with [Twitter Flight](http://twitter.github.io/flight/)
+create | _name, constructor, mixins_ | component | Create component with [Flight](http://twitter.github.io/flight)
 extend | _constructor, name, mixins_ | component | Extended component
 get | _name_ | component | Get component
 each | _function(name, component)_ | undefined | Iterator for all components
@@ -101,10 +101,10 @@ define(
             get: function(name) {
                 var cmp = components[name];
                 var flightComponent = null;
-                if(cmp){
+                if (cmp) {
                     flightComponent = components[name].flightComponent;
-                }else{
-                    console.error('Component "'+name+'" is undefined; components :', components);
+                }else {
+                    console.error('Component "' + name + '" is undefined; components :', components);
                 }
                 return flightComponent;
             },

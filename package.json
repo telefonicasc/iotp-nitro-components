@@ -32,6 +32,11 @@
     "grunt-contrib-requirejs": "~1.0.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-watch": "~0.3.1"
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-githooks": "~0.3.1",
+    "grunt-gjslint": "~0.1.0",
+    "grunt-contrib-jshint": "~0.7.1",
+    "jshint-stylish": "~0.1.3"
+
   }
 }

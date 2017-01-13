@@ -12,14 +12,14 @@ __DefaultItems__
 }
 ```
 
-@name MapMarkerGroupTooltip
+MapMarkerGroupTooltip
 
-@mixin Tooltip
-@mixin DataBinding
+mixin Tooltip
+mixin DataBinding
 
-@event hide none Trigger for hide group
-@event show none Trigger for show group
-@event fix none Trigger for fix position
+event hide none Trigger for hide group
+event show none Trigger for show group
+event fix none Trigger for fix position
 */
 
 define(
@@ -50,7 +50,7 @@ define(
                 this.on('valueChange', function(e, o) {
                     var list = this.$node.find('.group-tooltip-marker-list'),
                         markers = (o.value && o.value.markers) || [],
-                        itemselected = this.$node.data('itemselected');;
+                        itemselected = this.$node.data('itemselected');
 
                     list.empty();
                     $.each(markers, $.proxy(function(i, marker) {
@@ -61,7 +61,7 @@ define(
                                 .data('item', item)
                                 .addClass('group-tooltip-marker ' + cssClass)
                                 .html(title);
-                        if(itemselected && item === itemselected){
+                        if (itemselected && item === itemselected) {
                             el.addClass('selected');
                         }
                         el.appendTo(list);
@@ -83,20 +83,24 @@ define(
                             }
                         });
                     }
-                    if(o.silent) e.stopPropagation();
+                    if (o.silent) {
+                        e.stopPropagation();
+                    }
                 });
 
-                this.on('hide', function(){
+                this.on('hide', function() {
                     this.$node.removeData('bindto');
                 });
-                this.on('show', function(e, $ele){
-                    if($ele) this.$node.data('bindto', $ele);
+                this.on('show', function(e, $ele) {
+                    if ($ele) {
+                        this.$node.data('bindto', $ele);
+                    }
                 });
 
-                this.on('fix', function(){
+                this.on('fix', function() {
                     var ele = this.$node.data('bindto'),
                         position;
-                    if(ele){
+                    if (ele) {
                         position = L.DomUtil.getPosition(ele);
                         L.DomUtil.setPosition(this.$node[0], position);
                     }

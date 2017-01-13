@@ -6,8 +6,6 @@ define(
 
     function(ComponentManager, Container) {
 
-        return ComponentManager.create('CardSide', CardSide);
-
         function CardSide() {
 
             this.defaultAttrs({
@@ -22,7 +20,7 @@ define(
                     if (this.attr.editableHeader) {
                         $('<div>').addClass('card-title-label')
                                 .html('Card title').appendTo(this.$header);
-                        this.$headerText  = $('<textarea>').appendTo(this.$header);
+                        this.$headerText = $('<textarea>').appendTo(this.$header);
                         this.$headerText.val(this.attr.header);
                     } else {
                         if (typeof this.attr.header === 'string') {
@@ -41,5 +39,7 @@ define(
                 Container.attachTo(this.$body, this.attr);
             });
         }
+
+        return ComponentManager.create('CardSide', CardSide);
     }
 );

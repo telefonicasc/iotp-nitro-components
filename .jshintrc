@@ -24,7 +24,9 @@
     "expr": true,
     "boss": true,
     "globals": {
+        "angular": false,
         "define": true,
+        "XDomainRequest": false,
         "describeComponent": true,
         "d3": true,
         "Raphael": true,
@@ -32,6 +34,9 @@
         "setupComponent" : true,
         "expect": true,
         "it": true,
-        "describe":true
+        "describe":true,
+        "Kermit": false,
+        "L": false,
+        "Hogan": false
     }
 }

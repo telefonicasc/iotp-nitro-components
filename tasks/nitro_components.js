@@ -56,7 +56,9 @@ module.exports = function(grunt) {
             dest: cssPath
         };
 
-        if (optimize) requireCfg.options.optimize = optimize;
+        if (optimize) {
+            requireCfg.options.optimize = optimize;
+        }
 
         var imagesConfig = {
             expand: true,

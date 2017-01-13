@@ -3,8 +3,6 @@ define(
 
     function() {
 
-        return Interactions;
-
         function Interactions() {
 
             var interactions = [],
@@ -41,20 +39,20 @@ define(
 
                 this.$graphEditor.on('dragstart', '.card', $.proxy(function(e, ui) {
                     if (this.editable !== false) {
-                      var position = $(e.target).position();
-                      detached = false;
-                      startLeft = position.left;
-                      startTop = position.top;
+                        var position = $(e.target).position();
+                        detached = false;
+                        startLeft = position.left;
+                        startTop = position.top;
                     } else {
-                      return false;
+                        return false;
                     }
                 }, this));
 
                 this.$graphEditor.on('drag', '.card', $.proxy(function(e, ui) {
                     var position = $(e.target).position();
                     if (!detached) {
-                        if (Math.abs(position.left-startLeft) > 100 ||
-                            Math.abs(position.top-startTop) > 100) {
+                        if (Math.abs(position.left - startLeft) > 100 ||
+                            Math.abs(position.top - startTop) > 100) {
                             detached = true;
                             $(e.target).data('detached', true);
                             this.detachCard($(e.target));
@@ -118,7 +116,7 @@ define(
                     card.data('detached', false);
                 } else {
                     if (activeArea) {
-                        this.$graphEditor.trigger('restoreConnections'); 
+                        this.$graphEditor.trigger('restoreConnections');
                         this.undoTempRemoved();
                     }
                     card.data('detached', true);
@@ -130,7 +128,7 @@ define(
 
             this.tempRemoveCard = function(card) {
                 card.hide();
-                tempRemovedCards.push(card);                
+                tempRemovedCards.push(card);
             };
 
             this.undoTempRemoved = function() {
@@ -161,5 +159,8 @@ define(
                 }
             };
         }
+
+        return Interactions;
+
     }
 );

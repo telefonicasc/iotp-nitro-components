@@ -69,8 +69,8 @@ define([], function() {
 
                         scope.safeApply = function(fn) {
                             var phase = this.$root.$$phase;
-                            if(phase == '$apply' || phase == '$digest') {
-                                if(fn && (typeof(fn) === 'function')) {
+                            if (phase === '$apply' || phase === '$digest') {
+                                if (fn && (typeof(fn) === 'function')) {
                                     fn();
                                 }
                             } else {
@@ -103,9 +103,6 @@ define([], function() {
                         });
                     }
                 };
-            }])
-            .factory('BoxMessage', [function() {
-                return BoxMessage;
             }]);
     }
 });

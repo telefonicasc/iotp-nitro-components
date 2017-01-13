@@ -22,7 +22,7 @@ define(
 );
 ```
 
-@name jqueryPlugins
+jqueryPlugins
 */
 (function() {
 

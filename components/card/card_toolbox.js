@@ -9,9 +9,6 @@ define(
     function(ComponentManager, BorderCollapsablePanel, Card,
              Draggable) {
 
-        return ComponentManager.extend(BorderCollapsablePanel,
-                'CardToolbox', CardToolbox);
-
         function CardToolbox() {
 
             this.defaultAttrs({
@@ -63,12 +60,12 @@ define(
                             containment: this.attr.containment,
                             helper: function() {
                                 var newCardEl = $('<div>');
-                                var data = $.extend({}, card, {id:null});
+                                var data = $.extend({}, card, {id: null});
                                 if (locales[attrCard.component]) {
                                     data.locales = locales[attrCard.component];
                                 }
                                 cardCmp.attachTo(newCardEl, data);
-                                newCardEl.data('cardConfig', card['__cardConfig']);//===========
+                                newCardEl.data('cardConfig', card.__cardConfig);//===========
                                 return newCardEl;
                             }
                         });
@@ -80,5 +77,8 @@ define(
                 this.$node.find('.card-toolbox-section').remove();
             };
         }
+
+        return ComponentManager.extend(BorderCollapsablePanel,
+            'CardToolbox', CardToolbox);
     }
 );

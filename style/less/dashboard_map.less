@@ -67,7 +67,7 @@
     padding: 8px 8px 0 8px;
     margin-top:15px;
     margin-left:-62px;
-    z-index: 9999;
+    z-index: 10001000;
 
     &:after {
         display: none;
@@ -127,10 +127,11 @@
 
 .m2m-dashboardmap .group-tooltip-marker {
     background-image: url('@{image-path}/markers/blue-marker-tooltip.png');
-    height: 24px;
+    min-height: 24px;
     cursor: pointer;
     background-repeat: no-repeat;
     padding-left: 20px;
+    margin-bottom: 5px;
 
     &.selected {
         background-image: url('@{image-path}/markers/blue-marker-selected-tooltip.png');

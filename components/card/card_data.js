@@ -1,555 +1,830 @@
 define(
-[],
-function() {
+    [],
+    function() {
 
-    var locales = {
-        'true': 'True',
-        'false': 'False',
-        'value': 'Value',
-        'after': 'After',
-        'every': 'Every',
-        'sendAlarmHeader': 'Create alarm',
-        'turnOffAlarmHeader': 'Turn off alarm',
-        'sendEmailHeader': 'Send email',
-        'subject': 'Subject',
-        'to': 'To',
-        'thresholdHeader': 'Threshold',
-        'criticalLevel': 'Critical level',
-        'majorLevel': 'Major level',
-        'maxLevel': 'Maximum level',
-        'minLevel': 'Minimum level',
-        'alarmOffLevel':  'Alarm off level',
-        'alarmConditionTxt': 'This condition includes all assets that have at least one active alarm and does not require configuration.',
-        'sendAlarmTxt': 'This action will create all active alarms for the assets that meet the formulated conditions and does not require configuration.',
-        'turnOffAlarmTxt': 'This action will turn off all active alarms for the assets that meet the formulated conditions and does not require configuration.',
-        'alarmHeader': 'Alarm',
-        'repeat': 'Repeat',
-        'interval': 'Interval',
-        'elapsed': 'Elapsed',
-        'noSensorSignal': 'No Sensor Signal',
-        'sendSMSHeader': 'Send SMS',
-        'property': 'Property',
-        'name': 'Name'
-    };
+    var locales = {},
 
-    var PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:';
-
-    var cardType = {
-        'SENSOR_CARD': 'SensorCard',
-        'ACTION_CARD': 'ActionCard',
-        'TIME_CARD': 'TimeCard'
-    };
-
-    var component = {
-        'ANGLE': 'AngleWidget',
-        'SLIDER': 'Slider',
-        'BATTERY': 'Battery',
-        'SEND_EMAIL': 'SendEmail',
-        'SEND_SMS':'SendSMS'
-    };
-
-    var encodeSensor = {
-        'angle': function(card){
-
-            card.front = {
-                items: [{
-                    component: component.ANGLE
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: component.SLIDER,
-                    label: locales.value
-                }]
-            };
-            card.defaultValue = '0';
-            return card;
+        /**
+         * RuleEditor atributes configuration
+         *
+         * @type    object
+         */
+        options = {
+            card: {
+                valueThreshold: {
+                    // Example of option:
+                    //  > regExpQuantity:  '^[-+]?([0-9]*?||([0-9]+(\.[0-9]*?)))?$',
+                    //  > regExpText:      '^(?!.*(_)\\1)[\.a-zA-Z0-9_\-]*$'
+                },
+                attributeThreshold: {
+                    // Example of option:
+                    //  > regExpValidator: '^(?!.*(_)\\1)[a-zA-Z][\.a-zA-Z0-9_]*$',
+                }
+            }
         },
-        'battery': function(card){
-            card.front = {
-                items: [{
-                    component: component.BATTERY
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: component.SLIDER,
-                    label: locales.value
-                }]
-            };
-            card.defaultValue = '0';
-            return card;
+
+        PHENOMENON_PREFIX = 'urn:x-ogc:def:phenomenon:IDAS:1.0:',
+
+        cardType = {
+            'SENSOR_CARD': 'SensorCard',
+            'ACTION_CARD': 'ActionCard',
+            'TIME_CARD': 'TimeCard'
         },
-        'binary': function(card) {
-            card.front = {
-                items: [{
-                    component: 'CardFrontBinary',
-                    trueLabel: locales['true'],
-                    falseLabel: locales['false']
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'Dropdown',
-                    defaultValue: 'false',
-                    options: [{
-                        label: locales['true'],
-                        value: 'true'
-                    }, {
-                        label: locales['false'],
-                        value: 'false'
-                    }]
-                }]
-            };
-            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
-            card.defaultValue = 'false';
-            return card;
+
+        component = {
+            'SEND_EMAIL': 'SendEmail',
+            'SEND_SMS': 'SendSMS'
         },
-        'text': function(card) {
-            card.front = {
-                items: [{
-                    component: 'CardFrontText'
-                }]
-            };
-            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value']
-                }]
-            };
-            return card;
-        },
-        'quantityValue': function(card) {
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    units: card.sensorData.uom
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType:card.sensorData.dataType
-                }]
-            };
-            return card;
-        },
-        'noSensorSignal':function(card){
-            card.header = locales['noSensorSignal'];
-            if( card.sensorData && card.sensorData.measureName && $.isArray(card.configData) ){
-                $.map(card.configData, function(option){
-                    var measureName = (option.value && option.value.measureName);
-                    if(measureName === card.sensorData.measureName){
-                        option.selected = true;
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Encode Sensor
+         * Condition cards description and initialized
+         *
+         * @type    object
+         */
+        encodeSensor = {
+            /**
+             * Not Updated Card
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            notUpdated: function(card) {
+                var property = card.conditionList && card.conditionList[0],
+                    sensor = card.sensorData || false,
+                    timeData = card.timeData || false;
+
+                if (property) {
+                    property.parameterValue = {
+                        maxTime: property.parameterValue
+                    };
+
+                    if (sensor) {
+                        property.parameterValue.attributeName = sensor.measureName;
                     }
-                    return option;
-                });
-            }
 
-            card.front = {
-                items: [{
-                    component: 'CardFrontOff'
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'Dropdown',
-                    defaultValue: '',
-                    options: card.configData
-                }]
-            };
-            card.delimiterList = ['GREATER_THAN'];
-            card.delimiterCustomLabels = [
-                {
-                    valueKey: 'GREATER_THAN',
-                    labelKey: 'IS_OFF'
-                },
-                {
-                    valueKey: 'EQUAL_TO',
-                    labelKey: 'IS_OFF'
+                    if (timeData) {
+                        property.parameterValue.checkInterval = timeData.interval;
+                    }
                 }
-            ];
 
-            return card;
-        },
-        'alarm' : function (card) {
-            var property = card.conditionList && card.conditionList[0];
-            card.front = {
-                items: [{
-                    component: 'CardFrontIcon',
-                    iconClass: 'm2m-card-alarm-img'
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackLabel',
-                    labelTxt:  locales['alarmConditionTxt']
-                }]
-            };
-            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
-
-            // delimiter options with custom labels
-            card.delimiterCustomLabels = [
-                {
-                    valueKey: 'EQUAL_TO',
-                    labelKey: 'IS_ON'
-                },
-                {
-                    valueKey: 'DIFFERENT_TO',
-                    labelKey: 'IS_OFF'
-                }
-            ];
-
-            card.defaultCondition = {
-                    scope: 'USER_PROP',
-                    parameterValue: 'true',
-                    not: false,
-                    operator: null,
-                    userProp: '${device.asset.UserProps.histeresis}'
-            };
-            card.header = locales['alarmHeader'];
-
-            if(property){
-                card.value = property.parameterValue;
-            }
-            return card;
-        },
-        'threshold': function(card) {
-            var parameterValue = (card.conditionList && card.conditionList[0] && card.conditionList[0].parameterValue) ? card.conditionList[0].parameterValue : "";
-            var phenomenonValue = (card.sensorData && card.sensorData.phenomenonApp) ? card.sensorData.phenomenonApp : "";
-            var phenomenonData = (card.configData && card.configData.phenomenons) || '';
-
-            card.front = {
-                items: [{
-                    component: 'CardFrontThreshold'
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackThreshold',
-                    phenomenonData: phenomenonData,
-                    levelVal: parameterValue,
-                    phenomenonVal: phenomenonValue,
-                    labelCritical: locales['criticalLevel'],
-                    labelMajor: locales['majorLevel'],
-                    labelAlarmOff: locales ['alarmOffLevel'],
-                    labelMax: locales['maxLevel'],
-                    labelMin: locales['minLevel']
-                }]
-            };
-            card.header = locales['thresholdHeader'];
-
-            return card;
-        },
-        'userProperty': function(card){
-            var property = card.conditionList && card.conditionList[0];
-            if(property){
-                card.value = {
-                    key: property.userProp.replace(/^\${device\.asset\.UserProps\.(.+)}$/g, '$1'),
-                    value: property.parameterValue
+                card.header = locales.notUpdate;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText',
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.checkInterval}}</strong></span>' +
+                                '<span>{{value.attributeName}}</span>' +
+                                '<span>{{value.maxTime}}</span>' +
+                            '</dl>'
+                    }]
                 };
-            }
-            card.header = locales['property'];
-            card.front = {
-                items: [{
-                    component: 'CardFrontText',
-                    tpl: '<div class="m2m-card-text">' +
-                        '<div class="m2m-card-text-value">{{value.key}}' +
-                        '</div>' +
-                     '</div>'
-                }]
-            };
-            card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    inputs: [
+                card.back = {
+                    items: [
                         {
-                            label: locales['name'],
-                            name:'key'
-                        },
-                        {
-                            label: locales['value'],
-                            name:'value'
+                            component: 'CardBackTextCombo',
+                            inputs: [
+                                {
+                                    type: 'text',
+                                    name: 'checkInterval',
+                                    label: locales.checkInterval
+                                },
+                                {
+                                    type: 'text',
+                                    name: 'attributeName',
+                                    label: locales.attribName
+                                },
+                                {
+                                    type: 'text',
+                                    name: 'maxTime',
+                                    label: locales.maxTime
+                                }
+                            ]
                         }
                     ]
-                }]
-            };
-            card.defaultCondition = {
+                };
+                card.delimiterList = [];
+                card.defaultCondition = [
+                    {
+                        scope: 'LAST_MEASURE',
+                        not: false,
+                        operator: 'EQUAL_TO',
+                        parameterValue: ''
+                    }
+                ];
+                card.sensorData = {
+                    measureName: '',
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    uom: ''
+                };
+
+                return card;
+            },
+
+            /**
+             * Value Threshold
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            valueThreshold: function(card) {
+                var property = card.conditionList && card.conditionList[0],
+                    sensor = card.sensorData || false,
+                    tmpType = 'Quantity';
+
+                if (property) {
+                    property.parameterValue = {
+                        thresoldValue: property.parameterValue
+                    };
+
+                    if (sensor) {
+                        tmpType = sensor.dataType;
+                        property.parameterValue.thresoldType = tmpType;
+                        property.parameterValue.thresoldName = sensor.measureName;
+                    }
+                }
+
+                card.header = locales.valueThreshold;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText',
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.thresoldName}}</strong></span>' +
+                                '<span>{{value.thresoldType}}</span>' +
+                                '<span>{{value.thresoldValue}}</span>' +
+                            '</dl>'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackTextCombo',
+                        inputs: [
+                            {
+                                type: 'text',
+                                name: 'thresoldName',
+                                label: locales.name
+                            }, {
+                                type: 'dropdown',
+                                name: 'thresoldType',
+                                options: [
+                                    {
+                                        'label': locales.quantity,
+                                        'value': 'Quantity',
+                                        'selected': (tmpType === 'Quantity' ? true : false)
+                                    },
+                                    {
+                                        'label': locales.text,
+                                        'value': 'Text',
+                                        'selected': (tmpType === 'Text' ? true : false)
+                                    }
+                                ],
+                                regExp: {
+                                    'Quantity': options.card.valueThreshold.regExpQuantity,
+                                    'Text': options.card.valueThreshold.regExpText
+                                },
+                                regExpTarget: 'thresoldValue'
+                            }, {
+                                type: 'text',
+                                name: 'thresoldValue',
+                                label: locales.value,
+
+                                regExp: options.card.valueThreshold.regExpText,
+                                regExpOrigin: 'thresoldType'
+                            }
+                        ]
+                    }]
+                };
+                card.delimiterList = ['GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO'];
+                card.defaultCondition = {
                     scope: 'USER_PROP',
                     parameterValue: null,
                     not: false,
                     operator: null,
                     userProp: ''
-            };
+                };
+                card.sensorData = {
+                    measureName: 'acceleration',
+                    phenomenonApp: 'myPhenomApp',
+                    phenomenon: 'myPhenom',
+                    dataType: 'Quantity',
+                    uom: 'myUOM'
+                };
 
-            return card;
-        }
+                return card;
+            },
 
-    };
+            /**
+             * Attribute Threshold
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            attributeThreshold: function(card) {
+                var property = (card.conditionList && card.conditionList[0]) ? card.conditionList[0] : false,
+                    sensor = card.sensorData || false,
+                    tmpType = 'Quantity';
 
-    var encodeTime = {
-        'timeElapsed': function(card){
-            card.header = locales['elapsed'];
-            card.cssClass = 'm2m-card-time m2m-card-elapsed';
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['after'],
-                    units:'seg'
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType: 'Quantity'
-                }]
-            };
-            if( card.timeData && card.timeData.interval ){
-                card.value = card.timeData.interval;
+                if (property) {
+                    var tmpValue = property.parameterValue,
+                        pattern = /\$\{(.*)\}/,
+                        matches;
+
+                    if (matches = tmpValue.match(pattern)) {
+                        tmpValue = matches[1];
+                    }
+
+                    property.parameterValue = {
+                        thresoldValue: tmpValue
+                    };
+
+                    if (sensor) {
+                        tmpType = sensor.dataType;
+                        property.parameterValue.thresoldType = tmpType;
+                        property.parameterValue.thresoldName = sensor.measureName;
+                    }
+                }
+
+                card.header = locales.attributeThreshold;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText',
+                        tpl: '<div class="thresold-attribs">' +
+                                '<span><strong>{{value.thresoldName}}</strong></span>' +
+                                '<span>{{value.thresoldType}}</span>' +
+                                '<span>{{value.thresoldValue}}</span>' +
+                            '</dl>'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackTextCombo',
+                        inputs: [
+                            {
+                                type: 'text',
+                                name: 'thresoldName',
+                                label: locales.name
+                            },
+                            {
+                                type: 'dropdown',
+                                name: 'thresoldType',
+                                options: [
+                                    {
+                                        'label': locales.quantity,
+                                        'value': 'Quantity',
+                                        'selected': (tmpType === 'Quantity' ? true : false)
+                                    },
+                                    {
+                                        'label': locales.text,
+                                        'value': 'Text',
+                                        'selected': (tmpType === 'Text' ? true : false)
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'text',
+                                name: 'thresoldValue',
+                                label: locales.value,
+                                placeholder: locales.valueAttributeThreshold,
+                                regExp: options.card.attributeThreshold.regExpValidator
+                            }
+                        ]
+                    }]
+                };
+                card.delimiterList = ['GREATER_THAN', 'MINOR_THAN', 'EQUAL_TO', 'DIFFERENT_TO'];
+                card.defaultCondition = {
+                    scope: 'USER_PROP',
+                    parameterValue: null,
+                    not: false,
+                    operator: null,
+                    userProp: ''
+                };
+
+                return card;
+            },
+
+            /**
+             * CEP Rule
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            ceprule: function(card) {
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackTextarea'
+                    }]
+                };
+                card.delimiterList = ['EQUAL_TO'];
+
+                return card;
+            },
+
+            /**
+             * RegExp (Alias ID)
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            regexp: function(card) {
+                card.header = locales.regexpTitle;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackText',
+                        label: locales.regexp
+                    }]
+                };
+
+                card.delimiterList = ['MATCH'];
+
+                card.defaultCondition = {
+                    scope: 'XPATH',
+                    parameterValue: null,
+                    parameterName: 'id',
+                    not: false,
+                    operator: 'MATCH',
+                    userProp: ''
+                };
+
+                return card;
+            },
+
+            /**
+             * Type
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            type: function(card) {
+                card.header = locales.type;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackText',
+                        label: locales.value
+                    }]
+                };
+
+                card.delimiterList = ['EQUAL_TO', 'DIFFERENT_TO'];
+
+                card.defaultCondition = {
+                    scope: 'XPATH',
+                    parameterValue: null,
+                    parameterName: 'type',
+                    not: false,
+                    operator: null,
+                    userProp: ''
+                };
+
+                card.sensorData = {
+                    dataType: 'Text'
+                };
+
+                return card;
             }
-            card.defaultValue = '1';
-            card.timeCard = true;
-            return card;
         },
-        'timeInterval': function(card){
-            card.header = locales['interval'];
-            card.cssClass = 'm2m-card-time m2m-card-interval';
 
-            card.front = {
-                items: [{
-                    component: 'CardFrontQuantityValue',
-                    label: locales['interval'],
-                    units:'min'
-                }]
-            };
-            card.back = {
-                items: [{
-                    component: 'CardBackText',
-                    label: locales['value'],
-                    dataType: 'Quantity'
-                }]
-            };
+        // --------------------------------------------------------------------
 
-            if( card.timeData && card.timeData.interval ){
-                card.value = card.timeData.interval;
+        /**
+         * Encode Time
+         * Time based condition cards description and initialized
+         *
+         * @type    object
+         */
+        encodeTime = {
+            /**
+             * Time Elapsed
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            timeElapsed: function(card) {
+                card.header = locales.elapsed;
+                card.cssClass = 'm2m-card-time m2m-card-elapsed';
+
+                card.front = {
+                    items: [{
+                        component: 'CardFrontQuantityValue',
+                        label: locales.after,
+                        units: 'seg'
+                    }]
+                };
+                card.back = {
+                    items: [{
+                        component: 'CardBackText',
+                        label: locales.value,
+                        dataType: 'Quantity'
+                    }]
+                };
+
+                if (card.timeData && card.timeData.interval) {
+                    // card.timeData.interval is in milliseconds, need do change to sec.
+                    card.value = + card.timeData.interval / 1000;
+                }
+                card.defaultValue = '1';
+                card.timeCard = true;
+
+                return card;
             }
-            card.defaultValue = '1';
-            card.timeCard = true;
-            return card;
-        }
-    };
+        },
 
-    var encodeAction = {
-        'SendEmailAction': function(card) {
-            card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
-            card.header = locales.sendEmailHeader;
-            card.locales = {
-                subject: locales.subject,
-                to: locales.to
+        // --------------------------------------------------------------------
+
+        /**
+         * Encode Action
+         * Action cards description and initialized
+         *
+         * @type    object
+         */
+        encodeAction = {
+            /**
+             * Send Email Action
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            SendEmailAction: function(card) {
+                card.cssClass = 'm2m-card-action m2m-card-send-email action-card';
+                card.header = locales.sendEmailHeader;
+                card.locales = {
+                    subject: locales.subject,
+                    to: locales.to,
+                    from: locales.from
+                };
+                card.component = component.SEND_EMAIL;
+                card.tokens = ['type', 'id'];
+
+                return card;
+            },
+
+            /**
+             * Send SMS Action
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            SendSmsMibAction: function(card) {
+                card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
+                card.header = locales.sendSMSHeader;
+                card.locales = {
+                    subject: locales.subject,
+                    to: locales.to
+                };
+                card.component = component.SEND_SMS;
+                card.tokens = ['type', 'id'];
+
+                return card;
+            },
+
+            /**
+             * Update Attribute
+             *
+             * @param   {object}  card    The defaults card attributes
+             * @return  {object}          The card composed
+             */
+            updateAttribute: function(card) {
+                var userParams = card.userParams || {};
+                card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
+                card.header = locales.updateAttribute;
+                card.actionCard = true;
+                card.front = {
+                    items: [{
+                        component: 'CardFrontText',
+                        tpl: '<dl class="properties">' +
+                                '<dt>{{value.name}}</dt>' +
+                                '<dd>{{value.value}}</dd>' +
+                            '</dl>'
+                    }]
+                };
+
+                card.back = {
+                    items: [{
+                        component: 'CardBackText',
+                        inputs: [
+                            {
+                                label: locales.name,
+                                name: 'name'
+                            },
+                            {
+                                label: locales.value,
+                                name: 'value'
+                            }
+                        ]
+                    }]
+                };
+                card.value = {
+                    name: (userParams.name || '') ,
+                    value: (userParams.value || '')
+                };
+
+                return card;
             }
-            card.component = component.SEND_EMAIL;
-            card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
-            return card;
         },
-        'CreateAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
-            card.header = locales.sendAlarmHeader;
-            card.actionCard = true;
-            card.front = {
-                items: [{
-                    component: 'CardFrontIcon',
-                    iconClass: 'm2m-card-alarm-img'
-                }]
-            };
-            card.back = {
-                items: [{
-                     component: 'CardBackLabel',
-                     labelTxt: locales.sendAlarmTxt
-                }]
-            };
-            return card;
-        },
-        'TurnOffAlarmAction': function(card){
-            card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
-            card.header = locales.turnOffAlarmHeader;
-            card.actionCard = true;
-            card.front = {
-                items: [{
-                    component: 'CardFrontIcon',
-                    iconClass: 'm2m-card-alarm-with-x-img'
-                }]
-            };
-            card.back = {
-                items: [{
-                     component: 'CardBackLabel',
-                     labelTxt: locales.turnOffAlarmTxt
-                }]
-            };
-            return card;
-        },
-        'SendSmsMibAction':function(card){
-            card.cssClass = 'm2m-card-action m2m-card-send-sms action-card';
-            card.header = locales.sendSMSHeader;
-            card.locales = {
-                subject: locales.subject,
-                to: locales.to
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Sensor
+         * Mapped of data after any kind of condition card modification
+         *
+         * @type    object
+         */
+        decodeSensor = {
+            notUpdated: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
+
+                if (condition) {
+                    condition.scope = 'LAST_MEASURE';
+                    condition.parameterValue = cardData.maxTime;
+                }
+
+                cardConfig.timeData = {
+                    'interval': cardData.checkInterval,
+                    'repeat': '-1',
+                    'context': ''
+                };
+
+                cardConfig.sensorData = {
+                    'measureName': cardData.attributeName,
+                    'phenomenonApp': '',
+                    'phenomenon': '',
+                    'dataType': '',
+                    'uom': ''
+                };
+
+                cardConfig.conditionList = condition;
+                delete cardConfig.configData;
+
+                return cardConfig;
+            },
+
+            valueThreshold: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
+
+                if (condition) {
+                    condition.scope = 'OBSERVATION';
+                    condition.parameterValue = cardData.thresoldValue;
+
+                    delete condition.userProp;
+                }
+
+                cardConfig.sensorData = {
+                    measureName: cardData.thresoldName,
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
+                };
+
+                cardConfig.conditionList = condition;
+                delete cardConfig.configData;
+
+                return cardConfig;
+            },
+
+            attributeThreshold: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
+
+                if (condition) {
+                    condition.scope = 'OBSERVATION';
+                    condition.parameterValue = '${' + cardData.thresoldValue + '}';
+
+                    delete condition.userProp;
+                }
+
+                cardConfig.sensorData = {
+                    measureName: cardData.thresoldName,
+                    phenomenonApp: '',
+                    phenomenon: '',
+                    dataType: cardData.thresoldType,
+                    uom: ''
+                };
+
+                cardConfig.conditionList = condition;
+
+                delete cardConfig.configData;
+
+                return cardConfig;
+            },
+
+            regexp: function(cardConfig, cardData) {
+                var condition = cardConfig.conditionList && cardConfig.conditionList[0];
+
+                cardConfig.sensorData = {};
+                cardConfig.conditionList = condition;
+                return cardConfig;
+            },
+
+            type: function(cardConfig, cardData) {
+                cardConfig.sensorData = {
+                    dataType: 'Text'
+                };
+
+                return cardConfig;
             }
-            card.component = component.SEND_SMS;
-            card.tokens = ['device_latitude', 'device_longitude', 'measure.value', 'device.asset.name'];
-            return card;
-        }
-    };
-
-    var decodeSensor = {
-        'noSensorSignal':function(cardConfig, cardData){
-            cardConfig.sensorData = cardData;
-            cardConfig.conditionList = [{
-               'scope':'LAST_MEASURE',
-               'not':false,
-               'operator': (cardData.dataType === 'Quantity') ? 'GREATER_THAN':'EQUAL_TO' ,
-               'parameterValue':'${device.asset.UserProps.reportInterval}'
-            }];
-            delete cardConfig.configData;
-            return cardConfig;
         },
-        'userProperty':function(cardConfig, cardData){
-            var key = '${device.asset.UserProps.' + cardData.key + '}';
-            var condition = cardConfig.conditionList && cardConfig.conditionList[0];
-            if(condition){
-                condition.scope = 'USER_PROP';
-                condition.parameterValue = cardData.value;
-                condition.userProp = key;
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Action
+         * Mapped of data after any kind of action card modification
+         *
+         * @type    object
+         */
+        decodeAction = {
+            SendEmailAction: function(cardConfig, cardData) {
+                cardConfig.actionData.userParams = cardData.userParams;
+
+                return cardConfig;
+            },
+
+            SendSmsMibAction: function(cardConfig, cardData) {
+                cardConfig.actionData.userParams = cardData.userParams;
+
+                return cardConfig;
+            },
+
+            updateAttribute: function(cardConfig, cardData) {
+                cardConfig.actionData.userParams = cardData;
+                cardConfig.actionData.name = 'updateAttribute';
+                cardConfig.actionData.type = 'updateAttribute';
+
+                return cardConfig;
             }
-            delete cardConfig.sensorData;
-            return cardConfig;
-        }
+        },
+
+        // --------------------------------------------------------------------
+
+        /**
+         * Decode Time
+         * Mapped of data after any kind of time based card modification
+         *
+         * @type    object
+         */
+        decodeTime = {
+            timeElapsed: function(cardConfig, cardData) {
+                // card.timeData.interval is in milliseconds, need do change to sec.
+                cardConfig.timeData.interval = +cardData * 1000;
+                cardConfig.timeData.context = 'ASSET';
+                cardConfig.timeData.repeat = '0';
+
+                return cardConfig;
+            }
+        };
+
+        // --------------------------------------------------------------------
+
+
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Add Locales
+     * Mixes locales from other repositories
+     *
+     * @param   {object}  newLocales  A JSON object that holds translated strings
+     * @return  {object}              A JSON that holds all translated strings
+     */
+    var addLocales = function(newLocales) {
+        $.extend(locales, newLocales);
     };
 
-    var decodeAction = {
-        'SendEmailAction': function(cardConfig, cardData) {
-            cardConfig.actionData.userParams = cardData.userParams;
-            return cardConfig;
-        },
-        'SendAlarmAction': function(cardConfig, cardData){
-            cardConfig.actionData.userParams = cardData.userParams;
-            return cardConfig;
-        },
-        'SendSmsMibAction': function(cardConfig, cardData) {
-            cardConfig.actionData.userParams = cardData.userParams;
-            return cardConfig;
-        }
-    };
+    var encode = function(card) {
+        var adapterMethodName = _getMethodNameForParse(card),
+            adapterMethod;
 
-    var decodeTime = {
-        'timeElapsed': function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData;
-            cardConfig.timeData.context =  'ASSET';
-            cardConfig.timeData.repeat = '0';
-            return cardConfig;
-        },
-        'timeInterval':function(cardConfig, cardData){
-            cardConfig.timeData.interval = cardData;
-            cardConfig.timeData.repeat = '0';
-            cardConfig.timeData.context =  'ASSET';//no debería ser necesario pero BE lo necesita
-            return cardConfig;
-        }
-    };
-
-    var encode = function (card) {
-        var adapterMethodName = _getMethodNameForPase(card);
-        var adapterMethod;
         card = $.extend({}, card);
 
-        if(card.type === cardType.SENSOR_CARD){
-            if (!card.header && card.sensorData) {
+        if (card.type === cardType.SENSOR_CARD) {
+            if (! card.header && card.sensorData) {
                 card.header = card.sensorData.measureName || '';
             }
             card = $.extend(card, card.configData);
             adapterMethod = encodeSensor[adapterMethodName];
-
-        }else if(card.type === cardType.ACTION_CARD){
+        } else if (card.type === cardType.ACTION_CARD) {
             card = $.extend(card, card.actionData);
             adapterMethod = encodeAction[adapterMethodName];
-        }else if(card.type === cardType.TIME_CARD) {
+        } else if (card.type === cardType.TIME_CARD) {
             adapterMethodName = card.configData.timeType;
             adapterMethod = encodeTime[adapterMethodName];
         }
-        if( $.isFunction(adapterMethod) ){
+
+        if ($.isFunction(adapterMethod)) {
             card = adapterMethod(card);
         }
+
         return card;
     };
 
-    var decode = function(cardConfig, cardData){
-        var adapterMethodName = _getMethodNameForPase(cardConfig);
-        var adapterMethod;
-        cardConfig = $.extend({}, cardConfig);
-        if(cardConfig.type === cardType.SENSOR_CARD){
-            adapterMethod = decodeSensor[adapterMethodName];
+    var decode = function(cardConfig, cardData) {
+        var adapterMethodName = _getMethodNameForParse(cardConfig),
+            adapterMethod;
 
-        }else if(cardConfig.type === cardType.ACTION_CARD){
+        cardConfig = $.extend({}, cardConfig);
+
+        if (cardConfig.type === cardType.SENSOR_CARD) {
+            adapterMethod = decodeSensor[adapterMethodName];
+        } else if (cardConfig.type === cardType.ACTION_CARD) {
             adapterMethod = decodeAction[adapterMethodName];
-        }else if(cardConfig.type === cardType.TIME_CARD) {
+        } else if (cardConfig.type === cardType.TIME_CARD) {
             adapterMethod = decodeTime[adapterMethodName];
         }
-        if( $.isFunction(adapterMethod) ){
+
+        if ($.isFunction(adapterMethod)) {
             cardConfig = adapterMethod(cardConfig, cardData);
         }
+
         return cardConfig;
     };
 
-    var addLocales = function(newLocales){
-        $.extend(locales, newLocales);
-    };
+    // --------------------------------------------------------------------
 
-    var _getMethodNameForPase = function(cardConfig){
+    /**
+     * Get Method name for parse
+     * Gets a card config data and finds the appropriate method to parse
+     * its data.
+     *
+     * @param  {object}   cardConfig  The card configuration
+     * @return {string}               The name of the method for parse data
+     */
+    var _getMethodNameForParse = function(cardConfig) {
         var sensorData = cardConfig.sensorData,
-            name, phenomenon;
-        var parameterValue = ( cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue)? cardConfig.conditionList[0].parameterValue : "";
-        var patt = /^\$/g;
-        if(cardConfig.type === cardType.SENSOR_CARD){
+            sensorCardType = cardConfig.sensorCardType,
+            name,
+            phenomenon;
+
+        if (cardConfig.type === cardType.SENSOR_CARD) {
             phenomenon = (sensorData && sensorData.phenomenon) ?
                 sensorData.phenomenon.replace(PHENOMENON_PREFIX, '') : '';
-            if(cardConfig.sensorCardType === 'userProperty'){
-                name = 'userProperty';
-            }else if (cardConfig.model === 'NoSensorSignal') {
-                name = 'noSensorSignal';
-            } else if (phenomenon === 'angle') {
-                name = 'angle';
-            } else if (!sensorData){
-                name = 'alarm';
-            } else if (cardConfig.sensorCardType && cardConfig.sensorCardType === 'threshold' || patt.test(parameterValue)) {
-                name = 'threshold';
-             }else if (phenomenon === 'electricPotential') {
-                name = 'battery';
-            } else if (sensorData && sensorData.dataType === 'Boolean') {
-                name = 'binary';
-            } else if (sensorData && sensorData.dataType === 'Quantity') {
-                name = 'quantityValue';
-            } else {
+
+            switch (true) {
+            case (sensorCardType === 'valueThreshold'):
+                name = 'valueThreshold';
+                break;
+
+            case (sensorCardType === 'attributeThreshold'):
+                name = 'attributeThreshold';
+                break;
+
+            case (sensorCardType === 'type'):
+                name = 'type';
+                break;
+
+            case (sensorCardType === 'regexp'):
+                name = 'regexp';
+                break;
+
+            case (sensorCardType === 'entityAttrib'):
+                name = 'entityAttrib';
+                break;
+
+            case (sensorCardType === 'notUpdated'):
+                name = 'notUpdated';
+                break;
+
+            case (sensorCardType === 'ceprule'):
+                name = 'ceprule';
+                break;
+
+            default:
                 name = 'text';
+                break;
             }
-        }else if(cardConfig.type === cardType.ACTION_CARD){
+        } else if (cardConfig.type === cardType.ACTION_CARD) {
             name = cardConfig.actionData.type;
-        }else if(cardConfig.type === cardType.TIME_CARD){
+        } else if (cardConfig.type === cardType.TIME_CARD) {
             phenomenon = cardConfig.configData.timeType;
-            if (phenomenon === 'timeInterval') {
-                name = 'timeInterval';
-            } else if (phenomenon === 'timeElapsed') {
+            if (phenomenon === 'timeElapsed') {
                 name = 'timeElapsed';
             }
         }
+
         return name;
     };
 
+    // Returning public methods
     return {
         'addLocales': addLocales,
         'encode': encode,
-        'decode': decode
+        'decode': decode,
+        'options': options
     };
-
 });

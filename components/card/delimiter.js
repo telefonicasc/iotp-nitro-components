@@ -5,8 +5,6 @@ define(
 
     function(ComponentManager) {
 
-        return ComponentManager.create('CardDelimiter', CardDelimiter);
-
         function CardDelimiter() {
 
             this.defaultAttrs({
@@ -14,16 +12,18 @@ define(
                     'EQUAL_TO',
                     'DIFFERENT_TO',
                     'MINOR_THAN',
-                    'GREATER_THAN'
+                    'GREATER_THAN',
+                    'MATCH'
                 ],
                 delimiterLabels: {
                     'EQUAL_TO': 'IS',
                     'DIFFERENT_TO': 'IS NOT',
                     'MINOR_THAN': 'BELOW',
-                    'GREATER_THAN': 'ABOVE'
+                    'GREATER_THAN': 'ABOVE',
+                    'MATCH': 'MATCH'
                 },
                 delimiterCustomLabels: [],
-                cardConfig : {'conditionList':[]}
+                cardConfig: {'conditionList': []}
             });
 
             this.after('initialize', function() {
@@ -32,8 +32,8 @@ define(
                 var delimiterList = cardElement.data('delimiterList');
                 var delimiterValue;
                 this.attr.delimiterCustomLabels = cardElement.data('delimiterCustomLabels');
-               
-                if(!$.isArray(delimiterList)){
+
+                if (!$.isArray(delimiterList)) {
                     delimiterList = this.attr.delimiterList;
                 }
 
@@ -50,7 +50,7 @@ define(
                         .appendTo(this.$node);
 
                 $.each(delimiterList, $.proxy(function(i, del) {
-                   
+
                     $('<li>').addClass('delimiter-value')
                             .appendTo(this.$delimiterList)
                             .data('value', del)
@@ -88,9 +88,9 @@ define(
                 });
 
                 this.$delimiterList.find('li').slideToggle(0);
-                if(cardConfig.conditionList.length){
+                if (cardConfig.conditionList.length) {
                     delimiterValue = cardConfig.conditionList[0].operator;
-                }else{
+                }else {
                     delimiterValue = delimiterList[0];
                 }
 
@@ -101,12 +101,12 @@ define(
             this.getDelimiterLabel = function(del) {
                 var delimiterKeyLabel = del;
                 if (this.attr.delimiterCustomLabels && this.attr.delimiterCustomLabels.length > 0) {
-                        $.each(this.attr.delimiterCustomLabels, function(i, o) {
-                            if(del == o.valueKey){
-                                delimiterKeyLabel = o.labelKey;
-                            }
-                        });
-                    }
+                    $.each(this.attr.delimiterCustomLabels, function(i, o) {
+                        if (del === o.valueKey) {
+                            delimiterKeyLabel = o.labelKey;
+                        }
+                    });
+                }
                 return this.attr.delimiterLabels[delimiterKeyLabel] || delimiterKeyLabel;
             };
 
@@ -117,5 +117,7 @@ define(
                 this.trigger('valueChange', { value: del });
             };
         }
+
+        return ComponentManager.create('CardDelimiter', CardDelimiter);
     }
 );

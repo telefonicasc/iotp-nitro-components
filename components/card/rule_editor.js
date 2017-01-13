@@ -15,18 +15,15 @@ define(
     ],
 
     function(ComponentManager, GraphEditor, CardToolbox,
-            Card, CardData, Interactions, AndInteraction, ActionDropInteraction,TimeDropInteraction,
+Card, CardData, Interactions, AndInteraction, ActionDropInteraction, TimeDropInteraction,
             DataBinding, RuleEditorToolbar, Delimiter) {
-
-        return ComponentManager.create('RuleEditor', RuleEditor,
-                Interactions, AndInteraction, ActionDropInteraction, TimeDropInteraction);
 
         function RuleEditor() {
 
             this.defaultAttrs({
                 cards: {},
                 value: {
-                    rule:{
+                    rule: {
                         cards: []
                     },
                     isValid: true
@@ -45,25 +42,29 @@ define(
                     'IS_ON': 'IS_ON'
                 },
                 locales: {
-                    Card:{
+                    Card: {
                         'subject': 'Subject',
                         'to': 'To',
-                        'sensor_name': 'Sensor Name'
+                        'sensor_name': 'Condition'
                     },
-                    CardData:{
+                    CardData: {
                         'true': 'True',
                         'false': 'False',
                         'value': 'Value'
                     }
                 },
                 editable: true,
-                ruleValidator : function(ruleData){
+                ruleValidator: function(ruleData) {
                     return true;
-                }
+                },
+
+                //Configure cards
+                card: {}
             });
 
             this.after('initialize', function() {
                 CardData.addLocales(this.attr.locales.CardData);
+                $.extend(true, CardData.options, this.attr);
 
                 this.connections = [];
                 this.value = this.attr.value;
@@ -129,9 +130,9 @@ define(
                 this.$bottomToolbar.on('conditionsSelected',
                     $.proxy(function(e, o) {
                         var isVisible = this.$conditionsToolbox.is(':visible');
-                        if(isVisible){
+                        if (isVisible) {
                             this.$conditionsToolbox.trigger('collapse');
-                        }else{
+                        }else {
                             this.$actionsToolbox.trigger('collapse', {
                                 complete: $.proxy(function() {
                                     this.$conditionsToolbox.trigger('expand');
@@ -146,9 +147,9 @@ define(
                 this.$bottomToolbar.on('actionsSelected',
                     $.proxy(function(e, o) {
                         var isVisible = this.$actionsToolbox.is(':visible');
-                        if(isVisible){
+                        if (isVisible) {
                             this.$actionsToolbox.trigger('collapse');
-                        }else{
+                        }else {
                             this.$conditionsToolbox.trigger('collapse', {
                                 complete: $.proxy(function() {
                                     this.$actionsToolbox.trigger('expand');
@@ -162,14 +163,14 @@ define(
 
                 GraphEditor.attachTo(this.$graphEditor, {});
 
-                $('body').on('click', function(){
+                $('body').on('click', function() {
                     $(this).find('.card.flip').each(function() {
                         $(this).removeClass('flip');
                         $(this).trigger('flipped');
                     });
                 });
 
-                this.$graphEditor.on('nodeAdded', $.proxy(function(e, o) {
+                this.$graphEditor.on('addDelimiter', $.proxy(function(e, o) {
                     var node = o.node,
                         placeholder,
                         delimiter;
@@ -177,7 +178,7 @@ define(
                     if (node.hasClass('m2m-card-condition')) {
                         delimiter = $('<div>').appendTo(
                             this.$graphEditor.find('.node-container'));
-                        delimiter.on('valueChange', $.proxy(function(){
+                        delimiter.on('valueChange', $.proxy(function() {
                             this.updateValue();
                         }, this));
                         Delimiter.attachTo(delimiter, $.extend({
@@ -204,7 +205,7 @@ define(
                     }
                 }, this));
 
-                this.$graphEditor.on('flipped', '.card', $.proxy(function(e, o){
+                this.$graphEditor.on('flipped', '.card', $.proxy(function(e, o) {
                     var delimiter = $(e.target).data('delimiter');
                     if (delimiter) {
                         if ($(e.target).hasClass('flip')) {
@@ -244,7 +245,6 @@ define(
                         if (o.cards) {
                             if (o.cards.conditions) {
                                 cards = o.cards.conditions.cards || [];
-                                cards.unshift( _makeCardNoSensorSignal(cards) );
                                 this.attr.cards.conditions = cards;
 
                                 this.loadToolboxCards(this.$conditionsToolbox, cards);
@@ -268,7 +268,7 @@ define(
                 this.$graphEditor.droppable({
                     accept: '.card.preview',
                     drop: $.proxy(function(e, ui) {
-                        ui.draggable.data('draggable').cancelHelperRemoval = true;
+                        ui.draggable.data('uiDraggable').cancelHelperRemoval = true;
                         this.$graphEditor.trigger('addNode', { node: ui.helper });
                         $(window).trigger('resize');
                         this.relayoutCards();
@@ -287,7 +287,7 @@ define(
                     if (e.target === this.node &&
                         !o.ruleEngineUpdate) {
                         this.disableChangeEvent = true;
-                        if(o.value){
+                        if (o.value) {
                             this.loadRuleData(o.value);
                         }
                         this.disableChangeEvent = false;
@@ -381,12 +381,14 @@ define(
                 return connectedTo;
             };
 
-            this.getConnectedToId = function(card){
+            this.getConnectedToId = function(card) {
                 var connections = this.getConnectedTo(card);
                 var ids = [];
-                $.each(connections, function(i,connection){
+                $.each(connections, function(i, connection) {
                     var id = $(connection).attr('id');
-                    if(id) ids.push(id);
+                    if (id) {
+                        ids.push(id);
+                    }
                 });
                 return ids;
             };
@@ -431,8 +433,8 @@ define(
 
                 if (to) {
                     this.removeConnection(card, to);
-                }else{
-                    this.addPlaceholderToCard( $(from) );
+                }else {
+                    this.addPlaceholderToCard($(from));
                 }
                 this.disableRelayout = false;
                 this.relayoutCards();
@@ -442,16 +444,16 @@ define(
                 var parsedCards = [];
                 $.each(cards, $.proxy(function(i, card) {
                     // If card is a threshold card, put phenomenons in configData parameter
-                   if(card.sensorCardType && card.sensorCardType === 'threshold'){
-                       var phenomenons = _getPhenomenons(cards);
-                       card.configData = phenomenons;
+                    if (card.sensorCardType && card.sensorCardType === 'threshold') {
+                        var phenomenons = _getPhenomenons(cards);
+                        card.configData = phenomenons;
                     }
 
                     var cardConfig = $.extend({}, card);
                     var data = CardData.encode(card);
                     // esta variable es importante porque se usa en card_toolbox.js para asignar
                     // el valor devuelto por servidor
-                    data['__cardConfig'] = cardConfig;
+                    data.__cardConfig = cardConfig;
                     parsedCards.push($.extend({},
                         this.attr.cardDefaults, data));
                 }, this));
@@ -473,18 +475,19 @@ define(
                 // Add cards
                 $.each(rule.cards, $.proxy(function(i, card) {
                     var cardConfig = $.extend({}, card);
-                    var cardEl = $('<div>').data('cardConfig', cardConfig );
+                    var cardEl = $('<div>').data('cardConfig', cardConfig);
                     // If card is a threshold card, put phenomenons in configData parameter
-                    var parameterValue = (cardConfig.conditionList && cardConfig.conditionList[0] && cardConfig.conditionList[0].parameterValue) ? cardConfig.conditionList[0].parameterValue : "";
+                    var parameterValue = (cardConfig.conditionList && cardConfig.conditionList[0] &&
+                        cardConfig.conditionList[0].parameterValue) ? cardConfig.conditionList[0].parameterValue : '';
                     var patt = /^\$/g;
-                    if(patt.test(parameterValue)){
+                    if (patt.test(parameterValue)) {
                         var phenomenons = _getPhenomenons(this.attr.cards.conditions);
-                        card['configData'] = phenomenons;
+                        card.configData = phenomenons;
                     }
 
-                    if( card.model === 'NoSensorSignal' ){
+                    if (card.model === 'NoSensorSignal') {
                         card.value = card.sensorData;
-                        card.configData =  _getPhenomenonList(this.attr.cards.conditions);
+                        card.configData = _getPhenomenonList(this.attr.cards.conditions);
                     }
 
                     var data = CardData.encode(card);
@@ -526,7 +529,7 @@ define(
             this.getRuleData = function() {
                 var cardsData = [],
                     cards = this.$graphEditor.find('.node-container > .card'),
-                    data = this._rawData || {'cards':[]};
+                    data = this._rawData || {'cards': []};
 
                 $.each(cards, $.proxy(function(i, card) {
                     var cardConfig;
@@ -540,23 +543,23 @@ define(
                         elementId = $(card).attr('id');
                         delimiter = $(card).data('delimiter');
                         conditionList = $(card).data('conditionList');
-                        if(cardConfig && (cardValue !== undefined) ){
+                        if (cardConfig && (cardValue !== undefined)) {
                             cardConfig = CardData.decode(cardConfig, cardValue);
                         }
-                        if(cardConfig){
+                        if (cardConfig) {
                             cardConfig.connectedTo = this.getConnectedToId(card);
                             cardConfig.id = elementId;
-                            if( $.isArray(conditionList) ){
+                            if ($.isArray(conditionList)) {
                                 cardConfig.conditionList = conditionList;
                             }
                             cardsData.push(cardConfig);
-                        }else{
+                        }else {
                             throw 'RuleEditor :: "cardConfig" in Card is undefined';
                         }
                     }
                 }, this));
-                cardsData = _setScopeInSensorCards(cardsData);
-                cardsData.sort(_orderCards);
+                //cardsData = _setScopeInSensorCards(cardsData);
+                //cardsData.sort(_orderCards);
 
                 //@TODO añadir el valor del titulo en caso de implementar esta funcionalidad
                 //data.name = "";
@@ -571,7 +574,7 @@ define(
                     this.trigger('valueChange', {
                         value: {
                             'rule': ruleData,
-                            'isValid': ( this.isValidCards() && this.attr.ruleValidator(ruleData) )
+                            'isValid': (this.isValidCards() && this.attr.ruleValidator(ruleData))
                         },
                         ruleEngineUpdate: true
                     });
@@ -639,7 +642,7 @@ define(
                 return cardToolbox;
             };
 
-            this.addPlaceholderToCard = function(card){
+            this.addPlaceholderToCard = function(card) {
                 var placeHolderelement = _newPlaceholderElement();
                 this.$graphEditor.trigger('addNode', {
                     node: placeHolderelement
@@ -650,63 +653,47 @@ define(
                 });
             };
 
-            this.isValidCards = function(){
+            this.isValidCards = function() {
                 var cards = this.$graphEditor.find('.card');
                 var values = [];
-                for(var i = cards.length; i--;){
+                for (var i = cards.length; i--;) {
                     var isValid = $(cards[i]).data('isValid');
-                    if(isValid === undefined){
+                    if (isValid === undefined) {
                         isValid = true;
                     }
-                    values.push(isValid ? '':'0');
+                    values.push(isValid ? '' : '0');
                 }
                 return (values.join('').length === 0);
             };
         }
 
-        function _newPlaceholderElement(){
+        function _newPlaceholderElement() {
             var placeholder = $('<div>').
                 addClass('card-placeholder action-card');
             return placeholder;
         }
 
-        function _makeCardNoSensorSignal(sensorCards){
-            var data = {
-                'id': '0',
-                'type': 'SensorCard',
-                'model': 'NoSensorSignal',
-                'sensorData':{},
-                'conditionList':[{
-                       'scope':'LAST_MEASURE',
-                       'not':false,
-                       'operator':'GREATER_THAN',
-                       'parameterValue':'${device.asset.UserProps.reportInterval}'
-                    }],
-                'configData': _getPhenomenonList(sensorCards)
-            };
-            return data;
-        }
-
-        function _getPhenomenonList(cards){
+        function _getPhenomenonList(cards) {
             var measureName;
             var emptyPhenomenon = { label: '', value: '' };
             var measureNames = [emptyPhenomenon];
             var unit;
-            for(var n = cards.length;n--;){
-                if (cards[n].type === "SensorCard" && cards[n].sensorData && cards[n].model !== 'NoSensorSignal') {
-                    unit = (cards[n].sensorData.uom && cards[n].sensorData.uom !== "Unknown") ? ' (' + cards[n].sensorData.uom + ')': '';
+            for (var n = cards.length; n--;) {
+                if (cards[n].type === 'SensorCard' && cards[n].sensorData && cards[n].model !== 'NoSensorSignal') {
+                    unit = (cards[n].sensorData.uom && cards[n].sensorData.uom !== 'Unknown') ?
+                        ' (' + cards[n].sensorData.uom + ')' : '';
                     measureName = cards[n].sensorData.measureName + unit;
-                    measureNames.push( { label: measureName, value: cards[n].sensorData } );
+                    measureNames.push({ label: measureName, value: cards[n].sensorData });
                 }
             }
             return measureNames;
         }
 
         // _getPhenomenons returns phenomenons with dataType quantity
-        function _getPhenomenons(cards){
+        function _getPhenomenons(cards) {
             var phenomenons = [];
 
-            $.each(cards, function(i, card){
+            $.each(cards, function(i, card) {
                 if (card.type === 'SensorCard' && card.sensorData && card.sensorData.dataType === 'Quantity') {
                     phenomenons.push(card);
                 }
@@ -715,15 +702,15 @@ define(
             return {phenomenons: phenomenons};
         }
 
-        function _orderCards(a, b){
+        /*function _orderCards(a, b){
             var out = 0;
             if(b.type === 'TimeCard'){
                 out = b.configData.timeType === 'timeInterval'?1:-1;
             }
             return out;
         }
-
-        function _setScopeInSensorCards(cards){
+        */
+        /*function _setScopeInSensorCards(cards){
             var hasTimeInterval = false;
             for(var i =cards.length; i--;){
                 if( cards[i].timeData && cards[i].configData.timeType === 'timeInterval' ){
@@ -739,13 +726,17 @@ define(
 
             return cards;
         }
-        function _setScope(card, scope){
-            if( $.isArray(card.conditionList) ){
-                $.each(card.conditionList, function(i, condition){
+        */
+        function _setScope(card, scope) {
+            if ($.isArray(card.conditionList)) {
+                $.each(card.conditionList, function(i, condition) {
                     condition.scope = scope;
                 });
             }
             return card;
         }
+
+        return ComponentManager.create('RuleEditor', RuleEditor,
+            Interactions, AndInteraction, ActionDropInteraction, TimeDropInteraction);
     }
 );

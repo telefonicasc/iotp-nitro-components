@@ -3,8 +3,6 @@ define(
 
     function() {
 
-        return ActionDropInteraction;
-
         function ActionDropInteraction() {
             this.after('initialize', function() {
                 this.registerInteraction({
@@ -32,7 +30,7 @@ define(
             return areas;
         }
 
-        
+
         function activate(area, card) {
             var previousCard = this.getConnectedFrom(area.placeholder);
             var nextcard = this.getConnectedTo(area.placeholder);
@@ -55,6 +53,8 @@ define(
                 }
             }
         }
+
+        return ActionDropInteraction;
 
     }
 );

@@ -2,13 +2,11 @@ define(
     [
         'components/component_manager',
         'components/draggable',
-        'components/mixin/template'
+        'components/mixin/template',
+        'node_modules/raphael/raphael'
     ],
 
-    function(ComponentManager, Draggable, Template) {
-
-        return ComponentManager.create('graphEditor',
-            Template, GraphEditor);
+    function(ComponentManager, Draggable, Template, Raphael) {
 
         function GraphEditor() {
 
@@ -29,18 +27,19 @@ define(
 
                 this.$node.addClass('graph-editor');
 
-                this.paper = Raphael(this.$connections[0], 10000, 10000);
+                this.paper = new Raphael(this.$connections[0], 10000, 10000);
 
                 this.on('addConnection', function(e, o) {
                     var connection = {
-                                start: o.start,
-                                end: o.end
-                            };
+                        start: o.start,
+                        end: o.end
+                    };
+
                     this.connections.push(connection);
                     this.updateConnections();
                     this.trigger('connectionAdded', {
-                            connection: connection,
-                            connections: this.connections
+                        connection: connection,
+                        connections: this.connections
                     });
                 });
 
@@ -48,7 +47,8 @@ define(
                     if (e.target.parentNode === e.delegateTarget) {
                         var dragNode = $(e.target);
                         dragNode.data({
-                            left: ui.position.left, top: ui.position.top
+                            left: ui.position.left,
+                            top: ui.position.top
                         });
                         dragNode.trigger('moved');
                     }
@@ -61,9 +61,10 @@ define(
                         if (o && o.left && o.top) {
                             $(e.target).data({ left: o.left, top: o.top });
 
-                            if (!o.animated) {
-                                $(e.target).css(o);
-                                $(e.target).trigger('moved', o);
+                            if (! o.animated) {
+                                $(e.target)
+                                    .css(o)
+                                    .trigger('moved', o);
                             } else {
                                 $(e.target).animate(o, {
                                     step: function(now, tween) {
@@ -74,9 +75,8 @@ define(
                                                 left: lastLeft,
                                                 top: now
                                             });
-                                            
                                         }
-                                    }, 
+                                    },
                                     complete: function() {
                                         $(e.target).trigger('moved', o);
                                     }
@@ -89,34 +89,38 @@ define(
                 this.$nodes.on('moved', '*', $.proxy(function(e) {
                     if (e.target.parentNode === e.delegateTarget) {
                         this.updateConnections();
-                     }
+                    }
                 }, this));
 
                 this.on('removeConnection', function(e, o) {
                     var connection = this.getConnection(o.start, o.end),
                         index;
+
                     if (connection) {
                         connection.path.remove();
                         index = this.connections.indexOf(connection);
                         this.connections.splice(index, 1);
                         this.trigger('connectionRemoved', {
-                                connection: connection,
-                                connections: this.connections
+                            connection: connection,
+                            connections: this.connections
                         });
                     }
                 });
 
-                this.on('insertAfter', function(e, o) {
-
-                });
-
                 this.on('addNode', function(e, o) {
                     var node = o.node;
-                    this.$nodes.append(node);
-                    if (o.draggable !== false) {
-                        Draggable.attachTo(node, {});
+
+                    if (node.hasClass('m2m-card-action') && this.$nodes.find('.m2m-card-action').length) {
+                        this.trigger('removeGraphNode', o);
+                        this.trigger('restoreConnections');
+                        this.updateConnections();
+                    } else {
+                        this.$nodes.append(node);
+                        if (o.draggable !== false) {
+                            Draggable.attachTo(node, {});
+                        }
+                        this.trigger('addDelimiter', o);
                     }
-                    this.trigger('nodeAdded', o);
                 });
 
                 this.on('removeGraphNode', function(e, o) {
@@ -125,38 +129,32 @@ define(
                     this.trigger('nodeRemoved', { node: node });
                 });
 
-                this.on('nodeAdded', function() {
-
-                });
-
-                this.on('nodeRemoved', function() {
-
-                });
                 this.on('saveConnections', function() {
                     this.savedConnections = [];
                     $.each(this.connections, $.proxy(function(i, connection) {
                         this.savedConnections.push({
-                            start: connection.start, end: connection.end
+                            start: connection.start,
+                            end: connection.end
                         });
                     }, this));
                 });
- 
+
                 this.on('restoreConnections', function() {
-                    $.each($.extend([], this.connections), 
+                    $.each($.extend([], this.connections),
                         $.proxy(function(i, connection) {
-                            this.trigger('removeConnection', connection );
+                            this.trigger('removeConnection', connection);
                         }, this));
 
                     this.connections = $.extend(true, [], this.savedConnections);
-                    this.trigger('connectionsChange', { 
-                        connections : this.connections 
+                    this.trigger('connectionsChange', {
+                        connections: this.connections
                     });
                     this.updateConnections();
                 });
 
                 this.on('connectionAdded connectionRemoved', function() {
-                    this.trigger('connectionsChange', { 
-                        connections : this.connections
+                    this.trigger('connectionsChange', {
+                        connections: this.connections
                     });
                 });
 
@@ -168,10 +166,11 @@ define(
             this.updateConnections = function() {
                 $.each(this.connections, $.proxy(function(i, connection) {
                     var pathArray;
-                    if (!connection.path) {
+                    if (! connection.path) {
                         connection.path = this.paper.path();
                         connection.path.attr({
-                            stroke: '#2d3336', 'stroke-width': 40
+                            stroke: '#2d3336',
+                            'stroke-width': 40
                         });
                     }
 
@@ -215,5 +214,8 @@ define(
                 return pathArray;
             };
         }
+
+        return ComponentManager.create('graphEditor',
+            Template, GraphEditor);
     }
 );

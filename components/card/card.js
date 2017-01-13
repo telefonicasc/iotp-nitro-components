@@ -9,12 +9,10 @@ define(
     ],
     function(ComponentManager, Template, Flippable, CardSide, DataBinding, CardData) {
         var ELEMENT_ID_PREFIX = 'card_';
-        var id=0;
-        var _getNexId = function(){
+        var id = 0;
+        var _getNexId = function() {
             return ELEMENT_ID_PREFIX + (id++);
         };
-
-        return ComponentManager.create('Card', Template, Card, DataBinding);
 
         function Card() {
 
@@ -30,18 +28,19 @@ define(
                 },
                 back: {
                 },
-                cssClass:'m2m-card-condition',
-                conditionList : [],
-                defaultCondition : {
+                cssClass: 'm2m-card-condition',
+                conditionList: [],
+                defaultCondition: {
                     'scope': 'OBSERVATION',
                     'parameterValue': null,
+                    'parameterName': null,
                     'not': false,
                     'operator': null
                 },
                 delimiterList: false,
-                defaultValue : '',
+                defaultValue: '',
                 locales: {
-                    'sensor_name':'Sensor Name'
+                    'sensor_name': 'Condition'
                 }
             });
 
@@ -52,19 +51,19 @@ define(
                 this.attr.updateOnValueChange = false;
 
                 if (this.attr.rawCard) {
-                    CardData.addLocales(this.attr.locales.CardData);
+                    CardData.addLocales(resamplingLocales());
                     $.extend(this.attr, CardData.encode(this.attr.rawCard));
                 }
 
-                this.$node.on('click',_stopPropagation);
+                this.$node.on('click', _stopPropagation);
                 this.$node.addClass('card');
                 this.$node.addClass(this.attr.cssClass);
-                this.$node.attr('id', elementId );
+                this.$node.attr('id', elementId);
 
                 if (this.attr.header) {
                     this.attr.front.header = this.attr.header;
                     this.attr.back.header = {
-                        label: this.attr.locales.sensor_name,
+                        label: this.attr.locales.sensor_name, // jshint ignore:line
                         value: this.attr.header
                     };
                 }
@@ -101,30 +100,30 @@ define(
                 }
 
                 this.on('valueChange', function(e, o) {
-                    if( $.isFunction(this.attr.validator) ){
-                        this.$node.data( 'isValid', this.attr.validator(o.value) );
+                    if ($.isFunction(this.attr.validator)) {
+                        this.$node.data('isValid', this.attr.validator(o.value));
                     }
                     this.$node.data('cardValue', o.value);
                 });
 
                 var value = this.attr.value || this.attr.defaultValue || undefined;
 
-                if(value){
-                    this.$node.find('.body > *' ).trigger('valueChange', { value: value, silent: true });
+                if (value) {
+                    this.$node.find('.body > *').trigger('valueChange', { value: value, silent: true });
                     this.$node.data('cardValue', value);
                 }
 
-                if(_isSensorCard(this) && this.attr.model !== 'NoSensorSignal'){
+                if (_isSensorCard(this) && this.attr.model !== 'NoSensorSignal') {
                     var condition;
-                    if(this.attr.conditionList.length){
+                    if (this.attr.conditionList.length) {
                         condition = this.attr.conditionList[0];
-                    }else{
+                    }else {
                         condition = $.extend({}, this.attr.defaultCondition);
                     }
 
-                    this.on('conditionOperatorChange', function(e,o){
+                    this.on('conditionOperatorChange', function(e, o) {
                         condition.operator = o;
-                        if(condition.parameterValue !== null){
+                        if (condition.parameterValue !== null) {
                             this.$node.data('conditionList', [condition]);
                         }
                     });
@@ -157,33 +156,57 @@ define(
                     }, this));
 
                     this.on('levelChange', $.proxy(function(e, o) {
-                        this.$node.find('.body > *' ).trigger('updateLevel', o);
+                        this.$node.find('.body > *').trigger('updateLevel', o);
                     }, this));
-                    if(condition.scope !== 'USER_PROP'){
-                        if(condition.parameterValue !== null ){
-                            this.$node.find('.body > *' ).trigger('valueChange', { value: condition.parameterValue, silent: true });
-                        }else{
+                    if (condition.scope !== 'USER_PROP') {
+                        if (condition.parameterValue !== null) {
+                            this.$node.find('.body > *')
+                                .trigger('valueChange', { value: condition.parameterValue, silent: true });
+                        }else {
                             condition.parameterValue = this.attr.defaultValue;
                         }
                     }
                     this.$node.data('conditionList', [condition]);
                     this.$node.data('delimiterList', this.attr.delimiterList);
                     this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
-                }else if(this.attr.model === 'NoSensorSignal'){
+                }else if (this.attr.model === 'NoSensorSignal') {
                     this.$node.data('delimiterList', this.attr.delimiterList);
                     this.$node.data('delimiterCustomLabels', this.attr.delimiterCustomLabels);
                 }
 
             });
 
-            function _stopPropagation(e){
+            function _stopPropagation(e) {
                 e.stopPropagation();
             }
 
-            function _isSensorCard(instance){
+            function _isSensorCard(instance) {
                 return instance.attr.actionCard !== true &&
                     instance.attr.timeCard !== true;
             }
+
+            /**
+             * Resampling Locales
+             * Gets the main i18n and extract translations for rules.
+             *
+             * @return  {object}   obj      The rules translations
+             */
+            function resamplingLocales() {
+                var dataObj = Kermit.i18n.strings,
+                    result = {},
+                    obj, key;
+
+                for (obj in dataObj) {
+                    if (! obj.indexOf('Rules.')) {
+                        key = obj.substr(6, obj.length);
+                        result[key] = dataObj[obj];
+                    }
+                }
+
+                return result;
+            }
         }
+
+        return ComponentManager.create('Card', Template, Card, DataBinding);
     }
 );

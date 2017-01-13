@@ -6,11 +6,9 @@ define(
     ],
 
     function(ComponentManager, DataBinding, Template) {
-        return ComponentManager.create('CardFrontText', DataBinding,
-            Template, CardFrontText);
 
         function CardFrontText() {
-            
+
             this.defaultAttrs({
                 tpl: '<div class="m2m-card-text">' +
                         '<div class="m2m-card-text-value">{{value}}' +
@@ -18,6 +16,9 @@ define(
                      '</div>'
             });
         }
+
+        return ComponentManager.create('CardFrontText', DataBinding,
+            Template, CardFrontText);
 
     }
 );

@@ -9,15 +9,16 @@ define(
     function(ComponentManager, DataBinding, Card, Flippable) {
 
         var defaultAttrs = {
-            subject:'',
-            emailAddress:'',
-            message:'',
+            from: '',
+            subject: '',
+            emailAddress: '',
+            message: '',
             tokens: [],
             actionCard: true,
             actionData: {
-                name:'',
-                description:'',
-                userParams:[]
+                name: '',
+                description: '',
+                userParams: []
             }
 
            // Locales defined in card_data (encodeAction --> SendEmailAction)
@@ -27,92 +28,113 @@ define(
             //    to: 'To'
             // }
         };
-        var BACK_TPL = ['<div class="card-header">',
+        var BACK_TPL = [
+                '<div class="card-header">',
+                '<label class="email-from-label">From</label>',
+                '<input class="email-from">',
                 '<label class="email-subject-label">Subject</label>',
                 '<input class="email-subject">',
                 '<label class="email-address-label">To</label>',
                 '<input class="email-address">',
-            '</div>',
-            '<div class="card-body">',
+                '</div>',
+                '<div class="card-body">',
                 '<textarea class="email-message"></textarea>',
-            '</div>',
-            '<div class="token-selector"></div>'].join('');
-        var FRONT_TPL = ['<i class="email-address"></i>',
-            '<h3 class="email-subject"></h3>',
-            '<p class="email-message"></p>'].join('') ;
-        var TOKEN_TPL = '<div class="token"></div>';
-        var TOKEN_SYMBOL = '+';
-        var TOKEN_VALUE_TPL_START = '${';
-        var TOKEN_VALUE_TPL_END = '}';
+                '</div>',
+                '<div class="token-selector"></div>'
+            ].join(''),
+
+            FRONT_TPL = [
+                '<i class="email-address"></i>',
+                '<h3 class="email-subject"></h3>',
+                '<p class="email-message"></p>'
+            ].join(''),
+
+            TOKEN_TPL = '<div class="token"></div>',
+            TOKEN_SYMBOL = '+',
+            TOKEN_VALUE_TPL_START = '${',
+            TOKEN_VALUE_TPL_END = '}';
 
         function SendEmail() {
             // this == scope of component
-            this.defaultAttrs( $.extend({},defaultAttrs) );
+            this.defaultAttrs($.extend({}, defaultAttrs));
             this.after('initialize', _install);
 
             this._userParamsObject = {};
             this.$element = null;
 
-            this.validate = function(){
+            this.validate = function() {
                 var isValid = this.isValid();
                 this.$node.data('isValid', isValid);
             };
 
-            this.getValue = function(){
+            this.getValue = function() {
+                this._userParamsObject['mail.from'] = this.$element.back.from.val();
                 this._userParamsObject['mail.subject'] = this.$element.back.subject.val();
                 this._userParamsObject['mail.to'] = this.$element.back.emailAddress.val();
                 this._userParamsObject['mail.message'] = this.$element.back.message.val();
+
                 var value = {
-                    'userParams' : _userParamsObjectToArray(this._userParamsObject)
-                };
-                var data = {
-                    'value': value
-                };
+                        'userParams' : _userParamsObjectToArray(this._userParamsObject)
+                    },
+                    data = {
+                        'value': value
+                    };
+
                 return data;
             };
 
-            this.valueChange = function(){
+            this.valueChange = function() {
                 this.trigger('valueChange', this.getValue());
             };
 
-            this.isValid = function(){
-                var userParam = this._userParamsObject;
-                var a = false;
-                var b = false;
-                var c = false;
-                if(userParam['mail.subject'] && userParam['mail.to'] && userParam['mail.message']){
-                    a = (userParam['mail.subject'].length > 0 );
-                    b = (userParam['mail.to'].length > 0 );
-                    c = (userParam['mail.message'].length > 0 );
+            this.isValid = function() {
+                var userParam = this._userParamsObject,
+                    a, b, c, d;
+
+                a = b = c = d = false;
+
+                if (
+                    userParam['mail.from'] &&
+                    userParam['mail.subject'] &&
+                    userParam['mail.to'] &&
+                    userParam['mail.message']
+                ) {
+                    a = (userParam['mail.from'].length > 0);
+                    b = (userParam['mail.subject'].length > 0);
+                    c = (userParam['mail.to'].length > 0);
+                    d = (userParam['mail.message'].length > 0);
                 }
 
-                return (a && b && c);
+                return (a && b && c && d);
             };
         }
 
-        function _install(){
-            var frontTpl = $(FRONT_TPL);
-            var backTpl = $(BACK_TPL);
+        function _install() {
+            var frontTpl = $(FRONT_TPL),
+                backTpl = $(BACK_TPL);
             // this == scope of element in component
             this.$front.find('.body').append(frontTpl);
             this.$back.find('.body').append(backTpl);
+
             var element = this.$element = {
-                back : {
-                    subject : $(backTpl).find('input.email-subject'),
-                    emailAddress : $(backTpl).find('input.email-address'),
-                    message : $(backTpl).find('.email-message'),
-                    token : $(backTpl[2])
+                back: {
+                    from: $(backTpl).find('input.email-from'),
+                    subject: $(backTpl).find('input.email-subject'),
+                    emailAddress: $(backTpl).find('input.email-address'),
+                    message: $(backTpl).find('.email-message'),
+                    token: $(backTpl[2])
                 },
-                front : {
-                    emailAddress : $(frontTpl[0]),
-                    subject : $(frontTpl[1]),
-                    message : $(frontTpl[2])
+                front: {
+                    emailAddress: $(frontTpl[0]),
+                    subject: $(frontTpl[1]),
+                    message: $(frontTpl[2])
                 }
             };
-            
+
             this.$back.find('.email-subject-label').html(this.attr.locales.subject);
             this.$back.find('.email-address-label').html(this.attr.locales.to);
-            
+            this.$back.find('.email-from-label').html(this.attr.locales.from);
+
             var userParamsObject = this._userParamsObject = _userParamsToObject(this.attr.actionData.userParams);
 
             this.$back.on('click', _stopPropagation);
@@ -123,15 +145,17 @@ define(
             element.back.token.html('');
             $.each(this.attr.tokens, _addToken(element));
 
-            element.back.subject.on('change', _updateElementOnChange(element.front.subject) );
-            element.back.message.on('change', _updateElementOnChange(element.front.message) );
+            element.back.subject.on('change', _updateElementOnChange(element.front.subject));
+            element.back.message.on('change', _updateElementOnChange(element.front.message));
 
             var triggerUpdateOnChange = _triggerUpdateOnChange(this);
-            element.back.emailAddress.on('change',  triggerUpdateOnChange).keyup(triggerUpdateOnChange);
-            element.back.subject.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
-            element.back.message.on('change', triggerUpdateOnChange ).keyup(triggerUpdateOnChange);
+            element.back.from.on('change', triggerUpdateOnChange).keyup(triggerUpdateOnChange);
+            element.back.emailAddress.on('change', triggerUpdateOnChange).keyup(triggerUpdateOnChange);
+            element.back.subject.on('change', triggerUpdateOnChange).keyup(triggerUpdateOnChange);
+            element.back.message.on('change', triggerUpdateOnChange).keyup(triggerUpdateOnChange);
 
             //set values
+            element.back.from.val(userParamsObject['mail.from']);
             element.back.subject.val(userParamsObject['mail.subject']);
             element.back.emailAddress.val(userParamsObject['mail.to']);
             element.back.message.val(userParamsObject['mail.message']);
@@ -141,47 +165,69 @@ define(
 
             $('.email-subject-label', this.$node).html(this.attr.locales.subject);
             $('.email-address-label', this.$node).html(this.attr.locales.to);
+            $('.email-from-label', this.$node).html(this.attr.locales.from);
 
-            var node = this.$node;
-            $(node.parent() ).on('click', function(){
+
+            var node = this.$node,
+                insertInMessage = true;
+
+            $(node.parent()).on('click', function() {
                 node.removeClass('flip');
             });
 
-            $(element.back.token).on('click', '.token', function(){
-                var token = $(this).text().replace(TOKEN_SYMBOL,'');
-                var value = TOKEN_VALUE_TPL_START+token+TOKEN_VALUE_TPL_END;
-                _insertAt(element.back.message[0], value);
+            $(element.back.subject).focus(function() {
+                insertInMessage = false;
+            });
+
+            $(element.back.message).focus(function() {
+                insertInMessage = true;
+            });
+
+            $(element.back.token).on('click', '.token', function() {
+                var token = $(this).text().replace(TOKEN_SYMBOL, ''),
+                    value = TOKEN_VALUE_TPL_START + token + TOKEN_VALUE_TPL_END,
+                    toElement = element.back.message;
+
+                if (! insertInMessage) {
+                    toElement = element.back.subject;
+                }
+
+                _insertAt(toElement[0], value);
                 element.back.message.change();
+                toElement.focus();
             });
 
             this.validate();
         }
-        function _stopPropagation(e){
+
+        function _stopPropagation(e) {
             e.stopPropagation();
         }
 
-        function _addToken(element){
-            return function(index, name){
+        function _addToken(element) {
+            return function(index, name) {
                 var ele = _makeSymbolElement(name);
-                element.back.token.append( ele );
+                element.back.token.append(ele);
             };
         }
 
-        function _makeSymbolElement(name){
-            var ele = $(TOKEN_TPL).text(TOKEN_SYMBOL+name);
+        function _makeSymbolElement(name) {
+            var ele = $(TOKEN_TPL).text(TOKEN_SYMBOL + name);
+
             return ele;
         }
 
-        function _updateElementOnChange(elementTo){
-            var callbackToEvent = function(){
+        function _updateElementOnChange(elementTo) {
+            var callbackToEvent = function() {
                 var value = $(this).val();
-                elementTo.text( value );
+                elementTo.text(value);
             };
+
             return callbackToEvent;
         }
 
-        function _triggerUpdateOnChange(card){
-            return function(){
+        function _triggerUpdateOnChange(card) {
+            return function() {
                 card.validate();
                 card.valueChange();
             };
@@ -207,22 +253,24 @@ define(
             }
         }
 
-        function _userParamsToObject(params){
+        function _userParamsToObject(params) {
             var obj = {};
-            $.each(params, function(i,o){
+            $.each(params, function(i, o) {
                 obj[o.name] = o.value;
             });
+
             return obj;
         }
 
-        function _userParamsObjectToArray(obj){
-            var name, arr=[];
-            for(name in obj){
+        function _userParamsObjectToArray(obj) {
+            var name, arr = [];
+            for (name in obj) {
                 arr.push({
                     'name': name,
-                    'value':obj[name]
+                    'value': obj[name]
                 });
             }
+
             return arr;
         }
 

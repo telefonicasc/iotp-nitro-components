@@ -1,3 +1,29 @@
+/**
+
+*components/jquery_plugins* will take all the components created using the
+*ComponentManager* and will create jQuery plugins for each of them.
+The name of the plugin is `'m2m' + name` of the plugin.
+This file needs to be included after all the components have been created.
+
+If you have a component created with the name 'MyComponent' you can do:
+```javascript
+$('#blabla').m2mMyComponent({ ... });
+```
+
+This is the same as doing:
+```javascript
+define(
+    [
+        'path/to/mycomponent'
+    ],
+    function(MyComponent) {
+        MyComponent.attachTo($('#blabla'), { ... });
+    }
+);
+```
+
+jqueryPlugins
+*/
 (function() {
 
     define([

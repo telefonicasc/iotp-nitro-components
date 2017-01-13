@@ -1,63 +1,8 @@
-# m2m-nitro-components
-
-## Introduction
-
-m2m-nitro-components is a javascript widget library built on top of 
-[twitter flight](http://twitter.github.io/flight/).
-Source code repository is [here](https://pdihub.hi.inet/M2M/m2m-nitro-components).
-
 ### How to use the library
-
-The library is designed to be included into your project using *npm*, and 
-generate a custom build selecting desired components using *grunt*.
-Install m2m-nitro-components npm package from pdihub:
-
-    npm install git+ssh://git@pdihub.hi.inet:M2M/m2m-nitro-components.git#develop
-
-That will download m2m-nitro-components an put it in the node_modules directory.
-Install grunt packages:
-
-    npm install grunt grunt-contrib-requirejs grunt-contrib-less
-
-Next you need to define in your Gruntfile what widgets do you want to include
-in your m2m-nitro-components build. A sample Gruntfile.js including the 
-ApplicationMenu widget will be:
-
-    module.exports = function(grunt) {
-
-        grunt.initConfig({
-            nitroComponents: {
-                build: {
-                    components: [
-                        'components/application_menu',
-                        'components/jquery_plugins'
-                    ]
-                }
-            }
-        });
-
-        grunt.loadNpmTasks('grunt-contrib-less');
-        grunt.loadNpmTasks('grunt-contrib-requirejs');
-        grunt.loadTasks('node_modules/m2m-nitro-components/tasks');
-
-    };
-
-Now if you run:
-
-    grunt nitroComponents
-
-It will generate a javascript file in app/lib/nitro_components/nitro_components.js
-and a css file in style/css/nitro-components.css, that you should include in
-your package.
-
-The only dependency of m2m-nitro-components is jquery, that you should include
-in your page before nitro_components.js. Although, some of the widgets will
-require additional dependencies. For example the map widget will depend on
-mapbox, and most of the charting components depend on D3.
 
 All the widgets are accesible as jQuery plugins in the form of m2mComponentName.
 An options object could be passed to the jQuery plugin.
-Here it is an example web page using the ApplicationMenu widget:
+Here it is an example web page using the mapDashboard widget:
 
     <!DOCTYPE html>
     <html lang="en">
@@ -67,40 +12,29 @@ Here it is an example web page using the ApplicationMenu widget:
       <link rel="stylesheet" href="style/css/nitro-components.css" />
     </head>
     <body>
-      <div id="application" class="fit">
-        <nav>
-          <ul>
-            <li><a href="#s1"><span>Section 1</span></a></li>
-            <li><a href="#s2"><span>Section 2</span></a></li>
-            <li><a href="#s3"><span>Section 3</span></a></li>
-            <li><a href="#s4"><span>Section 4</span></a></li>
-            <li><a href="#s5"><span>Section 5</span></a></li>
-          </ul>
-        </nav>
-        <div id="content" class="application-content fit">
-
-        </div>
+      <div class="panel-body" id="map-secttion"
+          data-nitro-component="m2mDashboardMap"
+          data-nitro-options="m2mDashboardMapOptions"
+          data-nitro-value="entitiesInDashboard">
       </div>
       <script src="jquery.js"></script>
-      <script src="app/lib/nitro_components/nitro_components.js"></script>
-      <script>
-        $(function() {
-            $('#application nav').m2mApplicationMenu({
-                applicationContent: '#content'
-            });
-        });
-      </script>
+      <script src="nitro_components.js"></script>
     </body>
     </html>
 
 All the communication with the components is done through dom events.
-For example to expand the panel created by the ApplicationMenu example above
-you could do:
+So if you want to change the value of the slider you can do:
+```javascript
+$('#blabla').trigger('valueChange', { value: 34 });
+```
 
-    $('#application nav').trigger('expand')
-
-In the m2m-nitro-components/examples folder, you will find examples of pages
-using different components.
+And if you want to do something when the value of the slider is changed
+you can do:
+```javascrip
+$('#blabla').on('valueChange', function(e, o) {
+    console.log('value of the slider is ' + o.value);
+});
+```
 
 ## Building components
 
@@ -253,7 +187,6 @@ the items before they get render you can use this.before('renderItems', ...,
 or if you want to do something after the items finished rendering you can 
 do this.after('renderItems',...
 
-Look at components/dashboard/dashboard.js for an example of this.
 
 ### Template mixin
 

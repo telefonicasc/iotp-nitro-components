@@ -1,3 +1,6 @@
+/**
+Create wrapper with Template and DataBinding functionalities
+*/
 define(
     [
         'components/component_manager',
@@ -8,7 +11,7 @@ define(
 
     function(ComponentManager, DataBinding, Template, Container) {
 
-        return ComponentManager.create('component', Template,  
+        return ComponentManager.create('component', Template,
             DataBinding);
     }
 );

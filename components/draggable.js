@@ -1,13 +1,11 @@
 define(
-  [
-    'components/component_manager',
-    'components/mixin/draggable'
-  ],
+    [
+        'components/component_manager',
+        'components/mixin/draggable'
+    ],
 
-  function(ComponentManager, DraggableMixin) {
-
-    return ComponentManager.create('draggable', DraggableMixin);
-
-  }
+    function(ComponentManager, DraggableMixin) {
+        return ComponentManager.create('draggable', DraggableMixin);
+    }
 
 );

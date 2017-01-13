@@ -6,9 +6,6 @@ define(
 
     function(ComponentManager, Template) {
 
-        return ComponentManager.create('BorderCollapsablePanel',
-            Template, SlidingPanel);
-
         function SlidingPanel() {
 
             this.defaultAttrs({
@@ -45,7 +42,7 @@ define(
                 this.on('expand', function(e, o) {
                     if (!this.expanded) {
                         this.toggle(o && o.duration, o && o.complete);
-                    }else if( o && $.isFunction(o.complete) ){
+                    }else if (o && $.isFunction(o.complete)) {
                         o.complete();
                     }
                 });
@@ -53,7 +50,7 @@ define(
                 this.on('collapse', function(e, o) {
                     if (this.expanded) {
                         this.toggle(o && o.duration, o && o.complete);
-                    }else if( o && $.isFunction(o.complete) ){
+                    }else if (o && $.isFunction(o.complete)) {
                         o.complete();
                     }
                 });
@@ -83,5 +80,8 @@ define(
                 }
             };
         }
+
+        return ComponentManager.create('BorderCollapsablePanel',
+            Template, SlidingPanel);
     }
 );

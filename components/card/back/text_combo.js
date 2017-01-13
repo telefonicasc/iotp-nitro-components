@@ -13,18 +13,18 @@ define(
             isIE8 = (function() {
                 return !! ((/msie 8./i).test(navigator.appVersion) &&
                     ! (/opera/i).test(navigator.userAgent) &&
-                    window.ActiveXObject && XDomainRequest &&
+                    window.ActiveXObject &&
+                    XDomainRequest &&
                     ! window.msPerformance);
             })();
 
-        function CardBackText() {
+        function CardBackTextCombo() {
 
             this.defaultAttrs({
                 'dataType': dataType.TEXT
             });
 
             this.after('initialize', function() {
-
                 this.$node.addClass('m2m-card-text');
 
                 if ($.isArray(this.attr.inputs)) {
@@ -33,7 +33,7 @@ define(
                     this.addInput(null, this.attr);
                 }
 
-                this.$node.on('keyup change', 'input', $.proxy(function(e) {
+                this.$node.on('keyup change', 'input, select', $.proxy(function(e) {
                     var $ele = $(e.currentTarget),
                         value = $ele.val(),
                         type = $ele.data('dataType');
@@ -44,15 +44,8 @@ define(
                         }
                     }
 
-                    // Testing value REGEXP Validation
-                    if ($ele.data('regExp')) {
-                        var regExp = new RegExp($ele.data('regExp'), 'i');
-
-                        if (! value.match(regExp)) {
-                            $ele.val(value.slice(0, -1));
-
-                            return false;
-                        }
+                    if (! this.validateWithRegExp($ele)) {
+                        return false;
                     }
 
                     // si el input es de tipo "number" devuelve un valor vacío en caso no tener el formato adecuado
@@ -73,12 +66,64 @@ define(
                     } else {
                         $('input', this.$node).val(o.value);
                     }
-
                 });
             });
 
+            this.validateWithRegExp = function($ele) {
+                var $eleParent,
+                    $target,
+                    targetValue,
+                    regExp;
+
+                $eleParent = $ele.parents('.m2m-card-condition');
+
+                // Checks for custom value REGEXP validation
+                if ($ele.data('regExp')) {
+                    regExp = this.prepareRegExp($ele);
+                }
+
+                // Checks for delegated REGEXP validation
+                if ($ele.data('regExpOrigin')) {
+                    var $originEle = $eleParent.find('[name="' + $ele.data('regExpOrigin') + '"]');
+                    regExp = this.prepareRegExp($originEle);
+                }
+
+                // Check for REGEXP target
+                $target = ($ele.data('regExpTarget')) ?
+                    $eleParent.find('[name="' + $ele.data('regExpTarget') + '"]') :
+                    $ele;
+
+                targetValue = $target.val();
+
+                if (! targetValue.match(regExp)) {
+                    // We have to clear all text, instead last character inserted,
+                    // in order to avoid detected keyboard issues with timings.
+                    $target.val('');
+
+                    return false;
+                }
+
+                return true;
+            };
+
+            this.prepareRegExp = function($ele) {
+                var regExp;
+
+                if (! $ele || ! $ele.data('regExp')) {
+                    return false;
+                }
+
+                if ($.isPlainObject($ele.data('regExp'))) {
+                    regExp = new RegExp($ele.data('regExp')[$ele.val()], 'i');
+                } else {
+                    regExp = new RegExp($ele.data('regExp'), 'i');
+                }
+
+                return regExp;
+            };
+
             this.getData = function() {
-                var $inputs = $('input', this.$node),
+                var $inputs = $('input, select', this.$node),
                     out;
 
                 if ($.isArray(this.attr.inputs)) {
@@ -101,7 +146,11 @@ define(
                     this.makeLabel(data).appendTo(this.$node);
                 }
 
-                this.makeInput(data).appendTo(this.$node);
+                if (data.type === 'text') {
+                    this.makeInput(data).appendTo(this.$node);
+                } else if (data.type === 'dropdown') {
+                    this.makeDropDown(data).appendTo(this.$node);
+                }
             };
 
             this.makeLabel = function(data) {
@@ -122,8 +171,46 @@ define(
 
                 data.placeholder && ele.attr('placeholder', data.placeholder);
                 data.regExp && ele.data('regExp', data.regExp);
+                data.regExpOrigin && ele.data('regExpOrigin', data.regExpOrigin);
+                data.regExpTarget && ele.data('regExpTarget', data.regExpTarget);
 
                 return ele;
+            };
+
+            this.makeDropDown = function(data) {
+                var $ele = $('<select>'),
+                    currentValue;
+
+                $ele.attr({
+                    'name': data.name || data.label,
+                    'class': 'text_combo'
+                });
+
+                $.each(data.options, $.proxy(function(i, option) {
+                    var optionEl = $('<option>')
+                        .attr('value', option.value)
+                        .data('dataValue', option.value)
+                        .html(option.label)
+                        .appendTo($ele);
+
+                    if (option.attr) {
+                        optionEl.attr('attr', option.attr);
+                    }
+                    if (option.selected) {
+                        optionEl.attr('selected', 'selected');
+                        currentValue = option.value;
+                    }
+                }, this));
+
+                if (! currentValue) {
+                    $ele.val(this.attr.defaultValue);
+                }
+
+                data.regExp && $ele.data('regExp', data.regExp);
+                data.regExpOrigin && $ele.data('regExpOrigin', data.regExpOrigin);
+                data.regExpTarget && $ele.data('regExpTarget', data.regExpTarget);
+
+                return $ele;
             };
 
             this.isValid = function(type, value) {
@@ -139,8 +226,7 @@ define(
             };
         }
 
-        return ComponentManager.create('CardBackText', DataBinding,
-            CardBackText);
-
+        return ComponentManager.create('CardBackTextCombo', DataBinding,
+            CardBackTextCombo);
     }
 );

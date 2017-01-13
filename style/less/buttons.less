@@ -6,10 +6,10 @@
 // Styleguide 4.0.
 
 .m2m-btn {
-    .gradient(@m2m-btn_bg-color, @m2m-btn_bg-color-start, @m2m-btn_bg-color-end);
+    .nt-gradient(@m2m-btn_bg-color, @m2m-btn_bg-color-start, @m2m-btn_bg-color-end);
     border: 1px solid @m2m-btn_bg-color;
     border-bottom: 1px solid #bbb;
-    .border-radius (3px, 3px, 3px, 3px);
+    .nt-border-radius (3px, 3px, 3px, 3px);
     color: @m2m-btn_color;
     font-family: @m2m-btn_font_family;
     font-weight: 800;
@@ -17,7 +17,7 @@
     text-align: center;
 }
 .m2m-btn:hover {
-    .gradient(@m2m-btn_hover_bg-color, @m2m-btn_hover_bg-color-start, @m2m-btn_hover_bg-color-end);
+    .nt-gradient(@m2m-btn_hover_bg-color, @m2m-btn_hover_bg-color-start, @m2m-btn_hover_bg-color-end);
     border: 1px solid @m2m-btn_hover_bg-color;
     border-bottom: 1px solid #999;
     cursor: pointer;
@@ -31,9 +31,18 @@
 .m2m-btn.accept{
     color:@m2m-btn_accept_color;
     border-color:@m2m-btn_accept_bg-color;
-    .gradient(@m2m-btn_accept_bg-color, @m2m-btn_accept_bg-color-start, @m2m-btn_accept_bg-color-end);
+    .nt-gradient(@m2m-btn_accept_bg-color, @m2m-btn_accept_bg-color-start, @m2m-btn_accept_bg-color-end);
 
 }
 .m2m-btn:hover.accept{
-    .gradient(@m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-start);
+    .nt-gradient(@m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-end, @m2m-btn_accept_bg-color-start);
+}
+.m2m-btn.cancel{
+  color:@m2m-btn_cancel_color;
+  border-color:@m2m-btn_cancel_bg-color;
+  .nt-gradient(@m2m-btn_cancel_bg-color, @m2m-btn_cancel_bg-color-start, @m2m-btn_cancel_bg-color-end);
+
+}
+.m2m-btn:hover.cancel{
+  .nt-gradient(@m2m-btn_cancel_bg-color-end, @m2m-btn_cancel_bg-color-end, @m2m-btn_cancel_bg-color-start);
 }

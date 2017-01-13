@@ -17,8 +17,9 @@ define(
             var hasCardInterval = _hasTimeInterval(cards);
             if (draggingCard.hasClass('m2m-card-condition')) {
                 cards.each($.proxy(function(i, el) {
-                    var isValidLeftCard = hasCardInterval ? $(el).hasClass('m2m-card-interval') : $(el).hasClass('start-card');
-                    if ($(el).hasClass('m2m-card-condition') || isValidLeftCard ){
+                    var isValidLeftCard =
+                        hasCardInterval ? $(el).hasClass('m2m-card-interval') : $(el).hasClass('start-card');
+                    if ($(el).hasClass('m2m-card-condition') || isValidLeftCard) {
                         var area = $(el).position();
                         area.left = area.left + 100;
                         area.width = 200;
@@ -41,10 +42,10 @@ define(
             }
         }
 
-        function _hasTimeInterval(cards){
-            var out=false;
-            for(var i=cards.length;i--;){
-                if(out = $(cards[i]).hasClass('m2m-card-interval') ){
+        function _hasTimeInterval(cards) {
+            var out = false;
+            for (var i = cards.length; i--;) {
+                if (out = $(cards[i]).hasClass('m2m-card-interval')) {
                     break;
                 }
             }

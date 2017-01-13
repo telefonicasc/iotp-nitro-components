@@ -4,13 +4,10 @@
   "description": "Visual components for the nitro framework",
   "main": "index.js",
   "directories": {
-    "doc": "doc",
-    "example": "examples",
-    "test": "test"
+    "doc": "doc"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "gendocs": "node ./libs/dca-component-documentor/generatedoc.js -o ./doc/user-document.md"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -35,11 +32,6 @@
     "grunt-contrib-requirejs": "~1.0.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
-    "dox": "~0.4.2",
-    "grunt-styleguide": "~0.2.4",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-closure-linter": "~0.1.0",
-    "grunt-plato": "~0.2.0",
-    "markdox": "~0.1.2"
+    "grunt-contrib-watch": "~0.3.1"
   }
 }

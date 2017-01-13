@@ -1,5 +1,5 @@
 1.0.0
+Fix: AttributeThreshold card with Text value not working in Spanish
+Modify: Use Leaflet instead of Mapbox
 Add: Components for rules
 Add: Components for mapDashboard
-Modify: Use Leaflet instead of Mapbox
-Fix: AttributeThreshold card with Text value not working in Spanish

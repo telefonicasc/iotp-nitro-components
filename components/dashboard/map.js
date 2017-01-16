@@ -66,7 +66,7 @@ define(
 
             this.defaultAttrs({
 
-                MAP_TILE_PROVIDER: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                MAP_TILE_PROVIDER: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
                 MAP_TILE_PROVIDER_SUBDOMAINS: 'abcd',
                 MAP_TILE_PROVIDER_MAXZOOM: 19,
                 MAP_TILE_PROVIDER_ATTRIBUTION: '&copy; ' +

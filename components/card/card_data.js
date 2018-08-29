@@ -501,6 +501,7 @@ define(
              */
             updateAttribute: function(card) {
                 var userParams = card.userParams || {};
+                var tmpUpdateType = 'APPEND';
                 card.cssClass = 'm2m-card-action m2m-card-alarm-action action-card';
                 card.header = locales.updateAttribute;
                 card.actionCard = true;
@@ -510,28 +511,49 @@ define(
                         tpl: '<dl class="properties">' +
                                 '<dt>{{value.name}}</dt>' +
                                 '<dd>{{value.value}}</dd>' +
+                                '<dd>{{value.actionType}}</dd>' +
                             '</dl>'
                     }]
                 };
 
                 card.back = {
                     items: [{
-                        component: 'CardBackText',
+                        component: 'CardBackTextCombo',
                         inputs: [
                             {
+                                type: 'text',
                                 label: locales.name,
                                 name: 'name'
                             },
                             {
+                                type: 'text',
                                 label: locales.value,
                                 name: 'value'
+                            },
+                            {
+                                type: 'dropdown',
+                                name: 'actionType',
+                                label: 'actionType',
+                                options: [
+                                    {
+                                        'label': 'append',
+                                        'value': 'APPEND',
+                                        'selected': (tmpUpdateType === 'APPEND' ? true : false)
+                                    },
+                                    {
+                                        'label': 'update',
+                                        'value': 'UPDATE',
+                                        'selected': (tmpUpdateType === 'UPDATE' ? true : false)
+                                    }
+                                ]
                             }
                         ]
                     }]
                 };
                 card.value = {
                     name: (userParams.name || '') ,
-                    value: (userParams.value || '')
+                    value: (userParams.value || ''),
+                    actionType: (userParams.actionType || 'APPEND')
                 };
 
                 return card;

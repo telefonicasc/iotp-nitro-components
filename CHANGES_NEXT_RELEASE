@@ -1,3 +1,5 @@
+ADD upateAction (append by default) to updateAttriute card
+
 1.0.0
 Fix: AttributeThreshold card with Text value not working in Spanish
 Modify: Use Leaflet instead of Mapbox

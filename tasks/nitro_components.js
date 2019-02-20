@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 out: out || 'nitro_components.js',
                 //include: 'node_modules/almond/almond.js',
                 include: ['main'],
-                name: '../node_modules/almond/almond',
+                name: 'node_modules/almond/almond',
                 insertRequire: ['main'],
                 wrap: true
             }

@@ -23,7 +23,7 @@
     "leaflet.markercluster": "~1.0.0",
     "jsonpath": "~0.2.9",
     "hogan.js": "~3.0.2",
-    "almond": "~0.2.5"
+    "almond": "0.3.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

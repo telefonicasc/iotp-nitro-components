@@ -1,3 +1,4 @@
+ADD aldmon npm dependence to enable use Nodejs 6 (requirejs)
 ADD upateAction (append by default) to updateAttriute card
 
 1.0.0

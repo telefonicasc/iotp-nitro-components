@@ -18,7 +18,9 @@ module.exports = function(grunt) {
             options: {
                 baseUrl: baseUrl,
                 out: out || 'nitro_components.js',
-                include: 'node_modules/almond/almond.js',
+                //include: 'node_modules/almond/almond.js',
+                include: ['main'],
+                name: '../node_modules/almond/almond',
                 insertRequire: ['main'],
                 wrap: true
             }

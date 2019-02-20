@@ -18,8 +18,8 @@ module.exports = function(grunt) {
             options: {
                 baseUrl: baseUrl,
                 out: out || 'nitro_components.js',
-                name: 'node_modules/almond/almond',
-                include: ['main'],
+                name: 'almond',
+                include: ['node_modules/almond'],
                 insertRequire: ['main'],
                 wrap: true
             }
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
 
         //build JS
         grunt.config.set('concat.nitroComponents', bannerCfg);
-        grunt.config.set('requirejs.nitroComponents', requireCfg);
+        //grunt.config.set('requirejs.nitroComponents', requireCfg);
         grunt.task.run('requirejs:nitroComponents');
         grunt.task.run('concat:nitroComponents');
 

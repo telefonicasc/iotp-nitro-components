@@ -74,8 +74,8 @@ module.exports = function(grunt) {
 
         //build JS
         grunt.config.set('concat.nitroComponents', bannerCfg);
-        grunt.config.set('requirejs.nitroComponents', requireCfg);
-        grunt.task.run('requirejs:nitroComponents');
+        // grunt.config.set('requirejs.nitroComponents', requireCfg);
+        // grunt.task.run('requirejs:nitroComponents');
         grunt.task.run('concat:nitroComponents');
 
         //build CSS

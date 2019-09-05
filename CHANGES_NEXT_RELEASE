@@ -1,6 +1,6 @@
-ADD delete to updateAction to updateAttibute card
+ADD delete to updateAction to updateAttribute card
 ADD almond npm dependence to enable use Nodejs 6 (requirejs)
-ADD upateAction (append by default) to updateAttriute card
+ADD updateAction (append by default) to updateAttribute card
 
 1.0.0
 Fix: AttributeThreshold card with Text value not working in Spanish

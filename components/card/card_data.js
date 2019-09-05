@@ -544,6 +544,11 @@ define(
                                         'label': 'update',
                                         'value': 'UPDATE',
                                         'selected': (tmpUpdateType === 'UPDATE' ? true : false)
+                                    },
+                                    {
+                                        'label': 'delete',
+                                        'value': 'DELETE',
+                                        'selected': (tmpUpdateType === 'DELETE' ? true : false)
                                     }
                                 ]
                             }

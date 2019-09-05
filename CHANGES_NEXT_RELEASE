@@ -1,4 +1,4 @@
-ADD delete to upateAction to updateAttriute card
+ADD delete to upateAction to updateAttibute card
 ADD almond npm dependence to enable use Nodejs 6 (requirejs)
 ADD upateAction (append by default) to updateAttriute card
 

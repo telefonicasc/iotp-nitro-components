@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@pdihub.hi.inet:fiware/iotp-nitro-components.git"
+    "url": "git@github.com:telefonicasc/iotp-nitro-components.git"
   },
   "author": "Telefónica I+D",
   "readmeFilename": "README.md",

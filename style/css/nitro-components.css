@@ -1980,21 +1980,21 @@ li.delimiter-value {
   color: #ffffff;
   border-color: #196387;
   background: #196387;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #08415f), color-stop(1, #2481ad));
-  background: -ms-linear-gradient(bottom, #08415f, #2481ad);
-  background: -moz-linear-gradient(center bottom, #08415f 0%, #2481ad 100%);
-  background: -o-linear-gradient(#2481ad, #08415f);
-  -pie-background: linear-gradient(#2481ad, #08415f);
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #08415f), color-stop(1, #227ca5));
+  background: -ms-linear-gradient(bottom, #08415f, #227ca5);
+  background: -moz-linear-gradient(center bottom, #08415f 0%, #227ca5 100%);
+  background: -o-linear-gradient(#227ca5, #08415f);
+  -pie-background: linear-gradient(#227ca5, #08415f);
   /*ie 6-9 via PIE*/
   behavior: url("style/css3pie/PIE.htc");
 }
 .m2m-btn:hover.accept {
-  background: #2481ad;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #2481ad), color-stop(1, #08415f));
-  background: -ms-linear-gradient(bottom, #2481ad, #08415f);
-  background: -moz-linear-gradient(center bottom, #2481ad 0%, #08415f 100%);
-  background: -o-linear-gradient(#08415f, #2481ad);
-  -pie-background: linear-gradient(#08415f, #2481ad);
+  background: #227ca5;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #227ca5), color-stop(1, #08415f));
+  background: -ms-linear-gradient(bottom, #227ca5, #08415f);
+  background: -moz-linear-gradient(center bottom, #227ca5 0%, #08415f 100%);
+  background: -o-linear-gradient(#08415f, #227ca5);
+  -pie-background: linear-gradient(#08415f, #227ca5);
   /*ie 6-9 via PIE*/
   behavior: url("style/css3pie/PIE.htc");
 }

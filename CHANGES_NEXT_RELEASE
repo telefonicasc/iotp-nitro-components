@@ -1,3 +1,4 @@
+FIX btn color contrast 
 ADD delete to updateAction to updateAttribute card
 ADD almond npm dependence to enable use Nodejs 6 (requirejs)
 ADD updateAction (append by default) to updateAttribute card
